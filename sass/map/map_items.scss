@@ -1,0 +1,37 @@
+.shadow .level2 {
+    background-image: url('/img/texture/shadow.png');
+    width: 104px;
+    height: 104px;
+    margin-top: -4px;
+    margin-left: -4px;
+}
+
+.decor-1 .level1 {
+    background-image: url(/img/texture/decor/1.png);
+    width: 253px;
+    height: 104px;
+    margin-left: -90px;
+}
+
+.decor-2 .level1 {
+    background-image: url(/img/texture/decor/2.png);
+    width: 146px;
+    height: 71px;
+}
+
+.decor-3 .level1 {
+    background-image: url(/img/texture/decor/3.png);
+    width: 196px;
+    height: 69px;
+}
+
+.selected .level3 {
+    border: 1px solid #fff;
+    width: 94px;
+    height: 94px;
+    z-index: 45;
+}
+
+.land-0-1 .level0 {
+    @include texture-land('0-1');
+}

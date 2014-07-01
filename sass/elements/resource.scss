@@ -1,0 +1,15 @@
+.resources {
+    width: 162px;
+
+    > div {
+        float: left;
+        width: 76px;
+        height: 28px;
+        padding: 3px 3px 3px 23px;
+        margin: 2px 2px 2px 2px;
+        background-color: #e6e6e6;
+        background-position: 2px 2px;
+        border: solid 1px #c6c6c6;
+        border-radius: 4px;
+    }
+}

@@ -1,0 +1,33 @@
+$font-small: 12px;
+$font-normal: 14px;
+$font-big: 18px;
+
+$texture-land: '/img/texture/land/';
+
+@mixin no-selected {
+    -o-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+@mixin text-selected {
+    -o-user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+@mixin normal-selected {
+    -o-user-select: auto;
+    -moz-user-select: auto;
+    -khtml-user-select: auto;
+    -webkit-user-select: auto;
+    user-select: auto;
+}
+
+@mixin texture-land($name) {
+    background-image: url('/img/texture/land/land-' + $name + '.png');
+}

@@ -1,0 +1,41 @@
+div.container {
+    .resource_container.focused .resource_image {
+        border: 1px solid #efff23;
+        border-radius: 5px;
+        width: 64px;
+        height: 64px;
+        margin: 9px 0 0 7px;
+    }
+
+    .resource_container {
+        .resource_image {
+            width: 66px;
+            height: 66px;
+            background-repeat: no-repeat;
+        }
+
+        .town_type_rubins {
+            margin: 10px 0 0 8px;
+            background-image: url(/img/objects/resource/rubins.png);
+        }
+
+        .town_type_wood {
+            margin: 10px 0 0 8px;
+            background-image: url(/img/objects/resource/wood.png);
+        }
+
+        .town_type_steel {
+            margin: 10px 0 0 8px;
+            background-image: url(/img/objects/resource/steel.png);
+        }
+
+        .town_type_stone {
+            margin: 10px 0 0 8px;
+            background-image: url(/img/objects/resource/stone.png);
+        }
+
+        .town_type_eat {
+            background-image: url(/img/objects/resource/eat.png);
+        }
+    }
+}

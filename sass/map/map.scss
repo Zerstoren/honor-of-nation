@@ -1,0 +1,144 @@
+#canvas_map {
+
+    overflow: hidden;
+    @include no-selected;
+
+    table {
+        position: absolute;
+        z-index: -1;
+        border: 1px solid #f00;
+        padding: 0;
+        margin: 0;
+        width: auto;
+        height: auto;
+        @include no-selected;
+        cursor: normal;
+
+        tr {
+            overflow: hidden;
+            white-space: nowrap;
+            @include no-selected;
+            cursor: normal;
+
+            td {
+                width: 96px;
+                height: 96px;
+                display: inline-block;
+                white-space: nowrap;
+                @include no-selected;
+                cursor: normal;
+
+                > div {
+                    position: absolute;
+                    width: 96px;
+                    height: 96px;
+                    cursor: normal;
+                    @include no-selected;
+                }
+
+                // Ground
+                > div.level0 {
+                     z-index: 0;
+                }
+
+                // Decor
+                > div.level1 {
+                    z-index: 10;
+                }
+
+                // Shadow
+                > div.level2 {
+                    z-index: 30;
+                }
+
+                > div.level3 {
+                    z-index: 40;
+                }
+
+                > div.container {
+                    .box_message {
+                        z-index: 60;
+                        border-radius: 5px;
+                        padding: 4px;
+                        box-shadow: 3px 3px 10px 1px #333;
+                        position: absolute;
+                        margin-left: -20px;
+                        margin-top: 80px;
+
+                    }
+
+                    .box_message:hover {
+                        z-index: 65;
+                        opacity: 0.6;
+                    }
+
+                    .box_message.user_state_0 {
+                        background: rgb(255,255,255);
+                        background: -moz-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 52%, rgba(237,237,237,1) 100%);
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(52%,rgba(255,255,255,1)), color-stop(100%,rgba(237,237,237,1)));
+                        background: -webkit-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 52%,rgba(237,237,237,1) 100%);
+                        background: -o-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 52%,rgba(237,237,237,1) 100%);
+                        background: -ms-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 52%,rgba(237,237,237,1) 100%);
+                        background: radial-gradient(ellipse at center,  rgba(255,255,255,1) 52%,rgba(237,237,237,1) 100%);
+
+                    }
+
+                    .box_message.user_state_1 {
+                        background: #9dd53a; /* Old browsers */
+                        background: -moz-radial-gradient(center, ellipse cover,  #9dd53a 0%, #a1d54f 3%, #a1d54f 17%, #80c217 85%, #7cbc0a 100%); /* FF3.6+ */
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#9dd53a), color-stop(3%,#a1d54f), color-stop(17%,#a1d54f), color-stop(85%,#80c217), color-stop(100%,#7cbc0a)); /* Chrome,Safari4+ */
+                        background: -webkit-radial-gradient(center, ellipse cover,  #9dd53a 0%,#a1d54f 3%,#a1d54f 17%,#80c217 85%,#7cbc0a 100%); /* Chrome10+,Safari5.1+ */
+                        background: -o-radial-gradient(center, ellipse cover,  #9dd53a 0%,#a1d54f 3%,#a1d54f 17%,#80c217 85%,#7cbc0a 100%); /* Opera 12+ */
+                        background: -ms-radial-gradient(center, ellipse cover,  #9dd53a 0%,#a1d54f 3%,#a1d54f 17%,#80c217 85%,#7cbc0a 100%); /* IE10+ */
+                        background: radial-gradient(ellipse at center,  #9dd53a 0%,#a1d54f 3%,#a1d54f 17%,#80c217 85%,#7cbc0a 100%); /* W3C */
+                    }
+
+                    .box_message.user_state_2 {
+                        color: #eee;
+                        background: #61badd; /* Old browsers */
+                        background: -moz-radial-gradient(center, ellipse cover,  #61badd 0%, #3c7bc9 100%); /* FF3.6+ */
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#61badd), color-stop(100%,#3c7bc9)); /* Chrome,Safari4+ */
+                        background: -webkit-radial-gradient(center, ellipse cover,  #61badd 0%,#3c7bc9 100%); /* Chrome10+,Safari5.1+ */
+                        background: -o-radial-gradient(center, ellipse cover,  #61badd 0%,#3c7bc9 100%); /* Opera 12+ */
+                        background: -ms-radial-gradient(center, ellipse cover,  #61badd 0%,#3c7bc9 100%); /* IE10+ */
+                        background: radial-gradient(ellipse at center,  #61badd 0%,#3c7bc9 100%); /* W3C */
+                    }
+
+                    .box_message.user_state_3 {
+                        background: #ffe49b; /* Old browsers */
+                        background: -moz-radial-gradient(center, ellipse cover,  #ffe49b 0%, #fcc735 100%); /* FF3.6+ */
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ffe49b), color-stop(100%,#fcc735)); /* Chrome,Safari4+ */
+                        background: -webkit-radial-gradient(center, ellipse cover,  #ffe49b 0%,#fcc735 100%); /* Chrome10+,Safari5.1+ */
+                        background: -o-radial-gradient(center, ellipse cover,  #ffe49b 0%,#fcc735 100%); /* Opera 12+ */
+                        background: -ms-radial-gradient(center, ellipse cover,  #ffe49b 0%,#fcc735 100%); /* IE10+ */
+                        background: radial-gradient(ellipse at center,  #ffe49b 0%,#fcc735 100%); /* W3C */
+                    }
+
+                    .box_message.user_state_4 {
+                        background: #f6f8f9;
+                        background: -moz-radial-gradient(center, ellipse cover,  #f6f8f9 0%, #c7c7c9 100%);
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#f6f8f9), color-stop(100%,#c7c7c9));
+                        background: -webkit-radial-gradient(center, ellipse cover,  #f6f8f9 0%,#c7c7c9 100%);
+                        background: -o-radial-gradient(center, ellipse cover,  #f6f8f9 0%,#c7c7c9 100%);
+                        background: -ms-radial-gradient(center, ellipse cover,  #f6f8f9 0%,#c7c7c9 100%);
+                        background: radial-gradient(ellipse at center,  #f6f8f9 0%,#c7c7c9 100%);
+                    }
+
+                    .box_message.user_state_5 {
+                        background: #febbbb;
+                        background: -moz-radial-gradient(center, ellipse cover,  #febbbb 0%, #ff5c5c 99%);
+                        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#febbbb), color-stop(99%,#ff5c5c));
+                        background: -webkit-radial-gradient(center, ellipse cover,  #febbbb 0%,#ff5c5c 99%);
+                        background: -o-radial-gradient(center, ellipse cover,  #febbbb 0%,#ff5c5c 99%);
+                        background: -ms-radial-gradient(center, ellipse cover,  #febbbb 0%,#ff5c5c 99%);
+                        background: radial-gradient(ellipse at center,  #febbbb 0%,#ff5c5c 99%);
+                    }
+                }
+
+                @import "map_objects/init";
+            }
+
+            @import "map_items";
+        }
+    }
+}

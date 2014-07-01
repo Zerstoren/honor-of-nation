@@ -1,0 +1,17 @@
+.auth__block {
+    min-width: 200px;
+    max-width: 600px;
+    margin: 0 auto;
+
+    .auth__input_login {
+        width: 100%;
+    }
+
+    .auth__input_password {
+        width: 100%;
+    }
+
+    .auth__error {
+        margin-top: 10px;
+    }
+}

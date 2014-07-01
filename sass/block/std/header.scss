@@ -1,0 +1,39 @@
+.mpi__header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    .mpi__resource_wrapper {
+        position: absolute;
+        left: 0;
+        width: 170px;
+        height: 100px;
+    }
+
+    .mpi__menu {
+        position: absolute;
+        right: 0;
+        width: 453px;
+        height: 37px;
+        padding: 4px 8px 2px 4px;
+        margin: -1px 0px 0 0;
+        background: #ccc;
+        border-radius: 0 0 0 8px;
+
+        ul {
+            li {
+                cursor: pointer;
+                float: left;
+                width: 30px;
+                height: 30px;
+                padding: 0 17px;
+            }
+
+            li.separator_vertical {
+                cursor: normal;
+                padding: 0;
+                width: 2px;
+            }
+        }
+    }
+}

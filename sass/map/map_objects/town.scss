@@ -1,0 +1,34 @@
+div.container {
+    .town_container.focused .town_image {
+        border: 1px solid #efff23;
+        border-radius: 5px;
+        width: 112px;
+        height: 92px;
+        margin: -1px 0 0 -1px;
+    }
+
+    .town_container {
+        width: 114px;
+        height: 96px;
+
+        .town_image {
+            position: absolute;
+            z-index: 20;
+            width: 114px;
+            height: 96px;
+        }
+
+        .town_type_0 {
+            background-image: url(/img/objects/city/village.png);
+        }
+
+        .town_box {
+            width: 140px;
+            height: 40px;
+
+            div {
+                text-align: center;
+            }
+        }
+    }
+}
