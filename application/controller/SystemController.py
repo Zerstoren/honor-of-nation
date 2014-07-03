@@ -10,5 +10,5 @@ class MainController():
             'admin_mode': config.get('game.admin_mode') == "true",
 
             'map_size': int(config.get('map.size')),
-            'chank_size': int(config.get('map.chank'))
+            'chunk_size': int(config.get('map.chunk'))
         })

@@ -21,8 +21,8 @@ define('system/config', [
         return $$config.map_size;
     };
 
-    Config.prototype.getChankSize = function() {
-        return $$config.chank_size;
+    Config.prototype.getChunkSize = function() {
+        return $$config.chunk_size;
     };
 
     Config.prototype.getTime = function() {

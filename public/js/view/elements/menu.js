@@ -8,13 +8,9 @@ define('view/elements/menu', [
             "click ul li": "onClick"
         },
 
-        initialize: function () {
-            this.$el.html(template('elements/menu'));
-        },
-
         render: function (holder) {
+            this.$el.html(template('elements/menu'));
             holder.append(this.$el);
-            this.delegateEvents();
         },
 
         onClick: function (e) {

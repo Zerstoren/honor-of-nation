@@ -7,7 +7,7 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
     def _getModelController(self):
         return controller.MapController.MainController()
 
-    def testGettingUsersChanks(self):
+    def testGettingUsersChunks(self):
         controller = self._getModelController()
         transfer = self._login()
         user = transfer.getUser()

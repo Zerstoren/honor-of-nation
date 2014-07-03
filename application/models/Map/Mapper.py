@@ -10,7 +10,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         """
         pass
 
-    # def getByUserAndChunks(self, user, chanks):
+    # def getByUserAndChunks(self, user, chunks):
     #     where = Common.Common_Filter({
     #
     #     })

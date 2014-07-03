@@ -7,7 +7,7 @@ routers = {
 
     '/system/configs'               : 'System.Main.get',
 
-    '/map/load_chanks'              : 'Map.Main.load_chanks'
+    '/map/load_chunks'              : 'Map.Main.load_chunks'
 }
 
 

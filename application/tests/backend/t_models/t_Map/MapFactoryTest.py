@@ -42,17 +42,17 @@ class Backend_Model_Map_MapFactoryTest(generic.Backend_Models_Map_Generic):
         self.assertEqual(createDomain, factoryDomainId)
         self.assertEqual(createDomain, factoryDomainPosition)
 
-    def testMapGetChank(self):
+    def testMapGetChunk(self):
         for x in range(17):
             for y in range(16):
                 self._createMapCell(x, y)
 
         domain = Factory.factory.getByPosition(0, 0)
 
-        collection = Factory.factory.getByChank(domain.getChank())
+        collection = Factory.factory.getByChunk(domain.getChunk())
         self.assertEqual(len(collection), 256)
 
-    def testMapGetChank_ForUser(self):
+    def testMapGetChunk_ForUser(self):
         user = self.fixture.getUser(0)
 
         for x in range(5):
@@ -61,7 +61,7 @@ class Backend_Model_Map_MapFactoryTest(generic.Backend_Models_Map_Generic):
 
         domain = Factory.factory.getByPosition(0, 0)
 
-        collection = Factory.factory.getByChank(domain.getChank())
+        collection = Factory.factory.getByChunk(domain.getChunk())
         self.assertFalse(collection.isVisibleFor(user))
         collection.addAccessToUser(user)
         self.assertTrue(collection.isVisibleFor(user))

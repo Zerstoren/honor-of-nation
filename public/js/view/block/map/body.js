@@ -12,12 +12,13 @@ define('view/block/map/body', [
         },
 
         render: function () {
-            this.holder.append(this.template);
+            this.$el.html(this.template);
+            this.holder.append(this.$el);
         },
 
         getHolder: function () {
             if (this.holderEl === null) {
-                this.holderEl = jQuery('#main-holder');
+                this.holderEl = jQuery('#map-body-holder');
             }
 
             return this.holderEl;
