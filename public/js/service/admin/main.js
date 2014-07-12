@@ -34,6 +34,11 @@ define('service/admin/main', [
         this.onSelectType('terrain');
     };
 
+    Main.prototype.unRender = function () {
+        this.mainView.unRender();
+        this.unSelectType();
+    };
+
     Main.prototype.onClose = function () {
         systemRoute.navigate('');
     };
@@ -52,6 +57,16 @@ define('service/admin/main', [
         }
 
         this.selectType = type;
+    };
+
+    Main.prototype.unSelectType = function () {
+        switch(this.selectType) {
+            case 'terrain':
+                this.terrainView.unRender();
+                break;
+        }
+
+        this.selectType = null;
     };
 
     Main.prototype.onTerrainSend = function (data) {

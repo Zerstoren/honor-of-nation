@@ -30,6 +30,10 @@ define('controller/admin', [
 
             mapInterface.render();
             protect.serviceAdminMain.render();
+        },
+
+        leaveAdmin: function () {
+            protect.serviceAdminMain.unRender();
         }
     };
 });
