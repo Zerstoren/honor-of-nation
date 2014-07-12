@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    define('model/resources', ['model/abstract'], function (abstractDomain) {
-        return abstractDomain.extend({
+    define('model/resources', [], function () {
+        return AbstractModel.extend({
             model_url: 'resources',
 
             RUBINS: 'rubins',
@@ -13,7 +13,7 @@
             GOLD  : 'gold',
 
             initialize: function (userDomain) {
-                abstractDomain.prototype.initialize.apply(this, arguments);
+                AbstractModel.prototype.initialize.apply(this, arguments);
                 this.user = userDomain;
                 this.load();
             },

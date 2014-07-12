@@ -1,18 +1,13 @@
 define('view/block/map/header', [
-    'system/template',
-
     'view/elements/resource',
     'view/elements/menu'
 ], function(
-    template,
     ViewElementsResource,
     ViewElementsMenu
 ) {
     'use strict';
 
-    return Backbone.View.extend({
-        template: template('block/map/header'),
-
+    return AbstractView.extend({
         viewResource: null,
         viewMenu    : null,
 
@@ -32,7 +27,7 @@ define('view/block/map/header', [
                 }, this)
             }
 
-            this.$el.html(this.template);
+            this.$el.html(this.template('block/map/header'));
 
             this.viewResource.render(this.$el.find('.mpi__resource_wrapper'));
             this.viewMenu.render(this.$el.find('.mpi__menu'));

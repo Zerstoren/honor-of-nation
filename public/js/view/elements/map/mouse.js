@@ -1,6 +1,6 @@
 define('view/elements/map/mouse', [], function () {
 
-    return Backbone.View.extend({
+    return AbstractView.extend({
         initialize: function(service) {
             this.service = service;
             this.currentMovePosition = [-1, -1];

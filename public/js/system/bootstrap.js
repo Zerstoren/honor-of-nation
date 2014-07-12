@@ -83,23 +83,36 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
             replace : replace === undefined ? false : replace
         }]);
     };
-
     RouterBone = Backbone.Router.extend(route);
 
     router = new RouterBone();
-    Backbone.history.start({pushState: true});
+    define('system/route', function () {
+        return router;
+    });
 
     define('system/socket', function () {
         return new Socket('127.0.0.1', 8080);
     });
 
-    define('system/route', function () {
-        return router;
+
+    requirejs([
+        'libs/abstract/collection',
+        'libs/abstract/factory',
+        'libs/abstract/gateway',
+        'libs/abstract/model',
+        'libs/abstract/service',
+        'libs/abstract/view'
+    ], function () {
+        requirejs(['system/preStart', 'system/config'], function () {
+            Backbone.history.start({pushState: true});
+        });
     });
 
     return events;
 });
 
-requirejs(['system/bootstrap', 'system/preStart', 'system/config'], function() {
-    'use strict';
+requirejs([
+    'system/bootstrap'
+], function() {
+
 });

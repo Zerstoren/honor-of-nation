@@ -1,7 +1,5 @@
-define('view/admin/main', [
-    'system/template'
-], function (template) {
-    return Backbone.View.extend({
+define('view/admin/main', [], function () {
+    return AbstractView.extend({
         events: {
             'click .close': "onClose",
             'click ul li button': 'onSelectType'
@@ -13,7 +11,7 @@ define('view/admin/main', [
         },
 
         render: function (holder) {
-            this.$el.html(template('admin/main'));
+            this.$el.html(this.template('admin/main'));
             holder.append(this.$el);
             this.delegateEvents();
         },

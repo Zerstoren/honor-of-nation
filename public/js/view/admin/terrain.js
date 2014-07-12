@@ -1,14 +1,12 @@
 define('view/admin/terrain', [
-    'system/template',
 
     'service/standalone/gameMap',
     'view/block/error'
 ], function (
-    template,
     gameMap,
     viewBlockError
 ) {
-    return Backbone.View.extend({
+    return AbstractView.extend({
         className: 'terrain',
         events: {
             'click .change-type-fill > button': 'onChangeFillType',
@@ -26,7 +24,7 @@ define('view/admin/terrain', [
         },
 
         render: function (holder) {
-            this.$el.html(template('admin/terrain/terrain'));
+            this.$el.html(this.template('admin/terrain/terrain'));
             holder.append(this.$el);
             this.delegateEvents();
         },
