@@ -9,22 +9,16 @@ requirejs.config({
 define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, Socket) {
     'use strict';
 
-    var route, item, data, RouterBone, router,
+    var route, item, data, RouterBone, router, controllerMethodLeave,
         events = _.clone(Backbone.Events);
 
     route = {};
     route.routes = {};
 
     function routeFunc(routeController, routeMethod) {
-        var controllerMethod, returnFunction;
+        var controllerMethod,
+            args = arguments;
 
-        requirejs(['controller/' + routeController], function(controller) {
-            if (controller[routeMethod] === undefined) {
-                throw new Error('Route method ' + routeMethod + ' not found in controller ' + routeController);
-            }
-
-            controllerMethod = controller[routeMethod];
-        });
 
         function triggerCall(routeController, routeMethod) {
             events.trigger(
@@ -48,25 +42,26 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
                 ['route', routeController, routeMethod].join(":")
             );
 
-            console.trace('route = ' + [routeController, routeMethod].join(":"));
+            console.log('route = ' + [routeController, routeMethod].join(":"));
         }
 
-        returnFunction = function() {
-            if (controllerMethod === undefined) {
-                var scope = this,
-                    args = Array.prototype.slice.call(arguments);
+        return function () {
+            requirejs(['controller/' + routeController], function(controller) {
+                if (controller[routeMethod] === undefined) {
+                    throw new Error('Route method ' + routeMethod + ' not found in controller ' + routeController);
+                }
 
-                setTimeout(function() {
-                    returnFunction.apply(scope, args);
-                }, 50);
-                return;
-            }
+                if (controllerMethodLeave) {
+                    controllerMethodLeave();
+                }
 
-            triggerCall(routeController, routeMethod);
-            controllerMethod.apply(this, Array.prototype.slice.call(arguments));
+                controllerMethod = controller[routeMethod];
+                controllerMethodLeave = controller['leave' + routeMethod.charAt(0).toUpperCase() + routeMethod.slice(1)];
+
+                triggerCall(routeController, routeMethod);
+                controllerMethod.apply(this, Array.prototype.slice.call(args));
+            });
         };
-
-        return returnFunction;
     }
 
     for (item in routes) {
@@ -79,6 +74,10 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
     }
 
     route.navigate = function (path, trigger, replace) {
+        if (!trigger) {
+            trigger = true;
+        }
+
         Backbone.Router.prototype.navigate.apply(this, [path, {
             trigger : trigger === undefined ? true : trigger,
             replace : replace === undefined ? false : replace

@@ -15,6 +15,12 @@ define('view/admin/main', [
         render: function (holder) {
             this.$el.html(template('admin/main'));
             holder.append(this.$el);
+            this.delegateEvents();
+        },
+
+        unRender: function() {
+            this.$el.remove();
+            this.undelegateEvents();
         },
 
         getHolder: function () {

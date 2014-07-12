@@ -27,7 +27,13 @@ define('view/admin/terrain', [
 
         render: function (holder) {
             this.$el.html(template('admin/terrain/terrain'));
-            holder.append(this.el);
+            holder.append(this.$el);
+            this.delegateEvents();
+        },
+
+        unRender: function () {
+            this.$el.remove();
+            this.undelegateEvents();
         },
 
         successSave: function () {
