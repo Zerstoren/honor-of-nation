@@ -1,11 +1,9 @@
 define('collection/user', [
-    'collection/abstract',
     'model/user'
 ], function (
-    CollectionAbstract,
     ModelUser
 ) {
-    return CollectionAbstract.extend({
+    return AbstractCollection.extend({
         model: ModelUser,
         collection_url: 'user'
     });

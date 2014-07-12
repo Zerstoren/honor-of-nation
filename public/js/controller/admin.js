@@ -3,18 +3,15 @@ define('controller/admin', [
     'service/standalone/mapInterface',
 
     'service/admin/main',
-    'service/admin/terrain'
 ], function(
     preStart,
     mapInterface,
 
-    ServiceAdminMain,
-    ServiceAdminTerrain
+    ServiceAdminMain
 ) {
     'use strict';
 
     var protect = {
-        serviceAdminTerrain: null,
         serviceAdminMain: null
     };
 
@@ -22,10 +19,6 @@ define('controller/admin', [
         admin: function() {
             if (protect.serviceAdminMain === null) {
                 protect.serviceAdminMain = new ServiceAdminMain();
-            }
-
-            if (protect.serviceAdminTerrain === null) {
-                protect.serviceAdminTerrain = new ServiceAdminTerrain();
             }
 
             mapInterface.render();

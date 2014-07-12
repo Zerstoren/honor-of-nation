@@ -2,15 +2,11 @@
     'use strict';
 
     define('model/user', [
-        'model/abstract',
-
         'model/resources'
     ], function (
-        abstractDomain,
-
         ModelResources
     ) {
-        return abstractDomain.extend({
+        return AbstractModel.extend({
             model_url: 'user',
 
             auth: function (login, password, callback) {

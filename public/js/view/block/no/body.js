@@ -1,10 +1,7 @@
-define('view/block/no/body', [
-    'system/template'
-], function(template) {
+define('view/block/no/body', [], function() {
     'use strict';
 
-    return Backbone.View.extend({
-        template: template('block/no/body'),
+    return AbstractView.extend({
         holderEl: null,
 
         initialize: function (holder) {
@@ -12,7 +9,7 @@ define('view/block/no/body', [
         },
 
         render: function () {
-            this.holder.append(this.template);
+            this.holder.append(this.template('block/no/body'));
         },
 
         getHolder: function () {

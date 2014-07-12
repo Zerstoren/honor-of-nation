@@ -1,11 +1,5 @@
-define('collection/abstract', [
-    'system/socket'
-], function (
-    socket
-) {
-    'use strict';
-
-    return Backbone.Collection.extend({
+define('libs/abstract/collection', [], function () {
+    window.AbstractCollection = Backbone.Collection.extend({
         collection_url: null,
 
         initialize: function () {

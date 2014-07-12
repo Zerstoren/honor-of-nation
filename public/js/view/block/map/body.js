@@ -1,10 +1,7 @@
-define('view/block/map/body', [
-    'system/template'
-], function(template) {
+define('view/block/map/body', [], function() {
     'use strict';
 
-    return Backbone.View.extend({
-        template: template('block/map/body'),
+    return AbstractView.extend({
         holderEl: null,
 
         initialize: function (holder) {
@@ -12,7 +9,7 @@ define('view/block/map/body', [
         },
 
         render: function () {
-            this.$el.html(this.template);
+            this.$el.html(this.template('block/map/body'));
             this.holder.append(this.$el);
         },
 

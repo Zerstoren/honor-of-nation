@@ -1,15 +1,13 @@
-define('view/block/map/footer', [
-    'system/template'
-], function(template) {
+define('view/block/map/footer', [], function() {
     'use strict';
 
-    return Backbone.View.extend({
+    return AbstractView.extend({
         initialize: function (holder) {
             this.holder = holder;
         },
-        template: template('block/map/footer'),
+
         render: function () {
-            this.holder.append(this.template);
+            this.holder.append(this.template('block/map/footer'));
         }
     });
 });

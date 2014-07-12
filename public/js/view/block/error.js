@@ -1,10 +1,9 @@
 define('view/block/error', [
     'libs/alertify',
-    'system/template'
-], function (alertify, template) {
+], function (alertify) {
     'use strict';
 
-    var ErrorBlock = Backbone.View.extend({
+    var ErrorBlock = AbstractView.extend({
         initialize: function () {
         },
 

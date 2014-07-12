@@ -1,15 +1,11 @@
-define('view/elements/menu', [
-    'system/template'
-], function (
-    template
-) {
-    return Backbone.View.extend({
+define('view/elements/menu', [], function () {
+    return AbstractView.extend({
         events: {
             "click ul li": "onClick"
         },
 
         render: function (holder) {
-            this.$el.html(template('elements/menu'));
+            this.$el.html(this.template('elements/menu'));
             holder.append(this.$el);
         },
 

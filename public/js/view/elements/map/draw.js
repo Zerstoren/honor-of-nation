@@ -1,9 +1,7 @@
-define('view/elements/map/draw', [], function (
-
-) {
+define('view/elements/map/draw', [], function () {
     "use strict";
 
-    return Backbone.View.extend({
+    return AbstractView.extend({
         initialize: function(service) {
             // events: 'onSetPosition', 'onUpdate', 'postUpdate']
             this.service = service;

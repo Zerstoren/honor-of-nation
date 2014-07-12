@@ -3,7 +3,7 @@ define('view/elements/map/help', [
 ], function (
     config
 ) {
-    return Backbone.View.extend({
+    return AbstractView.extend({
         initialize: function(service) {
             this.service = service;
         },

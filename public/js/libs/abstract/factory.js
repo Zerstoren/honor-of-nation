@@ -1,11 +1,15 @@
-define('factory/abstract', [], function () {
-    'use strict';
+define('libs/abstract/factory', [], function () {
+    window.AbstractFactory = function () {
+        this.initialize.apply(this, arguments);
+    };
 
-    var AbstractFactory = function () {};
-
-    _.extend(AbstractFactory.prototype, {
+    _.extend(window.AbstractFactory.prototype, Backbone.Events, {
         __pool: null,
         domain: null,
+
+        initialize: function () {
+
+        },
 
         getFromPool: function (id) {
             if (this.__pool === null) {
@@ -51,5 +55,5 @@ define('factory/abstract', [], function () {
         }
     });
 
-    return AbstractFactory;
+    window.AbstractFactory.extend = Backbone.Model.extend;
 });

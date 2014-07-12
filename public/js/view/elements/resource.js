@@ -1,7 +1,5 @@
-define('view/elements/resource', [
-    'system/template'
-], function (template) {
-    return Backbone.View.extend({
+define('view/elements/resource', [], function () {
+    return AbstractView.extend({
         events: {
             "mouseenter .resources > div": "onShowHint",
             "mouseout .resources > div": "onHideHint"
@@ -9,7 +7,7 @@ define('view/elements/resource', [
         currentTooltip: null,
 
         render: function (holder) {
-            this.$el.html(template('elements/resource'));
+            this.$el.html(this.template('elements/resource'));
             holder.append(this.$el);
         },
 

@@ -1,19 +1,17 @@
 define('view/user/auth', [
-    'system/template',
     'libs/alertify'
 ], function (
-    template,
     libsAlertify
 ) {
     'use strict';
 
-    return Backbone.View.extend({
+    return AbstractView.extend({
         events: {
             "click .auth__button": "onSubmit"
         },
 
         initialize: function () {
-            this.$el.html(template('user/login'));
+            this.$el.html(this.template('user/login'));
             this.loginInput = this.$el.find('.auth__input_login');
             this.passwordInput = this.$el.find('.auth__input_password');
         },
