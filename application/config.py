@@ -15,7 +15,7 @@ from optparse import OptionParser
 configType = 'dev'
 
 _config = configparser.ConfigParser()
-_config.read(os.path.dirname(os.path.abspath(__file__)) + '/application.ini')
+_config.read(os.path.dirname(os.path.abspath(__file__)) + '/config/application.ini')
 
 _arguments = OptionParser()
 _arguments.add_option("-l", "--host", help="Select listening host", default=None)
@@ -45,6 +45,13 @@ if options.type:
 
 if options.pycharm:
     _config['default']['system.pycharm'] = str(options.pycharm is not None)
+
+
+def getRoutes():
+    _config = configparser.ConfigParser()
+    _config.read(os.path.dirname(os.path.abspath(__file__)) + '/config/router.ini')
+
+    return _config['routes']
 
 
 def get(name):

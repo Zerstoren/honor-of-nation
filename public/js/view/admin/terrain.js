@@ -1,10 +1,12 @@
 define('view/admin/terrain', [
     'system/template',
 
-    'service/standalone/gameMap'
+    'service/standalone/gameMap',
+    'view/block/error'
 ], function (
     template,
-    gameMap
+    gameMap,
+    viewBlockError
 ) {
     return Backbone.View.extend({
         className: 'terrain',
@@ -29,7 +31,7 @@ define('view/admin/terrain', [
         },
 
         successSave: function () {
-
+            viewBlockError.showSuccessBox('Terrain save successful');
         },
 
         _renderChunkList: function () {
