@@ -1,0 +1,16 @@
+.terrain {
+    input.form-control {
+        width: 100px;
+    }
+
+    .fill-items {
+        div {
+            margin: 8px 0 0 8px;
+
+            .name {
+                display: inline-block;
+                width: 72px;
+            }
+        }
+    }
+}

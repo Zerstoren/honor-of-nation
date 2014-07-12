@@ -61,9 +61,6 @@ define('system/preStart', [
         holder.empty();
     }
 
-    systemBootstrap.on('route /', renderMapBlock);
-    systemBootstrap.on('route /login', renderNoBlock);
-
     systemSocket.on('message', function (message) {
         if (message.done === false || message.done === undefined) {
             viewBlockError.showErrorBox(message);

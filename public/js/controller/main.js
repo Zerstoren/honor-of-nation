@@ -2,12 +2,14 @@ define('controller/main', [
     'service/map/main',
 
     'service/standalone/user',
-    'service/standalone/gameMap'
+    'service/standalone/gameMap',
+    'service/standalone/mapInterface'
 ], function(
     ServiceMapMain,
 
     user,
-    gameMap
+    gameMap,
+    mapInterface
 ) {
     'use strict';
 
@@ -21,7 +23,8 @@ define('controller/main', [
                 protect.serviceMapMain = new ServiceMapMain();
             }
 
-            protect.serviceMapMain.render();
+            mapInterface.render();
+//            protect.serviceMapMain.render();
         }
     };
 });

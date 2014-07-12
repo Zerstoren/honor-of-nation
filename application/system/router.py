@@ -1,14 +1,7 @@
 import importlib
+import config
 
-routers = {
-    '/model/user/login'             : 'User.Model.login',
-
-    '/model/resources/get'          : 'Resource.Model.get',
-
-    '/system/configs'               : 'System.Main.get',
-
-    '/map/load_chanks'              : 'Map.Main.load_chanks'
-}
+routers = config.getRoutes()
 
 
 def searchExecControllerMethod(path):

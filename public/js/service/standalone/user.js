@@ -75,8 +75,6 @@ define('service/standalone/user', [
                     self.viewUserAuth.clean();
                 }
 
-                systemRoute.navigate('');
-
                 _.each(self.getMeFn, function (fn) {
                     fn(self.me);
                 });

@@ -1,23 +1,45 @@
 import models.Abstract.Factory
+from collection import MapCollection
+
 from . import Domain
 from . import Mapper
+from . import Math
 
 class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
-    def getDomainById(self, userId):
+    def getDomainByPosition(self, x, y):
         """
         :rtype: models.Map.Domain.Map_Domain
         """
         domain = self.getDomainFromData(
-            Mapper.Map_Mapper.getById(userId)
+            Mapper.Map_Mapper.getByPositionId(
+                Math.fromPositionToId(x, y)
+            )
         )
 
         return domain
 
-    def getCollectionByUserAndChunks(self, user, chunksList):
-        return Mapper.Map_Mapper.getByUserAndChunks(
-            user,
-            chunksList
+    def getDomainById(self, domainId):
+        """
+        :rtype: models.Map.Domain.Map_Domain
+        """
+        domain = self.getDomainFromData(
+            Mapper.Map_Mapper.getById(domainId)
         )
+
+        return domain
+
+    def getByChunks(self, chunks):
+        """
+        :rtype: collection.MapCollection.Map_Collection
+        """
+        collection = MapCollection.Map_Collection()
+        result = Mapper.Map_Mapper.getByChunks(chunks)
+        for i in result:
+            domain = self.getDomainFromData(i)
+            collection.append(domain)
+
+        return collection
+
 
     def getDomainFromData(self, data):
         """

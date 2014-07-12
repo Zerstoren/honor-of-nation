@@ -5,6 +5,6 @@ define('system/router', function() {
         ''                  : 'main/main',
         'login'             : 'user/login',
 
-        'admin'             : 'admin/terrain'
+        'admin'             : 'admin/admin'
     };
 });

@@ -22,11 +22,11 @@ define('view/elements/map/help', [
             };
         },
 
-        fromPlaceToChank: function(x, y) {
-            var chank = config.getChankSize(),
+        fromPlaceToChunk: function(x, y) {
+            var chunk = config.getChunkSize(),
                 size = config.getMapSize();
 
-            return parseInt(((y - y % chank) / chank * (size / chank)) + (x - x % chank) / chank + 1, 0x0);
+            return parseInt(((y - y % chunk) / chunk * (size / chunk)) + (x - x % chunk) / chunk + 1, 0x0);
         }
     });
 });

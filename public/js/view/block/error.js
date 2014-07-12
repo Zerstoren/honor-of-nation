@@ -13,14 +13,24 @@ define('view/block/error', [
         },
 
         showErrorBox: function (message) {
-            var errorText = '<div>Code: ' + message.code + '</div>';
-            errorText += '<div>Message: ' + message.error + '</div>';
+            var errorText = '';
+
+            if (_.isObject(message)) {
+                errorText += '<div>Code: ' + message.code + '</div>';
+                errorText += '<div>Message: ' + message.error + '</div>';
+            } else {
+                errorText = message;
+            }
 
             if (message.traceback) {
                 errorText += '<div><pre><code>' + message.traceback + '</code></pre></div>';
             }
 
             alertify.error(errorText, 0);
+        },
+
+        showSuccessBox: function (message) {
+            alertify.success(message);
         }
     });
 

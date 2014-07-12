@@ -10,26 +10,26 @@ class Selenium_Main_Menu_Admin_MapTest(generic.Selenium_Main_Menu_Admin_Generic)
         self.byCssSelector('.fill-items > div:nth-child(%d) button:nth-child(%d)' % \
             (land, number)).click()
 
-    def _setChankNumber(self, value):
-        self.byCssSelector('.fill-type-chank .sl-select-chank').clear()
-        self.byCssSelector('.fill-type-chank .sl-select-chank').send_keys(str(value))
+    def _setChunkNumber(self, value):
+        self.byCssSelector('.fill-type-chunk .sl-select-chunk').clear()
+        self.byCssSelector('.fill-type-chunk .sl-select-chunk').send_keys(str(value))
 
-    def _addChankToList(self):
-        self.byCssSelector('.fill-type-chank .sl-add-to-list').click()
+    def _addChunkToList(self):
+        self.byCssSelector('.fill-type-chunk .sl-add-to-list').click()
 
-    def _removeChankFromList(self, chank):
-        self.byXPath('//div//span[.="%s"]/../a' % chank).click()
+    def _removeChunkFromList(self, chunk):
+        self.byXPath('//div//span[.="%s"]/../a' % chunk).click()
 
     def _fillArea(self):
         self.byCssSelector('.map_fill .sl-fill-area').click()
 
-    def _setChankX(self, n):
-        item = self.byNg('popup.admin.vars.fillChankPosX')
+    def _setChunkX(self, n):
+        item = self.byNg('popup.admin.vars.fillChunkPosX')
         item.clear()
         item.send_keys(str(n))
 
-    def _setChankY(self, n):
-        item = self.byNg('popup.admin.vars.fillChankPosY')
+    def _setChunkY(self, n):
+        item = self.byNg('popup.admin.vars.fillChunkPosY')
         item.clear()
         item.send_keys(str(n))
 
@@ -53,7 +53,7 @@ class Selenium_Main_Menu_Admin_MapTest(generic.Selenium_Main_Menu_Admin_Generic)
         item.clear()
         item.send_keys(str(n))
 
-    def testMapCreateByChank(self):
+    def testMapCreateByChunk(self):
         self.login()
 
         self._getMenuItem('admin').click()
@@ -61,13 +61,13 @@ class Selenium_Main_Menu_Admin_MapTest(generic.Selenium_Main_Menu_Admin_Generic)
 
         self._setMapFillMethod(2)
 
-        self._setChankNumber(1)
-        self._addChankToList()
+        self._setChunkNumber(1)
+        self._addChunkToList()
 
-        self._setChankNumber(3)
-        self._addChankToList()
+        self._setChunkNumber(3)
+        self._addChunkToList()
 
-        self._removeChankFromList(3)
+        self._removeChunkFromList(3)
 
         self._setFillLand(1, 1)
 
@@ -76,28 +76,28 @@ class Selenium_Main_Menu_Admin_MapTest(generic.Selenium_Main_Menu_Admin_Generic)
         self.waitForSocket()
 
         # result check
-        items = models.Map.Factory.factory.getByChank(1)
+        items = models.Map.Factory.factory.getByChunk(1)
         self.assertEqual(256, len(items))
 
-        items = models.Map.Factory.factory.getByChank(3)
+        items = models.Map.Factory.factory.getByChunk(3)
         self.assertEqual(0, len(items))
 
-    def testMapCreateByChankCoordinate(self):
+    def testMapCreateByChunkCoordinate(self):
         self.login()
         self._getMenuItem('admin').click()
         self._selectTestAdminBlock('map')
 
         self._setMapFillMethod(2)
 
-        self._setChankX(1)
-        self._setChankY(1)
-        self._addChankToList()
+        self._setChunkX(1)
+        self._setChunkY(1)
+        self._addChunkToList()
 
-        self._setChankX(45)
-        self._setChankY(1)
-        self._addChankToList()
+        self._setChunkX(45)
+        self._setChunkY(1)
+        self._addChunkToList()
 
-        self._removeChankFromList(3)
+        self._removeChunkFromList(3)
 
         self._setFillLand(1, 1)
 
@@ -106,10 +106,10 @@ class Selenium_Main_Menu_Admin_MapTest(generic.Selenium_Main_Menu_Admin_Generic)
         self.waitForSocket()
 
         # result check
-        items = models.Map.Factory.factory.getByChank(1)
+        items = models.Map.Factory.factory.getByChunk(1)
         self.assertEqual(256, len(items))
 
-        items = models.Map.Factory.factory.getByChank(3)
+        items = models.Map.Factory.factory.getByChunk(3)
         self.assertEqual(0, len(items))
 
     def testMapCreate_BySelection(self):

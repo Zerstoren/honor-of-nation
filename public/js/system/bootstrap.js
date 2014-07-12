@@ -48,7 +48,7 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
                 ['route', routeController, routeMethod].join(":")
             );
 
-            console.log('route = ' + [routeController, routeMethod].join(":"));
+            console.trace('route = ' + [routeController, routeMethod].join(":"));
         }
 
         returnFunction = function() {
@@ -79,10 +79,6 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
     }
 
     route.navigate = function (path, trigger, replace) {
-        if (!trigger) {
-            trigger = true;
-        }
-
         Backbone.Router.prototype.navigate.apply(this, [path, {
             trigger : trigger === undefined ? true : trigger,
             replace : replace === undefined ? false : replace

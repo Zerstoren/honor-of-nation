@@ -27,25 +27,25 @@ def fromIdToPosition(posId):
     return (x, y, )
 
 
-def fromPositionToChank(x, y):
+def fromPositionToChunk(x, y):
     """
     "Определяет чанк, в котором находится эта координата
     @params integer x
     @params integer y
-    @return integer - Chank
+    @return integer - Chunk
     """
-    chank = int(config.get('map.chank'))
+    chunk = int(config.get('map.chunk'))
     size = int(config.get('map.size'))
 
-    return int(((y - y % chank) / chank * (size / chank)) + (x - x % chank) / chank + 1)
+    return int(((y - y % chunk) / chunk * (size / chunk)) + (x - x % chunk) / chunk + 1)
 
 
-def fromChankToPosition(chank):
-    chankSize = int(config.get('map.chank'))
+def fromChunkToPosition(chunk):
+    chunkSize = int(config.get('map.chunk'))
 
     return (
-        int(((chank % 125) - 1) * chankSize),
-        int(chank / 125) * chankSize,
+        int(((chunk % 125) - 1) * chunkSize),
+        int(chunk / 125) * chunkSize,
     )
 
 
