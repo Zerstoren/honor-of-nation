@@ -4,23 +4,26 @@ import service.Admin
 
 
 class AbstractAdminController(Backend_Controller_Generic):
-    def _getAdminService(self):
-        return service.Admin.Service_Admin()
+    def _getAclAdminService(self):
+        return service.Admin.Service_Admin().decorate('Acl')
 
 
 class MainAdminController(AbstractAdminController):
     def fillTerrain(self, transfer, data):
+
         if data['type'] == 'coordinate':
-            result = self._getAdminService().fillCoordinate(
+            result = self._getAclAdminService().fillCoordinate(
                 data['coordinate'],
                 data['fillLand'],
-                data['fillLandType']
+                data['fillLandType'],
+                transfer.getUser()
             )
         else:
-            result = self._getAdminService().fillChunks(
+            result = self._getAclAdminService().fillChunks(
                 data['chunks'],
                 data['fillLand'],
-                data['fillLandType']
+                data['fillLandType'],
+                transfer.getUser()
             )
 
 

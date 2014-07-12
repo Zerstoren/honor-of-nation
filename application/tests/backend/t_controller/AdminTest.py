@@ -1,7 +1,7 @@
 from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import controller.AdminController
-import models.Map.Factory
+import exceptions.httpCodes
 
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
@@ -16,8 +16,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
             "coordinate": {
                 "fromX": 1,
                 "fromY": 1,
-                "toX": 32,
-                "toY": 32
+                "toX": 4,
+                "toY": 4
             },
             "fillLand": "valley",
             "fillLandType": 1,
@@ -32,7 +32,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         transfer = self._login()
 
         controller.fillTerrain(transfer, {
-            "chunks": [1,2,3],
+            "chunks": [1],
             "fillLand": "valley",
             "fillLandType": 1,
             "type": "chunks",
@@ -40,3 +40,27 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         message = transfer.getLastMessage()['message']
         self.assertTrue(message['done'])
+
+    def testFillTerrain_ExpectedException(self):
+        controller = self._getModelController()
+        transfer = self._login()
+        user = transfer.getUser()
+        user.setAdmin(False)
+        user.getMapper().save(user)
+
+        self.assertRaises(
+            exceptions.httpCodes.Page403,
+            controller.fillTerrain,
+            transfer,
+            {
+                "coordinate": {
+                    "fromX": 1,
+                    "fromY": 1,
+                    "toX": 1,
+                    "toY": 1
+                },
+                "fillLand": "valley",
+                "fillLandType": 1,
+                "type": "coordinate",
+            }
+        )
