@@ -1,5 +1,4 @@
 from tests.generic import Generic
-from . import global_actions
 
 import config
 
@@ -35,7 +34,7 @@ webdriver.remote.webdriver.WebDriver.byIdMany = webdriver.remote.webdriver.WebDr
 webdriver.remote.webdriver.WebDriver.byClassMany = webdriver.remote.webdriver.WebDriver.find_elements_by_class_name
 
 
-class Selenium_Abstract_Generic(Generic, global_actions.GlobalItems):
+class Selenium_Abstract_Generic(Generic):
     keys = Keys
     managedProcess = None
     isSetup = False

@@ -33,7 +33,7 @@ class Service_Admin(AbstractService.Service_Abstract):
             domain.setBuildType(buildType)
             return domain
 
-    def fillCoordinate(self, coordinate, land, landType):
+    def fillCoordinate(self, coordinate, land, landType, user=None):
         for x in range(coordinate['fromX'], coordinate['toX'] + 1):
             for y in range(coordinate['fromY'], coordinate['toY'] + 1):
                 domain = self._getDomainFromData(x, y, land, landType)
@@ -41,7 +41,7 @@ class Service_Admin(AbstractService.Service_Abstract):
 
         return True
 
-    def fillChunks(self, chunks, land, landType):
+    def fillChunks(self, chunks, land, landType, user=None):
         for chunk in chunks:
             fromX, fromY = models.Map.Math.fromChunkToPosition(chunk)
             for x in range(fromX, fromX + int(config.get('map.chunk'))):
@@ -53,6 +53,6 @@ class Service_Admin(AbstractService.Service_Abstract):
 
     def decorate(self, *args):
         """
-        :rtype: Service_Map
+        :rtype: Service_Admin
         """
         return super().decorate(*args)
