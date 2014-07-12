@@ -8,13 +8,9 @@ define('view/elements/resource', [
         },
         currentTooltip: null,
 
-        initialize: function () {
-            this.$el.html(template('elements/resource'));
-        },
-
         render: function (holder) {
+            this.$el.html(template('elements/resource'));
             holder.append(this.$el);
-            this.delegateEvents();
         },
 
         onShowHint: function (e) {

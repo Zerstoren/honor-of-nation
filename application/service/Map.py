@@ -5,7 +5,7 @@ import models.MapUserVisible.Factory
 
 
 class Service_Map(AbstractService.Service_Abstract):
-    def getUsersChanks(self, user, chunksList):
+    def getUsersChunks(self, user, chunksList):
         collection = models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionCellsByUsers(
             user,
             chunksList

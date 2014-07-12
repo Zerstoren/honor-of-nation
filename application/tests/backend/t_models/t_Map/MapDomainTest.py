@@ -12,14 +12,14 @@ class Backend_Models_Map_MapDomainTest(generic.Backend_Models_Map_Generic):
             'decor': 0,
             'build': 0,
             'build_type': 0,
-            'chank': 253,
+            'chunk': 253,
             'pos_id': 80040
         })
 
         self.assertEqual(domain.getId(), 80040)
         self.assertEqual(domain.getPositionX(), 40)
         self.assertEqual(domain.getPositionY(), 40)
-        self.assertEqual(domain.getChank(), 253)
+        self.assertEqual(domain.getChunk(), 253)
         self.assertEqual(domain.getLand(), 0)
         self.assertEqual(domain.getLandType(), 1)
 

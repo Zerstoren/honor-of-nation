@@ -21,24 +21,6 @@ define('service/map/main', [
 
     };
 
-    Map.prototype.render = function () {
-        preStart.map();
-
-        preStart.map.header.on('onMenuClick', this.onClickMenu, this);
-    };
-
-    Map.prototype.onClickMenu = function (type) {
-        switch(type) {
-            case 'admin':
-                systemRoute.navigate('/admin', false, true);
-                break;
-
-            default:
-                alert(type + ' is not created');
-                break;
-        }
-    };
-
     _.extend(Map.prototype, ServiceAbstract.prototype);
 
     return Map;

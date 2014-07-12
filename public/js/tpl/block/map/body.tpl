@@ -1,3 +1,3 @@
-<div>
+<div id="map-body-holder">
 
 </div>

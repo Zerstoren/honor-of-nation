@@ -1,15 +1,35 @@
 define('controller/admin', [
+    'system/preStart',
+    'service/standalone/mapInterface',
+
+    'service/admin/main',
+    'service/admin/terrain'
 ], function(
+    preStart,
+    mapInterface,
+
+    ServiceAdminMain,
+    ServiceAdminTerrain
 ) {
     'use strict';
 
     var protect = {
-        serviceMapMain: null
+        serviceAdminTerrain: null,
+        serviceAdminMain: null
     };
 
     return {
-        terrain: function() {
-            alert(25);
+        admin: function() {
+            if (protect.serviceAdminMain === null) {
+                protect.serviceAdminMain = new ServiceAdminMain();
+            }
+
+            if (protect.serviceAdminTerrain === null) {
+                protect.serviceAdminTerrain = new ServiceAdminTerrain();
+            }
+
+            mapInterface.render();
+            protect.serviceAdminMain.render();
         }
     };
 });
