@@ -2,13 +2,11 @@
     'use strict';
 
     define('model/news', [
-        'model/abstract',
         'factory/user'
     ], function (
-        AbstractDomain,
         factoryUser
     ) {
-        return AbstractDomain.extend({
+        return AbstractModel.extend({
             model_url: '/news/',
 
             initialize: function () {

@@ -1,9 +1,5 @@
-define('model/abstract', [
-    'system/socket'
-], function (socket) {
-    'use strict';
-
-    return Backbone.Model.extend({
+define('libs/abstract/model', ['system/socket'], function (socket) {
+    window.AbstractModel = Backbone.Model.extend({
         model_url: null,
 
         initialize: function() {
