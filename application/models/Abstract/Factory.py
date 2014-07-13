@@ -15,4 +15,4 @@ class Abstract_Factory(object):
         return self.__cache[domainId] if domainId in self.__cache else None
 
     def _cleanIndexes(self):
-        self.__cache = []
+        self.__cache = {}

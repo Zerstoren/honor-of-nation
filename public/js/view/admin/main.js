@@ -1,8 +1,9 @@
 define('view/admin/main', [], function () {
     return AbstractView.extend({
         events: {
-            'click .close': "onClose",
-            'click ul li button': 'onSelectType'
+            'click .close'      : "onClose",
+            'click ul li button': 'onSelectType',
+            'keydown global'    : 'onKeyDown'
         },
 
         className: 'admin',
@@ -35,6 +36,12 @@ define('view/admin/main', [], function () {
             this.$el.find('ul li button').removeClass('active');
             target.addClass('active');
             this.trigger('selectType', target.data('type'));
+        },
+
+        onKeyDown: function (e) {
+            if (e.keyCode === this.keyCodes.esc) {
+                this.trigger('close');
+            }
         }
     });
 });
