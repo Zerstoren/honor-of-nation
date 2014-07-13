@@ -9,8 +9,8 @@ define('system/config', [
     socket.send('/system/configs', {}, function(message) {
         var time = new Date();
 
-        $$config = message;
-        $$config.diffTime = parseInt(time.getTime() / 1000, 10) - message.time;
+        $$config = message.data;
+        $$config.diffTime = parseInt(time.getTime() / 1000, 10) - $$config.time;
     });
 
     function Config() {
