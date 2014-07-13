@@ -5,7 +5,12 @@ import config
 from selenium import webdriver
 from selenium.webdriver import ActionChains as WebDriverActionChain
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.common.by import By as WebDriverCommonBy
+import selenium.webdriver.support.expected_conditions as WebDriverExpectedCondition
+import selenium.webdriver.support.ui as WebDriverUI
 
 from tests.bootstrap.Selenium import SeleniumFacade
 
@@ -38,6 +43,9 @@ class Selenium_Abstract_Generic(Generic):
     keys = Keys
     managedProcess = None
     isSetup = False
+
+    TimeoutException = TimeoutException
+    NoSuchElementException = NoSuchElementException
 
     def setUp(self):
         self.isSetup = True
@@ -109,14 +117,26 @@ class Selenium_Abstract_Generic(Generic):
     def byXPath(self, xpath):
         return self.driver.byXPath(xpath)
 
-    def byNg(self, model, by='ng-model'):
-        return self.byXPath('//*[@%(by)s="%(model)s"]' % {
-            "model": model,
-            "by": by
+    def byAttribute(self, attr, value):
+        return self.byXPath('//*[@%(attr)s="%(value)s"]' % {
+            "attr": attr,
+            "value": value
         })
 
     def sleep(self, n):
         time.sleep(n)
+
+    def waitForElement(self, selector, by='css'):
+        waiter = WebDriverUI.WebDriverWait(self.driver, int(config.get('testing.waitUtilTime')))
+
+        if by == 'css':
+            waiter.until(WebDriverExpectedCondition.visibility_of_element_located(
+                (WebDriverCommonBy.CSS_SELECTOR, selector))
+            )
+        elif by == 'xpath':
+            waiter.until(WebDriverExpectedCondition.visibility_of_element_located(
+                (WebDriverCommonBy.XPATH, selector))
+            )
 
     def waitForSocket(self, n=10000):
         sleepTime = 0
