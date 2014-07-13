@@ -17,7 +17,7 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
 
         self.operationIsSuccess()
 
-    def testCreateTerrainByCoordinate(self):
+    def testCreateTerrainByChunks(self):
         self.login()
         self._goToAdmin()
 

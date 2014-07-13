@@ -3,15 +3,17 @@ define('service/admin/main', [
     'system/route',
     'gateway/admin',
 
-    'view/admin/main',
-    'view/admin/terrain'
+    'service/admin/terrain',
+
+    'view/admin/main'
 ], function (
     preStart,
     systemRoute,
     gatewayAdmin,
 
-    ViewAdminMain,
-    ViewAdminTerrain
+    ServiceAdminTerrain,
+
+    ViewAdminMain
 ) {
     return AbstractService.extend({
         initialize: function () {
@@ -21,8 +23,7 @@ define('service/admin/main', [
             this.mainView.on('close', this.onClose, this);
             this.mainView.on('selectType', this.onSelectType, this);
 
-            this.terrainView = new ViewAdminTerrain();
-            this.terrainView.on('send', this.onTerrainSend, this)
+            this.serviceTerrain = new ServiceAdminTerrain();
         },
 
         render: function () {
@@ -33,7 +34,7 @@ define('service/admin/main', [
 
         unRender: function () {
             this.mainView.unRender();
-            this.unSelectType();
+            this.unSelectType(true);
         },
 
         onClose: function () {
@@ -49,27 +50,24 @@ define('service/admin/main', [
 
             switch(type) {
                 case 'terrain':
-                    this.terrainView.render(holder);
+                    this.serviceTerrain.render(holder);
                     break;
             }
 
+            this.unSelectType();
             this.selectType = type;
         },
 
-        unSelectType: function () {
+        unSelectType: function (reset) {
             switch(this.selectType) {
                 case 'terrain':
-                    this.terrainView.unRender();
+                    this.serviceTerrain.unRender();
                     break;
             }
 
-            this.selectType = null;
-        },
-
-        onTerrainSend: function (data) {
-            gatewayAdmin.fillMap(data, function (result) {
-                this.terrainView.successSave();
-            }.bind(this));
+            if (reset) {
+                this.selectType = null;
+            }
         }
     });
 });
