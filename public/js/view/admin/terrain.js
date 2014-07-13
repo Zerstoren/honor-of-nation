@@ -48,7 +48,7 @@ define('view/admin/terrain', [
             for (i = 0; i < this.chunksListToAdd.length; i += 1) {
                 el = $('<span>');
                 el.html(
-                    template('admin/terrain/chunkItem', {chunk: this.chunksListToAdd[i]})
+                    this.template('admin/terrain/chunkItem', {chunk: this.chunksListToAdd[i]})
                 );
                 holder.append(el);
             }

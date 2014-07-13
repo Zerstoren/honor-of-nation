@@ -10,11 +10,35 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
         else:
             user = self.fixture.getUser(0)
 
-        self.executeCommand("window.localStorage.login = '%s'" % user.getLogin())
-        self.executeCommand("window.localStorage.password = '%s'" % user._reservedPasswordForTest)
+        self.executeCommand("window.localStorage.authLogin = '%s'" % user.getLogin())
+        self.executeCommand("window.localStorage.authPassword = '%s'" % user._domain_data['_testPassword'])
 
         self.go('/')
-        self.waitForSocket()
+        self.waitForElement('.mpi__resource_wrapper', 'css')
+
+    def operationIsSuccess(self):
+        try:
+            self.waitForElement('.alertify-log-success')
+        except self.TimeoutException:
+            self.fail('Operation is not success')
+
+        try:
+            self.byCssSelector('.alertify-log-error')
+            self.fail('Operation success show error message')
+        except self.NoSuchElementException:
+            pass
+
+    def operationIsFail(self):
+        try:
+            self.waitForElement('.alertify-log-error')
+        except self.TimeoutException:
+            self.fail('Operation is not failed')
+
+        try:
+            self.byCssSelector('.alertify-log-success')
+            self.fail('Operation error show success message')
+        except self.NoSuchElementException:
+            pass
 
     # def moveToPath(self, module, data):
     #     self.serviceAction('$nav', "service.locate('%s', %s);" % (module, json.dumps(data)))

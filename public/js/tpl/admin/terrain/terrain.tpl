@@ -26,7 +26,7 @@
                 <input type="number" min="0" max="15625" step="1" class="form-control chunk">
             </div>
 
-            <div class="input-group-sm">
+            <div class="input-group-sm chunk-position">
                 <span>Позиция чанка:</span> <br>
                 <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x">
                 <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y">
