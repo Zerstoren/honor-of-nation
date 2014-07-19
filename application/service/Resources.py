@@ -9,7 +9,6 @@ class Service_Resources(AbstractService.Service_Abstract):
         :type userDomain: models.User.Domain.User_Domain
         """
         domain = models.Resources.Domain.Resources_Domain()
-
         domain.setOptions(
             models.Resources.Mapper.Resources_Mapper.getByUser(userDomain)
         )

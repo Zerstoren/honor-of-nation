@@ -6903,6 +6903,8 @@ td.visible-print {
       margin: 8px 0 0 8px; }
       .admin .left-side ul li button.btn {
         width: 100%; }
+  .admin #admin-holder {
+    padding-right: 40px; }
 
 .terrain input.form-control {
   width: 100px; }

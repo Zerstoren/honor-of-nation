@@ -1,3 +1,4 @@
+from jinja2._stringdefs import Co
 import models.Abstract.Mapper
 import exceptions.database
 from . import Common
@@ -24,7 +25,6 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet\
             .add('login', domain.getLogin())\
             .add('password', domain.getPassword())
-
         if domain.hasId():
             self._update(
                 commonSet,
@@ -33,5 +33,16 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         else:
             cursor = self._insert(commonSet)
             domain.setId(cursor)
+
+    def searchUser(self, login):
+        commonFilter = Common.Common_Filter()
+        commonFilter.add('login', login)
+
+        commonLimit = Common.Common_Limit()
+        commonLimit.setOne()
+
+        return self._select(commonFilter, commonLimit)
+
+
 
 User_Mapper = User_Mapper_Main()

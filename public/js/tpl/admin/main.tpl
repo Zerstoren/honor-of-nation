@@ -7,7 +7,7 @@
                     <button class="btn btn-default active" data-type="terrain">Карта</button>
                 </li>
                 <li>
-                    <button class="btn btn-default active" data-type="terrain">Игроки</button>
+                    <button class="btn btn-default" data-type="player">Игроки</button>
                 </li>
             </ul>
     </div>

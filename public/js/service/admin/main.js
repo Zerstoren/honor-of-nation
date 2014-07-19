@@ -4,6 +4,7 @@ define('service/admin/main', [
     'gateway/admin',
 
     'service/admin/terrain',
+    'service/admin/player',
 
     'view/admin/main'
 ], function (
@@ -12,6 +13,7 @@ define('service/admin/main', [
     gatewayAdmin,
 
     ServiceAdminTerrain,
+    ServiceAdminPlayer,
 
     ViewAdminMain
 ) {
@@ -24,12 +26,13 @@ define('service/admin/main', [
             this.mainView.on('selectType', this.onSelectType, this);
 
             this.serviceTerrain = new ServiceAdminTerrain();
+            this.servicePlayer = new ServiceAdminPlayer();
         },
 
         render: function () {
             this.holder = preStart.map.body.getHolder();
             this.mainView.render(this.holder);
-            this.onSelectType('terrain');
+            this.onSelectType('player');
         },
 
         unRender: function () {
@@ -52,6 +55,9 @@ define('service/admin/main', [
                 case 'terrain':
                     this.serviceTerrain.render(holder);
                     break;
+                case 'player':
+                    this.servicePlayer.render(holder);
+                    break;
             }
 
             this.unSelectType();
@@ -62,6 +68,9 @@ define('service/admin/main', [
             switch(this.selectType) {
                 case 'terrain':
                     this.serviceTerrain.unRender();
+                    break;
+                case 'player':
+                    this.servicePlayer.unRender();
                     break;
             }
 

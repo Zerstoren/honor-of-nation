@@ -21,7 +21,11 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         limit = limit if limit is not None else models.Abstract.Common.Common_Limit()
 
         if limit.isOneRecord():
-            return self._db[self._table].find_one(where)
+            action = self._db[self._table].find_one(where)
+            if action is None:
+                raise exceptions.database.NotFound('Data not found by ' + str(where))
+
+            return action
 
         action = self._db[self._table].find(where)
 
@@ -36,14 +40,14 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         """
         data.add('remove', 0)
 
-        return self._db[self._table].insert(data)
+        return self._db[self._table].insert(data, manipulate=True)
 
     def _update(self, data, filters):
         """
         :type data: models.Abstract.Set.Common_Set
         :type filters: models.Abstract.Filter.Common_Filter
         """
-        return self._db[self._table].update(filters, data)
+        return self._db[self._table].update(filters, {"$set": data})
 
     def _remove(self, queryId):
         """
@@ -64,3 +68,9 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
             raise exceptions.database.NotFound('Data by _id %s not found in table `%s`' % (queryId, self._table))
 
         return result
+
+    def _objectId(self, value):
+        return self._db.id(value)
+
+    def _bsonCode(self, text):
+        return self._db.code(text)
