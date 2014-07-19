@@ -54,6 +54,9 @@ class Common_Set(dict):
 class Common_Filter(dict):
 
     def __init__(self, options=None):
+        if options and 'id' in options:
+            raise Exception('In common filter you set id, need to use _id')
+
         super().__init__()
 
         if options:
