@@ -6,6 +6,8 @@ class AbstractResourceController(object):
     def _getAclJsonPackResourceService(self):
         return service.Resources.Service_Resources().decorate('Acl', 'JsonPack')
 
+    def _getJsonPackResourceService(self):
+        return service.Resources.Service_Resources().decorate('JsonPack')
 
 class ModelController(AbstractResourceController):
     def get(self, transfer, data):
@@ -17,3 +19,15 @@ class ModelController(AbstractResourceController):
             'done': True,
             'result': resourceService.getResources(transfer.getUser(), userDomain)
         })
+
+
+class DeliveryController(AbstractResourceController):
+    def resourceChange(self, user):
+        """
+        :type user: models.User.Domain.User_Domain
+        """
+        if user.hasTransfer():
+            user.getTransfer().send('/delivery/resourceUpdate', {
+                'done': True,
+                'resources': self._getJsonPackResourceService().getResources(user, user)
+            })

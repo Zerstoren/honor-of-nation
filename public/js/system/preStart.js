@@ -63,7 +63,11 @@ define('system/preStart', [
 
     systemSocket.on('message', function (message) {
         if (message.done === false || message.done === undefined) {
-            viewBlockError.showErrorBox(message);
+            if (message.error) {
+                viewBlockError.showErrorBox(message.error);
+            } else {
+                viewBlockError.showErrorBox(message);
+            }
         }
     });
 

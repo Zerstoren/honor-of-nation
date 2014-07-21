@@ -4,6 +4,9 @@ from models.User.Domain import User_Domain
 
 class Backend_Controller_Generic(generic.Backend_Generic):
     def _login(self, user=None):
+        """
+        :rtype: tests.mock.Transfer.TransferMock
+        """
         assert isinstance(user, User_Domain) or user is None
 
         if user is None:

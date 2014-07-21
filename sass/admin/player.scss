@@ -1,0 +1,31 @@
+#user-info {
+    margin-top: 20px;
+    .resources-edit {
+        .input-group {
+            width: 100%;
+
+            .input-group-addon {
+                width: 124px;
+                text-align: left;
+                border-radius: 0;
+            }
+        }
+
+        .input-group:first-child {
+            .input-group-addon {
+                border-radius: 5px 0 0 0;
+            }
+        }
+
+        .input-group:last-child {
+            .input-group-addon {
+                border-radius: 0 0 0 5px;
+            }
+        }
+
+        button {
+            margin-top: 20px;
+        }
+    }
+
+}

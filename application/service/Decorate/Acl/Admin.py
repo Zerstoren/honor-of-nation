@@ -16,3 +16,13 @@ class Decorate():
     def fillChunks(self, chunks, land, landType, user=None):
         self._testAccessAdmin(user)
         return super().fillChunks(chunks, land, landType, user)
+
+    def searchUser(self, userLogin, user):
+        self._testAccessAdmin(user)
+
+        userDomain = super().searchUser(userLogin, user)
+
+        if userDomain and userDomain.getAdmin() is True and user.getId() != userDomain.getId():
+            raise exceptions.httpCodes.Page403('Can`t edit other admin')
+
+        return userDomain

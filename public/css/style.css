@@ -6903,6 +6903,8 @@ td.visible-print {
       margin: 8px 0 0 8px; }
       .admin .left-side ul li button.btn {
         width: 100%; }
+  .admin #admin-holder {
+    padding-right: 40px; }
 
 .terrain input.form-control {
   width: 100px; }
@@ -6911,6 +6913,21 @@ td.visible-print {
   .terrain .fill-items div .name {
     display: inline-block;
     width: 72px; }
+
+#user-info {
+  margin-top: 20px; }
+  #user-info .resources-edit .input-group {
+    width: 100%; }
+    #user-info .resources-edit .input-group .input-group-addon {
+      width: 124px;
+      text-align: left;
+      border-radius: 0; }
+  #user-info .resources-edit .input-group:first-child .input-group-addon {
+    border-radius: 5px 0 0 0; }
+  #user-info .resources-edit .input-group:last-child .input-group-addon {
+    border-radius: 0 0 0 5px; }
+  #user-info .resources-edit button {
+    margin-top: 20px; }
 
 * {
   font-family: Verdana;

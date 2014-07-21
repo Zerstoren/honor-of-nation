@@ -28,6 +28,14 @@ class Service_User(service.Abstract.AbstractService.Service_Abstract):
             models.User.Mapper.User_Mapper.getById(domainId)
         )
 
+    def searchUser(self, login):
+        """
+        :rtype: models.User.Domain.User_Domain|False
+        """
+        return models.User.Factory.User_Factory.getDomainFromData(
+            models.User.Mapper.User_Mapper.searchUser(login)
+        )
+
     def decorate(self, *args):
         """
         :rtype: Service_User
