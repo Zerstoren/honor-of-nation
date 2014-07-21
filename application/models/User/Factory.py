@@ -1,6 +1,5 @@
 import models.Abstract.Factory
-from . import Domain
-from . import Mapper
+import models.User.Domain
 
 class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
     def getDomainById(self, userId):
@@ -19,7 +18,7 @@ class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         domain = self.getCache(data['_id'])
 
         if domain is None:
-            domain = Domain.User_Domain()
+            domain = models.User.Domain.User_Domain()
             domain.setOptions(data)
             self.setCache(domain.getId(), domain)
 

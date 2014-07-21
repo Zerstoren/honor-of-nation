@@ -8,10 +8,9 @@ class Resources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def getByUser(self, userDomain):
         where = Common.Common_Filter()
-        where.add('user', userDomain.getId())
+        where.add('user', self._objectId(userDomain.getId()))
 
         limit = Common.Common_Limit().setOne()
-
         result = self._select(where, limit)
         if result is None:
             raise exceptions.database.NotFound('User %s dont have resource records' % userDomain.getLogin())
@@ -21,7 +20,7 @@ class Resources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     def save(self, resourceDomain):
         commonSet = Common.Common_Set()
         commonSet\
-            .add('user', resourceDomain.getUser().getId())\
+            .add('user', self._objectId(resourceDomain.getUser().getId()))\
             .add('rubins', resourceDomain.getRubins())\
             .add('wood', resourceDomain.getWood())\
             .add('steel', resourceDomain.getSteel())\
@@ -32,7 +31,7 @@ class Resources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         if resourceDomain.hasId():
             self._update(
                 commonSet,
-                Common.Common_Filter({'id': resourceDomain.getId()})
+                Common.Common_Filter({'_id': resourceDomain.getId()})
             )
         else:
             cursor = self._insert(commonSet)

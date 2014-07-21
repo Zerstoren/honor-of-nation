@@ -6,12 +6,14 @@ class Decorate():
         """
 
         return {
-            'rubins': resourceDomain.getRubins(),
-            'wood': resourceDomain.getWood(),
-            'steel': resourceDomain.getSteel(),
-            'stone': resourceDomain.getStone(),
-            'eat': resourceDomain.getEat(),
-            'gold': resourceDomain.getGold()
+            '_id': str(resourceDomain.getId()),
+            'user': str(resourceDomain.getUser().getId()),
+            'rubins': int(resourceDomain.getRubins()),
+            'wood': int(resourceDomain.getWood()),
+            'steel': int(resourceDomain.getSteel()),
+            'stone': int(resourceDomain.getStone()),
+            'eat': int(resourceDomain.getEat()),
+            'gold': int(resourceDomain.getGold())
         }
 
     def getResources(self, transferUser, userDomain):

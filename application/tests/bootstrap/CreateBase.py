@@ -37,6 +37,7 @@ class CreateBase(object):
         domain = User_Domain()
         domain.setLogin(login)
         domain.setPassword(password)
+        domain.setAdmin(False)
         domain._domain_data['_testPassword'] = password
         domain.getMapper().save(domain)
 

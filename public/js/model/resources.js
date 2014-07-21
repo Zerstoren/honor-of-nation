@@ -12,10 +12,13 @@
             EAT   : 'eat',
             GOLD  : 'gold',
 
-            initialize: function (userDomain) {
+            initialize: function (userDomain, load) {
                 AbstractModel.prototype.initialize.apply(this, arguments);
                 this.user = userDomain;
-                this.load();
+
+                if (load || false) {
+                    this.load();
+                }
             },
 
             load: function () {

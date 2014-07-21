@@ -21,7 +21,7 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         return self._domain_data['_id']
 
     def hasId(self):
-        return 'id' in self._domain_data
+        return '_id' in self._domain_data
 
     def setOptions(self, options):
         for i in options:

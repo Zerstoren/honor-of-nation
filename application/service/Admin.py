@@ -6,6 +6,8 @@ import models.Map.Domain
 
 import exceptions.database
 
+import service.User
+
 import config
 
 
@@ -50,6 +52,9 @@ class Service_Admin(AbstractService.Service_Abstract):
                     domain.getMapper().save(domain)
 
         return True
+
+    def searchUser(self, userLogin, user):
+        return service.User.Service_User().searchUser(userLogin)
 
     def decorate(self, *args):
         """

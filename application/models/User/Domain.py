@@ -2,6 +2,9 @@ import models.Abstract.Domain
 from .Mapper import User_Mapper
 import copy
 
+import models.Resources.Mapper
+import models.Resources.Domain
+
 
 class User_Domain(models.Abstract.Domain.Abstract_Domain):
     _transfer = None
@@ -20,6 +23,19 @@ class User_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getTransfer(self):
         return self._transfer
+
+    def getResources(self):
+        """
+        :type userDomain: models.User.Domain.User_Domain
+        """
+        domain = models.Resources.Domain.Resources_Domain()
+
+        domain.setOptions(
+            models.Resources.Mapper.Resources_Mapper.getByUser(self)
+        )
+
+        return domain
+
 
     def toDict(self):
         result = copy.deepcopy(self._domain_data)

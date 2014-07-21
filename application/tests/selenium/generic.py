@@ -16,6 +16,8 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
         self.go('/')
         self.waitForElement('.mpi__resource_wrapper', 'css')
 
+        return user
+
     def operationIsSuccess(self):
         try:
             self.waitForElement('.alertify-log-success')
