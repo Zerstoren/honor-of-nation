@@ -2593,3 +2593,15 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
 
   return __module0__;
 })();
+
+Handlebars.JavaScriptCompiler.prototype.nameLookup = function(parent, name, type) {
+    var result = '(' + parent + ' instanceof Backbone.Model ? ' + parent + '.get("' + name + '") : ' + parent;
+
+    if (/^[0-9]+$/.test(name)) {
+        return result + "[" + name + "])";
+    } else if (Handlebars.JavaScriptCompiler.isValidJavaScriptVariableName(name)) {
+        return result + "." + name + ')';
+    } else {
+        return result + "['" + name + "'])";
+    }
+};

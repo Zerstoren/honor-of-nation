@@ -6914,6 +6914,21 @@ td.visible-print {
     display: inline-block;
     width: 72px; }
 
+#user-info {
+  margin-top: 20px; }
+  #user-info .resources-edit .input-group {
+    width: 100%; }
+    #user-info .resources-edit .input-group .input-group-addon {
+      width: 124px;
+      text-align: left;
+      border-radius: 0; }
+  #user-info .resources-edit .input-group:first-child .input-group-addon {
+    border-radius: 5px 0 0 0; }
+  #user-info .resources-edit .input-group:last-child .input-group-addon {
+    border-radius: 0 0 0 5px; }
+  #user-info .resources-edit button {
+    margin-top: 20px; }
+
 * {
   font-family: Verdana;
   margin: 0;

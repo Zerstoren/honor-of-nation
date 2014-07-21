@@ -54,13 +54,7 @@ class Service_Admin(AbstractService.Service_Abstract):
         return True
 
     def searchUser(self, userLogin, user):
-        userService = service.User.Service_User()
-        userDomain = userService.searchUser(userLogin)
-
-        if userDomain is False:
-            return False
-
-        return userDomain
+        return service.User.Service_User().searchUser(userLogin)
 
     def decorate(self, *args):
         """

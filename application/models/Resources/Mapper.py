@@ -20,7 +20,7 @@ class Resources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     def save(self, resourceDomain):
         commonSet = Common.Common_Set()
         commonSet\
-            .add('user', resourceDomain.getUser().getId())\
+            .add('user', self._objectId(resourceDomain.getUser().getId()))\
             .add('rubins', resourceDomain.getRubins())\
             .add('wood', resourceDomain.getWood())\
             .add('steel', resourceDomain.getSteel())\

@@ -1,5 +1,11 @@
 import models.Abstract.Common
 
+RUBINS = 'rubins'
+WOOD = 'wood'
+STONE = 'stone'
+STEEL = 'steel'
+EAT = 'eat'
+GOLD = 'gold'
 
 class Common_Set(models.Abstract.Common.Common_Set):
     pass

@@ -128,3 +128,43 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         message = transfer.getLastMessage()['message']
         self.assertFalse(message['done'])
         self.assertEqual(message['error'], 'Can`t edit other admin')
+
+    def testSaveResources(self):
+        controller = self._getModelController()
+        transfer = self._login()
+        user = transfer.getUser()
+        self.setUserAsAdmin(user)
+
+        controller.saveResources(transfer, {
+            'userLogin': user.getLogin(),
+            'resources': {
+                'rubins': 10,
+                'wood': 100,
+                'steel': 500,
+                'stone': 1000,
+                'eat': 5000,
+                'gold': 10000
+            }
+        })
+
+        resources = user.getResources()
+
+        # Message delivery
+        message = transfer.getLastMessage()['message']
+        self.assertTrue(message['done'])
+        self.assertEqual(resources.getRubins(), message['resources']['rubins'])
+        self.assertEqual(resources.getWood(), message['resources']['wood'])
+        self.assertEqual(resources.getSteel(), message['resources']['steel'])
+        self.assertEqual(resources.getStone(), message['resources']['stone'])
+        self.assertEqual(resources.getEat(), message['resources']['eat'])
+        self.assertEqual(resources.getGold(), message['resources']['gold'])
+
+        # Controller send
+        message = transfer.getLastMessage(1)['message']
+        self.assertTrue(message['done'])
+        self.assertEqual(resources.getRubins(), 10)
+        self.assertEqual(resources.getWood(), 100)
+        self.assertEqual(resources.getSteel(), 500)
+        self.assertEqual(resources.getStone(), 1000)
+        self.assertEqual(resources.getEat(), 5000)
+        self.assertEqual(resources.getGold(), 10000)

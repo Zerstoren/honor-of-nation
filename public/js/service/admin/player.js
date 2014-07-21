@@ -12,6 +12,9 @@ define('service/admin/player', [
             this.playerView = new ViewAdminPlayer();
 
             this.playerView.on('search-user', this.onSearchUser, this);
+            this.playerView.on('save-info', this.onSaveInfo, this);
+
+            this.user = null;
         },
 
         render: function (holder) {
@@ -20,11 +23,23 @@ define('service/admin/player', [
 
         unRender: function () {
             this.playerView.unRender();
+            this.user = null;
         },
 
         onSearchUser: function(userLogin) {
-            gatewayAdmin.searchUser(userLogin, function (data) {
+            gatewayAdmin.searchUser(userLogin, function (err, user, resources) {
+                if (!err) {
+                    this.user = user;
+                    this.playerView.showUserData(user, resources);
+                }
+            }.bind(this));
+        },
 
+        onSaveInfo: function (resources) {
+            gatewayAdmin.saveUserResources(this.user.get('login'), resources, function (err) {
+                if (!err) {
+                    this.playerView.successSave();
+                }
             }.bind(this));
         }
     });

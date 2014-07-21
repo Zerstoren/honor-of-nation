@@ -1,5 +1,7 @@
 from tests.backend.t_controller.generic import Backend_Controller_Generic
 
+import controller.ResourceController
+
 import service.Admin
 import service.Resources
 
@@ -48,11 +50,34 @@ class MainAdminController(AbstractAdminController):
             transfer.send('/admin/searchUser', {
                 'done': True,
                 'user': {
+                    '_id'  : str(user.getId()),
                     'login': user.getLogin(),
                     'admin': user.getAdmin()
                 },
                 'resources': resources
             })
+
+        except exceptions.httpCodes.Page403 as e:
+            transfer.send('/admin/searchUser', {
+                'done': False,
+                'error': str(e)
+            })
+
+        except exceptions.database.NotFound:
+            transfer.send('/admin/searchUser', {
+                'done': False,
+                'error': 'User with login %s not found' % data['login']
+            })
+
+    def saveResources(self, transfer, data):
+        try:
+            user = self._getAclAdminService().searchUser(data['userLogin'], transfer.getUser())
+            service.Resources.Service_Resources().setResources(user, data['resources'])
+            transfer.send('/admin/searchUser', {
+                'done': True
+            })
+
+            controller.ResourceController.DeliveryController().resourceChange(user)
 
         except exceptions.httpCodes.Page403 as e:
             transfer.send('/admin/searchUser', {
