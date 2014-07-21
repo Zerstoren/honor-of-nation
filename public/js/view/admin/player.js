@@ -14,10 +14,12 @@ define('view/admin/player', [
         render: function (holder) {
             this.$el.html(this.template('admin/player/player'));
             holder.append(this.$el);
+            this.delegateEvents();
         },
 
         unRender: function () {
             this.$el.remove();
+            this.undelegateEvents();
         },
 
         showUserData: function (userDomain, resourceDomain) {
