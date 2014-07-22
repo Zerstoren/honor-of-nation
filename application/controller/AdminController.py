@@ -7,6 +7,7 @@ import service.Resources
 
 import exceptions.httpCodes
 import exceptions.database
+import exceptions.args
 
 
 class AbstractAdminController(Backend_Controller_Generic):
@@ -23,24 +24,37 @@ class AbstractAdminController(Backend_Controller_Generic):
 class MainAdminController(AbstractAdminController):
     def fillTerrain(self, transfer, data):
 
-        if data['type'] == 'coordinate':
-            result = self._getAclAdminService().fillCoordinate(
-                data['coordinate'],
-                data['fillLand'],
-                data['fillLandType'],
-                transfer.getUser()
-            )
-        else:
-            result = self._getAclAdminService().fillChunks(
-                data['chunks'],
-                data['fillLand'],
-                data['fillLandType'],
-                transfer.getUser()
-            )
+        try:
+            if data['type'] == 'coordinate':
+                result = self._getAclAdminService().fillCoordinate(
+                    data['coordinate'],
+                    data['fillLand'],
+                    data['fillLandType'],
+                    transfer.getUser()
+                )
+            elif data['type'] == 'chunks':
+                result = self._getAclAdminService().fillChunks(
+                    data['chunks'],
+                    data['fillLand'],
+                    data['fillLandType'],
+                    transfer.getUser()
+                )
+            else:
+                transfer.send('/admin/fillTerrain', {
+                    'done': False,
+                    'error': 'Переданы неверные параметры'
+                })
 
-        transfer.send('/admin/fillTerrain', {
-            'done': result
-        })
+                return
+
+            transfer.send('/admin/fillTerrain', {
+                'done': result
+            })
+        except exceptions.args.Arguments:
+            transfer.send('/admin/fillTerrain', {
+                'done': False,
+                'error': 'Переданы неверные координаты'
+            })
 
     def searchUser(self, transfer, data):
         try:

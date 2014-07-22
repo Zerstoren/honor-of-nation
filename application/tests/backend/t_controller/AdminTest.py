@@ -3,6 +3,7 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 import controller.AdminController
 import exceptions.httpCodes
 import exceptions.database
+import exceptions.args
 
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
@@ -21,13 +22,73 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
                 "toX": 4,
                 "toY": 4
             },
-            "fillLand": "valley",
+            "fillLand": "1",
             "fillLandType": 1,
             "type": "coordinate",
         })
 
         message = transfer.getLastMessage()['message']
         self.assertTrue(message['done'])
+
+    def testFillTerrain_WrongType(self):
+        controller = self._getModelController()
+        transfer = self._login()
+        self.setUserAsAdmin(transfer.getUser())
+
+        self.assertRaises(
+            ValueError,
+            controller.fillTerrain,
+            transfer,
+            {
+                "coordinate": {
+                    "fromX": 1,
+                    "fromY": 1,
+                    "toX": 1,
+                    "toY": 1
+                },
+                "fillLand": "valley",
+                "fillLandType": 1,
+                "type": "coordinate",
+            }
+        )
+
+        self.assertRaises(
+            ValueError,
+            controller.fillTerrain,
+            transfer,
+            {
+                "coordinate": {
+                    "fromX": 1,
+                    "fromY": 1,
+                    "toX": 1,
+                    "toY": 1
+                },
+                "fillLand": "1",
+                "fillLandType": "wat?",
+                "type": "coordinate",
+            }
+        )
+
+    def testFillTerrain_WrongFillType(self):
+        controller = self._getModelController()
+        transfer = self._login()
+        self.setUserAsAdmin(transfer.getUser())
+
+        controller.fillTerrain(transfer, {
+            "coordinate": {
+                "fromX": 1,
+                "fromY": 1,
+                "toX": 4,
+                "toY": 4
+            },
+            "fillLand": "1",
+            "fillLandType": 1,
+            "type": "asdasd",
+        })
+
+        message = transfer.getLastMessage()['message']
+        self.assertFalse(message['done'])
+        self.assertEqual(message['error'], 'Переданы неверные параметры')
 
     def testFillTerrainChunks(self):
         controller = self._getModelController()
@@ -36,7 +97,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         controller.fillTerrain(transfer, {
             "chunks": [1],
-            "fillLand": "valley",
+            "fillLand": "1",
             "fillLandType": 1,
             "type": "chunks",
         })
@@ -61,11 +122,42 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
                     "toX": 1,
                     "toY": 1
                 },
-                "fillLand": "valley",
+                "fillLand": "1",
                 "fillLandType": 1,
                 "type": "coordinate",
             }
         )
+
+    def testFillTerrain_WrongCoordinates(self):
+        controller = self._getModelController()
+        transfer = self._login()
+        self.setUserAsAdmin(transfer.getUser())
+
+        coords = [
+            (-1, 0, 0, 0),
+            (0, -1, 0, 0),
+            (0, 0, -1, 0),
+            (0, 0, 0, -1),
+            (10, 0, 9, 0),
+            (0, 10, 0, 9),
+        ]
+
+        for coord in coords:
+            controller.fillTerrain(transfer, {
+                "coordinate": {
+                    "fromX": coord[0],
+                    "fromY": coord[1],
+                    "toX": coord[2],
+                    "toY": coord[3]
+                },
+                "fillLand": "1",
+                "fillLandType": 1,
+                "type": "coordinate",
+            })
+
+            message = transfer.getLastMessage()['message']
+            self.assertFalse(message['done'])
+            self.assertEqual(message['error'], 'Переданы неверные координаты')
 
     def testSearchUser(self):
         controller = self._getModelController()
@@ -84,10 +176,13 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(data['module'], '/admin/searchUser')
         self.assertEqual(message['done'], True)
         self.assertEqual(message['user'], {
+            '_id' : str(user.getId()),
             'login': 'Zerst',
             'admin': True
         })
         self.assertEqual(message['resources'], {
+            '_id': str(user.getResources().getId()),
+            'user': str(user.getId()),
             'eat': 1000000,
             'gold': 1000000,
             'rubins': 1000000,

@@ -56,46 +56,45 @@
     <div class="fill-items col-md-6">
         <div>
             <span class="name">Долина:</span>
-            <span data-type="valley">
+            <span data-type="1">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
         <div>
             <span class="name">Степь:</span>
-            <span data-type="steppe">
+            <span data-type="2">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
         <div>
             <span class="name">Болота:</span>
-            <span data-type="swamp">
+            <span data-type="3">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
         <div>
             <span class="name">Леса:</span>
-            <span data-type="forest">
+            <span data-type="4">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
         <div>
             <span class="name">Джунгли:</span>
-            <span data-type="jungle">
+            <span data-type="5">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
         <div>
             <span class="name">Горы:</span>
-            <span data-type="mountains">
+            <span data-type="6">
                 <button class="btn btn-default" data-type="1">1</button>
             </span>
         </div>
 
     </div>
-
 </div>
