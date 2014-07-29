@@ -277,10 +277,23 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         controller.saveCoordinate(transfer, {
             'fromX': 0,
             'fromY': 0,
-            'toX': 5,
-            'toY': 5
+            'toX': 2,
+            'toY': 2
         })
 
         self.assertTrue(
             transfer.getLastMessage()['message']['done']
+        )
+
+        import models.MapUserVisible.Mapper
+        import models.Map.Mapper
+
+        self.assertEqual(
+            9,
+            models.MapUserVisible.Mapper.MapUserVisible_Mapper._select().count()
+        )
+
+        self.assertEqual(
+            16,
+            models.Map.Mapper.Map_Mapper._select().count()
         )

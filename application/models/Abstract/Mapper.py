@@ -9,10 +9,12 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
 
     def __init__(self):
         self._db = system.mongo.mongo
+        self._bulk = None
         if self._table is None:
             raise Exception('Mapper %s not define _table' % self.__class__.__name__)
 
-        self._collection = self._db[self._table]
+    def _getCollection(self):
+        return self._db[self._table] if not self._bulk else self._bulk
 
     def _select(self, where=None, limit=None):
         """
@@ -23,13 +25,13 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         limit = limit if limit is not None else models.Abstract.Common.Common_Limit()
 
         if limit.isOneRecord():
-            action = self._collection.find_one(where)
+            action = self._getCollection().find_one(where)
             if action is None:
                 raise exceptions.database.NotFound('Data not found by ' + str(where))
 
             return action
 
-        action = self._collection.find(where)
+        action = self._getCollection().find(where)
 
         if limit.hasLimit():
             action = action.limit(*limit.getLimit())
@@ -42,14 +44,14 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         """
         data.add('remove', 0)
 
-        return self._collection.insert(data)
+        return self._getCollection().insert(data)
 
     def _update(self, data, filters):
         """
         :type data: models.Abstract.Set.Common_Set
         :type filters: models.Abstract.Filter.Common_Filter
         """
-        return self._collection.update(filters, {"$set": data})
+        return self._getCollection().update(filters, {"$set": data})
 
     def _remove(self, queryId):
         """
@@ -61,17 +63,16 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         )
 
     def bulkStart(self):
-        self._collection = self._collection.initialize_unordered_bulk_op()
+        self._bulk = self._db[self._table].initialize_unordered_bulk_op()
 
     def bulkEnd(self):
         try:
-            result = self._collection.execute()
+            result = self._getCollection().execute()
         except system.mongo.exceptions.InvalidOperation as e:
             result = None
-        except Exception as e:
-            result = e.details
+        finally:
+            self._bulk = None
 
-        self._collection = self._db[self._table]
         return result
 
     def getById(self, queryId):

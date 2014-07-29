@@ -14,7 +14,7 @@ class Core():
         self.database_name = "hn_test_core_" + self.indexName
         config._config[config.configType]['database.mongodb.db'] = self.database_name
 
-        system.mongo.mongo = system.mongo.MongoAbs(self.database_name)
+        system.mongo.mongo.connection = system.mongo.MongoAbs(self.database_name).connection
         self._mongo = system.mongo.mongo
         self.createIndexes()
 

@@ -106,15 +106,15 @@ class MainAdminController(AbstractAdminController):
             })
 
     def saveCoordinate(self, transfer, data):
-        try:
-            user = transfer.getUser()
-            self._getAclAdminService().openMapForUser(user, data)
+        # try:
+        user = transfer.getUser()
+        self._getAclAdminService().openMapForUser(user, data)
 
-            transfer.send('/admin/saveCoordinate', {
-                'done': True
-            })
-        except Exception as e:
-            transfer.send('/admin/saveCoordinate', {
-                'done': True,
-                'error': str(e)
-            })
+        transfer.send('/admin/saveCoordinate', {
+            'done': True
+        })
+        # except Exception as e:
+        #     transfer.send('/admin/saveCoordinate', {
+        #         'done': False,
+        #         'error': str(e)
+        #     })
