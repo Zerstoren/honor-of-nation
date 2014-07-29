@@ -1,7 +1,9 @@
 import models.Abstract.Factory
+
 from . import Domain
 from . import Mapper
-from collection import MapUserVisibleCollection
+
+import collection.MapUserVisibleCollection
 
 class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
@@ -16,18 +18,30 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
             chunksList
         )
 
-        collection = MapUserVisibleCollection.MapUserVisible_Collection()
+        collectionMapUserVisible = collection.MapUserVisibleCollection.MapUserVisible_Collection()
 
         for i in result:
-            collection.append(
+            collectionMapUserVisible.append(
                 self.getDomainFromData(i)
             )
 
         return collection
 
+    def getCollectionFromData(self, data):
+        """
+        :rtype: collection.MapUserVisibleCollection.MapUserVisible_Collection
+        """
+        collectionMapUserVisible = collection.MapUserVisibleCollection.MapUserVisible_Collection()
+        for i in data:
+            collectionMapUserVisible.append(
+                self.getDomainFromData(i)
+            )
+
+        return collectionMapUserVisible
+
     def getDomainFromData(self, data):
         """
-        :rtype: models.Map.Domain.Map_Domain
+        :rtype: models.MapUserVisible.Domain.MapUserVisible_Domain
         """
         domain = Domain.MapUserVisible_Domain()
         domain.setOptions(data)

@@ -1,4 +1,10 @@
-define('libs/abstract/view', ['system/template'], function (template) {
+define('libs/abstract/view', [
+    'system/template',
+    'view/block/error'
+], function (
+    template,
+    viewBlockError
+) {
     window.AbstractView = Backbone.View.extend({
         template: template,
         delegateEvents: function (events) {
@@ -67,6 +73,26 @@ define('libs/abstract/view', ['system/template'], function (template) {
 
             // Arrows
             aleft:37, aup:38, aright:39, adown:40
+        },
+
+        traverseEvent: function (eventName, fromView) {
+            fromView.on(eventName, this._traverseMethod, this);
+        },
+
+        unTraverseEvent: function (eventName, fromView) {
+            fromView.off(eventName, this._traverseMethod, this);
+        },
+
+        _traverseMethod: function () {
+            this.trigger.apply(this, [eventName].concat(arguments));
+        },
+
+        successMessage: function (str) {
+            viewBlockError.showSuccessBox(str);
+        },
+
+        errorMessage: function (str) {
+            viewBlockError.showErrorBox(str);
         }
     });
 });
