@@ -6,6 +6,9 @@ import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
 
+import models.MapUserVisible.Mapper
+import models.Map.Mapper
+
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
     def _getModelController(self):
@@ -226,9 +229,6 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(message['error'], 'Can`t edit other admin')
 
     def testSaveResources(self):
-        import models.Map.Mapper, pprint
-        print(models.Map.Mapper.Map_Mapper._db.connection.last_status())
-
         controller = self._getModelController()
         transfer = self._login()
         user = transfer.getUser()
@@ -284,9 +284,6 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertTrue(
             transfer.getLastMessage()['message']['done']
         )
-
-        import models.MapUserVisible.Mapper
-        import models.Map.Mapper
 
         self.assertEqual(
             9,
