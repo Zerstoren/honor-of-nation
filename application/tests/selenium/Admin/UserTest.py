@@ -36,3 +36,19 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
 
         self.operationIsFail()
 
+    def testOpenMapForUser(self):
+        self.fillTerrain(0, 0, 4, 4)
+
+        self.login()
+        self._goToAdmin()
+        self.byAttribute('data-type', 'player').click()
+
+        self.byCssSelector('div.from .x').send_keys(0)
+        self.byCssSelector('div.from .y').send_keys(0)
+
+        self.byCssSelector('div.to .x').send_keys(4)
+        self.byCssSelector('div.to .y').send_keys(4)
+
+        self.byCssSelector('.save-coordinate').click()
+
+        self.operationIsSuccess()

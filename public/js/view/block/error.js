@@ -3,7 +3,7 @@ define('view/block/error', [
 ], function (alertify) {
     'use strict';
 
-    var ErrorBlock = AbstractView.extend({
+    var ErrorBlock = Backbone.View.extend({
         initialize: function () {
         },
 

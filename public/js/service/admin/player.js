@@ -13,6 +13,7 @@ define('service/admin/player', [
 
             this.playerView.on('search-user', this.onSearchUser, this);
             this.playerView.on('save-info', this.onSaveInfo, this);
+            this.playerView.on('save-coordinate', this.onSaveCoordinate, this);
 
             this.user = null;
         },
@@ -41,6 +42,12 @@ define('service/admin/player', [
                     this.playerView.successSave();
                 }
             }.bind(this));
+        },
+
+        onSaveCoordinate: function (data) {
+            gatewayAdmin.saveCoordinate(data, function (err) {
+                this.playerView.successSave();
+            }.bind(this))
         }
     });
 });

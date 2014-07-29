@@ -32,14 +32,19 @@ class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         """
         :rtype: collection.MapCollection.Map_Collection
         """
+        return self.getCollectionFromData(
+            Mapper.Map_Mapper.getByChunks(chunks)
+        )
+
+    def getCollectionFromData(self, data):
+        """
+        :rtype: collection.MapCollection.Map_Collection
+        """
         collection = MapCollection.Map_Collection()
-        result = Mapper.Map_Mapper.getByChunks(chunks)
-        for i in result:
-            domain = self.getDomainFromData(i)
-            collection.append(domain)
+        for i in data:
+            collection.append(self.getDomainFromData(i))
 
         return collection
-
 
     def getDomainFromData(self, data):
         """

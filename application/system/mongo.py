@@ -13,6 +13,7 @@ class exceptions(object):
     NotFound = NotFound
     Duplicate = pymongo.errors.DuplicateKeyError
     InvalidId = bson.errors.InvalidId
+    InvalidOperation = pymongo.errors.InvalidOperation
 
 
 class types(object):

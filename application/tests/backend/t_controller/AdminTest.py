@@ -1,6 +1,7 @@
 from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import controller.AdminController
+
 import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
@@ -225,6 +226,9 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(message['error'], 'Can`t edit other admin')
 
     def testSaveResources(self):
+        import models.Map.Mapper, pprint
+        print(models.Map.Mapper.Map_Mapper._db.connection.last_status())
+
         controller = self._getModelController()
         transfer = self._login()
         user = transfer.getUser()
@@ -263,3 +267,20 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(resources.getStone(), 1000)
         self.assertEqual(resources.getEat(), 5000)
         self.assertEqual(resources.getGold(), 10000)
+
+    def testSaveCoordinate(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveCoordinate(transfer, {
+            'fromX': 0,
+            'fromY': 0,
+            'toX': 5,
+            'toY': 5
+        })
+
+        self.assertTrue(
+            transfer.getLastMessage()['message']['done']
+        )

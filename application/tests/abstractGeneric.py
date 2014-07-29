@@ -38,3 +38,16 @@ class Abstract_Generic(unittest.TestCase):
     def mockLoad(self, mockName, *args, **kwargs):
         if mockName is 'Transfer':
             return Transfer.TransferMock(*args, **kwargs)
+
+    def _executeTestPart(self, function, outcome, isTest=False):
+        def testWrapper(*args, **kwargs):
+            function(*args, **kwargs)
+            self._testDatabaseValues()
+
+        if isTest:
+            super()._executeTestPart(testWrapper, outcome, isTest)
+        else:
+            super()._executeTestPart(function, outcome, isTest)
+
+    def _testDatabaseValues(self):
+        pass
