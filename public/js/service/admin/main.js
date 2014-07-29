@@ -32,7 +32,7 @@ define('service/admin/main', [
         render: function () {
             this.holder = preStart.map.body.getHolder();
             this.mainView.render(this.holder);
-            this.onSelectType('terrain');
+            this.onSelectType('player');
         },
 
         unRender: function () {

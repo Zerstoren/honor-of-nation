@@ -33,3 +33,23 @@
 
     <button class="btn btn-default save-info">Сохранить</button>
 </div>
+
+
+<div class="show-terrain">
+    <h4>Открыть карту</h4>
+    <div class="block-coordinate form-inline" role="form">
+        <div class="input-group-sm from">
+            <span>C позиции:</span> <br>
+            <input type="number" min="0" max="1999" step="1"  placeholder="x" class="form-control x">
+            <input type="number" min="0" max="1999" step="1"  placeholder="y" class="form-control y">
+        </div>
+
+        <div class="input-group-sm to">
+            <span>По позицию:</span> <br>
+            <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x">
+            <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y">
+        </div>
+    </div>
+
+    <button class="btn btn-default save-coordinate">Сохранить</button>
+</div>

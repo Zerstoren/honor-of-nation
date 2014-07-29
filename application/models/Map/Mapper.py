@@ -24,13 +24,25 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(queryFilter)
 
+    def getByPosIds(self, posIds):
+        queryFilter = Common.Common_Filter()
+        queryFilter.addIn('pos_id', posIds)
+
+        return self._select(queryFilter)
+
+    def getRegion(self, startX, startY, finishX, finishY):
+        queryFilter = Common.Common_Filter()
+        queryFilter.add('x', {'$gte': startX, '$lte': finishX})
+        queryFilter.add('y', {'$gte': startY, '$lte': finishY})
+
+        return self._select(queryFilter)
+
     def save(self, domain):
         """
         :type domain: models.Map.Domain.Map_Domain
         """
         data = Common.Common_Set()
         data.fromDomain(domain)
-        data.test()
 
         if domain.hasId():
             filterData = Common.Common_Filter({

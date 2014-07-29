@@ -33,6 +33,16 @@ define('gateway/admin', [
             }, function (data) {
                 fn(false);
             });
+        },
+
+        saveCoordinate: function (data, fn) {
+            this.socket.send('/admin/saveUserShowCoordinate', {
+                data: data
+            }, function (result) {
+                if (result.done) {
+                    fn(true);
+                }
+            })
         }
     });
 
