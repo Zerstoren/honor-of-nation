@@ -21,7 +21,9 @@ define('service/admin/terrain', [
 
         onTerrainSend: function (data) {
             gatewayAdmin.fillMap(data, function (result) {
-                this.terrainView.successSave();
+                if (result.done) {
+                    this.terrainView.successSave();
+                }
             }.bind(this));
         }
     });

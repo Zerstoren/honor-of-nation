@@ -7,19 +7,24 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
     def _getModelController(self):
         return controller.MapController.MainController()
 
-    def testGettingUsersChunks(self):
+    def testLoadChunks(self):
         controller = self._getModelController()
         transfer = self._login()
         user = transfer.getUser()
 
-        self._fillMap()
+        mapCollection = self.fillTerrain(0, 0, 5, 5)
+        self.openRegion(user, mapCollection)
 
         controller.load_chunks(transfer, {
             'chunkList': [1, 2, 3]
         })
 
-        message = transfer.getLastMessage()
-        print(message)
+        message = transfer.getLastMessage()['message']
+        self.assertTrue(message['done'])
+        self.assertEqual(
+            len(message['result']['data']),
+            36
+        )
 
     # def testLogin(self):
     #     controller = self._getModelController()
