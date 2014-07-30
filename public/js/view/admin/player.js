@@ -12,9 +12,6 @@ define('view/admin/player', [], function () {
             this.$el.html(this.template('admin/player/player'));
             holder.append(this.$el);
             this.delegateEvents();
-
-            this.$el.find('.search-user-login').val('Zerst');
-            this.onSearchUser({});
         },
 
         unRender: function () {
