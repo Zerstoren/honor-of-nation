@@ -6882,6 +6882,8 @@ td.visible-print {
         z-index: 45; }
       #canvas_map table tr .land-0-1 .level0 {
         background-image: url("/img/texture/land/land-0-1.png"); }
+      #canvas_map table tr .land-1-1 .level0 {
+        background-image: url("/img/texture/land/land-1-1.png"); }
 
 .admin {
   z-index: 31;

@@ -1,9 +1,24 @@
 define('view/elements/map/mouse', [], function () {
 
     return AbstractView.extend({
+        events: {
+            'click td': 'mouseClick',
+            'dblclick td': 'mouseDoubleClick',
+            'mousedown td': 'mouseDragStart',
+            'mousemove global': 'mouseMove',
+            'mouseup global': 'mouseDragStop'
+        },
+
         initialize: function(service) {
             this.service = service;
             this.currentMovePosition = [-1, -1];
+
+
+            this.$dragStarted = false;
+            this.$dragUserUsed = false;
+            this.$dragMapBasePosition = [0, 0];
+
+            this.$activateSelfControl();
         },
 
         activateDrag: function() {
@@ -14,43 +29,10 @@ define('view/elements/map/mouse', [], function () {
             this.$dragUserUsed = false;
         },
 
-        $afterDraw: function() {
-            this.registerEvents([
-                'mouseClick', 'mouseRightClick', 'mouseMiddleClick', 'mouseDoubleClick',
-                'mouseMove',
-                'mouseDragStart', 'mouseDragMove', 'mouseDragStop'
-            ]);
-
-            this.$dragStarted = false;
-            this.$dragUserUsed = false;
-            this.$dragMapBasePosition = [0, 0];
-
-            this.$attachEvents();
-            this.$activateSelfControl();
-        },
-
-        $attachEvents: function() {
-            var self = this;
-
-            this.$area.click(function(ev) {
-                self.mouseClick(ev);
-            });
-
-            this.$area.mousedown(function(ev) {
-                self.mouseDragStart(ev);
-            });
-
-            this.$area.dblclick(function(ev) {
-                self.mouseDoubleClick(ev);
-            });
-
-            jQuery(document).mouseup(function(ev) {
-                self.mouseDragStop(ev);
-            });
-
-            jQuery(document).mousemove(function(ev) {
-                self.mouseMove(ev);
-            });
+        afterRender: function () {
+            this.$el = this.service.$layer.find('table');
+            this.el = this.$el.get(0);
+            this.delegateEvents();
         },
 
         mouseClick: function(ev) {
@@ -58,11 +40,11 @@ define('view/elements/map/mouse', [], function () {
 
             if(tmp) {
                 if(ev.which === 1) {
-                    this.fireEvent('mouseClick', this.$getInfoForEvent(ev));
+                    this.trigger('mouseClick', this.$getInfoForEvent(ev));
                 } else if(ev.which === 3) {
-                    this.fireEvent('mouseRightClick', this.$getInfoForEvent(ev));
+                    this.trigger('mouseRightClick', this.$getInfoForEvent(ev));
                 } else if(ev.which === 2) {
-                    this.fireEvent('mouseMiddleClick', this.$getInfoForEvent(ev));
+                    this.trigger('mouseMiddleClick', this.$getInfoForEvent(ev));
                 }
             }
         },
@@ -71,7 +53,7 @@ define('view/elements/map/mouse', [], function () {
             var tmp = this.$getInfoForEvent(ev);
 
             if(tmp) {
-                this.fireEvent('mouseDoubleClick', this.$getInfoForEvent(ev));
+                this.trigger('mouseDoubleClick', this.$getInfoForEvent(ev));
             }
         },
 
@@ -85,19 +67,19 @@ define('view/elements/map/mouse', [], function () {
 
                 if(tmp && (tmp[0] !== this.currentMovePosition[0] || tmp[1] !== this.currentMovePosition[1])) {
                     this.currentMovePosition = tmp;
-                    this.fireEvent('mouseMove', this.$getInfoForEvent(ev));
+                    this.trigger('mouseMove', this.$getInfoForEvent(ev));
                 }
             }
         },
 
         mouseDragStart: function(ev) {
             this.$dragStarted = true;
-            this.fireEvent('mouseDragStart', ev);
+            this.trigger('mouseDragStart', ev);
         },
 
         mouseDragStop: function(ev) {
             if(this.$dragStarted === true) {
-                this.fireEvent('mouseDragStop', ev);
+                this.trigger('mouseDragStop', ev);
                 this.$dragStarted = false;
             }
         },
@@ -106,68 +88,67 @@ define('view/elements/map/mouse', [], function () {
             /*if(ev.which === 0) {
                 this.mouseDragStop(ev);
             } else {*/
-            this.fireEvent('mouseDragMove', ev);
+            this.trigger('mouseDragMove', ev);
             //}
 
         },
 
         $activateSelfControl: function() {
-            var self = this;
-
-            this.subscribe('mouseDragStart', function(ev) {
-                if(self.$dragUserUsed) {
+            this.on('mouseDragStart', function(ev) {
+                if(this.$dragUserUsed) {
                     return;
                 }
 
-                self.$dragMapBasePosition[0] = ev.clientX;
-                self.$dragMapBasePosition[1] = ev.clientY;
-            });
+                this.$dragMapBasePosition[0] = ev.clientX;
+                this.$dragMapBasePosition[1] = ev.clientY;
+            }, this);
 
-            this.subscribe('mouseDragStop', function() {
-                return !self.$dragUserUsed;
-            });
+            this.on('mouseDragStop', function() {
+                return !this.$dragUserUsed;
+            }, this);
 
-            this.subscribe('mouseDragMove', function(ev) {
-                if(self.$dragUserUsed) {
+
+            this.on('mouseDragMove', function(ev) {
+                if(this.$dragUserUsed) {
                     return false;
                 }
 
                 var move = [
-                    ev.clientX - self.$dragMapBasePosition[0],
-                    ev.clientY - self.$dragMapBasePosition[1]
+                    ev.clientX - this.$dragMapBasePosition[0],
+                    ev.clientY - this.$dragMapBasePosition[1]
                 ];
 
-                self.$dragMapBasePosition[0] = ev.clientX;
-                self.$dragMapBasePosition[1] = ev.clientY;
+                this.$dragMapBasePosition[0] = ev.clientX;
+                this.$dragMapBasePosition[1] = ev.clientY;
 
-                self.$mapDrag(move);
+                this.$mapDrag(move);
 
                 return true;
-            });
+            }, this);
         },
 
         $mapDrag: function(move) {
-            var layer = this.$area.get(0),
+            var layer = this.el,
                 currentX = (layer.style.left ? parseInt(layer.style.left, 10) : 0) + move[0],
                 currentY = (layer.style.top ? parseInt(layer.style.top, 10) : 0) + move[1],
                 jump = [0, 0];
 
-            if(currentX >= this.minShiftX) {
-                jump[0] = (this.addedWidth - this.config.cellSize) / this.config.cellSize / -1;
+            if(currentX >= this.service.minShiftX) {
+                jump[0] = (this.service.addedWidth - this.service.config.cellSize) / this.service.config.cellSize / -1;
             } else if(currentX <= this.maxShiftX) {
-                jump[0] = (this.addedWidth - this.config.cellSize) / this.config.cellSize;
+                jump[0] = (this.service.addedWidth - this.service.config.cellSize) / this.service.config.cellSize;
             }
 
-            if(currentY >= this.minShiftY) {
-                jump[1] = (this.addedHeight - this.config.cellSize) / this.config.cellSize / -1;
-            } else if(currentY <= this.maxShiftY) {
-                jump[1] = (this.addedHeight - this.config.cellSize) / this.config.cellSize;
+            if(currentY >= this.service.minShiftY) {
+                jump[1] = (this.service.addedHeight - this.service.config.cellSize) / this.service.config.cellSize / -1;
+            } else if(currentY <= this.service.maxShiftY) {
+                jump[1] = (this.service.addedHeight - this.service.config.cellSize) / this.service.config.cellSize;
             }
 
             if(jump[0] !== 0 || jump[1] !== 0) {
-                this.correctLayerCoordinate(jump[0], jump[1]);
-                currentX += (jump[0] * this.config.cellSize);
-                currentY += (jump[1] * this.config.cellSize);
+                this.service.draw.correctLayerCoordinate(jump[0], jump[1]);
+                currentX += (jump[0] * this.service.config.cellSize);
+                currentY += (jump[1] * this.service.config.cellSize);
             }
 
             layer.style.left = currentX + 'px';

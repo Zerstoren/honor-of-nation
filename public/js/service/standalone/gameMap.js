@@ -2,6 +2,8 @@ define('service/standalone/gameMap', [
     'system/socket',
     'service/standalone/user',
 
+    'gateway/map',
+
     'view/elements/map/draw',
     'view/elements/map/help',
     'view/elements/map/mouse'
@@ -9,6 +11,8 @@ define('service/standalone/gameMap', [
 ], function (
     socket,
     userService,
+
+    gatewayMap,
 
     MapDraw,
     MapHelp,
@@ -31,6 +35,7 @@ define('service/standalone/gameMap', [
 
             this.draw.$drawMap();
             this.subscribeOnEvents();
+            this.mouse.afterRender();
 
             userService.getMe(function (userDomain) {
                 this.draw.setCameraPosition(
@@ -92,11 +97,8 @@ define('service/standalone/gameMap', [
 
             if(chunkList.length) {
                 this.chunksLoaded = _.union(this.chunksLoaded, chunkList);
-
-                socket.send('/map/load_chunks', {
-                    chunkList: chunkList
-                }, function(message) {
-    //                self.draw.mapMerge(message.map);
+                gatewayMap.loadChunks(chunkList, function(message) {
+                    self.draw.mapMerge(message.result.data);
                 });
             }
         },
@@ -118,12 +120,8 @@ define('service/standalone/gameMap', [
 
             if(chunkList.length) {
                 this.chunksLoaded = _.union(this.chunksLoaded, chunkList);
-
-                socket.send('/map/load_chunks', {
-                    chunkList: chunkList
-                }, function(message) {
-                    console.log(message)
-    //                self.$mapDrawDI.mapMerge(message.map);
+                gatewayMap.loadChunks(chunkList, function(message) {
+                    self.draw.mapMerge(message.result.data);
                 });
             }
         }
