@@ -4,6 +4,8 @@ import config
 import tests.bootstrap.bootstrap
 import tests.bootstrap.core
 import tests.bootstrap.CreateBase
+import tests.bootstrap.CheckDatabaseIndexes
+
 
 from tests.mock import Transfer
 
@@ -50,4 +52,6 @@ class Abstract_Generic(unittest.TestCase):
             super()._executeTestPart(function, outcome, isTest)
 
     def _testDatabaseValues(self):
-        pass
+        tests.bootstrap.CheckDatabaseIndexes.CheckDatabaseIndexes(
+            config.getDatabase()
+        )

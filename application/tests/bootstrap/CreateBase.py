@@ -39,6 +39,7 @@ class CreateBase(object):
         domain.setPassword(password)
         domain.setAdmin(False)
         domain._domain_data['_testPassword'] = password
+        domain.setPosition(1, 1)
         domain.getMapper().save(domain)
 
         User_Factory.setCache(domain.getId(), domain)
