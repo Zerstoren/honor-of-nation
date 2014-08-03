@@ -24,7 +24,10 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         commonSet\
             .add('login', domain.getLogin())\
-            .add('password', domain.getPassword())
+            .add('password', domain.getPassword())\
+            .add('admin', domain.getAdmin())\
+            .add('position', domain.getPosition())
+
         if domain.hasId():
             self._update(
                 commonSet,

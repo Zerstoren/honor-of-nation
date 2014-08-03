@@ -36,6 +36,11 @@ class User_Domain(models.Abstract.Domain.Abstract_Domain):
 
         return domain
 
+    def setPosition(self, x, y):
+        self._domain_data['position'] = {
+            'x': int(x),
+            'y': int(y)
+        }
 
     def toDict(self):
         result = copy.deepcopy(self._domain_data)
