@@ -1,13 +1,13 @@
 define('view/elements/map/mouse', [], function () {
 
     return AbstractView.extend({
-        events: {
-            'click td': 'mouseClick',
-            'dblclick td': 'mouseDoubleClick',
-            'mousedown td': 'mouseDragStart',
-            'mousemove global': 'mouseMove',
-            'mouseup global': 'mouseDragStop'
-        },
+//        events: {
+//            'click': 'mouseClick',
+//            'dblclick': 'mouseDoubleClick',
+//            'mousedown': 'mouseDragStart',
+//            'mousemove global': 'mouseMove',
+//            'mouseup global': 'mouseDragStop'
+//        },
 
         initialize: function(service) {
             this.service = service;
@@ -30,9 +30,29 @@ define('view/elements/map/mouse', [], function () {
         },
 
         afterRender: function () {
-            this.$el = this.service.$layer.find('table');
-            this.el = this.$el.get(0);
-            this.delegateEvents();
+            var self = this;
+            this.$area = this.service.$layer.find('table');
+            this.area = this.$area.get(0);
+
+            this.area.addEventListener('click', function (e) {
+                self.mouseClick(e);
+            });
+
+            this.area.addEventListener('dblclick', function (e) {
+                self.mouseDoubleClick(e);
+            });
+
+            this.area.addEventListener('mousedown', function (e) {
+                self.mouseDragStart(e);
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                self.mouseDragMove(e);
+            });
+
+            document.addEventListener('mouseup', function (e) {
+                self.mouseDragStop(e);
+            });
         },
 
         mouseClick: function(ev) {
@@ -74,68 +94,85 @@ define('view/elements/map/mouse', [], function () {
 
         mouseDragStart: function(ev) {
             this.$dragStarted = true;
-            this.trigger('mouseDragStart', ev);
+            if(this.$dragUserUsed) {
+                return;
+            }
+
+            this.$dragMapBasePosition[0] = ev.clientX;
+            this.$dragMapBasePosition[1] = ev.clientY;
         },
 
         mouseDragStop: function(ev) {
             if(this.$dragStarted === true) {
-                this.trigger('mouseDragStop', ev);
                 this.$dragStarted = false;
             }
         },
 
         mouseDragMove: function(ev) {
-            /*if(ev.which === 0) {
+            if(ev.which === 0) {
                 this.mouseDragStop(ev);
-            } else {*/
-            this.trigger('mouseDragMove', ev);
-            //}
+                return;
+            }
 
+            if(this.$dragUserUsed) {
+                return;
+            }
+
+            var move = [
+                ev.clientX - this.$dragMapBasePosition[0],
+                ev.clientY - this.$dragMapBasePosition[1]
+            ];
+
+            this.$dragMapBasePosition[0] = ev.clientX;
+            this.$dragMapBasePosition[1] = ev.clientY;
+
+            this.$mapDrag(move);
+//            }
         },
 
         $activateSelfControl: function() {
-            this.on('mouseDragStart', function(ev) {
-                if(this.$dragUserUsed) {
-                    return;
-                }
-
-                this.$dragMapBasePosition[0] = ev.clientX;
-                this.$dragMapBasePosition[1] = ev.clientY;
-            }, this);
-
-            this.on('mouseDragStop', function() {
-                return !this.$dragUserUsed;
-            }, this);
-
-
-            this.on('mouseDragMove', function(ev) {
-                if(this.$dragUserUsed) {
-                    return false;
-                }
-
-                var move = [
-                    ev.clientX - this.$dragMapBasePosition[0],
-                    ev.clientY - this.$dragMapBasePosition[1]
-                ];
-
-                this.$dragMapBasePosition[0] = ev.clientX;
-                this.$dragMapBasePosition[1] = ev.clientY;
-
-                this.$mapDrag(move);
-
-                return true;
-            }, this);
+//            this.on('mouseDragStart', function(ev) {
+//                if(this.$dragUserUsed) {
+//                    return;
+//                }
+//
+//                this.$dragMapBasePosition[0] = ev.clientX;
+//                this.$dragMapBasePosition[1] = ev.clientY;
+//            }, this);
+//
+//            this.on('mouseDragStop', function() {
+//                return !this.$dragUserUsed;
+//            }, this);
+//
+//
+//            this.on('mouseDragMove', function(ev) {
+//                if(this.$dragUserUsed) {
+//                    return false;
+//                }
+//
+//                var move = [
+//                    ev.clientX - this.$dragMapBasePosition[0],
+//                    ev.clientY - this.$dragMapBasePosition[1]
+//                ];
+//
+//                this.$dragMapBasePosition[0] = ev.clientX;
+//                this.$dragMapBasePosition[1] = ev.clientY;
+//
+//                this.$mapDrag(move);
+//
+//                return true;
+//            }, this);
         },
 
         $mapDrag: function(move) {
-            var layer = this.el,
+            var layer = this.area,
                 currentX = (layer.style.left ? parseInt(layer.style.left, 10) : 0) + move[0],
                 currentY = (layer.style.top ? parseInt(layer.style.top, 10) : 0) + move[1],
                 jump = [0, 0];
 
             if(currentX >= this.service.minShiftX) {
                 jump[0] = (this.service.addedWidth - this.service.config.cellSize) / this.service.config.cellSize / -1;
-            } else if(currentX <= this.maxShiftX) {
+            } else if(currentX <= this.service.maxShiftX) {
                 jump[0] = (this.service.addedWidth - this.service.config.cellSize) / this.service.config.cellSize;
             }
 

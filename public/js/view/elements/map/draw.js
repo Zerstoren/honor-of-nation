@@ -22,7 +22,7 @@ define('view/elements/map/draw', [], function () {
             this.positionX += x;
             this.positionY += y;
             this.trigger('onSetPosition', this.positionX, this.positionY);
-//            this.update();
+            this.update();
         },
 
         getMapHeight: function() {
@@ -42,7 +42,7 @@ define('view/elements/map/draw', [], function () {
             this.positionX = x;
             this.positionY = y;
             this.trigger('onSetPosition', x, y);
-//            this.update();
+            this.update();
         },
 
         /**
@@ -113,6 +113,7 @@ define('view/elements/map/draw', [], function () {
             if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
                 return ['no_map'];
             }
+//            console.log(x, y);
 
             var tmp, classList = [];
             tmp = this.$getLand(x, y);
@@ -249,8 +250,8 @@ define('view/elements/map/draw', [], function () {
             this.$area.attr('cellpadding', '0');
             this.$area.attr('cellspacing', '0');
             this.$area.css({
-                left: (this.addedWidth) / -1,
-                top:  (this.addedHeight) / -1
+                left: (this.service.addedWidth) / -1,
+                top:  (this.service.addedHeight) / -1
             });
         }
     });
