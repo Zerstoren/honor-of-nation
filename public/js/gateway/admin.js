@@ -37,7 +37,10 @@ define('gateway/admin', [
 
         saveCoordinate: function (data, fn) {
             this.socket.send('/admin/saveUserShowCoordinate', {
-                data: data
+                fromX: data.fromX,
+                fromY: data.fromY,
+                toX: data.toX,
+                toY: data.toY
             }, function (result) {
                 if (result.done) {
                     fn(true);

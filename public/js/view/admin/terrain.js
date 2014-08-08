@@ -1,6 +1,5 @@
 define('view/admin/terrain', [
-
-    'service/standalone/gameMap',
+    'service/standalone/map/gameMapItems/init',
     'view/block/error'
 ], function (
     gameMap,

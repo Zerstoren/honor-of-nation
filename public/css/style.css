@@ -302,9 +302,9 @@ table {
   .table-bordered th,
   .table-bordered td {
     border: 1px solid #ddd !important; } }
-*,
-*:before,
-*:after {
+a, abbr, acronym, efines, address, applet, efines, area, article, aside, audio, b, base, basefont, pecifies, bdi, bdo, big, efines, blockquote, body, br, button, canvas, caption, center, cite, code, col, colgroup, datalist, dd, del, details, dfn, dialog, dir, div, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, frame, frameset, h1, head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main, map, mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option, output, p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source, span, strike, strong, style, sub, summary, sup, textarea, time, title, track, u, ul, var, video, wbr,
+a, abbr, acronym, efines, address, applet, efines, area, article, aside, audio, b, base, basefont, pecifies, bdi, bdo, big, efines, blockquote, body, br, button, canvas, caption, center, cite, code, col, colgroup, datalist, dd, del, details, dfn, dialog, dir, div, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, frame, frameset, h1, head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main, map, mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option, output, p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source, span, strike, strong, style, sub, summary, sup, textarea, time, title, track, u, ul, var, video, wbr:before,
+a, abbr, acronym, efines, address, applet, efines, area, article, aside, audio, b, base, basefont, pecifies, bdi, bdo, big, efines, blockquote, body, br, button, canvas, caption, center, cite, code, col, colgroup, datalist, dd, del, details, dfn, dialog, dir, div, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, frame, frameset, h1, head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main, map, mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option, output, p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source, span, strike, strong, style, sub, summary, sup, textarea, time, title, track, u, ul, var, video, wbr:after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
@@ -5962,10 +5962,10 @@ td.visible-print {
   td.hidden-print {
     display: none !important; } }
 /*!
- * Bootstrap v3.0.3 (http://getbootstrap.com)
- * Copyright 2013 Twitter, Inc.
- * Licensed under http://www.apache.org/licenses/LICENSE-2.0
- */
+* Bootstrap v3.0.3 (http://getbootstrap.com)
+* Copyright 2013 Twitter, Inc.
+* Licensed under http://www.apache.org/licenses/LICENSE-2.0
+*/
 .btn-default,
 .btn-primary,
 .btn-success,
@@ -6882,6 +6882,8 @@ td.visible-print {
         z-index: 45; }
       #canvas_map table tr .land-0-1 .level0 {
         background-image: url("/img/texture/land/land-0-1.png"); }
+      #canvas_map table tr .land-1-1 .level0 {
+        background-image: url("/img/texture/land/land-1-1.png"); }
 
 .admin {
   z-index: 31;

@@ -1,3 +1,7 @@
+@mixin texture-land($name) {
+    background-image: url('/img/texture/land/land-' + $name + '.png');
+}
+
 .shadow .level2 {
     background-image: url('/img/texture/shadow.png');
     width: 104px;
@@ -34,4 +38,8 @@
 
 .land-0-1 .level0 {
     @include texture-land('0-1');
+}
+
+.land-1-1 .level0 {
+    @include texture-land('1-1');
 }
