@@ -36,6 +36,11 @@ class Service_User(service.Abstract.AbstractService.Service_Abstract):
             models.User.Mapper.User_Mapper.searchUser(login)
         )
 
+    def getAllUsers(self):
+        return models.User.Factory.User_Factory.getCollectionFromDataNoCache(
+            models.User.Mapper.User_Mapper.getAllUsersLogin()
+        )
+
     def decorate(self, *args):
         """
         :rtype: Service_User
