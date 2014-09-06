@@ -46,6 +46,8 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter, commonLimit)
 
+    def getAllUsersLogin(self):
+        return self._getCollection().find({}, {'_id': 1, 'login': 1})
 
 
 User_Mapper = User_Mapper_Main()

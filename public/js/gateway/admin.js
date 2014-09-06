@@ -1,9 +1,11 @@
 define('gateway/admin', [
     'factory/user',
-    'factory/resources'
+    'factory/resources',
+    'factory/mapResources'
 ], function (
         userFactory,
-        resourcesFactory
+        resourcesFactory,
+        mapResourceFactory
 ) {
     var GatewayAdmin = AbstractGateway.extend({
         fillMap: function (data, fn) {
@@ -46,6 +48,21 @@ define('gateway/admin', [
                     fn(true);
                 }
             })
+        },
+
+        loadResourceMap: function (x, y, fn) {
+            this.socket.send('/admin/loadResourceMap', {
+                x: x,
+                y: y
+            }, function (result) {
+                var domain = false;
+
+                if (result['resource']) {
+                    domain = mapResourceFactory.getDomainFromData(result['resource']);
+                }
+
+                fn(domain, result['users'], result['towns']);
+            });
         }
     });
 

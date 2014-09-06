@@ -294,3 +294,56 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
             16,
             models.Map.Mapper.Map_Mapper._select().count()
         )
+
+    def testLoadResourceMap_NoResources(self):
+        self.fillTerrain(0, 0, 3, 3)
+        self.addResource(0, 0, 'rubins')
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': False,
+            'y': False
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertFalse(result['resource'])
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+    def testLoadResourceMap_HasResources(self):
+        self.fillTerrain(0, 0, 3, 3)
+        self.addResource(0, 0, 'rubins')
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': 0,
+            'y': 0
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertEqual(result['resource']['pos_id'], 0)
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+    def testLoadResourceMap_ResourcesNotFound(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': 0,
+            'y': 0
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertFalse(result['resource'])
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
