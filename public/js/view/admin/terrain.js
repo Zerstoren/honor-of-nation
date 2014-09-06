@@ -20,10 +20,33 @@ define('view/admin/terrain', [
             this.fillType = 'coordinate';
             this.fillLand = null;
             this.fillLandType = null;
+            this.template = this.getTemplate('admin/terrain/terrain');
+
+            this.partials = {
+                chunkItem: this.getTemplate('admin/terrain/chunkItem')
+            };
+
+            this.initRactive();
+
+            this.bindModel(new Backbone.Model({
+                position: {
+                    fromX: null,
+                    fromY: null,
+                    toX  : null,
+                    toY  : null
+                },
+                chank: null,
+                searchChank: {
+                    x: null,
+                    y: null
+                },
+                chankListToAdd: []
+            }));
         },
 
+        data: {},
+
         render: function (holder) {
-            this.$el.html(this.template('admin/terrain/terrain'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -35,22 +58,6 @@ define('view/admin/terrain', [
 
         successSave: function () {
             viewBlockError.showSuccessBox('Terrain save successful');
-        },
-
-        _renderChunkList: function () {
-            var i,
-                el,
-                holder = this.$el.find('.chunk-to-add');
-
-            holder.empty();
-
-            for (i = 0; i < this.chunksListToAdd.length; i += 1) {
-                el = $('<span>');
-                el.html(
-                    this.template('admin/terrain/chunkItem', {chunk: this.chunksListToAdd[i]})
-                );
-                holder.append(el);
-            }
         },
 
         onChangeFillType: function (e) {
@@ -68,11 +75,11 @@ define('view/admin/terrain', [
         onAddToList: function () {
             var x,
                 y,
-                chunkNum = parseInt(this.$el.find('.block-chunk input.chunk').val(), 10);
+                chunkNum = parseInt(this.data.get('chunk'), 10);
 
             if (isNaN(chunkNum)) {
-                x = parseInt(this.$el.find('.block-chunk input.x').val(), 10);
-                y = parseInt(this.$el.find('.block-chunk input.y').val(), 10);
+                x = parseInt(this.data.get('searchChunk').x, 10);
+                y = parseInt(this.data.get('searchChunk').y, 10);
 
                 chunkNum = gameMap.help.fromPlaceToChunk(x, y);
 
@@ -85,17 +92,15 @@ define('view/admin/terrain', [
                 this.chunksListToAdd.push(chunkNum);
             }
 
-            this.$el.find('.block-chunk input.chunk').val('');
-            this.$el.find('.block-chunk input.x').val('');
-            this.$el.find('.block-chunk input.y').val('');
-
-            this._renderChunkList();
+            this.data.set('chunk', null);
+            this.data.set('searchChunk', {x: null, y: null});
+            this.data.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onRemoveFromList: function (e) {
             var chunk = parseInt($(e.target).data('chunk'), 10);
             this.chunksListToAdd = _.without(this.chunksListToAdd, chunk);
-            this._renderChunkList();
+            this.data.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onSelectLandType: function (e) {
@@ -114,10 +119,10 @@ define('view/admin/terrain', [
                send = {
                    type: 'coordinate',
                    coordinate: {
-                       fromX: parseInt(this.$el.find('.from .x').val(), 10),
-                       fromY: parseInt(this.$el.find('.from .y').val(), 10),
-                       toX  : parseInt(this.$el.find('.to .x').val(), 10),
-                       toY  : parseInt(this.$el.find('.to .y').val(), 10)
+                       fromX: parseInt(this.data.get('position').fromX, 10),
+                       fromY: parseInt(this.data.get('position').fromY, 10),
+                       toX  : parseInt(this.data.get('position').toX, 10),
+                       toY  : parseInt(this.data.get('position').toY, 10)
                    }
                };
 
@@ -136,6 +141,7 @@ define('view/admin/terrain', [
                 };
 
                 this.chunksListToAdd = [];
+                this.data.set('chunksListToAdd', this.chunksListToAdd);
             }
 
             send.fillLand = this.fillLand;

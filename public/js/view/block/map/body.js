@@ -9,7 +9,7 @@ define('view/block/map/body', [], function() {
         },
 
         render: function () {
-            this.$el.html(this.template('block/map/body'));
+            this.$el.html(this.getTemplate('block/map/body'));
             this.holder.append(this.$el);
         },
 

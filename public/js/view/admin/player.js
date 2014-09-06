@@ -9,7 +9,7 @@ define('view/admin/player', [], function () {
         },
 
         render: function (holder) {
-            this.$el.html(this.template('admin/player/player'));
+            this.$el.html(this.getTemplate('admin/player/player'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -20,14 +20,14 @@ define('view/admin/player', [], function () {
         },
 
         showUserData: function (userDomain, resourceDomain) {
-            this.$el.find('#user-info').html(
-                this.template(
-                    'admin/player/info',
-                    {
-                        resources: resourceDomain
-                    }
-                )
-            );
+//            this.$el.find('#user-info').html(
+//                this.template(
+//                    'admin/player/info',
+//                    {
+//                        resources: resourceDomain
+//                    }
+//                )
+//            );
         },
 
         successSave: function () {

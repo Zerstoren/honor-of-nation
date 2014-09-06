@@ -1,12 +1,57 @@
 define('libs/abstract/view', [
     'system/template',
-    'view/block/error'
+    'view/block/error',
+    'ractive'
 ], function (
-    template,
-    viewBlockError
+    getTemplate,
+    viewBlockError,
+    Ractive
 ) {
     window.AbstractView = Backbone.View.extend({
-        template: template,
+        initRactive: function () {
+            this.ractive = new Ractive(this);
+        },
+
+        data: {},
+
+        getTemplate: getTemplate,
+
+        bindModel: function (model) {
+            this.data = model;
+            this.ractive.data = this.data.attributes;
+            this.ractive.update();
+
+            // I hate idiots who not use on and off without manual context
+            this._ractiveEventHandler = this._ractiveEventHandler.bind(this);
+
+            model.on('all', this._backboneEventHandler, this);
+            this.ractive.on('change', this._ractiveEventHandler);
+        },
+
+        unBindModel: function () {
+            this.ractive.off('change', this._ractiveEventHandler);
+            this.data.off('all', this._backboneEventHandler, this);
+        },
+
+        unRender: function () {
+            this.ractive.teardown();
+        },
+
+        _backboneEventHandler: function (eventName, model, value) {
+            var valueName = '';
+
+            if (eventName.indexOf('change:') != -1) {
+                valueName = eventName.replace('change:', '');
+                this.ractive.set(valueName, value);
+            }
+        },
+
+        _ractiveEventHandler: function (data) {
+            _.forEach(data, function (val, key) {
+                this.data.set(key, val, {silent: true});
+            }, this);
+        },
+
         delegateEvents: function (events) {
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
@@ -73,6 +118,16 @@ define('libs/abstract/view', [
 
             // Arrows
             aleft:37, aup:38, aright:39, adown:40
+        },
+
+        setHolder: function (holder) {
+            if (holder instanceof Backbone.$) {
+                this.el = holder[0];
+                this.$el = holder;
+            } else {
+                this.el = holder;
+                this.$el = Backbone.$(holder);
+            }
         },
 
         traverseEvent: function (eventName, fromView) {

@@ -9,7 +9,7 @@ define('view/block/no/body', [], function() {
         },
 
         render: function () {
-            this.holder.append(this.template('block/no/body'));
+            this.holder.append(this.getTemplate('block/no/body'));
         },
 
         getHolder: function () {
