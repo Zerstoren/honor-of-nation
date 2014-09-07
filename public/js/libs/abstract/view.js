@@ -10,27 +10,44 @@ define('libs/abstract/view', [
     window.AbstractView = Backbone.View.extend({
         initRactive: function () {
             this.ractive = new Ractive(this);
-        },
-
-        data: {},
-
-        getTemplate: getTemplate,
-
-        bindModel: function (model) {
-            this.data = model;
-            this.ractive.data = this.data.attributes;
-            this.ractive.update();
 
             // I hate idiots who not use on and off without manual context
             this._ractiveEventHandler = this._ractiveEventHandler.bind(this);
-
-            model.on('all', this._backboneEventHandler, this);
-            this.ractive.on('change', this._ractiveEventHandler);
+            this.ractive.observe('*', this._ractiveEventHandler);
+            this.ractive.data = {};
         },
 
-        unBindModel: function () {
-            this.ractive.off('change', this._ractiveEventHandler);
-            this.data.off('all', this._backboneEventHandler, this);
+        getTemplate: getTemplate,
+
+        createData: function(data, name) {
+            var model = new Backbone.Model(data);
+            this.bindModel(model, name);
+        },
+
+        bindModel: function (model, name) {
+            if (!this._bindedModels) {
+                this._bindedModels = {};
+                this.data = {};
+            }
+
+            this.data[name] = model;
+            this.ractive.data[name] = this.data[name].attributes;
+
+            this.data[name].on('all', this._backboneEventHandler, this);
+
+            this._bindedModels[name] = model;
+        },
+
+        unBindModel: function (name) {
+            if (name) {
+                this.data[name].off('all', this._backboneEventHandler, this);
+                delete this._bindedModels[name];
+            } else {
+                this.ractive.off('change', this._ractiveEventHandler);
+                _.forEach(this._bindedModels, function (model, name) {
+                    this.data[name].off('all', this._backboneEventHandler, this);
+                }, this);
+            }
         },
 
         unRender: function () {
@@ -47,8 +64,14 @@ define('libs/abstract/view', [
         },
 
         _ractiveEventHandler: function (data) {
-            _.forEach(data, function (val, key) {
-                this.data.set(key, val, {silent: true});
+            console.log(data);
+            debugger;
+            _.forEach(data, function (modelData, model) {
+                if (this._bindedModels[model]) {
+                    _.forEach(modelData, function (val, key) {
+                        this.data[model].set(key, val, {silent: true});
+                    }, this);
+                }
             }, this);
         },
 

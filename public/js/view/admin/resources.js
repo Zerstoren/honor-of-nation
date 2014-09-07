@@ -12,7 +12,7 @@ define('view/admin/resources', [], function () {
         },
 
         render: function (holder) {
-            this.$el.html(this.template('admin/resources/show'));
+            this.$el.html(this.getTemplate('admin/resources/show'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -24,7 +24,7 @@ define('view/admin/resources', [], function () {
 
         showEditForm: function (domain, users) {
             this.$el.find('.edit').html(
-                this.template('admin/resources/edit', {
+                this.getTemplate('admin/resources/edit', {
                     'resource': domain,
                     'users': users
                 })

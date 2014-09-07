@@ -8,8 +8,16 @@ define('view/admin/player', [], function () {
             'click .save-coordinate': 'onSaveCoordinate'
         },
 
+        initialize: function () {
+            this.template = this.getTemplate('admin/player/player');
+            this.initRactive();
+
+            this.createData({
+                'login': ''
+            }, 'name');
+        },
+
         render: function (holder) {
-            this.$el.html(this.getTemplate('admin/player/player'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -17,17 +25,18 @@ define('view/admin/player', [], function () {
         unRender: function () {
             this.$el.remove();
             this.undelegateEvents();
+            this.unBindModel();
         },
 
         showUserData: function (userDomain, resourceDomain) {
-//            this.$el.find('#user-info').html(
-//                this.template(
-//                    'admin/player/info',
-//                    {
-//                        resources: resourceDomain
-//                    }
-//                )
-//            );
+            this.$el.find('#user-info').html(
+                this.getTemplate(
+                    'admin/player/info',
+                    {
+                        resources: resourceDomain
+                    }
+                )
+            );
         },
 
         successSave: function () {

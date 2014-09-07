@@ -28,7 +28,7 @@ define('view/admin/terrain', [
 
             this.initRactive();
 
-            this.bindModel(new Backbone.Model({
+            this.createData({
                 position: {
                     fromX: null,
                     fromY: null,
@@ -41,7 +41,7 @@ define('view/admin/terrain', [
                     y: null
                 },
                 chankListToAdd: []
-            }));
+            }, 'form');
         },
 
         data: {},
@@ -54,6 +54,7 @@ define('view/admin/terrain', [
         unRender: function () {
             this.$el.remove();
             this.undelegateEvents();
+            this.unBindModel();
         },
 
         successSave: function () {
@@ -75,11 +76,11 @@ define('view/admin/terrain', [
         onAddToList: function () {
             var x,
                 y,
-                chunkNum = parseInt(this.data.get('chunk'), 10);
+                chunkNum = parseInt(this.data.form.get('chunk'), 10);
 
             if (isNaN(chunkNum)) {
-                x = parseInt(this.data.get('searchChunk').x, 10);
-                y = parseInt(this.data.get('searchChunk').y, 10);
+                x = parseInt(this.data.form.get('searchChunk').x, 10);
+                y = parseInt(this.data.form.get('searchChunk').y, 10);
 
                 chunkNum = gameMap.help.fromPlaceToChunk(x, y);
 
@@ -92,15 +93,17 @@ define('view/admin/terrain', [
                 this.chunksListToAdd.push(chunkNum);
             }
 
-            this.data.set('chunk', null);
-            this.data.set('searchChunk', {x: null, y: null});
-            this.data.set('chunksListToAdd', this.chunksListToAdd);
+            this.data.form.set('chunk', null);
+            this.data.form.set('searchChunk', {x: null, y: null});
+            this.data.form.set('chunksListToAdd', this.chunksListToAdd);
+
+            console.log(this.data.form.attributes);
         },
 
         onRemoveFromList: function (e) {
             var chunk = parseInt($(e.target).data('chunk'), 10);
             this.chunksListToAdd = _.without(this.chunksListToAdd, chunk);
-            this.data.set('chunksListToAdd', this.chunksListToAdd);
+            this.data.form.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onSelectLandType: function (e) {
@@ -119,10 +122,10 @@ define('view/admin/terrain', [
                send = {
                    type: 'coordinate',
                    coordinate: {
-                       fromX: parseInt(this.data.get('position').fromX, 10),
-                       fromY: parseInt(this.data.get('position').fromY, 10),
-                       toX  : parseInt(this.data.get('position').toX, 10),
-                       toY  : parseInt(this.data.get('position').toY, 10)
+                       fromX: parseInt(this.data.form.get('position').fromX, 10),
+                       fromY: parseInt(this.data.form.get('position').fromY, 10),
+                       toX  : parseInt(this.data.form.get('position').toX, 10),
+                       toY  : parseInt(this.data.form.get('position').toY, 10)
                    }
                };
 
@@ -136,12 +139,12 @@ define('view/admin/terrain', [
 
             } else {
                 send = {
-                   type: 'chunk',
+                   type: 'chunks',
                    chunks: _.clone(this.chunksListToAdd)
                 };
 
                 this.chunksListToAdd = [];
-                this.data.set('chunksListToAdd', this.chunksListToAdd);
+                this.data.form.set('chunksListToAdd', this.chunksListToAdd);
             }
 
             send.fillLand = this.fillLand;

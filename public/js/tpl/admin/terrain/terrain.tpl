@@ -9,27 +9,27 @@
         <div class="block-coordinate">
             <div class="input-group-sm from">
                 <span>C позиции:</span> <br>
-                <input type="number" min="0" max="1999" step="1"  placeholder="x" class="form-control x" value="{{position.fromX}}">
-                <input type="number" min="0" max="1999" step="1"  placeholder="y" class="form-control y" value="{{position.fromY}}">
+                <input type="number" min="0" max="1999" step="1"  placeholder="x" class="form-control x" value="{{form.position.fromX}}">
+                <input type="number" min="0" max="1999" step="1"  placeholder="y" class="form-control y" value="{{form.position.fromY}}">
             </div>
 
             <div class="input-group-sm to">
                 <span>По позицию:</span> <br>
-                <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x" value="{{position.toX}}">
-                <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y" value="{{position.toY}}">
+                <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x" value="{{form.position.toX}}">
+                <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y" value="{{form.position.toY}}">
             </div>
         </div>
 
         <div class="block-chunk" style="display: none;">
             <div class="input-group-sm">
                 <span>Номер чанка:</span> <br>
-                <input type="number" min="0" max="15625" step="1" class="form-control chunk" value="{{chunk}}">
+                <input type="number" min="0" max="15625" step="1" class="form-control chunk" value="{{form.chunk}}">
             </div>
 
             <div class="input-group-sm chunk-position">
                 <span>Позиция чанка:</span> <br>
-                <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x" value="{{searchChunk.x}}">
-                <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y" value="{{searchChunk.y}}">
+                <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x" value="{{form.searchChunk.x}}">
+                <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y" value="{{form.searchChunk.y}}">
             </div>
 
             <br>
@@ -39,7 +39,7 @@
             <span>Чанки для добавления:</span>
             <span class="chunk-to-add">
                 <span>
-                    {{#each chunksListToAdd}}
+                    {{#each form.chunksListToAdd}}
                         {{>chunkItem}}
                     {{/each}}
                 </span>
