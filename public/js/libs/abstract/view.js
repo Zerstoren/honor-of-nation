@@ -1,12 +1,80 @@
 define('libs/abstract/view', [
     'system/template',
-    'view/block/error'
+    'view/block/error',
+    'ractive'
 ], function (
-    template,
-    viewBlockError
+    getTemplate,
+    viewBlockError,
+    Ractive
 ) {
     window.AbstractView = Backbone.View.extend({
-        template: template,
+        initRactive: function () {
+            this.ractive = new Ractive(this);
+
+            // I hate idiots who not use on and off without manual context
+            this._ractiveEventHandler = this._ractiveEventHandler.bind(this);
+            this.ractive.observe('*', this._ractiveEventHandler);
+            this.ractive.data = {};
+        },
+
+        getTemplate: getTemplate,
+
+        createData: function(data, name) {
+            var model = new Backbone.Model(data);
+            this.bindModel(model, name);
+        },
+
+        bindModel: function (model, name) {
+            if (!this._bindedModels) {
+                this._bindedModels = {};
+                this.data = {};
+            }
+
+            this.data[name] = model;
+            this.ractive.data[name] = this.data[name].attributes;
+
+            this.data[name].on('all', this._backboneEventHandler, this);
+
+            this._bindedModels[name] = model;
+        },
+
+        unBindModel: function (name) {
+            if (name) {
+                this.data[name].off('all', this._backboneEventHandler, this);
+                delete this._bindedModels[name];
+            } else {
+                this.ractive.off('change', this._ractiveEventHandler);
+                _.forEach(this._bindedModels, function (model, name) {
+                    this.data[name].off('all', this._backboneEventHandler, this);
+                }, this);
+            }
+        },
+
+        unRender: function () {
+            this.ractive.teardown();
+        },
+
+        _backboneEventHandler: function (eventName, model, value) {
+            var valueName = '';
+
+            if (eventName.indexOf('change:') != -1) {
+                valueName = eventName.replace('change:', '');
+                this.ractive.set(valueName, value);
+            }
+        },
+
+        _ractiveEventHandler: function (data) {
+            console.log(data);
+            debugger;
+            _.forEach(data, function (modelData, model) {
+                if (this._bindedModels[model]) {
+                    _.forEach(modelData, function (val, key) {
+                        this.data[model].set(key, val, {silent: true});
+                    }, this);
+                }
+            }, this);
+        },
+
         delegateEvents: function (events) {
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
@@ -73,6 +141,16 @@ define('libs/abstract/view', [
 
             // Arrows
             aleft:37, aup:38, aright:39, adown:40
+        },
+
+        setHolder: function (holder) {
+            if (holder instanceof Backbone.$) {
+                this.el = holder[0];
+                this.$el = holder;
+            } else {
+                this.el = holder;
+                this.$el = Backbone.$(holder);
+            }
         },
 
         traverseEvent: function (eventName, fromView) {

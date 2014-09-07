@@ -5,7 +5,7 @@ define('view/elements/menu', [], function () {
         },
 
         render: function (holder) {
-            this.$el.html(this.template('elements/menu'));
+            this.$el.html(this.getTemplate('elements/menu'));
             holder.append(this.$el);
         },
 

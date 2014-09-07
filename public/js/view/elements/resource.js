@@ -6,8 +6,14 @@ define('view/elements/resource', [], function () {
         },
         currentTooltip: null,
 
+        initialize: function () {
+            this.template = this.getTemplate('elements/resource');
+            this.initRactive();
+        },
+
+        data: {},
+
         render: function (holder) {
-            this.$el.html(this.template('elements/resource'));
             holder.append(this.$el);
         },
 

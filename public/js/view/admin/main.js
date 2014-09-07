@@ -8,11 +8,8 @@ define('view/admin/main', [], function () {
 
         className: 'admin',
 
-        initialize: function () {
-        },
-
         render: function (holder) {
-            this.$el.html(this.template('admin/main'));
+            this.$el.html(this.getTemplate('admin/main'));
             holder.append(this.$el);
             this.delegateEvents();
         },

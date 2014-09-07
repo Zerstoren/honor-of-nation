@@ -1,15 +1,28 @@
 import models.Abstract.Factory
 import models.User.Domain
+import models.User.Mapper
+from collection import UserCollection
 
 class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
+
     def getDomainById(self, userId):
         domain = self.getCache(userId)
         if domain is None:
             domain = self.getDomainFromData(
-                Mapper.User_Mapper.getById(userId)
+                models.User.Mapper.User_Mapper.getById(userId)
             )
 
         return domain
+
+    def getCollectionFromDataNoCache(self, data):
+        collection = UserCollection.User_Collection()
+
+        for i in data:
+            domain = models.User.Domain.User_Domain()
+            domain.setOptions(i)
+            collection.append(domain)
+
+        return collection
 
     def getDomainFromData(self, data):
         """

@@ -60,7 +60,7 @@ class CheckDatabaseIndexes():
                     value = item[i]
 
                 result = configParse[i][0](value)
-            except KeyError:
+            except (KeyError, _RefErrorLocalException):
                 if configParse[i][1].find('empty') != -1:
                     configKeys.remove(i)
                 continue
@@ -120,7 +120,7 @@ class CheckDatabaseIndexes():
             return lambda value: fn(value) or isinstance(value, system.mongo.types.ObjectId)
 
         def noneParse(fn):
-            return lambda value: fn(value)
+            return lambda value: fn(value) or value is None
 
         def refParse(fn, ref):
             collection, field = ref.split('->')
