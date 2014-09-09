@@ -51,7 +51,9 @@ class SocketHandler(websocket.WebSocketHandler):
 
     def on_close(self):
         self.user = None
-
+    
+    def check_origin(self, origin):
+        return True
 
 app = web.Application([
     ('/', SocketHandler)
