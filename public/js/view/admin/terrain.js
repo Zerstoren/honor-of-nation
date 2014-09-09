@@ -27,24 +27,22 @@ define('view/admin/terrain', [
             };
 
             this.initRactive();
-
-            this.createData({
-                position: {
-                    fromX: null,
-                    fromY: null,
-                    toX  : null,
-                    toY  : null
-                },
-                chank: null,
-                searchChank: {
-                    x: null,
-                    y: null
-                },
-                chankListToAdd: []
-            }, 'form');
         },
 
-        data: {},
+        data: {
+            position: {
+                fromX: null,
+                fromY: null,
+                toX  : null,
+                toY  : null
+            },
+            chunk: null,
+            searchChunk: {
+                x: null,
+                y: null
+            },
+            chunkListToAdd: []
+        },
 
         render: function (holder) {
             holder.append(this.$el);
@@ -54,7 +52,6 @@ define('view/admin/terrain', [
         unRender: function () {
             this.$el.remove();
             this.undelegateEvents();
-            this.unBindModel();
         },
 
         successSave: function () {
@@ -76,11 +73,11 @@ define('view/admin/terrain', [
         onAddToList: function () {
             var x,
                 y,
-                chunkNum = parseInt(this.data.form.get('chunk'), 10);
+                chunkNum = parseInt(this.get('chunk'), 10);
 
             if (isNaN(chunkNum)) {
-                x = parseInt(this.data.form.get('searchChunk').x, 10);
-                y = parseInt(this.data.form.get('searchChunk').y, 10);
+                x = parseInt(this.get('searchChunk').x, 10);
+                y = parseInt(this.get('searchChunk').y, 10);
 
                 chunkNum = gameMap.help.fromPlaceToChunk(x, y);
 
@@ -93,17 +90,15 @@ define('view/admin/terrain', [
                 this.chunksListToAdd.push(chunkNum);
             }
 
-            this.data.form.set('chunk', null);
-            this.data.form.set('searchChunk', {x: null, y: null});
-            this.data.form.set('chunksListToAdd', this.chunksListToAdd);
-
-            console.log(this.data.form.attributes);
+            this.set('chunk', null);
+            this.set('searchChunk', {x: null, y: null});
+            this.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onRemoveFromList: function (e) {
             var chunk = parseInt($(e.target).data('chunk'), 10);
             this.chunksListToAdd = _.without(this.chunksListToAdd, chunk);
-            this.data.form.set('chunksListToAdd', this.chunksListToAdd);
+            this.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onSelectLandType: function (e) {
@@ -111,7 +106,7 @@ define('view/admin/terrain', [
             this.fillLandType = target.data('type');
             this.fillLand = target.parent().data('type');
 
-            $('.fill-items button').removeClass('active');
+            this.$el.find('.fill-items button').removeClass('active');
             target.addClass('active');
         },
 
@@ -121,12 +116,7 @@ define('view/admin/terrain', [
             if (this.fillType === 'coordinate') {
                send = {
                    type: 'coordinate',
-                   coordinate: {
-                       fromX: parseInt(this.data.form.get('position').fromX, 10),
-                       fromY: parseInt(this.data.form.get('position').fromY, 10),
-                       toX  : parseInt(this.data.form.get('position').toX, 10),
-                       toY  : parseInt(this.data.form.get('position').toY, 10)
-                   }
+                   coordinate: this.get('position')
                };
 
                 if (isNaN(send.coordinate.fromX) ||
@@ -144,7 +134,7 @@ define('view/admin/terrain', [
                 };
 
                 this.chunksListToAdd = [];
-                this.data.form.set('chunksListToAdd', this.chunksListToAdd);
+                this.set('chunksListToAdd', this.chunksListToAdd);
             }
 
             send.fillLand = this.fillLand;

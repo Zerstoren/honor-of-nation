@@ -21,8 +21,8 @@ define('service/admin/resources', [
         },
 
         onSearch: function (x, y) {
-            gatewayAdmin.loadResourceMap(x, y, function (domain, users) {
-                this.resourcesView.showEditForm(domain, users);
+            gatewayAdmin.loadResourceMap(x, y, function (domain, users, towns) {
+                this.resourcesView.showEditForm(domain, users, towns);
             }.bind(this));
         },
 

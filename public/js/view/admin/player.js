@@ -10,11 +10,21 @@ define('view/admin/player', [], function () {
 
         initialize: function () {
             this.template = this.getTemplate('admin/player/player');
-            this.initRactive();
+            this.partials = {
+                info: this.getTemplate('admin/player/info')
+            };
 
-            this.createData({
-                'login': ''
-            }, 'name');
+            this.initRactive();
+        },
+
+        data: {
+            login: '',
+            position: {
+                fromX: null,
+                toX: null,
+                fromY: null,
+                toY: null
+            }
         },
 
         render: function (holder) {
@@ -25,18 +35,11 @@ define('view/admin/player', [], function () {
         unRender: function () {
             this.$el.remove();
             this.undelegateEvents();
-            this.unBindModel();
         },
 
         showUserData: function (userDomain, resourceDomain) {
-            this.$el.find('#user-info').html(
-                this.getTemplate(
-                    'admin/player/info',
-                    {
-                        resources: resourceDomain
-                    }
-                )
-            );
+            this.set('user', userDomain);
+            this.set('resources', resourceDomain);
         },
 
         successSave: function () {
@@ -45,32 +48,29 @@ define('view/admin/player', [], function () {
 
         onSaveInfo: function () {
             this.trigger('save-info', {
-                rubins : this.$el.find('input.rubins').val(),
-                wood   : this.$el.find('input.wood').val(),
-                steel  : this.$el.find('input.steel').val(),
-                stone  : this.$el.find('input.stone').val(),
-                eat    : this.$el.find('input.eat').val(),
-                gold   : this.$el.find('input.gold').val()
+                rubins : this.get('resources').get('rubins'),
+                wood   : this.get('resources').get('wood'),
+                steel  : this.get('resources').get('steel'),
+                stone  : this.get('resources').get('stone'),
+                eat    : this.get('resources').get('eat'),
+                gold   : this.get('resources').get('gold')
             });
         },
 
         onSaveCoordinate: function (e) {
-            var data = {
-                fromX: this.$el.find('.show-terrain .from .x').val(),
-                fromY: this.$el.find('.show-terrain .from .y').val(),
-                toX: this.$el.find('.show-terrain .to .x').val(),
-                toY: this.$el.find('.show-terrain .to .y').val()
-            };
+            var data = this.get('position');
 
             if (!data.fromX || !data.fromY || !data.toX || !data.toY) {
                 this.errorMessage('Указаны не все координаты');
                 return;
             }
 
-            this.$el.find('.show-terrain .from .x').val('');
-            this.$el.find('.show-terrain .from .y').val('');
-            this.$el.find('.show-terrain .to .x').val('');
-            this.$el.find('.show-terrain .to .y').val('');
+            this.set('position', {
+                fromX: null,
+                toX: null,
+                fromY: null,
+                toY: null
+            });
 
             this.trigger('save-coordinate', data);
         },
@@ -80,14 +80,12 @@ define('view/admin/player', [], function () {
                 return;
             }
 
-            var value = this.$el.find('.search-user-login').val();
-
-            if (!value) {
+            if (!this.get('login')) {
                 viewBlockError.showErrorBox('Поле логина пустое');
                 return;
             }
 
-            this.trigger('search-user', value);
+            this.trigger('search-user', this.get('login'));
         }
     });
 });

@@ -5,7 +5,7 @@
 
     <div class="col-md-4">
         <div class="input-group">
-            <input type="text" class="form-control coordinate">
+            <input type="text" class="form-control coordinate" value="{{search}}">
             <span class="input-group-btn search">
                 <button class="btn btn-default" type="button">Искать</button>
             </span>

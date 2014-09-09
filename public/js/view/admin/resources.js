@@ -11,8 +11,16 @@ define('view/admin/resources', [], function () {
             "mouseout .form-group .with-tooltip": "onHideHint"
         },
 
+        initialize: function () {
+            this.template = this.getTemplate('admin/resources/show');
+            this.initRactive();
+        },
+
+        data: {
+            search: ''
+        },
+
         render: function (holder) {
-            this.$el.html(this.getTemplate('admin/resources/show'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -23,6 +31,7 @@ define('view/admin/resources', [], function () {
         },
 
         showEditForm: function (domain, users) {
+            console.log(domain,users);
             this.$el.find('.edit').html(
                 this.getTemplate('admin/resources/edit', {
                     'resource': domain,
@@ -36,9 +45,7 @@ define('view/admin/resources', [], function () {
         },
 
         onSearch: function () {
-            var coordinate = this.$validateCoordinate(
-                this.$el.find('.coordinate').val()
-            );
+            var coordinate = this.$validateCoordinate(this.get('search'));
 
             if (coordinate) {
                 this.trigger('search', coordinate[0], coordinate[1]);

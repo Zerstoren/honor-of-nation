@@ -12,7 +12,7 @@ class AbstractMapController:
 class MainController(AbstractMapController):
     def load_chunks(self, transfer, data):
         userCollectionChunks = self._getAclJsonPackMapService().getByVisibleCollection(
-            self._getMapUserVisibleService().getByChanks(
+            self._getMapUserVisibleService().getByChunks(
                 transfer.getUser(),
                 data['chunkList']
             )

@@ -15,7 +15,7 @@ define('service/standalone/map/loader', [
         initialize: function () {
             this.$mapDI = mapInstance;
             this.$mapDrawDI = drawInstance;
-            this.chanksLoaded = [];
+            this.chunksLoaded = [];
             this.subscribeOnEvents();
         },
 
@@ -36,9 +36,9 @@ define('service/standalone/map/loader', [
         },
 
         positionMapLoad: function(x, y) {
-            var dumpX, chankItem,
+            var dumpX, chunkItem,
                 self = this,
-                chankList = [],
+                chunkList = [],
                 width = this.$mapDI.getMapWidth(),
                 height = this.$mapDI.getMapHeight(),
                 maxWidth = x + width,
@@ -48,44 +48,44 @@ define('service/standalone/map/loader', [
                 dumpX = x;
 
                 for(0; x < maxWidth; x += 4) {
-                    chankItem = this.$mapDI.help.fromPlaceToChank(x, y);
+                    chunkItem = this.$mapDI.help.fromPlaceToChunk(x, y);
 
-                    if(!_.contains(chankList, chankItem) && !_.contains(this.chanksLoaded, chankItem)) {
-                        chankList.push(chankItem);
+                    if(!_.contains(chunkList, chunkItem) && !_.contains(this.chunksLoaded, chunkItem)) {
+                        chunkList.push(chunkItem);
                     }
                 }
 
                 x = dumpX;
             }
 
-            if(chankList.length) {
-                this.chanksLoaded = _.union(this.chanksLoaded, chankList);
+            if(chunkList.length) {
+                this.chunksLoaded = _.union(this.chunksLoaded, chunkList);
 
-                gatewayMap.loadChunks(chankList, function(message) {
+                gatewayMap.loadChunks(chunkList, function(message) {
                     self.$mapDrawDI.mapMerge(message.result.data);
                 });
             }
         },
 
         regionReload: function(fromX, fromY, toX, toY) {
-            var y, x, chankItem,
+            var y, x, chunkItem,
                 self = this,
-                chankList = [];
+                chunkList = [];
 
             for(y = fromY; y < toY; y += 4) {
                 for(x = fromX; x < toX; x += 4) {
-                    chankItem = this.$mapDI.help.fromPlaceToChank(x, y);
+                    chunkItem = this.$mapDI.help.fromPlaceToChunk(x, y);
 
-                    if(!Array.contain(chankList, chankItem)) {
-                        chankList.push(chankItem);
+                    if(!Array.contain(chunkList, chunkItem)) {
+                        chunkList.push(chunkItem);
                     }
                 }
             }
 
-            if(chankList.length) {
-                Array.merge(this.chanksLoaded, chankList);
+            if(chunkList.length) {
+                Array.merge(this.chunksLoaded, chunkList);
 
-                gatewayMap.loadChunks(chankList, function(message) {
+                gatewayMap.loadChunks(chunkList, function(message) {
                     self.$mapDrawDI.mapMerge(message.result.data);
                 });
             }
