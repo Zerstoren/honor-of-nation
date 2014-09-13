@@ -11,6 +11,7 @@ import service.User
 import helpers.mongo
 
 import exceptions.database
+import exceptions.message
 
 class Service_MapResources(AbstractService.Service_Abstract):
 
@@ -31,9 +32,9 @@ class Service_MapResources(AbstractService.Service_Abstract):
             )
 
             if '_id' not in data['domain']:
-                raise Exception('Данная позиция уже занята')
+                raise exceptions.message.Message('Данная позиция уже занята')
             elif '_id' in data['domain'] and str(domainInPosition.getId()) != data['domain']['_id']:
-                raise Exception('Данная позиция уже занята')
+                raise exceptions.message.Message('Данная позиция уже занята')
 
         except exceptions.database.NotFound:
             pass
