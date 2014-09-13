@@ -10,4 +10,9 @@ class MapResources_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         domain.setOptions(data)
         return domain
 
+    def getDomainById(self, _id):
+        return self.getDomainFromData(
+            Mapper.MapResources_Mapper.getById(_id)
+        )
+
 MapResources_Factory = MapResources_Factory_Main()

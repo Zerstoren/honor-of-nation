@@ -1,5 +1,3 @@
-from tests.backend.t_controller.generic import Backend_Controller_Generic
-
 import controller.ResourceController
 
 import service.Admin
@@ -27,6 +25,9 @@ class AbstractAdminController():
 
     def _getJsonPackMapResourcesService(self):
         return service.MapResources.Service_MapResources().decorate('JsonPack')
+
+    def _getAclMapResourcesService(self):
+        return service.MapResources.Service_MapResources().decorate('Acl')
 
 
 class MainAdminController(AbstractAdminController):
@@ -143,3 +144,10 @@ class MainAdminController(AbstractAdminController):
 
         result['done'] = True
         transfer.send('/admin/loadResourceMap', result)
+
+
+    def saveResourceDomain(self, transfer, data):
+        result = {}
+        result['done'] = self._getAclMapResourcesService().saveResources(data)
+
+        transfer.send('/admin/saveResourceDomain', result)

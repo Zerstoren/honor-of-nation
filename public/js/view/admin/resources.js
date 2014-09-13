@@ -1,11 +1,13 @@
-define('view/admin/resources', [], function () {
+define('view/admin/resources', [
+    'model/resources'
+], function (ModelResources) {
     return AbstractView.extend({
         className: 'resources-map',
         events: {
             'click .create': 'onCreate',
             'click .search': 'onSearch',
-            'change .user': 'onChangeUser',
-            'change .town': 'onChangeTown',
+//            'change .user': 'onChangeUser',
+//            'change .town': 'onChangeTown',
             'click .save': 'onSaveResource',
             "mouseenter .form-group .with-tooltip": "onShowHint",
             "mouseout .form-group .with-tooltip": "onHideHint"
@@ -13,11 +15,16 @@ define('view/admin/resources', [], function () {
 
         initialize: function () {
             this.template = this.getTemplate('admin/resources/show');
+            this.partials = {
+                edit: this.getTemplate('admin/resources/edit')
+            };
             this.initRactive();
         },
 
         data: {
-            search: ''
+            search: '',
+            resource: null,
+            users: null
         },
 
         render: function (holder) {
@@ -31,13 +38,20 @@ define('view/admin/resources', [], function () {
         },
 
         showEditForm: function (domain, users) {
-            console.log(domain,users);
-            this.$el.find('.edit').html(
-                this.getTemplate('admin/resources/edit', {
-                    'resource': domain,
-                    'users': users
+            this.set('users', users);
+
+            if (!domain) {
+                domain = new ModelResources({
+                    type: ModelResources.prototype.RUBINS,
+                    amount: 0,
+                    base: 0,
+                    output: 0,
+                    pos_id: 0,
+                    town: null,
+                    user: null
                 })
-            );
+            }
+            this.set('resource', domain);
         },
 
         onCreate: function () {
@@ -68,16 +82,16 @@ define('view/admin/resources', [], function () {
             this.tooltip.tooltip('destroy');
         },
 
-        onChangeUser: function () {
-
-        },
-
-        onChangeTown: function () {
-
-        },
+//        onChangeUser: function () {
+//
+//        },
+//
+//        onChangeTown: function () {
+//
+//        },
 
         onSaveResource: function () {
-
+            this.trigger('save', this.get('resource'));
         },
 
         $validateCoordinate: function (coordinate) {

@@ -14,4 +14,8 @@
 </div>
 
 <br/><br/>
-<div class="edit"></div>
+<div class="edit">
+    {{#users}}
+        {{>edit}}
+    {{/users}}
+</div>

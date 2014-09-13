@@ -2,7 +2,7 @@ define('view/block/no/body', [], function() {
     'use strict';
 
     return AbstractView.extend({
-        holderEl: null,
+        holder: null,
 
         initialize: function (holder) {
             this.holder = holder;
@@ -13,11 +13,11 @@ define('view/block/no/body', [], function() {
         },
 
         getHolder: function () {
-            if (this.holderEl === null) {
-                this.holderEl = jQuery('#main-holder');
+            if (this.holder === null) {
+                this.holder = jQuery('#main-holder');
             }
 
-            return this.holderEl;
+            return this.holder;
         }
     });
 });

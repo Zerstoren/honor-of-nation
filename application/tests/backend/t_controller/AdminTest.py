@@ -347,3 +347,23 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertFalse(result['resource'])
         self.assertEqual(type(result['users']), list)
         self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+        #
+    def testSaveMapResource(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveResourceDomain(transfer, {
+            "amount": 2500000,
+            "base_output": 13000,
+            "output": 0,
+            "position": '1x1',
+            "town": None,
+            "type": "rubins",
+            "user": str(transfer.getUser().getId())
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])

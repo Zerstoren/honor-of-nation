@@ -63,6 +63,14 @@ define('gateway/admin', [
 
                 fn(domain, result['users'], result['towns']);
             });
+        },
+
+        saveResourceDomain: function (domain, fn) {
+            this.socket.send('/admin/saveResourceDomain', {
+               domain: domain.attributes
+            }, function (result) {
+                console.log(result);
+            });
         }
     });
 

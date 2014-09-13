@@ -3,13 +3,13 @@ define('service/admin/resources', [
     'view/admin/resources'
 ], function (
     gatewayAdmin,
-    ViewAdminResources,
-    ModelMapResources
+    ViewAdminResources
 ) {
     return AbstractService.extend({
         initialize: function () {
             this.resourcesView = new ViewAdminResources();
-            this.resourcesView.on('search', this.onSearch, this)
+            this.resourcesView.on('search', this.onSearch, this);
+            this.resourcesView.on('save', this.onResourcesSend, this);
         },
 
         render: function (holder) {
@@ -26,8 +26,10 @@ define('service/admin/resources', [
             }.bind(this));
         },
 
-        onResourcesSend: function (data) {
+        onResourcesSend: function (domain) {
+            gatewayAdmin.saveResourceDomain(domain, function () {
 
+            }.bind(this));
         }
     });
 });
