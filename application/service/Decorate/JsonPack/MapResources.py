@@ -1,14 +1,21 @@
 
 class Decorate():
     def packDomainToJson(self, domain):
+        user = domain.getUser()
+
+        if user:
+            userId = str(user.getId())
+        else:
+            userId = None
+
         return {
             '_id': str(domain.getId()),
             'pos_id': domain.getPosId(),
             'type': domain.getType(),
-            'user': domain.getUser(),
+            'user': userId,
             'town': None,
-            'count': domain.getCount(),
-            'production': domain.getProduction()
+            'amount': domain.getAmount(),
+            'base_output': domain.getBaseOutput()
         }
 
     def getResourceByPosition(self, x, y):

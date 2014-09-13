@@ -9,6 +9,8 @@ import exceptions.args
 import models.MapUserVisible.Mapper
 import models.Map.Mapper
 
+import models.Map.Factory
+
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
     def _getModelController(self):
@@ -356,14 +358,25 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         transfer = self._login()
 
         controller.saveResourceDomain(transfer, {
-            "amount": 2500000,
-            "base_output": 13000,
-            "output": 0,
-            "position": '1x1',
-            "town": None,
-            "type": "rubins",
-            "user": str(transfer.getUser().getId())
+            "domain": {
+                "amount": 2500000,
+                "base_output": 13000,
+                "output": 0,
+                "position": '1x1',
+                "town": None,
+                "type": "rubins",
+                "user": str(transfer.getUser().getId())
+            }
         })
 
         result = transfer.getLastMessage()['message']
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapResourceDomain = mapDomain.getResource()
+
         self.assertTrue(result['done'])
+        self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(2500000, mapResourceDomain.getAmount())
+        self.assertEqual(13000, mapResourceDomain.getBaseOutput())
+        self.assertEqual('rubins', mapResourceDomain.getType())
+        self.assertEqual(str(mapResourceDomain.getUser().getId()), str(transfer.getUser().getId()))
+

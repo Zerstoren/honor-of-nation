@@ -10,6 +10,8 @@ import service.User
 
 import helpers.mongo
 
+import exceptions.database
+
 class Service_MapResources(AbstractService.Service_Abstract):
 
     def getResourceByPosition(self, x, y):
@@ -21,26 +23,55 @@ class Service_MapResources(AbstractService.Service_Abstract):
         return models.MapResources.Factory.MapResources_Factory.getDomainFromData(resource)
 
     def saveResources(self, data):
-        if '_id' in data:
-            domain = models.MapResources.Factory.MapResources_Factory.getDomainById(data['_id'])
+        posId = models.Map.Math.fromStringCoordinateToPositionId(data['domain']['position'])
+
+        try:
+            domainInPosition = models.MapResources.Factory.MapResources_Factory.getDomainByPosition(
+                *models.Map.Math.fromIdToPosition(posId)
+            )
+
+            if '_id' not in data['domain']:
+                raise Exception('Данная позиция уже занята')
+            elif '_id' in data['domain'] and str(domainInPosition.getId()) != data['domain']['_id']:
+                raise Exception('Данная позиция уже занята')
+
+        except exceptions.database.NotFound:
+            pass
+
+        if '_id' in data['domain']:
+            domain = models.MapResources.Factory.MapResources_Factory.getDomainById(data['domain']['_id'])
         else:
             domain = models.MapResources.Domain.MapResources_Domain()
 
-        user = service.User.Service_User().getUserDomain(
-            helpers.mongo.objectId(data['user'])
-        )
+        if data['domain']['user']:
+            user = service.User.Service_User().getUserDomain(
+                helpers.mongo.objectId(data['domain']['user'])
+            ).getId()
+        else:
+            user = None
+
+        if data['domain']['town']:
+            town = None # TODO
+        else:
+            town = None
+
 
         domain.setOptions({
-            'amount': int(data['amount']),
-            'base_output': int(data['base_output']),
-            'output': int(data['output']),
-            'pos_id': models.Map.Math.fromStringCoordinateToPositionId(data['position']),
-            'town':  None, # TODO
-            'user': user
+            'amount': int(data['domain']['amount']),
+            'base_output': int(data['domain']['base_output']),
+            'output': self.calculateOutput(int(data['domain']['base_output'])),
+            'pos_id': posId,
+            'town':  town,
+            'user': user,
+            'type': data['domain']['type']
         })
 
         domain.getMapper().save(domain)
 
+        return True
+
+    def calculateOutput(self, baseOutput):
+        return baseOutput
 
     def decorate(self, *args):
         """

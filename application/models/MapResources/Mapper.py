@@ -15,10 +15,8 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonLimit = Common.Common_Limit()
         commonLimit.setOne()
 
-        try:
-            return self._select(commonFilter, commonLimit)
-        except exceptions.database.NotFound:
-            return False
+        return self._select(commonFilter, commonLimit)
+
 
 
     def save(self, domain):
@@ -33,10 +31,11 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet = Common.Common_Set()
         commonSet.add('pos_id', domain.getPosId())
         commonSet.add('type', domain.getType())
-        commonSet.add('user', domain.getUser())
-        commonSet.add('town', domain.getTown())
-        commonSet.add('count', domain.getCount())
-        commonSet.add('production', domain.getProduction())
+        commonSet.add('user', domain.getUser().getId() if domain.getUser() else None)
+        commonSet.add('town', domain.getTown().getId() if domain.getTown() else None)
+        commonSet.add('amount', domain.getAmount())
+        commonSet.add('base_output', domain.getBaseOutput()),
+        commonSet.add('output', domain.getOutput()),
 
         if domain.hasId():
             self._update(

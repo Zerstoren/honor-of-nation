@@ -1,4 +1,4 @@
-define('factory/resources', [
+define('factory/mapResources', [
     'model/mapResources'
 ], function (MapResourcesDomain) {
     'use strict';
@@ -8,12 +8,14 @@ define('factory/resources', [
 
         getDomainFromData: function (data) {
             var domain = new this.domain();
+            domain.set('_id', data._id);
             domain.set('pos_id', data.pos_id);
             domain.set('type', data.type);
             domain.set('user', data.user);
             domain.set('town', data.town);
-            domain.set('count', data.count);
-            domain.set('production', data.production);
+            domain.set('amount', data.amount);
+            domain.set('base_output', data.base_output);
+            domain.set('output', data.output);
 
             return domain;
 

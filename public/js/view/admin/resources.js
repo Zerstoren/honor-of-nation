@@ -44,14 +44,24 @@ define('view/admin/resources', [
                 domain = new ModelResources({
                     type: ModelResources.prototype.RUBINS,
                     amount: 0,
-                    base: 0,
+                    base_output: 0,
                     output: 0,
-                    pos_id: 0,
+                    position: this.get('formatters').fromIdToPlace(0),
                     town: null,
                     user: null
                 })
+            } else {
+                domain.set('position', this.get('formatters').fromIdToPlace(domain.get('pos_id')))
             }
+
             this.set('resource', domain);
+        },
+
+        showSuccess: function () {
+            this.set('users', null);
+            this.set('town', null);
+            this.set('search', null);
+            this.successMessage('Resource as success save');
         },
 
         onCreate: function () {
@@ -99,15 +109,15 @@ define('view/admin/resources', [
                 coords = coordinate.split(/([0-9]{1,4})([^0-9]{1,})([0-9]{1,4})/);
 
             if (coords.length != 5) {
-                this.showErrorBox('Введен неверный форма координат. Используйте такой вид: 100x100');
+                this.errorMessage('Введен неверный форма координат. Используйте такой вид: 100x100');
                 return false;
             }
 
             x = parseInt(coords[1], 10);
-            y = parseInt(coords[4], 10);
+            y = parseInt(coords[3], 10);
 
             if (isNaN(x) || isNaN(y)) {
-                this.showErrorBox('Введен неверный форма координат. Используйте такой вид: 100x100');
+                this.errorMessage('Введен неверный форма координат. Используйте такой вид: 100x100');
                 return false;
             }
 

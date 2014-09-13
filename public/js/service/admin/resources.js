@@ -27,8 +27,10 @@ define('service/admin/resources', [
         },
 
         onResourcesSend: function (domain) {
-            gatewayAdmin.saveResourceDomain(domain, function () {
-
+            gatewayAdmin.saveResourceDomain(domain, function (result) {
+                if (result.done) {
+                    this.resourcesView.showSuccess();
+                }
             }.bind(this));
         }
     });

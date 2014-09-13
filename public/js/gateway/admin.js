@@ -69,7 +69,7 @@ define('gateway/admin', [
             this.socket.send('/admin/saveResourceDomain', {
                domain: domain.attributes
             }, function (result) {
-                console.log(result);
+                fn(result);
             });
         }
     });
