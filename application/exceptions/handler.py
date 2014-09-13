@@ -2,6 +2,7 @@ import traceback
 
 from . import database
 from . import httpCodes
+from . import message
 
 
 def handle(fn):
@@ -48,6 +49,12 @@ def handle(fn):
                 'error': str(e),
                 'code': e.getCode(),
                 'traceback': traceback.format_exc()
+            })
+
+        except message.Message as e:
+            transfer.send('/error', {
+                'done': False,
+                'error': str(e)
             })
 
         except Exception as e:
