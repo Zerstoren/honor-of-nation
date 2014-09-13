@@ -9,6 +9,8 @@ import exceptions.args
 import models.MapUserVisible.Mapper
 import models.Map.Mapper
 
+import models.Map.Factory
+
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
     def _getModelController(self):
@@ -294,3 +296,87 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
             16,
             models.Map.Mapper.Map_Mapper._select().count()
         )
+
+    def testLoadResourceMap_NoResources(self):
+        self.fillTerrain(0, 0, 3, 3)
+        self.addResource(0, 0, 'rubins')
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': False,
+            'y': False
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertFalse(result['resource'])
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+    def testLoadResourceMap_HasResources(self):
+        self.fillTerrain(0, 0, 3, 3)
+        self.addResource(0, 0, 'rubins')
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': 0,
+            'y': 0
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertEqual(result['resource']['pos_id'], 0)
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+    def testLoadResourceMap_ResourcesNotFound(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.loadResourceMap(transfer, {
+            'x': 0,
+            'y': 0
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertFalse(result['resource'])
+        self.assertEqual(type(result['users']), list)
+        self.assertEqual(result['users'][0]['login'], 'Zerst')
+
+        #
+    def testSaveMapResource(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveResourceDomain(transfer, {
+            "domain": {
+                "amount": 2500000,
+                "base_output": 13000,
+                "output": 0,
+                "position": '1x1',
+                "town": None,
+                "type": "rubins",
+                "user": str(transfer.getUser().getId())
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapResourceDomain = mapDomain.getResource()
+
+        self.assertTrue(result['done'])
+        self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(2500000, mapResourceDomain.getAmount())
+        self.assertEqual(13000, mapResourceDomain.getBaseOutput())
+        self.assertEqual('rubins', mapResourceDomain.getType())
+        self.assertEqual(str(mapResourceDomain.getUser().getId()), str(transfer.getUser().getId()))
+

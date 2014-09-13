@@ -9,6 +9,9 @@
                 <li>
                     <button class="btn btn-default" data-type="player">Игроки</button>
                 </li>
+                <li>
+                    <button class="btn btn-default" data-type="resources">Ресурсы</button>
+                </li>
             </ul>
     </div>
 

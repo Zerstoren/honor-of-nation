@@ -16,12 +16,12 @@ define('service/standalone/map/gameMapItems/Help', [
             };
         },
 
-        fromPlaceToChank: function(x, y) {
+        fromPlaceToChunk: function(x, y) {
 
-            var chank = config.getChunkSize(),
+            var chunk = config.getChunkSize(),
                 size = config.getMapSize();
 
-            return parseInt(((y - y % chank) / chank * (size / chank)) + (x - x % chank) / chank + 1, 0x0);
+            return parseInt(((y - y % chunk) / chunk * (size / chunk)) + (x - x % chunk) / chunk + 1, 0x0);
         }
     });
 });

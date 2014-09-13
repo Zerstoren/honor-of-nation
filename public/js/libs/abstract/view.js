@@ -1,12 +1,25 @@
 define('libs/abstract/view', [
     'system/template',
-    'view/block/error'
+    'view/block/error',
+    'ractive'
 ], function (
-    template,
-    viewBlockError
+    getTemplate,
+    viewBlockError,
+    Ractive
 ) {
     window.AbstractView = Backbone.View.extend({
-        template: template,
+        adapt: [Ractive.adaptors.Backbone],
+        initRactive: function () {
+            this.ractive = new Ractive(this);
+            this.set = this.ractive.set.bind(this.ractive);
+            this.get = this.ractive.get.bind(this.ractive);
+            this.teardown = this.ractive.teardown.bind(this.ractive);
+        },
+
+        data: {},
+
+        getTemplate: getTemplate,
+
         delegateEvents: function (events) {
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
@@ -73,6 +86,16 @@ define('libs/abstract/view', [
 
             // Arrows
             aleft:37, aup:38, aright:39, adown:40
+        },
+
+        setHolder: function (holder) {
+            if (holder instanceof Backbone.$) {
+                this.el = holder[0];
+                this.$el = holder;
+            } else {
+                this.el = holder;
+                this.$el = Backbone.$(holder);
+            }
         },
 
         traverseEvent: function (eventName, fromView) {

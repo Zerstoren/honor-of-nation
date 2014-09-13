@@ -5,6 +5,10 @@ import random
 import service.Map
 import service.MapUserVisible
 
+import models.MapResources.Domain
+import models.Map.Math
+
+
 class Generic(abstractGeneric.Abstract_Generic):
     def getRandomName(self, prefix='', length=8):
         return prefix + hashlib.md5(str(random.randint(0, 100000000)).encode()).hexdigest()[0:length]
@@ -36,3 +40,13 @@ class Generic(abstractGeneric.Abstract_Generic):
 
     def openRegion(self, user, mapCollection):
         return service.MapUserVisible.Service_MapUserVisible().openRegion(user, mapCollection)
+
+    def addResource(self, x, y, resourceType, user=None, town=None, count=None, production=None):
+        domain = models.MapResources.Domain.MapResources_Domain()
+        domain.setPosId(models.Map.Math.fromPositionToId(x, y))
+        domain.setType(resourceType)
+        domain.setUser(user)
+        domain.setTown(town)
+        domain.setCount(count if count is not None else self.getRandomInt(10000, 1000000))
+        domain.setProduction(production if production is not None else self.getRandomInt(1000, 10000))
+        domain.getMapper().save(domain)

@@ -16,7 +16,7 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         models.MapUserVisible.Mapper.MapUserVisible_Mapper.insertCollection(user, region)
         return region.getMapVisible(user)
 
-    def getByChanks(self, user, chunks):
+    def getByChunks(self, user, chunks):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
             models.MapUserVisible.Mapper.MapUserVisible_Mapper.getCellsByUsersAndChunks(user, chunks)
         )

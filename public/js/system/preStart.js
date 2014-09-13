@@ -2,6 +2,7 @@ define('system/preStart', [
     'system/bootstrap',
     'system/socket',
     'view/block/error',
+    'view/elements/ractive-helper',
     'service/standalone/user',
 
     'view/block/map/header',
@@ -13,6 +14,7 @@ define('system/preStart', [
     systemBootstrap,
     systemSocket,
     viewBlockError,
+    viewElementsRactiveHelper,
     serviceUser,
 
     ViewBlockMapHeader,

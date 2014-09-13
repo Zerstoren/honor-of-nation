@@ -1,16 +1,16 @@
-from tests.backend.t_controller.generic import Backend_Controller_Generic
-
 import controller.ResourceController
 
 import service.Admin
 import service.Resources
+import service.User
+import service.MapResources
 
 import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
 
 
-class AbstractAdminController(Backend_Controller_Generic):
+class AbstractAdminController():
     def _getAclAdminService(self):
         return service.Admin.Service_Admin().decorate('Acl')
 
@@ -19,6 +19,15 @@ class AbstractAdminController(Backend_Controller_Generic):
 
     def _getJsonPackResourceService(self):
         return service.Resources.Service_Resources().decorate('JsonPack')
+
+    def _getJsonPackUserService(self):
+        return service.User.Service_User().decorate('JsonPack')
+
+    def _getJsonPackMapResourcesService(self):
+        return service.MapResources.Service_MapResources().decorate('JsonPack')
+
+    def _getAclMapResourcesService(self):
+        return service.MapResources.Service_MapResources().decorate('Acl')
 
 
 class MainAdminController(AbstractAdminController):
@@ -106,15 +115,39 @@ class MainAdminController(AbstractAdminController):
             })
 
     def saveCoordinate(self, transfer, data):
-        # try:
-        user = transfer.getUser()
-        self._getAclAdminService().openMapForUser(user, data)
+        try:
+            user = transfer.getUser()
+            self._getAclAdminService().openMapForUser(user, data)
 
-        transfer.send('/admin/saveCoordinate', {
-            'done': True
-        })
-        # except Exception as e:
-        #     transfer.send('/admin/saveCoordinate', {
-        #         'done': False,
-        #         'error': str(e)
-        #     })
+            transfer.send('/admin/saveCoordinate', {
+                'done': True
+            })
+        except Exception as e:
+            transfer.send('/admin/saveCoordinate', {
+                'done': False,
+                'error': str(e)
+            })
+
+    def loadResourceMap(self, transfer, data):
+        result = {}
+
+        result['users'] = self._getJsonPackUserService().getAllUsers()
+
+
+        if 'x' in data and 'y' in data and data['x'] is not False and data['y'] is not False:
+            result['resource'] = self._getJsonPackMapResourcesService().getResourceByPosition(
+                int(data['x']),
+                int(data['y'])
+            )
+        else:
+            result['resource'] = False
+
+        result['done'] = True
+        transfer.send('/admin/loadResourceMap', result)
+
+
+    def saveResourceDomain(self, transfer, data):
+        result = {}
+        result['done'] = self._getAclMapResourcesService().saveResources(data)
+
+        transfer.send('/admin/saveResourceDomain', result)
