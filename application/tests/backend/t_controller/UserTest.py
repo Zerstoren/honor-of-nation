@@ -14,7 +14,7 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
 
         controller.login(transfer, {
             'login': user.getLogin(),
-            'password': user._testPassword
+            'password': user._domain_data['_testPassword']
         })
 
         message = transfer.getLastMessage()
@@ -27,7 +27,10 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
                 'done': True,
                 'data': {
                     'login': user.getLogin(),
-                    '_id': str(user.getId())
+                    '_id': str(user.getId()),
+                    'admin': False,
+                    'position': {'x': 1, 'y': 1},
+                    '_testPassword': '12345'
                 }
             }
         })

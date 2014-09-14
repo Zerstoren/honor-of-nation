@@ -1,16 +1,8 @@
 from .Abstract import AbstractService
-import models.Map.Mapper
-import models.Map.Math
-import models.Map.Factory
-import models.Map.Domain
-
-import exceptions.database
 
 import service.User
 import service.Map
 import service.MapUserVisible
-
-import config
 
 
 class Service_Admin(AbstractService.Service_Abstract):
@@ -25,12 +17,7 @@ class Service_Admin(AbstractService.Service_Abstract):
         return service.User.Service_User().searchUser(userLogin)
 
     def openMapForUser(self, user, coordinate):
-        mapCollection = service.Map.Service_Map().getRegion(
-            fromX=coordinate['fromX'],
-            fromY=coordinate['fromY'],
-            toX=coordinate['toX'],
-            toY=coordinate['toY']
-        )
+        mapCollection = service.Map.Service_Map().getRegion(**coordinate)
         return service.MapUserVisible.Service_MapUserVisible().openRegion(user, mapCollection)
 
     def decorate(self, *args):
