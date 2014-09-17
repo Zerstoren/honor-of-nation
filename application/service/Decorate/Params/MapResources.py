@@ -3,6 +3,7 @@ import helpers.mongo
 import service.User
 import models.Map.Math
 
+
 class Decorate():
     def getResourceByPosition(self, x, y):
         return super().getResourceByPosition(int(x), int(y))

@@ -7,18 +7,12 @@ import exceptions.message
 class Decorate():
     def _testAccessAdmin(self, user):
         if int(config.get('game.admin_mode')) is 0:
-            raise exceptions.httpCodes.Page403('Can`t access to admin area')
+            raise exceptions.httpCodes.Page403('Нет доступы. Вы не администратор.')
 
         if user and user.getAdmin() is False:
-            raise exceptions.httpCodes.Page403('Can`t access to admin area')
+            raise exceptions.httpCodes.Page403('Нет доступы. Вы не администратор.')
 
     def fillCoordinate(self, coordinate, land, landType, user=None):
-        """
-        @param coordinate models.Map.Region.MapRegion
-        @param land str
-        @param landType str
-        @param user models.User.Domain.UserDomain
-        """
         self._testAccessAdmin(user)
         return super().fillCoordinate(coordinate, land, landType, user)
 
@@ -36,6 +30,10 @@ class Decorate():
 
         return userDomain
 
-    # def openMapForUser(self, user, coordinate):
-    #     self._testAccessAdmin(user)
-    #     return super().openMapForUser(user, coordinate)
+    def openMapForUser(self, user, coordinate):
+        self._testAccessAdmin(user)
+        return super().openMapForUser(user, coordinate)
+
+    def saveMapResources(self, user, domainData):
+        self._testAccessAdmin(user)
+        return super().saveMapResources(user, domainData)

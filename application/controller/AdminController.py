@@ -17,9 +17,6 @@ class AbstractAdminController():
     def _getAclParamsAdminService(self):
         return service.Admin.Service_Admin().decorate('Acl', 'Params')
 
-    def _getJsonPackAclAdminService(self):
-        return service.Admin.Service_Admin().decorate('JsonPack', 'Acl')
-
     def _getJsonPackResourceService(self):
         return service.Resources.Service_Resources().decorate('JsonPack')
 
@@ -29,15 +26,11 @@ class AbstractAdminController():
     def _getJsonPackParamsMapResourcesService(self):
         return service.MapResources.Service_MapResources().decorate('JsonPack', 'Params')
 
-    def _getParamsAclMapResourcesService(self):
-        return service.MapResources.Service_MapResources().decorate('Params', 'Acl')
-
 
 class MainAdminController(AbstractAdminController):
     def fillTerrain(self, transfer, data):
-
         if data['type'] == 'coordinate':
-            result = self._getAclParamsAdminService().fillCoordinate(
+            result = self._getAclAdminService().fillCoordinate(
                 data['coordinate'],
                 data['fillLand'],
                 data['fillLandType'],
@@ -64,12 +57,12 @@ class MainAdminController(AbstractAdminController):
 
     def searchUser(self, transfer, data):
         user = self._getAclAdminService().searchUser(data['login'], transfer.getUser())
-        resources = self._getJsonPackResourceService().getResources(user, user)
+        resources = self._getJsonPackResourceService().getResources(user)
 
         transfer.send('/admin/searchUser', {
             'done': True,
             'user': {
-                '_id'  : str(user.getId()),
+                '_id' : str(user.getId()),
                 'login': user.getLogin(),
                 'admin': user.getAdmin()
             },
@@ -77,39 +70,26 @@ class MainAdminController(AbstractAdminController):
         })
 
     def saveResources(self, transfer, data):
-        try:
-            user = self._getAclAdminService().searchUser(data['userLogin'], transfer.getUser())
-            service.Resources.Service_Resources().setResources(user, data['resources'])
-            transfer.send('/admin/searchUser', {
-                'done': True
-            })
+        user = self._getAclAdminService().searchUser(data['userLogin'], transfer.getUser())
+        service.Resources.Service_Resources().decorate('Params').setResources(user, data['resources'])
+        transfer.send('/admin/searchUser', {
+            'done': True
+        })
 
-            controller.ResourceController.DeliveryController().resourceChange(user)
-
-        except exceptions.database.NotFound:
-            transfer.send('/admin/searchUser', {
-                'done': False,
-                'error': 'User with login %s not found' % data['login']
-            })
+        controller.ResourceController.DeliveryController().resourceChange(user)
 
     def saveCoordinate(self, transfer, data):
-        try:
-            user = transfer.getUser()
-            self._getAclAdminService().openMapForUser(user, data)
+        user = transfer.getUser()
+        self._getAclAdminService().openMapForUser(user, data)
 
-            transfer.send('/admin/saveCoordinate', {
-                'done': True
-            })
-        except Exception as e:
-            transfer.send('/admin/saveCoordinate', {
-                'done': False,
-                'error': str(e)
-            })
+        transfer.send('/admin/saveCoordinate', {
+            'done': True
+        })
 
     def loadResourceMap(self, transfer, data):
-        result = {}
-
-        result['users'] = self._getJsonPackUserService().getAllUsers()
+        result = {
+            'users': self._getJsonPackUserService().getAllUsers()
+        }
 
         if 'x' in data and 'y' in data and data['x'] is not False and data['y'] is not False:
             try:
@@ -125,9 +105,9 @@ class MainAdminController(AbstractAdminController):
         result['done'] = True
         transfer.send('/admin/loadResourceMap', result)
 
-
     def saveResourceDomain(self, transfer, data):
-        result = {}
-        result['done'] = self._getParamsAclMapResourcesService().saveResources(data['domain'])
+        result = {
+            'done': self._getAclAdminService().saveMapResources(transfer.getUser(), data['domain'])
+        }
 
         transfer.send('/admin/saveResourceDomain', result)

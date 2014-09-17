@@ -13,7 +13,19 @@ class MapRegion(object):
             not 0 <= self.toY <= 1999 or\
             self.fromX > self.toX or\
             self.fromY > self.toY:
-            raise exceptions.args.Arguments('Wrong coordinate')
+            raise exceptions.args.Arguments('Переданы неверные координаты')
+
+    def getFromX(self):
+        return self.fromX
+
+    def getFromY(self):
+        return self.fromY
+
+    def getToX(self):
+        return self.toX
+
+    def getToY(self):
+        return self.toY
 
     def toObject(self):
         return {

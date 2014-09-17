@@ -132,7 +132,7 @@ class CheckDatabaseIndexes():
                 if result == 0:
                     raise _RefErrorLocalException(collection, field)
 
-                return fn(value)
+                return fn(value) or True
             return v
 
         fn = started

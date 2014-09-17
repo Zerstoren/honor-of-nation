@@ -7,6 +7,7 @@ import service.MapUserVisible
 
 import models.MapResources.Domain
 import models.Map.Math
+import models.Map.Region
 
 
 class Generic(abstractGeneric.Abstract_Generic):
@@ -24,19 +25,15 @@ class Generic(abstractGeneric.Abstract_Generic):
         user.getMapper().save(user)
 
     def fillTerrain(self, fromX, fromY, toX, toY, land=0):
-        service.Map.Service_Map().fillCoordinate({
+        region = models.Map.Region.MapRegion(**{
             'fromX': fromX,
             'fromY': fromY,
             'toX': toX,
             'toY': toY
-        }, land, 0)
+        })
+        service.Map.Service_Map().fillCoordinate(region, land, 0)
 
-        return service.Map.Service_Map().getRegion(
-            fromX,
-            fromY,
-            toX,
-            toY
-        )
+        return service.Map.Service_Map().getRegion(region)
 
     def openRegion(self, user, mapCollection):
         return service.MapUserVisible.Service_MapUserVisible().openRegion(user, mapCollection)

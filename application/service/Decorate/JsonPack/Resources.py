@@ -16,6 +16,6 @@ class Decorate():
             'gold': int(resourceDomain.getGold())
         }
 
-    def getResources(self, transferUser, userDomain):
-        domain = super().getResources(transferUser, userDomain)
+    def getResources(self, userDomain):
+        domain = super().getResources(userDomain)
         return self.packDomainToDict(domain)
