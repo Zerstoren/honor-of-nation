@@ -1,7 +1,9 @@
 define('view/block/map/header', [
+    'service/standalone/user',
     'view/elements/resource',
     'view/elements/menu'
 ], function(
+    serviceStandaloneUser,
     ViewElementsResource,
     ViewElementsMenu
 ) {
@@ -34,6 +36,10 @@ define('view/block/map/header', [
             this.viewMenu.render(this.$el.find('.mpi__menu'));
 
             this.holder.append(this.$el);
+
+            serviceStandaloneUser.getMe(function (domain) {
+                this.viewResource.setUserResources(domain.getResources());
+            }.bind(this));
         }
     });
 });

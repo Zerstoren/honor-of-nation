@@ -43,8 +43,7 @@ class User_Domain(models.Abstract.Domain.Abstract_Domain):
         }
 
     def toDict(self):
-        result = copy.deepcopy(self._domain_data)
-        if '_id' in result:
-            result['_id'] = str(result['_id'])
+        result = super().toDict()
+        del result['password']
 
         return result

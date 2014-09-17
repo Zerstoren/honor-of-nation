@@ -27,6 +27,16 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         for i in options:
             self.__getattribute__('set' + i)(options[i])
 
+    def toDict(self):
+        result = copy.deepcopy(self._domain_data)
+        if '_id' in result:
+                result['_id'] = str(result['_id'])
+
+        if 'remove' in result:
+            del result['remove']
+
+        return result
+
     def _getFunc(self, name):
         name = self.__convert(name)
         def getFunc():

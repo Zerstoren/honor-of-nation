@@ -16,7 +16,6 @@ define('factory/resources', [
             domain.set(domain.GOLD, data[domain.GOLD]);
 
             return domain;
-
         }
     });
     return new ResourcesFactory();

@@ -16,12 +16,12 @@ class Service_User(service.Abstract.AbstractService.Service_Abstract):
                 models.User.Mapper.User_Mapper.getByLogin(login)
             )
         except exceptions.database.NotFound:
-            return (False, None, )
+            return False
 
         if userDomain.passwordEqual(password):
-            return (True, userDomain, )
+            return userDomain
         else:
-            return (False, None, )
+            return False
 
     def getUserDomain(self, domainId):
         return models.User.Factory.User_Factory.getDomainFromData(
