@@ -1,6 +1,10 @@
 define('view/admin/resources', [
+    'view/elements/tooltip',
     'model/resources'
-], function (ModelResources) {
+], function (
+    ViewElementsTooltip,
+    ModelResources
+) {
     return AbstractView.extend({
         className: 'resources-map',
         events: {
@@ -8,12 +12,12 @@ define('view/admin/resources', [
             'click .search': 'onSearch',
 //            'change .user': 'onChangeUser',
 //            'change .town': 'onChangeTown',
-            'click .save': 'onSaveResource',
-            "mouseenter .form-group .with-tooltip": "onShowHint",
-            "mouseout .form-group .with-tooltip": "onHideHint"
+            'click .save': 'onSaveResource'
         },
 
         initialize: function () {
+            this.tooltipManager = new ViewElementsTooltip(this, '.form-group .with-tooltip');
+
             this.template = this.getTemplate('admin/resources/show');
             this.partials = {
                 edit: this.getTemplate('admin/resources/edit')
@@ -74,22 +78,6 @@ define('view/admin/resources', [
             if (coordinate) {
                 this.trigger('search', coordinate[0], coordinate[1]);
             }
-        },
-
-        onShowHint: function (e) {
-            this.tooltip = jQuery(e.target);
-            this.tooltip.tooltip({
-                trigger: '',
-                title: this.tooltip.data('hint'),
-                placement: 'right',
-                container: 'body'
-            });
-
-            this.tooltip.tooltip('show');
-        },
-
-        onHideHint: function (e) {
-            this.tooltip.tooltip('destroy');
         },
 
 //        onChangeUser: function () {
