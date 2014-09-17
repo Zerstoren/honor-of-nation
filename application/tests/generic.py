@@ -7,6 +7,7 @@ import service.MapUserVisible
 
 import models.MapResources.Domain
 import models.Map.Math
+import models.Map.Region
 
 
 class Generic(abstractGeneric.Abstract_Generic):
@@ -24,29 +25,26 @@ class Generic(abstractGeneric.Abstract_Generic):
         user.getMapper().save(user)
 
     def fillTerrain(self, fromX, fromY, toX, toY, land=0):
-        service.Map.Service_Map().fillCoordinate({
+        region = models.Map.Region.MapRegion(**{
             'fromX': fromX,
             'fromY': fromY,
             'toX': toX,
             'toY': toY
-        }, land, 0)
+        })
+        service.Map.Service_Map().fillCoordinate(region, land, 0)
 
-        return service.Map.Service_Map().getRegion(
-            fromX,
-            fromY,
-            toX,
-            toY
-        )
+        return service.Map.Service_Map().getRegion(region)
 
     def openRegion(self, user, mapCollection):
         return service.MapUserVisible.Service_MapUserVisible().openRegion(user, mapCollection)
 
-    def addResource(self, x, y, resourceType, user=None, town=None, count=None, production=None):
+    def addResource(self, x, y, resourceType, user=None, town=None, amount=None, baseOutput=None):
         domain = models.MapResources.Domain.MapResources_Domain()
         domain.setPosId(models.Map.Math.fromPositionToId(x, y))
         domain.setType(resourceType)
         domain.setUser(user)
         domain.setTown(town)
-        domain.setCount(count if count is not None else self.getRandomInt(10000, 1000000))
-        domain.setProduction(production if production is not None else self.getRandomInt(1000, 10000))
+        domain.setAmount(amount if amount is not None else self.getRandomInt(10000, 1000000))
+        domain.setBaseOutput(baseOutput if baseOutput is not None else self.getRandomInt(1000, 10000))
+        domain.setOutput(domain.getBaseOutput())
         domain.getMapper().save(domain)

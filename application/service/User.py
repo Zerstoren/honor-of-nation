@@ -30,7 +30,7 @@ class Service_User(service.Abstract.AbstractService.Service_Abstract):
 
     def searchUser(self, login):
         """
-        :rtype: models.User.Domain.User_Domain|False
+        :rtype: models.User.Domain.User_Domain
         """
         return models.User.Factory.User_Factory.getDomainFromData(
             models.User.Mapper.User_Mapper.searchUser(login)

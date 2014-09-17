@@ -23,33 +23,29 @@ class Service_Map(AbstractService.Service_Abstract):
             models.Map.Mapper.Map_Mapper.getByPosIds(posIds)
         )
 
-    def getRegion(self, fromX, fromY, toX, toY):
-        regionResult = models.Map.Mapper.Map_Mapper.getRegion(
-            int(fromX),
-            int(fromY),
-            int(toX),
-            int(toY)
-        )
+    def getRegion(self, regionMap):
+        """
+        :type regionMap:models.Map.Region.MapRegion
+        """
+        regionResult = models.Map.Mapper.Map_Mapper.getRegion(regionMap)
 
         return models.Map.Factory.Map_Factory.getCollectionFromData(
             regionResult
         )
 
-    def fillCoordinate(self, coordinate, land, landType):
-        land = int(land)
-        landType = int(landType)
+    def fillCoordinate(self, regionMap, land, landType):
+        """
+        :type regionMap:models.Map.Region.MapRegion
+        """
 
-        for x in range(int(coordinate['fromX']), int(coordinate['toX']) + 1):
-            for y in range(int(coordinate['fromY']), int(coordinate['toY']) + 1):
+        for x in range(regionMap.getFromX(), regionMap.getToX() + 1):
+            for y in range(regionMap.getFromY(), regionMap.getToY() + 1):
                 domain = self._getDomainFromData(x, y, land, landType)
                 domain.getMapper().save(domain)
 
         return True
 
     def fillChunks(self, chunks, land, landType):
-        land = int(land)
-        landType = int(landType)
-
         for chunk in chunks:
             fromX, fromY = models.Map.Math.fromChunkToPosition(chunk)
             for x in range(fromX, fromX + int(config.get('map.chunk'))):

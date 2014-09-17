@@ -1,37 +1,34 @@
 from .Abstract import AbstractService
-import models.Map.Mapper
-import models.Map.Math
-import models.Map.Factory
-import models.Map.Domain
-
-import exceptions.database
 
 import service.User
 import service.Map
 import service.MapUserVisible
+import service.MapResources
 
-import config
+import exceptions.database
+import exceptions.message
 
 
 class Service_Admin(AbstractService.Service_Abstract):
 
     def fillCoordinate(self, coordinate, land, landType, user=None):
-        return service.Map.Service_Map().fillCoordinate(coordinate, land, landType)
+        return service.Map.Service_Map().decorate('Params').fillCoordinate(coordinate, land, landType)
 
     def fillChunks(self, chunks, land, landType, user=None):
-        return service.Map.Service_Map().fillChunks(chunks, land, landType)
+        return service.Map.Service_Map().decorate('Params').fillChunks(chunks, land, landType)
 
     def searchUser(self, userLogin, user):
-        return service.User.Service_User().searchUser(userLogin)
+        try:
+            return service.User.Service_User().searchUser(userLogin)
+        except exceptions.database.NotFound:
+            raise exceptions.message.Message('Пользователь с логином %s не найден' % userLogin)
 
     def openMapForUser(self, user, coordinate):
-        mapCollection = service.Map.Service_Map().getRegion(
-            fromX=coordinate['fromX'],
-            fromY=coordinate['fromY'],
-            toX=coordinate['toX'],
-            toY=coordinate['toY']
-        )
+        mapCollection = service.Map.Service_Map().decorate('Params').getRegion(coordinate)
         return service.MapUserVisible.Service_MapUserVisible().openRegion(user, mapCollection)
+
+    def saveMapResources(self, user, domainData):
+        return service.MapResources.Service_MapResources().decorate('Params').saveResources(domainData)
 
     def decorate(self, *args):
         """

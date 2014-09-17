@@ -1,3 +1,4 @@
+from system.mongo import exceptions
 from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import controller.AdminController
@@ -94,7 +95,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         message = transfer.getLastMessage()['message']
         self.assertFalse(message['done'])
-        self.assertEqual(message['error'], 'Переданы неверные параметры')
+        self.assertEqual(message['error'], 'Переданы неверные параметры заполнения территории')
 
     def testFillTerrainChunks(self):
         controller = self._getModelController()
@@ -149,21 +150,22 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         ]
 
         for coord in coords:
-            controller.fillTerrain(transfer, {
-                "coordinate": {
-                    "fromX": coord[0],
-                    "fromY": coord[1],
-                    "toX": coord[2],
-                    "toY": coord[3]
-                },
-                "fillLand": "1",
-                "fillLandType": 1,
-                "type": "coordinate",
-            })
-
-            message = transfer.getLastMessage()['message']
-            self.assertFalse(message['done'])
-            self.assertEqual(message['error'], 'Переданы неверные координаты')
+            self.assertRaises(
+                exceptions.args.Arguments,
+                controller.fillTerrain,
+                transfer,
+                {
+                    "coordinate": {
+                        "fromX": coord[0],
+                        "fromY": coord[1],
+                        "toX": coord[2],
+                        "toY": coord[3]
+                    },
+                    "fillLand": "1",
+                    "fillLandType": 1,
+                    "type": "coordinate",
+                }
+            )
 
     def testSearchUser(self):
         controller = self._getModelController()
@@ -204,13 +206,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         self.setUserAsAdmin(user)
 
-        controller.searchUser(transfer, {
-            'login': 'notFoundUser'
-        })
-
-        message = transfer.getLastMessage()['message']
-        self.assertFalse(message['done'])
-        self.assertEqual(message['error'], 'User with login notFoundUser not found')
+        self.assertRaises(
+            exceptions.message.Message,
+            controller.searchUser,
+            transfer,
+            {
+                'login': 'notFoundUser'
+            }
+        )
 
 
     def testSearchUser_AdminCantEditAdmin(self):
@@ -222,13 +225,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.setUserAsAdmin(user)
         self.setUserAsAdmin(user2)
 
-        controller.searchUser(transfer, {
-            'login': user2.getLogin()
-        })
-
-        message = transfer.getLastMessage()['message']
-        self.assertFalse(message['done'])
-        self.assertEqual(message['error'], 'Can`t edit other admin')
+        self.assertRaises(
+            exceptions.httpCodes.Page403,
+            controller.searchUser,
+            transfer,
+            {
+                'login': user2.getLogin()
+            }
+        )
 
     def testSaveResources(self):
         controller = self._getModelController()
@@ -275,7 +279,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         controller = self._getModelController()
         transfer = self._login()
-
+        self.setUserAsAdmin(transfer.getUser())
         controller.saveCoordinate(transfer, {
             'fromX': 0,
             'fromY': 0,
@@ -357,6 +361,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         controller = self._getModelController()
         transfer = self._login()
 
+        self.setUserAsAdmin(transfer.getUser())
+
         controller.saveResourceDomain(transfer, {
             "domain": {
                 "amount": 2500000,
@@ -380,3 +386,29 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual('rubins', mapResourceDomain.getType())
         self.assertEqual(str(mapResourceDomain.getUser().getId()), str(transfer.getUser().getId()))
 
+    def testSaveMapResource_WithNoneUser(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        self.setUserAsAdmin(transfer.getUser())
+
+        controller.saveResourceDomain(transfer, {
+            "domain": {
+                "amount": 2500000,
+                "base_output": 13000,
+                "output": 0,
+                "position": '1x1',
+                "town": None,
+                "type": "rubins",
+                "user": 'none'
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapResourceDomain = mapDomain.getResource()
+
+        self.assertTrue(result['done'])
+        self.assertEqual(mapResourceDomain.getUser(), None)

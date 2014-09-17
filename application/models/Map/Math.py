@@ -86,3 +86,10 @@ def howFar(mapDomainSource, mapDomainTarget):
         abs(mapDomainSource.getPositionX() - mapDomainTarget.getPositionX()),
         abs(mapDomainSource.getPositionY() - mapDomainTarget.getPositionY()),
     )
+
+def chunkInRange(chunk):
+    """
+    Возвращает True если чанка находится больше нуля и меньше 15625 (как размер карты)
+    @params chunk int
+    """
+    return not (chunk < 0 or chunk > 15625)

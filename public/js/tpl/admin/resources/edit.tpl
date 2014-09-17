@@ -17,9 +17,7 @@
     <div class="form-group">
         <div class="col-sm-2">
             <select class="form-control with-tooltip user" data-hint="Игрок" value="{{resource.user}}">
-                {{#!resource.user}}
-                    <option disabled>Выберите пользователя</option>
-                {{/resource.user}}
+                <option value="none">Без игрока</option>
 
                 {{#each users}}
                     <option value="{{_id}}">{{login}}</option>
@@ -28,9 +26,7 @@
         </div>
         <div class="col-sm-2">
             <select class="form-control with-tooltip town" data-hint="Город" value="{{resource.town}}">
-                {{#!resource.town}}
-                    <option disabled>Выберите город</option>
-                {{/resource.town}}
+                <option value="none">Без игрока</option>
             </select>
         </div>
     </div>
