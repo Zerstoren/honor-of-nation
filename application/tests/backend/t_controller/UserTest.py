@@ -26,11 +26,21 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
                 'auth_result': True,
                 'done': True,
                 'data': {
-                    'login': user.getLogin(),
-                    '_id': str(user.getId()),
-                    'admin': False,
-                    'position': {'x': 1, 'y': 1},
-                    '_testPassword': '12345'
+                    'user': {
+                        'login': user.getLogin(),
+                        '_id': str(user.getId()),
+                        'admin': False,
+                        'position': {'x': 1, 'y': 1},
+                        '_testPassword': '12345'
+                    },
+                    'resources': {
+                        'rubins': 1000000,
+                        'steel': 1000000,
+                        'eat': 1000000,
+                        'wood': 1000000,
+                        'stone': 1000000,
+                        'gold': 1000000
+                    }
                 }
             }
         })
