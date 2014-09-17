@@ -226,6 +226,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.setUserAsAdmin(user2)
 
         self.assertRaises(
+            exceptions.httpCodes.Page403,
             controller.searchUser,
             transfer,
             {
@@ -278,7 +279,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         controller = self._getModelController()
         transfer = self._login()
-
+        self.setUserAsAdmin(transfer.getUser())
         controller.saveCoordinate(transfer, {
             'fromX': 0,
             'fromY': 0,
@@ -384,3 +385,30 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(13000, mapResourceDomain.getBaseOutput())
         self.assertEqual('rubins', mapResourceDomain.getType())
         self.assertEqual(str(mapResourceDomain.getUser().getId()), str(transfer.getUser().getId()))
+
+    def testSaveMapResource_WithNoneUser(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        self.setUserAsAdmin(transfer.getUser())
+
+        controller.saveResourceDomain(transfer, {
+            "domain": {
+                "amount": 2500000,
+                "base_output": 13000,
+                "output": 0,
+                "position": '1x1',
+                "town": None,
+                "type": "rubins",
+                "user": 'none'
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapResourceDomain = mapDomain.getResource()
+
+        self.assertTrue(result['done'])
+        self.assertEqual(mapResourceDomain.getUser(), None)

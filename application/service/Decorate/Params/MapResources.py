@@ -17,14 +17,21 @@ class Decorate():
             data['_id'] = helpers.mongo.objectId(data['_id'])
 
         if 'user' in data and data['user']:
-            data['user'] = service.User.Service_User().getUserDomain(
-                helpers.mongo.objectId(data['user'])
-            ).getId()
+            if data['user'] == 'none':
+                data['user'] = None
+            else:
+                data['user'] = service.User.Service_User().getUserDomain(
+                    helpers.mongo.objectId(data['user'])
+                ).getId()
+
         else:
             data['user'] = None
 
         if 'town' in data and data['town']:
-            data['town'] = None # TODO
+            if data['town'] == 'none':
+                data['town'] = None
+            else:
+                data['town'] = None # TODO
         else:
             data['town'] = None
 

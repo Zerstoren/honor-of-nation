@@ -29,5 +29,5 @@ class DeliveryController(AbstractResourceController):
         if user.hasTransfer():
             user.getTransfer().send('/delivery/resourceUpdate', {
                 'done': True,
-                'resources': self._getJsonPackResourceService().getResources(user, user)
+                'resources': self._getJsonPackResourceService().getResources(user)
             })
