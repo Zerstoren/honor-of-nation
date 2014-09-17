@@ -1,36 +1,17 @@
-define('view/elements/resource', [], function () {
+define('view/elements/resource', [
+    'view/elements/tooltip'
+], function (ViewElementsTooltip) {
     return AbstractView.extend({
-        events: {
-            "mouseenter .resources > div": "onShowHint",
-            "mouseout .resources > div": "onHideHint"
-        },
-        currentTooltip: null,
+        events: {},
 
         initialize: function () {
+            this.tooltipManager = new ViewElementsTooltip(this, '.resources > div');
             this.template = this.getTemplate('elements/resource');
             this.initRactive();
         },
 
-        data: {},
-
         render: function (holder) {
             holder.append(this.$el);
-        },
-
-        onShowHint: function (e) {
-            this.tooltip = jQuery(e.target);
-            this.tooltip.tooltip({
-                trigger: '',
-                title: this.tooltip.data('hint'),
-                placement: 'right',
-                container: 'body'
-            });
-
-            this.tooltip.tooltip('show');
-        },
-
-        onHideHint: function (e) {
-            this.tooltip.tooltip('destroy');
         }
     });
 });
