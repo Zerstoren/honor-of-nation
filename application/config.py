@@ -54,6 +54,13 @@ def getRoutes():
     return _config['routes']
 
 
+def getDatabase():
+    _config = configparser.ConfigParser()
+    _config.read(os.path.dirname(os.path.abspath(__file__)) + '/config/database.ini')
+
+    return _config
+
+
 def get(name):
     if name in _config[configType]:
         return _config[configType][name]

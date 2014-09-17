@@ -11,8 +11,6 @@ define('view/elements/map/draw', [], function () {
 
             this.sumWidth = 0;
             this.sumHeight = 0;
-
-            this.$updateDataFnLayer = null;
         },
 
         /**
@@ -24,15 +22,15 @@ define('view/elements/map/draw', [], function () {
             this.positionX += x;
             this.positionY += y;
             this.trigger('onSetPosition', this.positionX, this.positionY);
-//            this.update();
+            this.update();
         },
 
         getMapHeight: function() {
-            return this.sumHeight;
+            return this.service.sumHeight;
         },
 
         getMapWidth: function() {
-            return this.sumWidth;
+            return this.service.sumWidth;
         },
 
         /**
@@ -44,7 +42,7 @@ define('view/elements/map/draw', [], function () {
             this.positionX = x;
             this.positionY = y;
             this.trigger('onSetPosition', x, y);
-//            this.update();
+            this.update();
         },
 
         /**
@@ -115,6 +113,7 @@ define('view/elements/map/draw', [], function () {
             if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
                 return ['no_map'];
             }
+//            console.log(x, y);
 
             var tmp, classList = [];
             tmp = this.$getLand(x, y);
@@ -186,7 +185,7 @@ define('view/elements/map/draw', [], function () {
 
         mapMerge: function(map) {
             var x, y;
-    
+
             for(y in map) {
                 if(map.hasOwnProperty(y)) {
                     for(x in map[y]) {
@@ -210,27 +209,27 @@ define('view/elements/map/draw', [], function () {
                 monitorSizeY = window.innerHeight,
                 cellSize = this.service.config.cellSize;
 
-            this.sumHeight = Math.round(monitorSizeY / cellSize);
-            this.sumWidth = Math.round(monitorSizeX / cellSize);
+            this.service.sumHeight = Math.round(monitorSizeY / cellSize);
+            this.service.sumWidth = Math.round(monitorSizeX / cellSize);
 
-            this.addedWidth = 384;
-            this.addedHeight = 384;
+            this.service.addedWidth = 384;
+            this.service.addedHeight = 384;
 
-            this.minShiftX = -cellSize;
-            this.maxShiftX = (this.addedWidth * 2 - cellSize) / -1;
+            this.service.minShiftX = -cellSize;
+            this.service.maxShiftX = (this.service.addedWidth * 2 - cellSize) / -1;
 
-            this.minShiftY = -cellSize;
-            this.maxShiftY = (this.addedHeight * 2 - cellSize) / -1;
+            this.service.minShiftY = -cellSize;
+            this.service.maxShiftY = (this.service.addedHeight * 2 - cellSize) / -1;
 
-            this.sumHeight += (this.addedHeight / cellSize) * 2;
-            this.sumWidth += (this.addedWidth / cellSize) * 2;
+            this.service.sumHeight += (this.service.addedHeight / cellSize) * 2;
+            this.service.sumWidth += (this.service.addedWidth / cellSize) * 2;
 
             table = document.createElement('TABLE');
             table.id = 'table-map';
 
-            for(y = 0; y < this.sumHeight; y += 1) {
+            for(y = 0; y < this.service.sumHeight; y += 1) {
                 bufferRow = document.createElement('TR');
-                for(x = 0; x < this.sumWidth; x += 1) {
+                for(x = 0; x < this.service.sumWidth; x += 1) {
                     bufferCell = document.createElement('TD');
                     bufferCell.setAttribute('data-position', x + 'x' + y);
                     bufferCell.id = 'td-' + x + 'x' + y;
@@ -251,8 +250,8 @@ define('view/elements/map/draw', [], function () {
             this.$area.attr('cellpadding', '0');
             this.$area.attr('cellspacing', '0');
             this.$area.css({
-                left: (this.addedWidth) / -1,
-                top:  (this.addedHeight) / -1
+                left: (this.service.addedWidth) / -1,
+                top:  (this.service.addedHeight) / -1
             });
         }
     });

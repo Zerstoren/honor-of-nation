@@ -7,6 +7,10 @@ define('system/template', function () {
     function getSource(tpl) {
         var source;
 
+        if (sources[tpl]) {
+            return sources[tpl];
+        }
+
         jQuery.ajax({
             url: '/js/tpl/' + tpl + '.tpl',
             async: false,
@@ -23,18 +27,5 @@ define('system/template', function () {
         return sources[tpl];
     }
 
-    function compileTemplate(tpl) {
-        if (compiles[tpl] === undefined) {
-            compiles[tpl] = Handlebars.compile(getSource(tpl));
-        }
-
-        return compiles[tpl];
-    }
-
-
-    function getTemplate(tpl, data) {
-        return compileTemplate(tpl)(data);
-    }
-
-    return getTemplate;
+    return getSource;
 });

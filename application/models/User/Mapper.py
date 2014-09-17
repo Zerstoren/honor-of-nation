@@ -24,7 +24,10 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         commonSet\
             .add('login', domain.getLogin())\
-            .add('password', domain.getPassword())
+            .add('password', domain.getPassword())\
+            .add('admin', domain.getAdmin())\
+            .add('position', domain.getPosition())
+
         if domain.hasId():
             self._update(
                 commonSet,
@@ -43,6 +46,8 @@ class User_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter, commonLimit)
 
+    def getAllUsersLogin(self):
+        return self._getCollection().find({}, {'_id': 1, 'login': 1})
 
 
 User_Mapper = User_Mapper_Main()

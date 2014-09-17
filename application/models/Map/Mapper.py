@@ -30,10 +30,13 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(queryFilter)
 
-    def getRegion(self, startX, startY, finishX, finishY):
+    def getRegion(self, regionMap):
+        """
+        :type regionMap: models.Map.Region.MapRegion
+        """
         queryFilter = Common.Common_Filter()
-        queryFilter.add('x', {'$gte': startX, '$lte': finishX})
-        queryFilter.add('y', {'$gte': startY, '$lte': finishY})
+        queryFilter.add('x', {'$gte': regionMap.getFromX(), '$lte': regionMap.getToX()})
+        queryFilter.add('y', {'$gte': regionMap.getFromY(), '$lte': regionMap.getToY()})
 
         return self._select(queryFilter)
 

@@ -21,5 +21,3 @@ class Service_Abstract(object):
 
         classList.reverse()
         return type(newClassName, tuple(classList), {})()
-
-

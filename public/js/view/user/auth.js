@@ -11,7 +11,7 @@ define('view/user/auth', [
         },
 
         initialize: function () {
-            this.$el.html(this.template('user/login'));
+            this.$el.html(this.getTemplate('user/login'));
             this.loginInput = this.$el.find('.auth__input_login');
             this.passwordInput = this.$el.find('.auth__input_password');
         },

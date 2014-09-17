@@ -10,9 +10,10 @@ define('view/block/map/header', [
     return AbstractView.extend({
         viewResource: null,
         viewMenu    : null,
-
+        name: "b",
         initialize: function (holder) {
             this.holder = holder;
+            this.template = this.getTemplate('block/map/header');
         },
 
         render: function () {
@@ -27,7 +28,7 @@ define('view/block/map/header', [
                 }, this)
             }
 
-            this.$el.html(this.template('block/map/header'));
+            this.$el.html(this.template);
 
             this.viewResource.render(this.$el.find('.mpi__resource_wrapper'));
             this.viewMenu.render(this.$el.find('.mpi__menu'));

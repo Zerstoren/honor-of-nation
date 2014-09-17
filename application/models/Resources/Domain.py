@@ -15,7 +15,7 @@ class Resources_Domain(models.Abstract.Domain.Abstract_Domain):
         if isinstance(user, models.User.Domain.User_Domain):
             self._domain_data['user'] = user.getId()
         else:
-            raise Exception('%s is not instance of User_DOmain' % user.__class__.__name__)
+            raise Exception('%s is not instance of User_Domain' % user.__class__.__name__)
 
     def getMapper(self):
         return Resources_Mapper

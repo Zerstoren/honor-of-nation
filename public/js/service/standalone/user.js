@@ -49,6 +49,7 @@ define('service/standalone/user', [
         },
 
         renderForm: function () {
+
             if (this.viewUserAuth === null) {
                 this.viewUserAuth = new ViewUserAuth();
                 this.viewUserAuth.on('login', this.onLogin, this);

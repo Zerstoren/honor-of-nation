@@ -1,6 +1,5 @@
 define('view/admin/terrain', [
-
-    'service/standalone/gameMap',
+    'service/standalone/map/gameMapItems/init',
     'view/block/error'
 ], function (
     gameMap,
@@ -21,10 +20,31 @@ define('view/admin/terrain', [
             this.fillType = 'coordinate';
             this.fillLand = null;
             this.fillLandType = null;
+            this.template = this.getTemplate('admin/terrain/terrain');
+
+            this.partials = {
+                chunkItem: this.getTemplate('admin/terrain/chunkItem')
+            };
+
+            this.initRactive();
+        },
+
+        data: {
+            position: {
+                fromX: null,
+                fromY: null,
+                toX  : null,
+                toY  : null
+            },
+            chunk: null,
+            searchChunk: {
+                x: null,
+                y: null
+            },
+            chunkListToAdd: []
         },
 
         render: function (holder) {
-            this.$el.html(this.template('admin/terrain/terrain'));
             holder.append(this.$el);
             this.delegateEvents();
         },
@@ -36,22 +56,6 @@ define('view/admin/terrain', [
 
         successSave: function () {
             viewBlockError.showSuccessBox('Terrain save successful');
-        },
-
-        _renderChunkList: function () {
-            var i,
-                el,
-                holder = this.$el.find('.chunk-to-add');
-
-            holder.empty();
-
-            for (i = 0; i < this.chunksListToAdd.length; i += 1) {
-                el = $('<span>');
-                el.html(
-                    this.template('admin/terrain/chunkItem', {chunk: this.chunksListToAdd[i]})
-                );
-                holder.append(el);
-            }
         },
 
         onChangeFillType: function (e) {
@@ -69,11 +73,11 @@ define('view/admin/terrain', [
         onAddToList: function () {
             var x,
                 y,
-                chunkNum = parseInt(this.$el.find('.block-chunk input.chunk').val(), 10);
+                chunkNum = parseInt(this.get('chunk'), 10);
 
             if (isNaN(chunkNum)) {
-                x = parseInt(this.$el.find('.block-chunk input.x').val(), 10);
-                y = parseInt(this.$el.find('.block-chunk input.y').val(), 10);
+                x = parseInt(this.get('searchChunk').x, 10);
+                y = parseInt(this.get('searchChunk').y, 10);
 
                 chunkNum = gameMap.help.fromPlaceToChunk(x, y);
 
@@ -86,17 +90,15 @@ define('view/admin/terrain', [
                 this.chunksListToAdd.push(chunkNum);
             }
 
-            this.$el.find('.block-chunk input.chunk').val('');
-            this.$el.find('.block-chunk input.x').val('');
-            this.$el.find('.block-chunk input.y').val('');
-
-            this._renderChunkList();
+            this.set('chunk', null);
+            this.set('searchChunk', {x: null, y: null});
+            this.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onRemoveFromList: function (e) {
             var chunk = parseInt($(e.target).data('chunk'), 10);
             this.chunksListToAdd = _.without(this.chunksListToAdd, chunk);
-            this._renderChunkList();
+            this.set('chunksListToAdd', this.chunksListToAdd);
         },
 
         onSelectLandType: function (e) {
@@ -104,7 +106,7 @@ define('view/admin/terrain', [
             this.fillLandType = target.data('type');
             this.fillLand = target.parent().data('type');
 
-            $('.fill-items button').removeClass('active');
+            this.$el.find('.fill-items button').removeClass('active');
             target.addClass('active');
         },
 
@@ -114,12 +116,7 @@ define('view/admin/terrain', [
             if (this.fillType === 'coordinate') {
                send = {
                    type: 'coordinate',
-                   coordinate: {
-                       fromX: parseInt(this.$el.find('.from .x').val(), 10),
-                       fromY: parseInt(this.$el.find('.from .y').val(), 10),
-                       toX  : parseInt(this.$el.find('.to .x').val(), 10),
-                       toY  : parseInt(this.$el.find('.to .y').val(), 10)
-                   }
+                   coordinate: this.get('position')
                };
 
                 if (isNaN(send.coordinate.fromX) ||
@@ -132,11 +129,12 @@ define('view/admin/terrain', [
 
             } else {
                 send = {
-                   type: 'chunk',
+                   type: 'chunks',
                    chunks: _.clone(this.chunksListToAdd)
                 };
 
                 this.chunksListToAdd = [];
+                this.set('chunksListToAdd', this.chunksListToAdd);
             }
 
             send.fillLand = this.fillLand;

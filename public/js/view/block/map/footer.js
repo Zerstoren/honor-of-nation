@@ -7,7 +7,7 @@ define('view/block/map/footer', [], function() {
         },
 
         render: function () {
-            this.holder.append(this.template('block/map/footer'));
+            this.holder.append(this.getTemplate('block/map/footer'));
         }
     });
 });
