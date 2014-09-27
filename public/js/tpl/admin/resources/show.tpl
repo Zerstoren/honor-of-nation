@@ -15,7 +15,7 @@
 
 <br/><br/>
 <div class="edit">
-    {{#users}}
+    {{#users.length}}
         {{>edit}}
     {{/users}}
 </div>

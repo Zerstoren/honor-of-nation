@@ -21,9 +21,10 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
 
         message = transfer.getLastMessage()['message']
         self.assertTrue(message['done'])
+
         self.assertEqual(
             len(message['result']['data']),
-            36
+            6
         )
 
     # def testLogin(self):

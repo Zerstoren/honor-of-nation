@@ -1,18 +1,14 @@
-import subprocess
 import sys
 import os
 import unittest
 import importlib
 
 from . import core
-import config
 
 testLoader = unittest.TestLoader()
 
 
 def start_application():
-    removeOldCores()
-
     if len(sys.argv) == 1:
         sys.argv.append("tests/")
 
@@ -55,16 +51,3 @@ def import_files(path):
 
 def create_core_for_test():
     return core.Core()
-
-
-def removeOldCores():
-    command = 'find /var/lib/mongodb -name "hn_test_core_*" -mmin +%s' % config.get('testing.db_cores.remove_time_out')
-
-    try:
-        subprocess.check_output(command)
-        print("Type root password for remove old mongo cores")
-        os.system('%s | xargs sudo rm $1' % command)
-    except FileNotFoundError:
-        pass
-    except KeyboardInterrupt:
-        pass
