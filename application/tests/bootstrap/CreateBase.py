@@ -25,7 +25,7 @@ class CreateBase(object):
 
 
         self._user.append(
-            self._createUser('Zerst', '12345')
+            self._createUser('Zerst', '12345', admin=True)
         )
 
         for i in range(1, 4):
@@ -33,11 +33,11 @@ class CreateBase(object):
                 self._createUser(self.getRandomName('Login_'), self.getRandomName('Password_'))
             )
 
-    def _createUser(self, login, password):
+    def _createUser(self, login, password, admin=False):
         domain = User_Domain()
         domain.setLogin(login)
         domain.setPassword(password)
-        domain.setAdmin(False)
+        domain.setAdmin(admin)
         domain._domain_data['_testPassword'] = password
         domain.setPosition(1, 1)
         domain.getMapper().save(domain)

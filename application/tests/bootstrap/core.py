@@ -3,6 +3,7 @@ import config
 import random
 import hashlib
 import system.mongo
+import time
 
 
 class Core():
@@ -16,6 +17,9 @@ class Core():
 
         system.mongo.mongo.connection = system.mongo.MongoAbs(self.database_name).connection
         self._mongo = system.mongo.mongo
+        self._mongo['test_data'] = {
+            'timeCreated': time.time()
+        }
         self.createIndexes()
 
     def safe_core(self):
@@ -53,3 +57,12 @@ class Core():
             name='Unique_Position',
             unique=True
         )
+
+    def removeOldCores(self):
+        for i in system.mongo.mongo.mainConnect.database_names():
+            if i.find('hn_test_core') == -1:
+                continue
+
+            info = system.mongo.mongo.mainConnect[i]['test_data'].find_one()
+            if not info or not info['timeCreated'] or info['timeCreated'] < time.time() - int(config.get('testing.db_cores.remove_time_out')):
+                system.mongo.mongo.mainConnect.drop_database(i)

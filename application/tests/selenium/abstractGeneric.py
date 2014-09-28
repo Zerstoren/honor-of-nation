@@ -64,7 +64,7 @@ class Selenium_Abstract_Generic(Generic):
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
-            '%s/init.py' % sys.path[0],
+            '%s/init.py' % sys.path[1],
             '--type=test_server',
             '--database=%s' % self.core.database_name,
             '--port=%s' % self._port
