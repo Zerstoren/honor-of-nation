@@ -6660,6 +6660,40 @@ td.visible-print {
     border: solid 1px #c6c6c6;
     border-radius: 4px; }
 
+.connect-is-not-estabilished {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #d9534f;
+  color: #000;
+  padding: 30px;
+  width: 50%;
+  height: 80px;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 0px 0px 3px #333;
+  border-radius: 5px; }
+
+.connect-is-estabilished {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #5cb85c;
+  color: #000;
+  padding: 30px;
+  width: 50%;
+  height: 80px;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 0px 0px 3px #333;
+  border-radius: 5px; }
+
 .auth__block {
   min-width: 200px;
   max-width: 600px;

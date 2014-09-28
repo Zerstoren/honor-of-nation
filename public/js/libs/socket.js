@@ -8,8 +8,6 @@ define('libs/socket', function() {
         this.init(host, port);
     };
 
-    Socket.Counter = 0;
-
     Socket.prototype.pool = null;
 
     /**
@@ -123,7 +121,6 @@ define('libs/socket', function() {
         if(asyncFn) {
             asyncName = Math.random();
             this.listeners[asyncName] = asyncFn;
-            Socket.Counter += 1;
         }
 
         data = {
@@ -157,20 +154,6 @@ define('libs/socket', function() {
     };
 
     /**
-     * Отписка от сообщениф с сервера
-     * @param  {string}   eventName Имя события, от которых происходит отписка
-     * @param  {function} eventFn   Callback функция, подписки
-     * @return {void}
-     */
-    Socket.prototype.unsubscribe = function(eventName, eventFn) {
-        this.super('Observer', 'unsubscribe', [eventName, eventFn]);
-
-        if(this.sumEventListenters(eventName) === 0) {
-            this.removeEvents([eventName]);
-        }
-    };
-
-    /**
      * Получение сообщения с сервера
      * @param  {object} data Сообщение с сервера
      * @return {void}
@@ -196,8 +179,6 @@ define('libs/socket', function() {
         if(message.async !== null && this.listeners[message.async]) {
             this.listeners[message.async](message.message);
             delete this.listeners[message.async];
-            Socket.Counter -= 1;
-            return;
         }
 
     };
@@ -208,12 +189,7 @@ define('libs/socket', function() {
      */
     Socket.prototype.onOpen = function() {
         this.unload();
-
-        if(this.need_reconnect) {
-            this.trigger('reconnect');
-        } else {
-            this.trigger('connect');
-        }
+        this.trigger('connect');
     };
 
     /**
@@ -233,7 +209,21 @@ define('libs/socket', function() {
         }
     };
 
-    Socket.prototype.onError = function() {
+    Socket.prototype.onError = function(e) {
+        if (e.type === 'error') {
+            switch(e.currentTarget.readyState) {
+                case 0:
+                    this.trigger('error:notOpen');
+                    break;
+                case 2:
+                    this.trigger('error:close');
+                    break;
+                case 3:
+                    this.trigger('error:closed');
+                    break;
+            }
+        }
+
         this.trigger('error');
     };
 
