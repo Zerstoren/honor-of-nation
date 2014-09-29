@@ -8,7 +8,7 @@ define('service/admin/terrain', [
     return AbstractService.extend({
         initialize: function () {
             this.terrainView = new ViewAdminTerrain();
-            this.terrainView.on('send', this.onTerrainSend, this)
+            this.terrainView.on('send', this.onTerrainSend, this);
         },
 
         render: function (holder) {

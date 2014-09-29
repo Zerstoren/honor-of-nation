@@ -26,8 +26,8 @@ define('view/block/map/header', [
             if (this.viewMenu === null) {
                 this.viewMenu = new ViewElementsMenu();
                 this.viewMenu.on('onMenuClick', function (menuName) {
-                    this.trigger('onMenuClick', menuName)
-                }, this)
+                    this.trigger('onMenuClick', menuName);
+                }, this);
             }
 
             this.$el.html(this.template);

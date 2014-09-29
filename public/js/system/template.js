@@ -1,8 +1,13 @@
 define('system/template', function () {
     'use strict';
 
-    var sources = {},
-        compiles = {};
+    var sources = {};
+
+    if (env === 'production') {
+        requirejs(['tpls'], function (tpls) {
+            sources = tpls;
+        });
+    }
 
     function getSource(tpl) {
         var source;

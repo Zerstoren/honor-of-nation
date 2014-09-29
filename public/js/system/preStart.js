@@ -86,6 +86,8 @@ define('system/preStart', [
         serviceUser.login();
     });
 
+    systemSocket.connect();
+
     return {
         map: map,
         no: no

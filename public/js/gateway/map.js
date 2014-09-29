@@ -4,7 +4,7 @@ define('gateway/map', [
         initialize: function () {
             this.socket.on('/sync/map/reload_region', function (message) {
                 this.trigger('reloadRegion', message);
-            }, this)
+            }, this);
         },
 
         loadChunks: function (chunkList, fn) {

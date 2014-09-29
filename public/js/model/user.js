@@ -16,7 +16,7 @@
                         password: password
                     },
                     success: this.onLogin.bind(this, callback)
-                })
+                });
             },
 
             getResources: function () {
