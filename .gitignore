@@ -3,4 +3,5 @@
 *.idea*
 .sass-cache
 node_modules
+public/deploy/*/*
 libpeerconnection.log

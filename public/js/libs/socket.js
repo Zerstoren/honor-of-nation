@@ -36,8 +36,6 @@ define('libs/socket', function() {
         // Close socket on tab close
         window.addEventListener('beforeunload', this.close.bind(this));
         this.$Socket_timeoutUnload();
-
-        this.connect();
     };
 
     /**
@@ -180,7 +178,6 @@ define('libs/socket', function() {
             this.listeners[message.async](message.message);
             delete this.listeners[message.async];
         }
-
     };
 
     /**

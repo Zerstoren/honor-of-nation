@@ -47,7 +47,7 @@ define('service/admin/player', [
         onSaveCoordinate: function (data) {
             gatewayAdmin.saveCoordinate(data, function (err) {
                 this.playerView.successSave();
-            }.bind(this))
+            }.bind(this));
         }
     });
 });

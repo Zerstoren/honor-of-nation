@@ -8,10 +8,10 @@
         var env = 'production';
     </script>
 
-    
-    <link rel="stylesheet" href="/deploy/1c0638a8b141cd47ad58f2535c9c7515bb26008f/css.css">
-    <script type="text/javascript" src="/deploy/1c0638a8b141cd47ad58f2535c9c7515bb26008f/js.js"></script>
-    
+    <!-- build:process -->
+    <link rel="stylesheet" href="/deploy/<%= commit %>/css.min.css">
+    <script type="text/javascript" src="/deploy/<%= commit %>/js.min.js"></script>
+    <!-- /build -->
 </head>
     <body>
         <div class="interface"></div>
