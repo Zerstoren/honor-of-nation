@@ -168,8 +168,8 @@ module.exports = function(grunt) {
         execSync("rm public/deploy/" + commitHash + "/css.css");
         execSync("rm public/deploy/" + commitHash + "/js.js");
         execSync("rm public/deploy/" + commitHash + "/index.release.html");
-//        execSync("rm -rf public/js");
-//        execSync("rm -rf public/css");
+        execSync("rm -rf public/js");
+        execSync("rm -rf public/css");
     });
 
     //Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
