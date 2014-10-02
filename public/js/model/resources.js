@@ -27,10 +27,10 @@
                         user: this.user.get('_id')
                     },
                     success: this.onLoad.bind(this)
-                })
+                });
             },
 
-            onLoad: function (data, message) {
+            onLoad: function (data) {
                 if (data) {
                     this.attributes = data;
                 }

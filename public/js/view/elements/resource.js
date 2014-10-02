@@ -12,6 +12,10 @@ define('view/elements/resource', [
 
         render: function (holder) {
             holder.append(this.$el);
+        },
+
+        setUserResources: function (domain) {
+            this.set('resources', domain);
         }
     });
 });

@@ -3,6 +3,8 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import controller.AdminController
 
+import service.MapResources
+
 import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
@@ -116,6 +118,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         controller = self._getModelController()
         transfer = self._login()
         user = transfer.getUser()
+        user.setAdmin(False)
         user.getMapper().save(user)
 
         self.assertRaises(
@@ -412,3 +415,45 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
+
+    def testUpdateMapResource(self):
+        service.MapResources.Service_MapResources().saveResources({
+            'amount': 500000,
+            'base_output': 5000,
+            'output': 5000,
+            'posId': 2001,
+            'town': None,
+            'user': None,
+            'type': 'steel'
+        })
+
+        resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(1, 1)
+
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        self.setUserAsAdmin(transfer.getUser())
+
+        controller.saveResourceDomain(transfer, {
+            "domain": {
+                "_id": str(resourceDomain.getId()),
+                "amount": 2500000,
+                "base_output": 13000,
+                "output": 0,
+                "position": '1x1',
+                "town": None,
+                "type": "rubins",
+                "user": 'none'
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapResourceDomain = mapDomain.getResource()
+
+        self.assertTrue(result['done'])
+        self.assertEqual(mapResourceDomain.getUser(), None)
+        self.assertEqual(mapResourceDomain.getgetAmount(), 2500000)
+        self.assertEqual(mapResourceDomain.getType(), "rubins")

@@ -15,20 +15,26 @@ class MainController(_AbstractUserController):
 class ModelController(_AbstractUserController):
 
     def login(self, transfer, data):
-        userService = self._getAclPackUserService()
+        userService = self._getAclUserService()
 
-        result, domainDict = userService.login(data['login'], data['password'])
+        domain = userService.login(data['login'], data['password'])
 
-        if domainDict is not None:
-            userDomain = userService.getUserDomain(domainDict['_id'])
-            userDomain._setTransfer(transfer)
-            transfer.setUser(userDomain)
-
-        transfer.send('/model/user/login', {
-            'done': True,
-            'auth_result': result,
-            'data': domainDict
-        })
+        if domain is not False:
+            transfer.setUser(domain)
+            transfer.send('/model/user/login', {
+                'done': True,
+                'auth_result': True,
+                'data': {
+                    'user': domain.toDict(),
+                    'resources': domain.getResources().toDict()
+                }
+            })
+        else:
+            transfer.send('/model/user/login', {
+                'done': True,
+                'auth_result': False,
+                'data': None
+            })
 
 
 class CollectionController(_AbstractUserController):

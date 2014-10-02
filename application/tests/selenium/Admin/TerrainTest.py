@@ -11,7 +11,7 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('div.to .x').send_keys(1)
         self.byCssSelector('div.to .y').send_keys(1)
 
-        self.byXPath('//span[@data-type="valley"]/button').click()
+        self.byXPath('//span[@data-type="1"]/button').click()
 
         self.byCssSelector('.send').click()
 
@@ -46,7 +46,7 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         except self.NoSuchElementException:
             pass
 
-        self.byXPath('//span[@data-type="valley"]/button').click()
+        self.byXPath('//span[@data-type="1"]/button').click()
 
         self.byCssSelector('.send').click()
 

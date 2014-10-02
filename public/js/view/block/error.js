@@ -5,6 +5,7 @@ define('view/block/error', [
 
     var ErrorBlock = Backbone.View.extend({
         initialize: function () {
+            this.boxConnection = false;
         },
 
         showLoginForm: function () {
@@ -30,6 +31,30 @@ define('view/block/error', [
 
         showSuccessBox: function (message) {
             alertify.success(message);
+        },
+
+        _connectionIsNotEstablished: function () {
+            if (!this.boxConnection) {
+                this.boxConnection = jQuery('<div class="connect-is-not-estabilished">');
+                this.boxConnection.text('Сервер недоступен. Повтор соединения происходит автоматически');
+
+                jQuery('body').append(this.boxConnection);
+            }
+        },
+
+        _connectionIsEstablished: function () {
+            if (this.boxConnection) {
+                var boxConnection = this.boxConnection;
+                this.boxConnection = false;
+
+                boxConnection.removeClass('connect-is-not-estabilished');
+                boxConnection.addClass('connect-is-estabilished');
+                boxConnection.text('Соединение установлено, простите за неудобства');
+
+                setTimeout(function () {
+                    boxConnection.detach();
+                }, 5000);
+            }
         }
     });
 

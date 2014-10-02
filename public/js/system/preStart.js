@@ -73,7 +73,20 @@ define('system/preStart', [
         }
     });
 
-    serviceUser.login();
+    systemSocket.on('error:notOpen', function () {
+        viewBlockError._connectionIsNotEstablished();
+    });
+
+    systemSocket.on('error:close', function () {
+        viewBlockError._connectionIsNotEstablished();
+    });
+
+    systemSocket.on('connect', function () {
+        viewBlockError._connectionIsEstablished();
+        serviceUser.login();
+    });
+
+    systemSocket.connect();
 
     return {
         map: map,

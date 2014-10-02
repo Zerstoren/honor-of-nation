@@ -27,6 +27,7 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         self.operationIsSuccess()
 
     def testCreateTerrainByCoordinate_WrongUser(self):
+        self.setUserAsAdmin(self.fixture.getUser(1))
         self.login()
         self._goToAdmin()
 
@@ -43,8 +44,11 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         self._goToAdmin()
         self.byAttribute('data-type', 'player').click()
 
-        self.byCssSelector('div.from .x').send_keys(0)
-        self.byCssSelector('div.from .y').send_keys(0)
+        self.byCssSelector('.search-user-login').send_keys(self.fixture.getUser(0).getLogin())
+        self.byCssSelector('.search-user').click()
+
+        self.byCssSelector('div.from .x').send_keys(1)
+        self.byCssSelector('div.from .y').send_keys(1)
 
         self.byCssSelector('div.to .x').send_keys(4)
         self.byCssSelector('div.to .y').send_keys(4)

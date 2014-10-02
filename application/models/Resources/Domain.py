@@ -19,3 +19,11 @@ class Resources_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getMapper(self):
         return Resources_Mapper
+
+    def toDict(self):
+        result = super().toDict()
+
+        del result['user']
+        del result['_id']
+
+        return result

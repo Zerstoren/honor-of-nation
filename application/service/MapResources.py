@@ -13,10 +13,6 @@ class Service_MapResources(AbstractService.Service_Abstract):
 
     def getResourceByPosition(self, x, y):
         resource = models.MapResources.Mapper.MapResources_Mapper.getResourceByPosition(x, y)
-
-        if resource is False:
-            return False
-
         return models.MapResources.Factory.MapResources_Factory.getDomainFromData(resource)
 
     def saveResources(self, data):

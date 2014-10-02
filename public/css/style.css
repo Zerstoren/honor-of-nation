@@ -6647,6 +6647,57 @@ td.visible-print {
       padding: 0;
       width: 2px; }
 
+.mpi__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
+  .mpi__footer .mpi__selected_screen {
+    width: 200px;
+    height: 200px;
+    background: #c6c6c6;
+    float: left; }
+  .mpi__footer .mpi__selected_info {
+    width: 100%;
+    height: 150px;
+    background: #e6e6e6;
+    margin: 50px 200px 0 200px; }
+    .mpi__footer .mpi__selected_info .menu_interface > div {
+      height: 150px; }
+    .mpi__footer .mpi__selected_info .menu_interface .left {
+      position: absolute;
+      width: 200px;
+      padding: 10px; }
+      .mpi__footer .mpi__selected_info .menu_interface .left .cursor_position {
+        font-size: 16px;
+        text-align: center; }
+    .mpi__footer .mpi__selected_info .menu_interface .center {
+      padding: 20px 640px 20px 200px; }
+      .mpi__footer .mpi__selected_info .menu_interface .center .unit {
+        height: 70px; }
+        .mpi__footer .mpi__selected_info .menu_interface .center .unit .general {
+          float: left;
+          margin: 0 20px 0 20px; }
+        .mpi__footer .mpi__selected_info .menu_interface .center .unit .scrolled ul {
+          white-space: nowrap; }
+          .mpi__footer .mpi__selected_info .menu_interface .center .unit .scrolled ul li {
+            display: inline-block; }
+    .mpi__footer .mpi__selected_info .menu_interface .right {
+      position: absolute;
+      right: 200px;
+      width: 200px;
+      padding: 20px; }
+      .mpi__footer .mpi__selected_info .menu_interface .right div.buttons {
+        margin-top: -4px;
+        margin-left: 10px; }
+        .mpi__footer .mpi__selected_info .menu_interface .right div.buttons button {
+          margin: 4px; }
+  .mpi__footer .mpi__minimap {
+    width: 200px;
+    height: 200px;
+    background: #f6a6a6;
+    float: right; }
+
 .resources {
   width: 162px; }
   .resources > div {
@@ -6659,6 +6710,40 @@ td.visible-print {
     background-position: 2px 2px;
     border: solid 1px #c6c6c6;
     border-radius: 4px; }
+
+.connect-is-not-estabilished {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #d9534f;
+  color: #000;
+  padding: 30px;
+  width: 50%;
+  height: 80px;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 0px 0px 3px #333;
+  border-radius: 5px; }
+
+.connect-is-estabilished {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #5cb85c;
+  color: #000;
+  padding: 30px;
+  width: 50%;
+  height: 80px;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 0px 0px 3px #333;
+  border-radius: 5px; }
 
 .auth__block {
   min-width: 200px;

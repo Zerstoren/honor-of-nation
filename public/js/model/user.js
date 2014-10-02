@@ -16,13 +16,17 @@
                         password: password
                     },
                     success: this.onLogin.bind(this, callback)
-                })
+                });
+            },
+
+            getResources: function () {
+                return this.resources;
             },
 
             onLogin: function (callback, data, message) {
                 if (data) {
-                    this.attributes = data;
-                    this.attributes.resources = new ModelResources(this);
+                    this.attributes = data.user;
+                    this.resources = new ModelResources(data.resources);
                 }
 
                 if (callback) {

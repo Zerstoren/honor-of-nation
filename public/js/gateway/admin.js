@@ -47,7 +47,7 @@ define('gateway/admin', [
                 if (result.done) {
                     fn(true);
                 }
-            })
+            });
         },
 
         loadResourceMap: function (x, y, fn) {
@@ -57,11 +57,11 @@ define('gateway/admin', [
             }, function (result) {
                 var domain = false;
 
-                if (result['resource']) {
-                    domain = mapResourceFactory.getDomainFromData(result['resource']);
+                if (result.resource) {
+                    domain = mapResourceFactory.getDomainFromData(result.resource);
                 }
 
-                fn(domain, result['users'], result['towns']);
+                fn(domain, result.users, result.towns);
             });
         },
 

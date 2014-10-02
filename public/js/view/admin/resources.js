@@ -53,9 +53,9 @@ define('view/admin/resources', [
                     position: this.get('formatters').fromIdToPlace(0),
                     town: null,
                     user: null
-                })
+                });
             } else {
-                domain.set('position', this.get('formatters').fromIdToPlace(domain.get('pos_id')))
+                domain.set('position', this.get('formatters').fromIdToPlace(domain.get('pos_id')));
             }
 
             this.set('resource', domain);

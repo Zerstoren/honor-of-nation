@@ -1,7 +1,9 @@
 define('view/block/map/header', [
+    'service/standalone/user',
     'view/elements/resource',
     'view/elements/menu'
 ], function(
+    serviceStandaloneUser,
     ViewElementsResource,
     ViewElementsMenu
 ) {
@@ -24,8 +26,8 @@ define('view/block/map/header', [
             if (this.viewMenu === null) {
                 this.viewMenu = new ViewElementsMenu();
                 this.viewMenu.on('onMenuClick', function (menuName) {
-                    this.trigger('onMenuClick', menuName)
-                }, this)
+                    this.trigger('onMenuClick', menuName);
+                }, this);
             }
 
             this.$el.html(this.template);
@@ -34,6 +36,10 @@ define('view/block/map/header', [
             this.viewMenu.render(this.$el.find('.mpi__menu'));
 
             this.holder.append(this.$el);
+
+            serviceStandaloneUser.getMe(function (domain) {
+                this.viewResource.setUserResources(domain.getResources());
+            }.bind(this));
         }
     });
 });

@@ -40,14 +40,14 @@
     <div class="block-coordinate form-inline" role="form">
         <div class="input-group-sm from">
             <span>C позиции:</span> <br>
-            <input type="number" min="0" max="1999" step="1"  placeholder="x" class="form-control x" value="position.fromX">
-            <input type="number" min="0" max="1999" step="1"  placeholder="y" class="form-control y" value="position.fromY">
+            <input type="number" min="0" max="1999" step="1"  placeholder="x" class="form-control x" value="{{position.fromX}}">
+            <input type="number" min="0" max="1999" step="1"  placeholder="y" class="form-control y" value="{{position.fromY}}">
         </div>
 
         <div class="input-group-sm to">
             <span>По позицию:</span> <br>
-            <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x"  value="position.toX">
-            <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y"  value="position.toY">
+            <input type="number" min="0" max="1999" step="1" placeholder="x" class="form-control x"  value="{{position.toX}}">
+            <input type="number" min="0" max="1999" step="1" placeholder="y" class="form-control y"  value="{{position.toY}}">
         </div>
     </div>
 
