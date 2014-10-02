@@ -267,6 +267,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(resources.getEat(), message['resources']['eat'])
         self.assertEqual(resources.getGold(), message['resources']['gold'])
 
+        resources.getMap()
+
         # Controller send
         message = transfer.getLastMessage(1)['message']
         self.assertTrue(message['done'])
