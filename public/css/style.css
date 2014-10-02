@@ -6647,6 +6647,57 @@ td.visible-print {
       padding: 0;
       width: 2px; }
 
+.mpi__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
+  .mpi__footer .mpi__selected_screen {
+    width: 200px;
+    height: 200px;
+    background: #c6c6c6;
+    float: left; }
+  .mpi__footer .mpi__selected_info {
+    width: 100%;
+    height: 150px;
+    background: #e6e6e6;
+    margin: 50px 200px 0 200px; }
+    .mpi__footer .mpi__selected_info .menu_interface > div {
+      height: 150px; }
+    .mpi__footer .mpi__selected_info .menu_interface .left {
+      position: absolute;
+      width: 200px;
+      padding: 10px; }
+      .mpi__footer .mpi__selected_info .menu_interface .left .cursor_position {
+        font-size: 16px;
+        text-align: center; }
+    .mpi__footer .mpi__selected_info .menu_interface .center {
+      padding: 20px 640px 20px 200px; }
+      .mpi__footer .mpi__selected_info .menu_interface .center .unit {
+        height: 70px; }
+        .mpi__footer .mpi__selected_info .menu_interface .center .unit .general {
+          float: left;
+          margin: 0 20px 0 20px; }
+        .mpi__footer .mpi__selected_info .menu_interface .center .unit .scrolled ul {
+          white-space: nowrap; }
+          .mpi__footer .mpi__selected_info .menu_interface .center .unit .scrolled ul li {
+            display: inline-block; }
+    .mpi__footer .mpi__selected_info .menu_interface .right {
+      position: absolute;
+      right: 200px;
+      width: 200px;
+      padding: 20px; }
+      .mpi__footer .mpi__selected_info .menu_interface .right div.buttons {
+        margin-top: -4px;
+        margin-left: 10px; }
+        .mpi__footer .mpi__selected_info .menu_interface .right div.buttons button {
+          margin: 4px; }
+  .mpi__footer .mpi__minimap {
+    width: 200px;
+    height: 200px;
+    background: #f6a6a6;
+    float: right; }
+
 .resources {
   width: 162px; }
   .resources > div {
