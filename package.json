@@ -1,7 +1,7 @@
 {
     "author": "Zerstoren",
     "name": "HonorOfNation-GameProject",
-    "version": "0.0.0",
+    "version": "0.0.0.1-develop",
     "devDependencies": {
         "grunt": ">= 0.4.5",
         "grunt-cli": ">= 0.1.13",
