@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Honor of Nation</title>
-    <script type="text/javascript">
-        var baseUrl = '/api';
-        var env = 'production';
-    </script>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script type="text/javascript">
+            var baseUrl = '/api';
+            var env = 'develop';
+        </script>
+        <script type="text/javascript" src="/js/libs/require.js" defer></script>
+        <script type="text/javascript" src="/js/libs/underscore.js" defer></script>
+        <script type="text/javascript" src="/js/libs/jquery.js" defer></script>
+        <script type="text/javascript" src="/js/libs/backbone.js" defer></script>
+        <script type="text/javascript" src="/js/libs/ractive.js" defer></script>
+        <script type="text/javascript" src="/js/libs/ractive-backbone-adapter.js" defer></script>
+        <script type="text/javascript" src="/js/libs/socket.js" defer></script>
+        <script type="text/javascript" src="/js/libs/bootstrap.js" defer></script>
 
-    
-    <link rel="stylesheet" href="/deploy/1c0638a8b141cd47ad58f2535c9c7515bb26008f/css.css">
-    <script type="text/javascript" src="/deploy/1c0638a8b141cd47ad58f2535c9c7515bb26008f/js.js"></script>
-    
-</head>
+        <script type="text/javascript" src="/js/system/bootstrap.js" defer></script>
+    </head>
+
     <body>
         <div class="interface"></div>
         <div id="canvas_map" class="no-selected"></div>
