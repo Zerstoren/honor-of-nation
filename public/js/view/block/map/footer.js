@@ -11,7 +11,10 @@ define('view/block/map/footer', [
         initialize: function (holder) {
             this.holder = holder;
             this.template = this.getTemplate('block/map/footer');
-            this.data.footer = new ModelDummy();
+            this.data.footer = new ModelDummy({
+                x: '-',
+                y: '-'
+            });
 
             this.initRactive();
         },
