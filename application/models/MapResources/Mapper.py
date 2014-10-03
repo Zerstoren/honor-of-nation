@@ -1,6 +1,5 @@
 import models.Abstract.Mapper
 from . import Common
-import models.Map.Math
 import models.Resources.Common
 
 import exceptions.database
@@ -8,16 +7,14 @@ import exceptions.database
 class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'map_resources'
 
-    def getResourceByPosition(self, x, y):
+    def getResourceByPosition(self, mapCoordinate):
         commonFilter = Common.Common_Filter()
-        commonFilter.add('pos_id', models.Map.Math.fromPositionToId(x, y))
+        commonFilter.add('pos_id', mapCoordinate.getPosId())
 
         commonLimit = Common.Common_Limit()
         commonLimit.setOne()
 
         return self._select(commonFilter, commonLimit)
-
-
 
     def save(self, domain):
         assert(domain.getType() in [

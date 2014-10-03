@@ -7,7 +7,7 @@ import service.MapUserVisible
 
 import models.MapResources.Domain
 import models.Map.Math
-import models.Map.Region
+import helpers.MapRegion
 
 
 class Generic(abstractGeneric.Abstract_Generic):
@@ -25,7 +25,7 @@ class Generic(abstractGeneric.Abstract_Generic):
         user.getMapper().save(user)
 
     def fillTerrain(self, fromX, fromY, toX, toY, land=0):
-        region = models.Map.Region.MapRegion(**{
+        region = helpers.MapRegion.MapRegion(**{
             'fromX': fromX,
             'fromY': fromY,
             'toX': toX,

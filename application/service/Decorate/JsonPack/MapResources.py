@@ -1,4 +1,3 @@
-
 class Decorate():
     def packDomainToJson(self, domain):
         user = domain.getUser()
@@ -18,8 +17,9 @@ class Decorate():
             'base_output': domain.getBaseOutput()
         }
 
-    def getResourceByPosition(self, x, y):
-        resource = super().getResourceByPosition(x, y)
+    def getResourceByPosition(self, mapCoordinate):
+        resource = super().getResourceByPosition(mapCoordinate)
+
         if resource is False:
             return False
 

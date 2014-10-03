@@ -1,4 +1,4 @@
-import models.Map.Region
+import helpers.MapRegion
 
 import exceptions.args
 
