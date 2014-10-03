@@ -32,7 +32,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def getRegion(self, regionMap):
         """
-        :type regionMap: models.Map.Region.MapRegion
+        :type regionMap: helpers.MapRegion.MapRegion
         """
         queryFilter = Common.Common_Filter()
         queryFilter.add('x', {'$gte': regionMap.getFromX(), '$lte': regionMap.getToX()})

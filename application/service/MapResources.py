@@ -9,16 +9,18 @@ import models.Map.Math
 import exceptions.database
 import exceptions.message
 
+import helpers.MapCoordinate
+
 class Service_MapResources(AbstractService.Service_Abstract):
 
-    def getResourceByPosition(self, x, y):
-        resource = models.MapResources.Mapper.MapResources_Mapper.getResourceByPosition(x, y)
+    def getResourceByPosition(self, mapCoordinate):
+        resource = models.MapResources.Mapper.MapResources_Mapper.getResourceByPosition(mapCoordinate)
         return models.MapResources.Factory.MapResources_Factory.getDomainFromData(resource)
 
     def saveResources(self, data):
         try:
             domainInPosition = models.MapResources.Factory.MapResources_Factory.getDomainByPosition(
-                *models.Map.Math.fromIdToPosition(data['posId'])
+                helpers.MapCoordinate.MapCoordinate(posId=data['posId'])
             )
 
             if '_id' not in data:

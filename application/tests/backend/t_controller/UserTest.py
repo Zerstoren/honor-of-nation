@@ -29,7 +29,7 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
                     'user': {
                         'login': user.getLogin(),
                         '_id': str(user.getId()),
-                        'admin': False,
+                        'admin': True,
                         'position': {'x': 1, 'y': 1},
                         '_testPassword': '12345'
                     },

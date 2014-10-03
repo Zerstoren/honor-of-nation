@@ -1,4 +1,4 @@
-import models.Map.Region
+import helpers.MapRegion
 
 
 class Decorate():
@@ -9,13 +9,13 @@ class Decorate():
 
     def getRegion(self, coordinate):
         return super().getRegion(
-            models.Map.Region.MapRegion(**coordinate)
+            helpers.MapRegion.MapRegion(**coordinate)
         )
 
     def fillCoordinate(self, coordinate, land, landType):
         land = int(land)
         landType = int(landType)
-        regionMap = models.Map.Region.MapRegion(**coordinate)
+        regionMap = helpers.MapRegion.MapRegion(**coordinate)
 
         return super().fillCoordinate(regionMap, land, landType)
 
