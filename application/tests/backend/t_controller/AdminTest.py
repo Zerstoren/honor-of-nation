@@ -14,6 +14,8 @@ import models.Map.Mapper
 
 import models.Map.Factory
 
+import helpers.MapCoordinate
+
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
     def _getModelController(self):
@@ -429,7 +431,9 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
             'type': 'steel'
         })
 
-        resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(1, 1)
+        resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
 
         self.fillTerrain(0, 0, 3, 3)
 

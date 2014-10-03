@@ -25,7 +25,7 @@ class Service_Map(AbstractService.Service_Abstract):
 
     def getRegion(self, regionMap):
         """
-        :type regionMap:models.Map.Region.MapRegion
+        :type regionMap:helpers.MapRegion.MapRegion
         """
         regionResult = models.Map.Mapper.Map_Mapper.getRegion(regionMap)
 
@@ -35,7 +35,7 @@ class Service_Map(AbstractService.Service_Abstract):
 
     def fillCoordinate(self, regionMap, land, landType):
         """
-        :type regionMap:models.Map.Region.MapRegion
+        :type regionMap:helpers.MapRegion.MapRegion
         """
 
         for x in range(regionMap.getFromX(), regionMap.getToX() + 1):
