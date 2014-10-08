@@ -6,9 +6,10 @@ import models.Map.Math
 import helpers.MapCoordinate
 
 class Decorate():
-    def getResourceByPosition(self, x, y):
+    def getResourceByPosition(self, x, y, user=None):
         return super().getResourceByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+            helpers.MapCoordinate.MapCoordinate(x=x, y=y),
+            user
         )
 
     def saveResources(self, data):

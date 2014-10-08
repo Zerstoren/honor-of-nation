@@ -1,10 +1,12 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
 
-    'service/standalone/map/gameMapItems/init'
+    'service/standalone/map/gameMapItems/init',
+    'service/standalone/map/gameMapItems/drawObjects/resource'
 ], function (
     userService,
-    mapInstance
+    mapInstance,
+    MapDrawObjectsResource
 ) {
     var Draw = AbstractService.extend({
 
@@ -26,7 +28,7 @@ define('service/standalone/map/draw', [
         initialize: function () {
             this.$mapDI = mapInstance;
 //            this.mapDrawObjectsTownsDI = mapDrawObjectsTowns;
-//            this.mapDrawObjectsResourceDI = mapDrawObjectsResource;
+            this.mapDrawObjectsResource = new MapDrawObjectsResource();
             this.$isInit = false;
         },
 
@@ -42,7 +44,6 @@ define('service/standalone/map/draw', [
                     userDomain.get('position').x,
                     userDomain.get('position').y
                 );
-
             }.bind(this));
 
             this.map  = {};
@@ -123,7 +124,7 @@ define('service/standalone/map/draw', [
                     );
 
                 case this.BUILD_RESOURCES:
-                    return this.mapDrawObjectsResourceDI.getResourceObject(
+                    return this.mapDrawObjectsResource.getResourceObject(
                         x,
                         y,
                         this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]

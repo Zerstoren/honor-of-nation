@@ -7,6 +7,15 @@ import collection.MapUserVisibleCollection
 
 class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
+    def getVisibleDomain(self, mapDomain, userDomain):
+        """
+        :type mapDomain: models.Map.Domain.Map_Domain
+        :type userDomain: models.User.Domain.User_Domain
+        """
+        return self.getDomainFromData(
+            Mapper.MapUserVisible_Mapper.getByPosition(mapDomain.getPosition(), userDomain)
+        )
+
     def getCollectionCellsByUsers(self, user, chunksList):
         """
         :type user: models.User.Domain.User_Domain

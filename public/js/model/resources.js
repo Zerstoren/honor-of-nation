@@ -22,7 +22,7 @@
             },
 
             load: function () {
-                this.sync('get', this, {
+                this.sync('get', {
                     data: {
                         user: this.user.get('_id')
                     },

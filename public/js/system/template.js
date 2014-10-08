@@ -9,10 +9,17 @@ define('system/template', function () {
         });
     }
 
-    function getSource(tpl) {
+    function getSource(tpl, data) {
         var source;
 
         if (sources[tpl]) {
+            if (data) {
+                return (new Ractive({
+                   template: sources[tpl],
+                   data: data
+                })).toHTML();
+            }
+
             return sources[tpl];
         }
 
@@ -28,6 +35,13 @@ define('system/template', function () {
         });
 
         sources[tpl] = source;
+
+        if (data) {
+            return (new Ractive({
+               template: sources[tpl],
+               data: data
+            })).toHTML();
+        }
 
         return sources[tpl];
     }
