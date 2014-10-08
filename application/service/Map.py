@@ -8,10 +8,19 @@ import models.Map.Math
 import models.Map.Domain
 import models.MapUserVisible.Factory
 
+import helpers.MapCoordinate
+
 import exceptions.database
 
 
 class Service_Map(AbstractService.Service_Abstract):
+    def getByPosition(self, mapCoordinate):
+        """
+        :type mapPosition: helpers.MapCoordinate.MapCoordinate
+        :rtype: models.Map.Domain.Map_Domain
+        """
+        return models.Map.Factory.Map_Factory.getDomainByPosition(mapCoordinate)
+
     def getByVisibleCollection(self, collection):
         """
         :type collection: collection.MapUserVisibleCollection.MapUserVisible_Collection
@@ -60,7 +69,9 @@ class Service_Map(AbstractService.Service_Abstract):
         :rtype: models.Map.Domain.Map_Domain
         """
         try:
-            domain = models.Map.Factory.Map_Factory.getDomainByPosition(x, y)
+            domain = models.Map.Factory.Map_Factory.getDomainByPosition(
+                helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+            )
             domain.setLand(land)
             domain.setLandType(landType)
             return domain

@@ -16,6 +16,21 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         models.MapUserVisible.Mapper.MapUserVisible_Mapper.insertCollection(user, region)
         return region.getMapVisible(user)
 
+    def isOpen(self, mapDomain, userDomain):
+        """
+        :type mapDomain: models.Map.Domain.Map_Domain
+        :type userDomain: models.User.Domain.User_Domain
+        """
+        try:
+            models.MapUserVisible.Factory.MapUserVisible_Factory.getVisibleDomain(
+                mapDomain,
+                userDomain
+            )
+
+            return True
+        except:
+            return False
+
     def getByChunks(self, user, chunks):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
             models.MapUserVisible.Mapper.MapUserVisible_Mapper.getCellsByUsersAndChunks(user, chunks)

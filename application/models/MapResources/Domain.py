@@ -3,6 +3,7 @@ from .Mapper import MapResources_Mapper
 
 import models.User.Factory
 import models.Map.Factory
+import helpers.MapCoordinate
 
 class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
     def getUser(self):
@@ -14,7 +15,9 @@ class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
             return None
 
     def getMap(self):
-        return models.Map.Factory.Map_Factory.getDomainById(self.getPosId())
+        return models.Map.Factory.Map_Factory.getDomainByPosition(
+            helpers.MapCoordinate.MapCoordinate(posId=self.getPosId())
+        )
 
     def getMapper(self):
         """

@@ -8,10 +8,10 @@ define('libs/abstract/model', ['system/socket'], function (socket) {
             }
         },
 
-        sync: function (method, model, options) {
+        sync: function (method, options) {
             var url = '/model/' + this.model_url + '/' + method,
                 data = _.extend(
-                    {id: model.get('id')},
+                    {id: this.get('id')},
                     options.data ? options.data : {}
                 );
 

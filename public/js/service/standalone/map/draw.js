@@ -124,7 +124,6 @@ define('service/standalone/map/draw', [
                     );
 
                 case this.BUILD_RESOURCES:
-                    debugger;
                     return this.mapDrawObjectsResource.getResourceObject(
                         x,
                         y,

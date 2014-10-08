@@ -5,6 +5,7 @@ define('libs/abstract/factory', [], function () {
 
     _.extend(window.AbstractFactory.prototype, Backbone.Events, {
         __pool: null,
+        index: 'id',
         domain: null,
 
         initialize: function () {
@@ -28,11 +29,11 @@ define('libs/abstract/factory', [], function () {
                 this.__pool = {};
             }
 
-            if (this.getFromPool(domain.get('id')) !== undefined) {
+            if (this.getFromPool(domain.get(this.index)) !== undefined) {
                 throw new Error('Domain already in pool');
             }
 
-            this.__pool[domain.get('id')] = domain;
+            this.__pool[domain.get(this.index)] = domain;
         },
 
         getDomainFromData: function (data) {

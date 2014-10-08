@@ -5,6 +5,7 @@ import models.MapResources.Mapper
 import models.MapResources.Domain
 
 import models.Map.Math
+import models.Map.Common
 
 import exceptions.database
 import exceptions.message
@@ -13,7 +14,7 @@ import helpers.MapCoordinate
 
 class Service_MapResources(AbstractService.Service_Abstract):
 
-    def getResourceByPosition(self, mapCoordinate):
+    def getResourceByPosition(self, mapCoordinate, user=None):
         resource = models.MapResources.Mapper.MapResources_Mapper.getResourceByPosition(mapCoordinate)
         return models.MapResources.Factory.MapResources_Factory.getDomainFromData(resource)
 
@@ -47,6 +48,10 @@ class Service_MapResources(AbstractService.Service_Abstract):
         })
 
         domain.getMapper().save(domain)
+
+        mapDomain = domain.getMap()
+        mapDomain.setBuild(models.Map.Common.BUILD_RESOURCES)
+        mapDomain.getMapper().save(mapDomain)
 
         return True
 

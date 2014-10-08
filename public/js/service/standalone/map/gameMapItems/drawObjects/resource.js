@@ -1,54 +1,56 @@
 define('service/standalone/map/gameMapItems/drawObjects/resource', [
-    'factory/resources'
+    'system/template',
+    'factory/mapResources',
+    'model/mapResources',
+    'service/standalone/map/gameMapItems/init'
 ], function(
-    factoryResources
+    template,
+    factoryMapResources,
+    ModelMapResources,
+    mapInstance
 ) {
     "use strict";
 
     return AbstractService.extend({
-        initialize: function($map, $template) {
-            this.$mapDI = $map;
-            this.$templateDI = $template;
-            this.resourceFactory = factoryResources;
+        initialize: function() {
+
         },
 
         getResourceObject: function(x, y, type) {
             var domain,
                 self = this,
-                posId = this.$mapDI.help.fromPlaceToId(x, y);
+                posId = mapInstance.help.fromPlaceToId(x, y);
 
-            domain = this.resourceFactory.getFromIndex('pos_id', posId);
+            domain = factoryMapResources.getFromPool(posId);
 
-            if(domain === false) {
-                this.resourceFactory.getAs(function(resourceDomain) {
-                    self.drawBuildObject(x, y, resourceDomain);
-                }, {
-                    field: this.resourceFactory.FIELD_POSITION,
-                    field_value: posId,
-                    access: this.resourceFactory.ACCESS_VISIBLE,
-                    access_value: ''
-                });
+            if(domain === undefined) {
+                domain = new ModelMapResources();
+                domain.set('pos_id', posId);
+                domain.mapLoad(function () {
+                    this.drawBuildObject(domain);
+                }.bind(this));
             } else {
-                this.drawBuildObject(x, y, domain[0]);
+                this.drawBuildObject(domain);
             }
         },
 
-        drawBuildObject: function(x, y, domain) {
-            var domCell = this.$mapDI.getDomCell(x, y);
+        drawBuildObject: function(domain) {
+            var result = mapInstance.help.fromIdToPlace(parseInt(domain.get('pos_id'), 10));
+            var domCell = mapInstance.getDomCell(result.x, result.y);
 
             if(domain.$$domCell === domCell) {
                 return false;
             }
 
             if(!domain.$$domCell) {
-                domain.$$container = this.$templateDI.compile('map/objects/resource', {
-                    data: domain.getData()
+                domain.$$container = template('elements/map/objects/resource', {
+                    data: domain.toJSON()
                 });
             }
 
             if(domCell) {
                 domain.$$domCell = domCell;
-                domCell.find('.container').append(domain.$$container);
+                domCell.find('.cont').append(domain.$$container);
             }
 
             return true;

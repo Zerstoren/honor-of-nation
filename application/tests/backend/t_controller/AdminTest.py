@@ -10,9 +10,10 @@ import exceptions.database
 import exceptions.args
 
 import models.MapUserVisible.Mapper
-import models.Map.Mapper
 
+import models.Map.Mapper
 import models.Map.Factory
+import models.Map.Common
 
 import helpers.MapCoordinate
 
@@ -269,8 +270,6 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         self.assertEqual(resources.getEat(), message['resources']['eat'])
         self.assertEqual(resources.getGold(), message['resources']['gold'])
 
-        resources.getMap()
-
         # Controller send
         message = transfer.getLastMessage(1)['message']
         self.assertTrue(message['done'])
@@ -383,11 +382,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(mapDomain.getBuild(), models.Map.Common.BUILD_RESOURCES)
         self.assertEqual(2500000, mapResourceDomain.getAmount())
         self.assertEqual(13000, mapResourceDomain.getBaseOutput())
         self.assertEqual('rubins', mapResourceDomain.getType())
@@ -414,13 +416,17 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
 
     def testUpdateMapResource(self):
+        self.fillTerrain(0, 0, 3, 3)
+
         service.MapResources.Service_MapResources().saveResources({
             'amount': 500000,
             'base_output': 5000,
@@ -434,8 +440,6 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(
             helpers.MapCoordinate.MapCoordinate(x=1, y=1)
         )
-
-        self.fillTerrain(0, 0, 3, 3)
 
         controller = self._getModelController()
         transfer = self._login()
@@ -456,7 +460,9 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
