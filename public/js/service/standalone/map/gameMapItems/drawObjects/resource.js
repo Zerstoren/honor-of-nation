@@ -29,6 +29,7 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
                 domain.mapLoad(function () {
                     this.drawBuildObject(domain);
                 }.bind(this));
+                factoryMapResources.pushToPool(domain);
             } else {
                 this.drawBuildObject(domain);
             }

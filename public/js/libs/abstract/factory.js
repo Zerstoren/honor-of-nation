@@ -5,7 +5,7 @@ define('libs/abstract/factory', [], function () {
 
     _.extend(window.AbstractFactory.prototype, Backbone.Events, {
         __pool: null,
-        index: 'id',
+        index: 'pos_id',
         domain: null,
 
         initialize: function () {
