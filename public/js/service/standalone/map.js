@@ -1,4 +1,4 @@
-define('service/standalone/map/gameMapItems/init', [
+define('service/standalone/map', [
     'service/standalone/map/gameMapItems/Mouse',
     'service/standalone/map/gameMapItems/Draw',
     'service/standalone/map/gameMapItems/Access',
