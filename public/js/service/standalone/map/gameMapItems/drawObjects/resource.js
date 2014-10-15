@@ -2,7 +2,7 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
     'system/template',
     'factory/mapResources',
     'model/mapResources',
-    'service/standalone/map/gameMapItems/init'
+    'service/standalone/map'
 ], function(
     template,
     factoryMapResources,

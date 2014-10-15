@@ -16,3 +16,6 @@ class Map_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getMapper(self):
         return Map_Mapper
+
+    def isBusyByBuild(self):
+        return self.getBuildType() != 0

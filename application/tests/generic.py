@@ -6,8 +6,11 @@ import service.Map
 import service.MapUserVisible
 
 import models.MapResources.Domain
+import models.Town.Domain
 import models.Map.Math
+
 import helpers.MapRegion
+import helpers.MapCoordinate
 
 
 class Generic(abstractGeneric.Abstract_Generic):
@@ -48,3 +51,19 @@ class Generic(abstractGeneric.Abstract_Generic):
         domain.setBaseOutput(baseOutput if baseOutput is not None else self.getRandomInt(1000, 10000))
         domain.setOutput(domain.getBaseOutput())
         domain.getMapper().save(domain)
+
+    def addTown(self, x, y, user, population=None, typeTown=0, name=None):
+        population = population if population else self.getRandomInt(100, 10000)
+        name = name if name else self.getRandomName('city-')
+        mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+
+        domain = models.Town.Domain.MapResources_Domain()
+        domain.setPosId(mapCoordinate.getPosId())
+        domain.setName(name)
+        domain.setType(typeTown)
+        domain.setPopulation(population),
+        domain.setUser(user)
+
+        domain.getMapper().save(domain)
+
+        return domain

@@ -1,0 +1,3 @@
+
+class Decorate(object):
+    pass
