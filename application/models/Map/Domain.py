@@ -17,5 +17,14 @@ class Map_Domain(models.Abstract.Domain.Abstract_Domain):
     def getMapper(self):
         return Map_Mapper
 
+    def extract(self, force=False):
+        if not self.isMapLoaded():
+            return self
+
+        return super().extract(force)
+
+    def isMapLoaded(self):
+        return 'map_status' in self._domain_data
+
     def isBusyByBuild(self):
-        return self.getBuildType() != 0
+        return self.getBuild() != 0

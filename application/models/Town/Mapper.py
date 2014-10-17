@@ -29,11 +29,12 @@ class Town_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         ]);
 
         mapDomain = domain.getMap()
+        mapDomain.extract(True)
 
-        if mapDomain.isBusyByBuild() and domain.getPosId() == mapDomain.getPosId() and not domain.hasId():
+        if mapDomain.isBusyByBuild() and domain.getPosId() == mapDomain.getId() and not domain.hasId():
             raise exceptions.map.PositionIsBusy('Позиция уже занята')
 
-        mapDomain.setBuildType(models.Map.Common.BUILD_TOWNS)
+        mapDomain.setBuild(models.Map.Common.BUILD_TOWNS)
         mapDomain.getMapper().save(mapDomain)
 
         commonSet = Common.Common_Set()

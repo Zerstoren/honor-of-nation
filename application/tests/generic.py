@@ -57,7 +57,7 @@ class Generic(abstractGeneric.Abstract_Generic):
         name = name if name else self.getRandomName('city-')
         mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=x, y=y)
 
-        domain = models.Town.Domain.MapResources_Domain()
+        domain = models.Town.Domain.Town_Domain()
         domain.setPosId(mapCoordinate.getPosId())
         domain.setName(name)
         domain.setType(typeTown)
