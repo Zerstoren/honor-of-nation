@@ -1,7 +1,7 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
 
-    'service/standalone/map/gameMapItems/init',
+    'service/standalone/map',
     'service/standalone/map/gameMapItems/drawObjects/resource'
 ], function (
     userService,

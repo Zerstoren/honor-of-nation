@@ -1,5 +1,5 @@
 define('view/block/map/footer', [
-    'service/standalone/map/gameMapItems/init',
+    'service/standalone/map',
     'model/dummy'
 ], function(
     map,

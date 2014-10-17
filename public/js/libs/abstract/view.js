@@ -9,11 +9,21 @@ define('libs/abstract/view', [
 ) {
     window.AbstractView = Backbone.View.extend({
         adapt: [Ractive.adaptors.Backbone],
+        partials: {},
         initRactive: function () {
             this.ractive = new Ractive(this);
             this.set = this.ractive.set.bind(this.ractive);
             this.get = this.ractive.get.bind(this.ractive);
             this.teardown = this.ractive.teardown.bind(this.ractive);
+        },
+
+        setPartials: function (data) {
+            var key;
+            for (key in data) {
+                if (data.hasOwnProperty(key)) {
+                    this.partials[key] = this.getTemplate(data[key])
+                }
+            }
         },
 
         data: {},
