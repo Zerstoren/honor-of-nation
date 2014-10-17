@@ -8,12 +8,21 @@ import helpers.MapCoordinate
 
 import models.Map.Factory
 import models.User.Domain
+import models.User.Factory
 
-class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
+class Town_Domain(models.Abstract.Domain.Abstract_Domain):
     def getMap(self):
-        return models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(posId=self.getPosId())
+        return models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(posId=self.getPosId()).getPosId()
         )
+
+    def getUser(self):
+        userId = self._getFunc('user')()
+
+        if userId:
+            return models.User.Factory.User_Factory.getDomainById(userId)
+        else:
+            return None
 
     def getMapper(self):
         """
@@ -21,8 +30,8 @@ class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
         """
         return Town_Mapper
 
-    def setUser(self, obj):
-        if isinstance(obj, models.User.Domain.User_Domain):
-            self._domain_data['user'] = obj
+    def setUser(self, user):
+        if isinstance(user, models.User.Domain.User_Domain):
+            self._domain_data['user'] = user.getId()
         else:
-            self._domain_data['user'] = service.User.Service_User().getUserDomain(obj)
+            self._domain_data['user'] = user

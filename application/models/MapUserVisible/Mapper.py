@@ -31,7 +31,7 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         for i in region:
             commonSet = Common.Common_Set()
-            commonSet.add('pos_id', i.getPosId())
+            commonSet.add('pos_id', i.getId())
             commonSet.add('chunk', i.getChunk())
             commonSet.add('user_id', user.getId())
 

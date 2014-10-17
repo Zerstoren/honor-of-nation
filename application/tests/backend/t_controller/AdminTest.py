@@ -383,13 +383,13 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
-        self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(mapDomain.getId(), mapResourceDomain.getPosId())
         self.assertEqual(mapDomain.getBuild(), models.Map.Common.BUILD_RESOURCES)
         self.assertEqual(2500000, mapResourceDomain.getAmount())
         self.assertEqual(13000, mapResourceDomain.getBaseOutput())
@@ -417,8 +417,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
@@ -461,14 +461,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
-        self.assertEqual(mapResourceDomain.getgetAmount(), 2500000)
+        self.assertEqual(mapResourceDomain.getAmount(), 2500000)
         self.assertEqual(mapResourceDomain.getType(), "rubins")
 
     def testLoadTownMap(self):
@@ -514,6 +514,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         result = transfer.getLastMessage()['message']
         self.assertEqual(
             {
+                'done': True,
                 'town': {
                     'pos_id': 1,
                     'name': 'City name',
@@ -540,7 +541,6 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
                 "name": "City name"
             }
         })
-
         self.assertRaises(
             exceptions.map.PositionIsBusy,
             controller.saveTownDomain,
@@ -555,3 +555,4 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
                 }
             }
         )
+

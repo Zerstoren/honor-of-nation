@@ -7,7 +7,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def getByPositionId(self, posId):
         queryFilter = Common.Common_Filter()
-        queryFilter.add('pos_id', int(posId))
+        queryFilter.add('_id', int(posId))
 
         queryLimit = Common.Common_Limit()
         queryLimit.setOne()
@@ -16,6 +16,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         if result is None:
             raise exceptions.database.NotFound('Map item by position id %s not found' % posId)
 
+        result['map_status'] = 1
         return result
 
     def getByChunks(self, chunks):
@@ -26,7 +27,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def getByPosIds(self, posIds):
         queryFilter = Common.Common_Filter()
-        queryFilter.addIn('pos_id', posIds)
+        queryFilter.addIn('_id', posIds)
 
         return self._select(queryFilter)
 
@@ -45,15 +46,40 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         :type domain: models.Map.Domain.Map_Domain
         """
         data = Common.Common_Set()
-        data.fromDomain(domain)
+        data.add('land', domain.getLand())
+        data.add('land_type', domain.getLandType())
+        data.add('x', domain.getX())
+        data.add('y', domain.getY())
+        data.add('build', domain.getBuild())
+        data.add('decor', domain.getDecor())
+        data.add('chunk', domain.getChunk())
 
-        if domain.hasId():
+        if domain.isMapLoaded():
             filterData = Common.Common_Filter({
                 '_id': domain.getId()
             })
             self._update(data, filterData)
         else:
+            data.add('_id', domain.getId())
             self._insert(data)
 
+    def getById(self, queryId):
+        result = self._select(
+            Common.Common_Filter().setId(queryId),
+            Common.Common_Limit().setOne()
+        )
+
+        if result is None:
+            raise exceptions.database.NotFound('Data by _id %s not found in table `%s`' % (queryId, self._table))
+
+        result['map_status'] = 1
+        return result
+
+    def getByIds(self, ids):
+        result = super().getById(ids)
+        for i in result:
+            result[i]['map_status'] = 1
+
+        return result
 
 Map_Mapper = Map_Mapper_Main()

@@ -86,6 +86,12 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
 
         return result
 
+    def getByIds(self, ids):
+        commonFilter = models.Abstract.Common.Common_Filter()
+        commonFilter.addIn('_id', ids)
+
+        return self._select(commonFilter)
+
     def _objectId(self, value):
         return self._db.id(value)
 

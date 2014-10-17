@@ -8,9 +8,10 @@ class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
     def getDomainById(self, userId):
         domain = self.getCache(userId)
         if domain is None:
-            domain = self.getDomainFromData(
-                models.User.Mapper.User_Mapper.getById(userId)
-            )
+            domain = models.User.Domain.User_Domain()
+            domain.setId(userId)
+
+            self.setCache(domain.getId(), domain)
 
         return domain
 

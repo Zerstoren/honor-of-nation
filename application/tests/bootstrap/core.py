@@ -40,14 +40,6 @@ class Core():
     def createIndexes(self):
         mongo = self._mongo.connection
 
-        mongo.map.create_index(
-            [
-                ('pos_id', 1, )
-            ],
-            name='Unique_Position',
-            unique=True,
-        )
-
         ############### Index for map
         mongo.map_user_visible.create_index(
             [
