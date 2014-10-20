@@ -8,6 +8,7 @@ import service.MapResources
 import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
+import exceptions.map
 
 import models.MapUserVisible.Mapper
 
@@ -382,13 +383,13 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
-        self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(mapDomain.getId(), mapResourceDomain.getPosId())
         self.assertEqual(mapDomain.getBuild(), models.Map.Common.BUILD_RESOURCES)
         self.assertEqual(2500000, mapResourceDomain.getAmount())
         self.assertEqual(13000, mapResourceDomain.getBaseOutput())
@@ -416,8 +417,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
@@ -460,12 +461,98 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(
-            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
         )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
-        self.assertEqual(mapResourceDomain.getgetAmount(), 2500000)
+        self.assertEqual(mapResourceDomain.getAmount(), 2500000)
         self.assertEqual(mapResourceDomain.getType(), "rubins")
+
+    def testLoadTownMap(self):
+        controller = self._getModelController()
+        transfer = self._login()
+
+        self.fillTerrain(0, 0, 3, 3)
+        townDomain = self.addTown(1, 1, transfer.getUser())
+
+        controller.loadTownMap(transfer, {
+            'x': 1,
+            'y': 1
+        })
+
+        result = transfer.getLastMessage()
+        self.assertEqual(
+            result['message']['town'],
+            {
+                'population': townDomain.getPopulation(),
+                'type': 0,
+                'user': str(transfer.getUser().getId()),
+                'pos_id': 2001,
+                'name': townDomain.getName()
+            }
+        )
+
+    def testSaveTown(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveTownDomain(transfer, {
+            "domain": {
+                "type": "0",
+                "user": str(transfer.getUser().getId()),
+                "population": "23543",
+                "pos_id": "1",
+                "name": "City name"
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        self.assertEqual(
+            {
+                'done': True,
+                'town': {
+                    'pos_id': 1,
+                    'name': 'City name',
+                    'population': 23543,
+                    'type': 0,
+                    'user': str(transfer.getUser().getId())
+                }
+            },
+            result
+        )
+
+    def testSaveTown_PositionIsBusy(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveTownDomain(transfer, {
+            "domain": {
+                "type": "0",
+                "user": str(transfer.getUser().getId()),
+                "population": "23543",
+                "pos_id": "1",
+                "name": "City name"
+            }
+        })
+        self.assertRaises(
+            exceptions.map.PositionIsBusy,
+            controller.saveTownDomain,
+            transfer,
+            {
+                "domain": {
+                    "type": "0",
+                    "user": str(transfer.getUser().getId()),
+                    "population": "12000",
+                    "pos_id": "1",
+                    "name": "City name"
+                }
+            }
+        )
+

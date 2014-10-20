@@ -5,7 +5,6 @@ import models.MapUserVisible.Mapper
 import models.MapUserVisible.Factory
 
 
-
 class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
 
     def openRegion(self, user, region):

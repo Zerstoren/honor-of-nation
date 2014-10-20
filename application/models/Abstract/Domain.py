@@ -6,6 +6,7 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
     def __init__(self):
         self._isLoaded = False
         self._domain_data = {}
+        self._loaded = False
 
     def __convert(self, name):
         return re.sub('(?!^)([A-Z]+)', r'_\1',name).lower()
@@ -24,8 +25,30 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         return '_id' in self._domain_data
 
     def setOptions(self, options):
+        if '_id' in options:
+            self.setId(options['_id'])
+            del options['_id']
+
+        self.extract()
+
         for i in options:
-            self.__getattribute__('set' + i)(options[i])
+            self._setFunc(i)(options[i])
+
+    def extract(self, force=False):
+        if self._loaded is True:
+            return self
+
+        if not self.hasId():
+            return self
+
+        if not self._loaded or force:
+            self._loaded = True
+
+            self.setOptions(
+                self.getMapper().getById(self.getId())
+            )
+
+        return self
 
     def toDict(self):
         result = copy.deepcopy(self._domain_data)
@@ -40,7 +63,7 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
     def _getFunc(self, name):
         name = self.__convert(name)
         def getFunc():
-            self._loadData()
+            self.extract()
 
             return self._domain_data[name]
 
@@ -49,19 +72,12 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
     def _setFunc(self, name):
         name = self.__convert(name)
         def setFunc(value):
-            self._loadData()
+            self.extract()
 
             self._domain_data[name] = value
             return self
 
         return setFunc
-
-    def _loadData(self):
-        if 'id' in self._domain_data and self._isLoaded == False:
-            self._isLoaded = True
-            cursor = self.getMapper().getById(self._domain_data['_id'])
-
-            self.setOptions(cursor)
 
     def __getattribute__(self, item):
         """

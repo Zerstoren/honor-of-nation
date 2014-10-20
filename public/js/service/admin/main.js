@@ -6,6 +6,7 @@ define('service/admin/main', [
     'service/admin/terrain',
     'service/admin/player',
     'service/admin/resources',
+    'service/admin/town',
 
     'view/admin/main'
 ], function (
@@ -16,6 +17,7 @@ define('service/admin/main', [
     ServiceAdminTerrain,
     ServiceAdminPlayer,
     ServiceAdminResources,
+    ServiceAdminTown,
 
     ViewAdminMain
 ) {
@@ -30,6 +32,7 @@ define('service/admin/main', [
             this.serviceTerrain = new ServiceAdminTerrain();
             this.servicePlayer = new ServiceAdminPlayer();
             this.serviceResources = new ServiceAdminResources();
+            this.serviceTown = new ServiceAdminTown();
         },
 
         render: function () {
@@ -64,6 +67,10 @@ define('service/admin/main', [
                 case 'resources':
                     this.serviceResources.render(holder);
                     break;
+                case 'town':
+                    this.serviceTown.render(holder);
+                    break;
+
             }
 
             this.unSelectType();
@@ -80,6 +87,9 @@ define('service/admin/main', [
                     break;
                 case 'resources':
                     this.serviceResources.unRender();
+                    break;
+                case 'town':
+                    this.serviceTown.unRender();
                     break;
             }
 

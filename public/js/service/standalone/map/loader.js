@@ -2,7 +2,7 @@ define('service/standalone/map/loader', [
     'system/socket',
     'gateway/map',
 
-    'service/standalone/map/gameMapItems/init',
+    'service/standalone/map',
     'service/standalone/map/draw'
 ], function (
     socket,

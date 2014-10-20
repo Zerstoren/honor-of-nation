@@ -2,7 +2,7 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
     'system/template',
     'factory/mapResources',
     'model/mapResources',
-    'service/standalone/map/gameMapItems/init'
+    'service/standalone/map'
 ], function(
     template,
     factoryMapResources,
@@ -21,15 +21,17 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
                 self = this,
                 posId = mapInstance.help.fromPlaceToId(x, y);
 
-            domain = factoryMapResources.getFromPool(posId);
+            domain = factoryMapResources.searchInPool('pos_id', posId)[0];
 
             if(domain === undefined) {
                 domain = new ModelMapResources();
                 domain.set('pos_id', posId);
                 domain.mapLoad(function () {
                     this.drawBuildObject(domain);
+                    try {
+                        factoryMapResources.pushToPool(domain);
+                    } catch(e) {}
                 }.bind(this));
-                factoryMapResources.pushToPool(domain);
             } else {
                 this.drawBuildObject(domain);
             }

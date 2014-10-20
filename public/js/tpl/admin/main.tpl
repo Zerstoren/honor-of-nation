@@ -12,6 +12,9 @@
                 <li>
                     <button class="btn btn-default" data-type="resources">Ресурсы</button>
                 </li>
+                <li>
+                    <button class="btn btn-default" data-type="town">Города</button>
+                </li>
             </ul>
     </div>
 

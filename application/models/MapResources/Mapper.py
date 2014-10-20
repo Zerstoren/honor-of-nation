@@ -1,8 +1,12 @@
+from jinja2.ext import do
 import models.Abstract.Mapper
 from . import Common
+
 import models.Resources.Common
+import models.Map.Common
 
 import exceptions.database
+import exceptions.message
 
 class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'map_resources'
@@ -13,7 +17,6 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         commonLimit = Common.Common_Limit()
         commonLimit.setOne()
-
         return self._select(commonFilter, commonLimit)
 
     def save(self, domain):
@@ -25,6 +28,11 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
             models.Resources.Common.EAT,
         ])
 
+        mapDomain = domain.getMap()
+
+        if mapDomain.isBusyByBuild() and domain.getPosId() == mapDomain.getId() and not domain.hasId():
+            raise exceptions.message.Message('Позиция уже занята')
+
         commonSet = Common.Common_Set()
         commonSet.add('pos_id', domain.getPosId())
         commonSet.add('type', domain.getType())
@@ -34,6 +42,9 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet.add('base_output', domain.getBaseOutput()),
         commonSet.add('output', domain.getOutput()),
 
+        mapDomain.setBuild(models.Map.Common.BUILD_RESOURCES)
+        mapDomain.getMapper().save(mapDomain)
+
         if domain.hasId():
             self._update(
                 commonSet,
@@ -42,5 +53,6 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         else:
             cursor = self._insert(commonSet)
             domain.setId(cursor)
+
 
 MapResources_Mapper = MapResources_Mapper_Main()

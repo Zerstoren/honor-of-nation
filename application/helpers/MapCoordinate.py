@@ -17,6 +17,12 @@ class MapCoordinate(object):
     def getCoordinate(self):
         return (self.x, self.y, )
 
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
+
     def getPosId(self):
         return self.posId
 

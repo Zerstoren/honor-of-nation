@@ -26,16 +26,6 @@ class Common_Set(dict):
         except:
             self.add(key, value)
 
-    def fromDomain(self, domain):
-        """
-        :type domain: models.Abstract.Domain.Abstract_Domain
-        """
-        for key in domain._domain_data:
-            if key == '_id':
-                continue
-
-            self.set(key, domain._domain_data[key])
-
     def test(self, exception=True):
         if not len(self.require):
             return True

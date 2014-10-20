@@ -20,12 +20,11 @@ class Decorate():
 
     def _getJsonForMap(self, domain):
         return {
-            models.Map.Common.TRANSFER_ALIAS_POS_ID: domain.getPosId(),
+            models.Map.Common.TRANSFER_ALIAS_POS_ID: domain.getId(),
             models.Map.Common.TRANSFER_ALIAS_LAND: domain.getLand(),
             models.Map.Common.TRANSFER_ALIAS_LAND_TYPE: domain.getLandType(),
             models.Map.Common.TRANSFER_ALIAS_DECOR: domain.getDecor(),
-            models.Map.Common.TRANSFER_ALIAS_BUILD: domain.getBuild(),
-            models.Map.Common.TRANSFER_ALIAS_BUILD_TYPE: domain.getBuildType()
+            models.Map.Common.TRANSFER_ALIAS_BUILD: domain.getBuild()
         }
 
     def getByVisibleCollection(self, collection):

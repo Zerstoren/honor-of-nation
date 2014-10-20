@@ -8,14 +8,14 @@ import models.User.Domain
 class Resources_Domain(models.Abstract.Domain.Abstract_Domain):
     def getUser(self):
         return models.User.Factory.User_Factory.getDomainById(
-            self._domain_data['user']
+            self._getFunc('user')()
         )
 
     def setUser(self, user):
         if isinstance(user, models.User.Domain.User_Domain):
-            self._domain_data['user'] = user.getId()
+            self._setFunc('user')(user.getId())
         else:
-            raise Exception('%s is not instance of User_Domain' % user.__class__.__name__)
+            self._setFunc('user')(user)
 
     def getMapper(self):
         return Resources_Mapper
