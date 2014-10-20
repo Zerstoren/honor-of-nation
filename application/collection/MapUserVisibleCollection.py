@@ -7,6 +7,7 @@ class MapUserVisible_Collection(Abstract.AbstractCollection):
         result = []
 
         for i in self:
+            i._loaded = True
             result.append(i.getPosId())
 
         return service.Map.Service_Map().getByPosIds(result)

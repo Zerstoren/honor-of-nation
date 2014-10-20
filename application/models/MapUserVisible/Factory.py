@@ -43,7 +43,7 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         collectionMapUserVisible = collection.MapUserVisibleCollection.MapUserVisible_Collection()
         for i in data:
             collectionMapUserVisible.append(
-                self.getDomainFromData(i)
+                self.getDomainFromData_Unsafe(i)
             )
 
         return collectionMapUserVisible
@@ -54,6 +54,11 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         """
         domain = Domain.MapUserVisible_Domain()
         domain.setOptions(data)
+        return domain
+
+    def getDomainFromData_Unsafe(self, data):
+        domain = Domain.MapUserVisible_Domain()
+        domain._domain_data = data
         return domain
 
 MapUserVisible_Factory = MapUserVisible_Factory_Main()

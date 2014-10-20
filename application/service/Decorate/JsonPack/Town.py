@@ -2,6 +2,7 @@
 class Decorate():
     def _pack(self, domain):
         return {
+            '_id' : str(domain.getId()),
             "type": domain.getType(),
             "user": str(domain.getUser().getId()),
             "population": domain.getPopulation(),
@@ -9,9 +10,9 @@ class Decorate():
             "name": domain.getName()
         }
 
-    def loadByPosition(self, x, y):
+    def loadByPosition(self, mapCoordinate):
         return self._pack(
-            super().loadByPosition(x, y)
+            super().loadByPosition(mapCoordinate)
         )
 
     def save(self, townData):

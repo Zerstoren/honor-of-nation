@@ -1,7 +1,6 @@
 import models.Abstract.Mapper
 from . import Common
 
-
 class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'map_user_visible'
 
