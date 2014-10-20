@@ -20,15 +20,15 @@ class AbstractCollection(list):
             ids = []
 
             for i in self:
-                if not self[i].hasId():
+                if not i.hasId():
                     continue
 
-                ids.append(self[i].getId())
+                ids.append(i.getId())
 
             result = mapper.getByIds(ids)
 
             for i in result:
-                domain = self.getById(result[i]['_id'])
-                domain.setOptions(result[i])
+                domain = self.getById(i['_id'])
+                domain.setOptions(i)
 
         return self

@@ -48,7 +48,6 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
                 self.getMapper().getById(self.getId())
             )
 
-
         return self
 
     def toDict(self):

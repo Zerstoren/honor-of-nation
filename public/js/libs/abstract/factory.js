@@ -5,7 +5,7 @@ define('libs/abstract/factory', [], function () {
 
     _.extend(window.AbstractFactory.prototype, Backbone.Events, {
         __pool: null,
-        index: 'pos_id',
+        index: '_id',
         domain: null,
 
         initialize: function () {
@@ -53,6 +53,20 @@ define('libs/abstract/factory', [], function () {
             }
 
             return domain;
+        },
+
+        searchInPool: function (index, value) {
+            var item, result = [];
+
+            for (item in this.__pool) {
+                if (this.__pool.hasOwnProperty(item)) {
+                    if (this.__pool[item].get(index) === value) {
+                        result.push(this.__pool[item]);
+                    }
+                }
+            }
+
+            return result;
         }
     });
 

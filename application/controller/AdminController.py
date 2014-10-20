@@ -129,7 +129,7 @@ class MainAdminController(AbstractAdminController):
             except exceptions.database.NotFound:
                 result['done'] = False
         else:
-            result['done'] = False
+            result['done'] = True
 
         transfer.send('/admin/loadTownMap', result)
 

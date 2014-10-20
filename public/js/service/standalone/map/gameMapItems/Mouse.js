@@ -4,6 +4,7 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
         initialize: function() {
             this.currentMovePosition = [-1, -1];
             this.$activateSelfControl();
+            this.mouseIsMoved = false;
         },
 
         activateDrag: function() {
@@ -15,12 +16,6 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
         },
 
         $afterDraw: function() {
-//            this.registerEvents([
-//                'mouseClick', 'mouseRightClick', 'mouseMiddleClick', 'mouseDoubleClick',
-//                'mouseMove',
-//                'mouseDragStart', 'mouseDragMove', 'mouseDragStop'
-//            ]);
-
             this.$dragStarted = false;
             this.$dragUserUsed = false;
             this.$dragMapBasePosition = [0, 0];
@@ -82,7 +77,7 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
             } else {
                 tmp = this.$getInfoForEvent(ev);
 
-                if(tmp && (tmp[0] !== this.currentMovePosition[0] || tmp[1] !== this.currentMovePosition[1])) {
+                if(tmp && (tmp.x !== this.currentMovePosition[0] || tmp.y !== this.currentMovePosition[1])) {
                     this.currentMovePosition = tmp;
                     this.trigger('mouseMove', this.$getInfoForEvent(ev));
                 }
@@ -102,14 +97,7 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
         },
 
         mouseDragMove: function(ev) {
-            /*if(ev.which === 0) {
-                this.mouseDragStop(ev);
-            } else {*/
-//            console.profileEnd();
-//            console.profile();
             this.trigger('mouseDragMove', ev);
-            //}
-
         },
 
         $activateSelfControl: function() {
@@ -193,13 +181,12 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
             tmp = parent.getAttribute('data-position').split('x');
             positionX = parseInt(tmp[0], 10) + this.positionX;
             positionY = parseInt(tmp[1], 10) + this.positionY;
-
-            return [
-                positionX,
-                positionY,
-                ev.target,
-                ev
-            ];
+            return {
+                x      : positionX,
+                y      : positionY,
+                target : ev.target,
+                event  : ev
+            };
         }
     });
 });

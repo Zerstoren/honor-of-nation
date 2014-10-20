@@ -5,7 +5,6 @@ define('factory/mapResources', [
 
     var ResourcesFactory = AbstractFactory.extend({
         domain: MapResourcesDomain,
-        index: 'pos_id',
 
         getDomainFromData: function (data) {
             var domain;
