@@ -17,6 +17,8 @@ if config.get('system.pycharm') == 'true':
 
 
 class Abstract_Generic(unittest.TestCase):
+    maxDiff = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

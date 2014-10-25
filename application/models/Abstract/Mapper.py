@@ -5,7 +5,7 @@ import exceptions.database
 
 
 class Abstract_Mapper(metaclass=abc.ABCMeta):
-    _table = None
+    _table = 'towns_builds'
 
     def __init__(self):
         self._db = system.mongo.mongo

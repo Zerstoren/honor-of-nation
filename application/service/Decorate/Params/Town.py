@@ -3,9 +3,14 @@ import helpers.mongo
 import helpers.MapCoordinate
 
 class Decorate():
+    def getById(self, townId):
+        return super().getById(
+            helpers.mongo.objectId(townId)
+        )
+
     def loadByPosition(self, x, y):
         return super().loadByPosition(
-                helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+            helpers.MapCoordinate.MapCoordinate(x=x, y=y)
         )
 
     def save(self, townData):

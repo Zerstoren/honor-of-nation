@@ -9,6 +9,8 @@ class Town_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         domain = Domain.Town_Domain()
         domain.setId(townId)
 
+        return domain.extract()
+
     def getByPosition(self, mapCoordinate):
         result = Mapper.Town_Mapper.getByPosition(mapCoordinate)
         return self.getDomainFromData(result)
