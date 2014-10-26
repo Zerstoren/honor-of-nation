@@ -1,0 +1,42 @@
+.tda__block {
+    position: absolute;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+
+    .left {
+        position: absolute;
+        left: 0;
+        top: 5%;
+
+        background: #eee;
+        height: 90%;
+        width: 20%;
+
+        border-radius: 0 4px 4px 0;
+        box-shadow: 5px 0px 15px #000;
+    }
+
+    .right {
+        position: absolute;
+        right: 0;
+
+        background: #eee;
+        height: 100%;
+        width: 70%;
+
+        padding: 30px;
+
+        .soft-wrap {
+            padding-bottom: 20px;
+        }
+    }
+
+    .close {
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        font-size: 36px;
+        z-index: 1;
+    }
+}

@@ -4,8 +4,114 @@ import controller.TownController
 
 
 class Backend_Controller_UserTest(Backend_Controller_Generic):
+    def _getMainController(self):
+        return controller.TownController.MainController()
+
     def _getModelController(self):
         return controller.TownController.ModelController()
+
+    def testGetTownBuilds_Village(self):
+        self.fillTerrain(0, 0, 3, 3)
+        controller = self._getMainController()
+        transfer = self._login()
+        user = transfer.getUser()
+
+        townDomain = self.addTown(0, 0, user, population=13000, typeTown=0, name='Systemd')
+
+        controller.getTownBuilds(transfer, {
+            'id': str(townDomain.getId())
+        })
+
+        self.assertDictEqual(
+            transfer.getLastMessage(),
+            {
+                'async': None,
+                'module': '/town/get_builds',
+                'message': {
+                    'done': True,
+                    'data': {
+                        'v_council': 0,
+                        'hut': 0,
+                        'farm': 0,
+                        'field': 0,
+                        'mill': 0,
+                        'mine': 0,
+                        'road': 0
+                    }
+                },
+            }
+        )
+
+    def testGetTownBuilds_City(self):
+        self.fillTerrain(0, 0, 3, 3)
+        controller = self._getMainController()
+        transfer = self._login()
+        user = transfer.getUser()
+
+        townDomain = self.addTown(0, 0, user, population=13000, typeTown=1, name='Systemd')
+
+        controller.getTownBuilds(transfer, {
+            'id': str(townDomain.getId())
+        })
+
+        self.assertDictEqual(
+            transfer.getLastMessage(),
+            {
+                'module': '/town/get_builds',
+                'async': None,
+                'message':  {
+                    'done': True,
+                    'data':  {
+                        'casern': 0,
+                        't_council': 0,
+                        'prison': 0,
+                        'road': 0,
+                        'farm': 0,
+                        'field': 0,
+                        'smithy': 0,
+                        'wall': 0,
+                        'mill': 0,
+                        'storage': 0,
+                        'mine': 0,
+                        'guildhall': 0,
+                        'house': 0
+                    }
+                }
+            }
+        )
+
+    def testGetTownBuilds_Castle(self):
+        self.fillTerrain(0, 0, 3, 3)
+        controller = self._getMainController()
+        transfer = self._login()
+        user = transfer.getUser()
+
+        townDomain = self.addTown(0, 0, user, population=13000, typeTown=2, name='Systemd')
+
+        controller.getTownBuilds(transfer, {
+            'id': str(townDomain.getId())
+        })
+
+        self.assertDictEqual(
+            transfer.getLastMessage(),
+            {
+                'module': '/town/get_builds',
+                'async': None,
+                'message': {
+                    'done': True,
+                    'data': {
+                        'mine': 0,
+                        'smithy': 0,
+                        'high_wall': 0,
+                        'barrack': 0,
+                        'farm': 0,
+                        'road': 0,
+                        'headquarters': 0,
+                        'casern': 0
+                    }
+                },
+            }
+        )
 
     def testTownModelGetByPosId(self):
         self.fillTerrain(0, 0, 3, 3)

@@ -5,7 +5,7 @@ from . import Common
 class TownBuilds_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     def getByTownId(self, townId):
         filterQuery = Common.Common_Filter()
-        filterQuery.setId(townId)
+        filterQuery.add('town', townId)
 
         filterLimit = Common.Common_Limit()
         filterLimit.setOne()

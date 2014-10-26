@@ -1,3 +1,4 @@
 
 class Decorate():
-    pass
+    def get(self, townDomain, user):
+        return super().get(townDomain, user)

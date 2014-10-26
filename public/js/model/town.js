@@ -4,7 +4,7 @@ define('model/town', [
     return AbstractModel.extend({
         model_url: 'town',
 
-        getById: function (callback) {
+        getById: function (success) {
             this.sync('get', {
                 data: {
                     'id': this.get('id')
@@ -12,7 +12,7 @@ define('model/town', [
                 success: function (town) {
                     this.set(town);
                     success();
-                }
+                }.bind(this)
             });
         },
 
