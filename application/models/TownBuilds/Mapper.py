@@ -34,10 +34,21 @@ class TownBuilds_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
             Common.BUILD_WALL : 0
         }
 
-    def save(self, domain, town):
+    def saveQueue(self, domain):
+        queue = domain.getQueue()
+
+        commonSet = Common.Common_Set()
+        commonSet.add('queue', queue)
+
+        commonFilter = Common.Common_Filter()
+        commonFilter.setId(domain.getId())
+
+        self._update(commonSet, commonFilter)
+
+    def save(self, domain):
         commonSet = Common.Common_Set()
         commonSet\
-            .add('town', town.getId())\
+            .add('town', domain.getTown().getId())\
             .add(Common.BUILD_FIELD, domain.getField())\
             .add(Common.BUILD_FARM, domain.getFarm())\
             .add(Common.BUILD_MILL, domain.getMill())\
@@ -62,6 +73,7 @@ class TownBuilds_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
             filterQuery.setId(domain.getId())
             self._update(commonSet, filterQuery)
         else:
+            commonSet.add('queue', [])
             townBuildsId = self._insert(commonSet)
             domain.setId(townBuildsId)
 

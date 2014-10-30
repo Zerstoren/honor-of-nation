@@ -11,6 +11,7 @@ import system.router
 import config
 
 import json
+import subprocess
 
 
 class SocketHandler(websocket.WebSocketHandler):
@@ -60,5 +61,16 @@ app = web.Application([
 ])
 
 if __name__ == '__main__':
+    managedProcess = subprocess.Popen([
+        'python3',
+        '-B',
+        'init_celery.py',
+        '--type=dev'
+    ])
+
     app.listen(int(config.get('server.port')), config.get('server.host'))
-    ioloop.IOLoop.instance().start()
+
+    try:
+        ioloop.IOLoop.instance().start()
+    except KeyboardInterrupt:
+        managedProcess.terminate()

@@ -101,5 +101,10 @@ class Common_Limit(object):
         return True if self.limit is not None and self.limit == 1 else False
 
 
-class Common_Order(object):
-    pass
+class Common_Order(list):
+    ASC = 1,
+    DESC = -1
+
+    def add(self, key, direction):
+        self.append((key, direction, ))
+

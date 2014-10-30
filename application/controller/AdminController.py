@@ -1,4 +1,3 @@
-from concurrent.futures.process import _ResultItem
 import controller.ResourceController
 
 import service.Admin
