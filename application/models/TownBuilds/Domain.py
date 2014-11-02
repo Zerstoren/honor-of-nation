@@ -1,14 +1,26 @@
 import exceptions.builds
 
 import models.Abstract.Domain
+import models.Town.Factory
+import models.Town.Domain
 
-import models.TownBuildsQueue.Factory
 from .Mapper import TownBuilds_Mapper
 
 import time
 
 
 class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
+    def getTown(self):
+        return models.Town.Factory.Town_Factory.getDomainById(
+            self._domain_data['town']
+        )
+
+    def setTown(self, town):
+        if isinstance(town, models.Town.Domain.Town_Domain):
+            self._domain_data['town'] = town.getId()
+        else:
+            self._domain_data['town'] = town
+
     def addToQueue(self, key, level, completeAfter):
         buildLevel = self.getMaximumBuildLevel(key)
 
@@ -41,6 +53,8 @@ class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
                 items.append(i)
                 queue.remove(i)
 
+        self.setQueue(queue)
+
         return (queueCode, items, )
 
     def setQueueCode(self, queueCode):
@@ -50,7 +64,7 @@ class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
             raise exceptions.builds.WrongQueueChain('First build in queue is under construction')
 
         queue[0]['queue_code'] = str(queueCode)
-        queue[0]['start_at'] = time.time()
+        queue[0]['start_at'] = int(time.time())
 
         self.setQueue(queue)
 

@@ -16,18 +16,17 @@ class Resources_Domain(models.Abstract.Domain.Abstract_Domain):
             raise exceptions.resources.NotEnoughResources('Not enough resources')
 
         self.setRubins(self.getRubins() - data[Common.RUBINS])
-        self.setRubins(self.getWood() - data[Common.WOOD])
-        self.setRubins(self.getStone() - data[Common.STONE])
-        self.setRubins(self.getSteel() - data[Common.STEEL])
-        self.setRubins(self.getEat() - data[Common.EAT])
-
+        self.setWood(self.getWood() - data[Common.WOOD])
+        self.setStone(self.getStone() - data[Common.STONE])
+        self.setSteel(self.getSteel() - data[Common.STEEL])
+        self.setEat(self.getEat() - data[Common.EAT])
 
     def upResources(self, data):
         self.setRubins(self.getRubins() + data[Common.RUBINS])
-        self.setRubins(self.getWood() + data[Common.WOOD])
-        self.setRubins(self.getStone() + data[Common.STONE])
-        self.setRubins(self.getSteel() + data[Common.STEEL])
-        self.setRubins(self.getEat() + data[Common.EAT])
+        self.setWood(self.getWood() + data[Common.WOOD])
+        self.setStone(self.getStone() + data[Common.STONE])
+        self.setSteel(self.getSteel() + data[Common.STEEL])
+        self.setEat(self.getEat() + data[Common.EAT])
 
     def getUser(self):
         return models.User.Factory.User_Factory.getDomainById(

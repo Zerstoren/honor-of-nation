@@ -69,6 +69,7 @@ class TownBuilds_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
             .add(Common.BUILD_WALL, domain.getWall())
 
         if domain.hasId():
+            commonSet.add('queue', domain.getQueue())
             filterQuery = Common.Common_Filter()
             filterQuery.setId(domain.getId())
             self._update(commonSet, filterQuery)

@@ -4,30 +4,33 @@ import models.TownBuilds.Factory
 import models.TownBuilds.Math
 
 import time
+import copy
 
 import init_celery
 
 
 class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
-    def get(self, townDomain, user):
+    def get(self, townDomain, user=None):
         return models.TownBuilds.Factory.TownBuilds_Factory.getByTown(townDomain)
 
     def completeBuild(self, townDomain):
         buildsDomain = townDomain.getBuilds()
+        buildsInQueue = buildsDomain.getQueue()
         buildInQueue = buildsDomain.getQueue()[0]
 
-        buildsDomain.removeFromQueue(buildInQueue['key'], buildInQueue['level'])
+        buildsInQueue.remove(buildInQueue)
         self._updateQueueCode(buildsDomain)
 
+        buildsDomain._setFunc(buildInQueue['key'])(buildInQueue['level'])
         buildsDomain.getMapper().save(buildsDomain)
 
-    def create(self, townDomain, buildKey, level):
+    def create(self, user, townDomain, buildKey, level):
         buildsDomain = townDomain.getBuilds()
         resourceDomain = townDomain.getUser().getResources()
 
         maxBuildLevel = buildsDomain.getMaximumBuildLevel(buildKey)
 
-        for i in range(maxBuildLevel, level):
+        for i in range(maxBuildLevel + 1, level + 1):
             price = models.TownBuilds.Math.getBuildPrice(buildKey, i)
             resourceDomain.dropResources(price)
 
@@ -42,7 +45,7 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
         resourceDomain.getMapper().save(resourceDomain)
         buildsDomain.getMapper().saveQueue(buildsDomain)
 
-    def remove(self, townDomain, buildKey, level):
+    def remove(self, user, townDomain, buildKey, level):
         buildsDomain = townDomain.getBuilds()
         resourceDomain = townDomain.getUser().getResources()
         queueCode, buildsToRemove = buildsDomain.removeFromQueue(buildKey, level)
@@ -53,8 +56,14 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
 
         for build in buildsToRemove:
             percentComplete = 1
-            if 'queue_code' in build:
-                percentComplete = ((build['start_at'] + build['complete_after']) - time.time()) /  build['complete_after']
+            if 'queue_code' in build and build['queue_code']:
+                percentComplete = (
+                    (
+                        (
+                            build['start_at'] + build['complete_after']
+                        ) - int(time.time())
+                    ) /  build['complete_after']
+                )
 
             price = models.TownBuilds.Math.getBuildPrice(build['key'], build['level'], percentComplete)
             resourceDomain.upResources(price)
@@ -64,8 +73,11 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
 
     def _updateQueueCode(self, buildsDomain):
         if not buildsDomain.hasQueueCode() and len(buildsDomain.getQueue()):
-            queue = buildsDomain.getQueue()[0]
-            queueCode = init_celery.builds.apply_async(queue, countdown=queue['time'])
+            queue = copy.copy(buildsDomain.getQueue()[0])
+            queue['town'] = str(buildsDomain.getTown().getId())
+            queue['start_at'] = int(time.time())
+            queueCode = init_celery.builds.apply_async((queue, ), countdown=queue['complete_after'])
+
             buildsDomain.setQueueCode(queueCode)
 
             return True

@@ -10,6 +10,7 @@ import exceptions.handler
 import system.router
 import config
 
+import sys
 import json
 import subprocess
 
@@ -66,7 +67,7 @@ if __name__ == '__main__':
         '-B',
         'init_celery.py',
         '--type=dev'
-    ])
+    ], stdout=sys.stdout, stderr=sys.stderr)
 
     app.listen(int(config.get('server.port')), config.get('server.host'))
 

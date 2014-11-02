@@ -2,19 +2,36 @@ from celery import Celery
 import config
 import sys
 
-import controller.CeleryController
-celeryController = controller.CeleryController.CeleryPrivateController()
-
 sys.argv = [sys.argv[0]]
 
 app = Celery(
     'hn',
-    broker=config.get('celery.broker'),
-    backend=config.get('celery.backend')
+    broker=config.get('celery.broker') + config.get('database.mongodb.db'),
+    backend=config.get('celery.backend') + config.get('database.mongodb.db')
 )
+#
+# def reInitApp():
+#     app = Celery(
+#         'hn',
+#         broker=config.get('celery.broker') + config.get('database.mongodb.db'),
+#         backend=config.get('celery.backend') + config.get('database.mongodb.db')
+#     )
+#
+#     @app.task(serializer='json', name='init_celery.builds')
+#     def builds(message):
+#         import controller.CeleryController
+#         celeryController = controller.CeleryController.CeleryPrivateController()
+#
+#         celeryController.buildComplete(message)
+#
 
-@app.task
+
+
+@app.task(serializer='json', name='init_celery.builds')
 def builds(message):
+    import controller.CeleryController
+    celeryController = controller.CeleryController.CeleryPrivateController()
+
     celeryController.buildComplete(message)
 
 
@@ -23,5 +40,16 @@ if __name__ == '__main__':
         sys.argv[1] = 'worker'
     else:
         sys.argv.append('worker')
+
+    if config.configType.find('test') != -1:
+        if 2 in sys.argv:
+            sys.argv[2] = '-l'
+        else:
+            sys.argv.append('-l')
+
+        if 3 in sys.argv:
+            sys.argv[3] = 'INFO'
+        else:
+            sys.argv.append('INFO')
 
     app.start()

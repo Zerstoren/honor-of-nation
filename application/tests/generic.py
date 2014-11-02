@@ -71,7 +71,7 @@ class Generic(abstractGeneric.Abstract_Generic):
         buildsTownDomain = models.TownBuilds.Factory.TownBuilds_Factory.getDomainFromData(
             models.TownBuilds.Mapper.TownBuilds_Mapper.getDefaultData()
         )
+        buildsTownDomain.setTown(domain)
 
-        buildsTownDomain.getMapper().save(buildsTownDomain, domain)
-
+        buildsTownDomain.getMapper().save(buildsTownDomain)
         return domain

@@ -8,7 +8,7 @@ import copy
 
 
 def getBuildPrice(buildKey, level, drop=1):
-    price = Data.builds[buildKey]['price']
+    price = copy.copy(Data.builds[buildKey]['price'])
 
     percent = int(config.get('rate.build_up'))
 
