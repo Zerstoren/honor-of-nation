@@ -14,15 +14,22 @@ define('service/town/builds', [
         render: function (holder, townDomain) {
             this.holder = holder;
             this.currentTown = townDomain;
+
+            this.buildsView.render(this.holder, this.currentTown);
             gatewayTown.loadBuilds(townDomain, this.onBuildsLoad.bind(this));
         },
 
-        onBuildsLoad: function (builds) {
-            this.buildsView.render(this.holder, builds, this.currentTown);
+        onBuildsLoad: function (builds, queue) {
+            this.buildsView.update(builds, queue);
         },
 
         onCreateBuild: function (key) {
+            var level = this.buildsView._getMaximumLevel(key) + 1;
+            gatewayTown.createBuild(this.currentTown, key, level, this.updateInfo.bind(this));
+        },
 
+        updateInfo: function (builds, queue) {
+            this.buildsView.update(builds, queue);
         }
     });
 });

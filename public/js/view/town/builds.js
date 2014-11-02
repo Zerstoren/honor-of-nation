@@ -7,7 +7,7 @@ define('view/town/builds', [
 
     buildsView = AbstractView.extend({
         events: {
-            'click .build_container a': 'onCreate'
+            'click .build_container .btn a': 'onCreate'
         },
 
         initialize: function () {
@@ -19,12 +19,15 @@ define('view/town/builds', [
             this.initRactive();
         },
 
-        render: function (holder, builds, currentTown) {
+        render: function (holder, currentTown) {
             this.currentTown = currentTown;
             holder.append(this.$el);
-            this.setBuilds(builds);
+
             this.popupBuilds = new ViewElementsPopup(
-                this.$el.find('.build_container')
+                this.$el, {
+                    liveTarget: '.build_container',
+                    timeout: 100
+                }
             );
 
             this.popupQueue = new ViewElementsPopup(
@@ -32,9 +35,19 @@ define('view/town/builds', [
             );
         },
 
-        setBuilds: function (buildsList) {
+        update: function (buildsList, queue) {
+            this.builds = buildsList || this.builds;
+            this.queue = queue || this.queue;
+
+            this.setBuilds();
+            this.setQueue();
+        },
+
+        setBuilds: function () {
             var key,
+                buildsList = this.builds,
                 result = [];
+
             for (key in buildsList) {
                 if (buildsList.hasOwnProperty(key)) {
                     result.push({
@@ -43,7 +56,8 @@ define('view/town/builds', [
                         'price': builds[key]['price'],
                         'desc': builds[key]['desc'],
                         'maxLevel': builds[key]['maxLevel'][this.currentTown.get('type')],
-                        'level': buildsList[key]
+                        'level': buildsList[key],
+                        'levelWithQueue': this._getMaximumLevel(key)
                     });
                 }
             }
@@ -51,9 +65,32 @@ define('view/town/builds', [
             this.set('builds', result);
         },
 
+        setQueue: function () {
+
+        },
+
         onCreate: function (e) {
-            this.trigger('createBuild', e.target.id);
+            this.trigger(
+                'createBuild',
+                jQuery(e.target).parents('.build_container').attr('id')
+            );
             return false;
+        },
+
+        _getMaximumLevel: function (key) {
+            var i,
+                itemQueue,
+                currentLevel = this.builds[key];
+
+            for (i = 0; i < this.queue.length; i++) {
+                itemQueue = this.queue[i];
+
+                if (itemQueue['key'] === key) {
+                    currentLevel = itemQueue['level'];
+                }
+            }
+
+            return currentLevel;
         }
     });
 

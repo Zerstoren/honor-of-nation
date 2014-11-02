@@ -1,6 +1,8 @@
 import models.Town.Common
 from models.TownBuilds import Common
 
+import copy
+
 class Decorate():
     def _packVillage(self, domain):
         return {
@@ -51,3 +53,16 @@ class Decorate():
             return self._packCity(townBuilds)
         elif townDomain.getType() == models.Town.Common.CASTLE:
             return self._packCastle(townBuilds)
+
+    def getQueue(self, townDomain, user):
+        queue = super().getQueue(townDomain, user)
+        result = []
+
+        for i in queue:
+            i = copy.copy(i)
+
+            del i['queue_code']
+
+            result.append(i)
+
+        return result

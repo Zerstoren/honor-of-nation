@@ -5,6 +5,7 @@ import models.Town.Factory
 import models.Town.Domain
 
 from .Mapper import TownBuilds_Mapper
+from .Data import builds
 
 import time
 
@@ -20,6 +21,10 @@ class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
             self._domain_data['town'] = town.getId()
         else:
             self._domain_data['town'] = town
+
+    def getMaximalLevel(self, key):
+        townDomain = self.getTown()
+        return builds[key]['maxLevel'][townDomain.getType()]
 
     def addToQueue(self, key, level, completeAfter):
         buildLevel = self.getMaximumBuildLevel(key)

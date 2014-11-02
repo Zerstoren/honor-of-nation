@@ -5,9 +5,6 @@ import helpers.MapCoordinate
 
 
 class AbstractTownController(object):
-    def _getParamsTown(self):
-        return service.Town.Service_Town().decorate('Params')
-
     def _getAclParamsJsonPackTown(self):
         return service.Town.Service_Town().decorate('Acl', 'Params', 'JsonPack')
 
@@ -19,23 +16,6 @@ class AbstractTownController(object):
 
     def _getParamsAclJsonPackTownBuilds(self):
         return service.TownBuilds.Service_TownBuilds().decorate('Params', 'Acl', 'JsonPack')
-
-    def _getAclJsonPackTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Acl', 'JsonPack')
-
-
-class MainController(AbstractTownController):
-    def getTownBuilds(self, transfer, data):
-        townDomain = self._getParamsTown().getById(data['id'])
-
-        result = {}
-        result['done'] = True
-        result['data'] = self._getAclJsonPackTownBuilds().get(
-            townDomain,
-            transfer.getUser()
-        )
-
-        transfer.send('/town/get_builds', result)
 
 
 class ModelController(AbstractTownController):

@@ -67,7 +67,7 @@ if __name__ == '__main__':
         '-B',
         'init_celery.py',
         '--type=dev'
-    ], stdout=sys.stdout, stderr=sys.stderr)
+    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     app.listen(int(config.get('server.port')), config.get('server.host'))
 

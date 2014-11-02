@@ -6,22 +6,22 @@
 
         width: 250px;
 
-        background: #eee;
+        //background: #eee;
         width: 210px;
         padding: 10px;
 
         .build_container {
-            padding: 10px 0;
-            border: 1px solid #aaa;
-
+            padding: 4px 0;
             .name {
                 text-align: left;
                 font-weight: bold;
                 font-size: 16px;
+                width: 100%;
 
                 img {
                     float: right;
-                    margin-right: 10px;
+                    margin-right: 0px;
+                    margin-top: 3px;
                 }
             }
 

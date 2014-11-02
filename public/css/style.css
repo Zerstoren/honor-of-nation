@@ -7057,19 +7057,19 @@ td.visible-print {
   left: 0;
   top: 0;
   width: 250px;
-  background: #eee;
   width: 210px;
   padding: 10px; }
   .ti__block .left .list_of_builds .build_container {
-    padding: 10px 0;
-    border: 1px solid #aaa; }
+    padding: 4px 0; }
     .ti__block .left .list_of_builds .build_container .name {
       text-align: left;
       font-weight: bold;
-      font-size: 16px; }
+      font-size: 16px;
+      width: 100%; }
       .ti__block .left .list_of_builds .build_container .name img {
         float: right;
-        margin-right: 10px; }
+        margin-right: 0px;
+        margin-top: 3px; }
     .ti__block .left .list_of_builds .build_container .name.green a {
       color: #f00; }
     .ti__block .left .list_of_builds .build_container .popup {

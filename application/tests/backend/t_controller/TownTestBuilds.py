@@ -96,6 +96,25 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
             4
         )
 
+    def testCreateGroupBuildByLimit(self):
+        self.controller.createBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'mill',
+            'level': 35
+        })
+
+        self.assertTrue(
+            self.transfer.getLastMessage()['message']['done']
+        )
+
+        build = self.town.getBuilds()
+        build.extract(True)
+
+        self.assertEqual(
+            len(build.getQueue()),
+            10
+        )
+
     def testCreateMixedBuild(self):
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),

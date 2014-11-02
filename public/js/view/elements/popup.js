@@ -10,6 +10,7 @@ define('view/elements/popup', [], function () {
             }
 
             this.$config = {
+                liveTarget: config.liveTarget || false,
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
                 callback: config.popupCallback || false
@@ -22,13 +23,23 @@ define('view/elements/popup', [], function () {
         addEventListener: function () {
             var self = this;
 
-            this.element.on('mouseenter', function(e) {
-                self.startShowTimeout(e);
-            });
+            if (this.$config.liveTarget) {
+                this.element.on('mouseenter', this.$config.liveTarget, function(e) {
+                    self.startShowTimeout(e);
+                });
 
-            this.element.on('mouseleave', function(e) {
-                self.stopShowTimeout(e);
-            });
+                this.element.on('mouseleave', this.$config.liveTarget, function(e) {
+                    self.stopShowTimeout(e);
+                });
+            } else {
+                this.element.on('mouseenter', function(e) {
+                    self.startShowTimeout(e);
+                });
+
+                this.element.on('mouseleave', function(e) {
+                    self.stopShowTimeout(e);
+                });
+            }
         },
 
         showLayer: function () {
@@ -52,7 +63,7 @@ define('view/elements/popup', [], function () {
 
         startShowTimeout: function (e) {
             var self = this;
-
+//            debugger;
 //            if (hideTimer !== -1 && self === showLayer) {
 //                clearTimeout(hideTimer);
 //                hideTimer = -1;
@@ -98,7 +109,7 @@ define('view/elements/popup', [], function () {
 
         setPopup: function (e) {
             if (e) {
-                this.target = jQuery(e.target);
+                this.target = jQuery(e.currentTarget);
                 this.popup = this.target.find(this.$config.target);
             } else {
                 this.target = null;

@@ -1,30 +1,33 @@
-<div class="build_container">
-    {{#level < maxLevel}}
-    <div class="name">
-        <a href="" id="{{key}}">
-            {{name}} ур. <span class="level">{{level + 1}}</span>
+<div class="build_container" id="{{key}}">
+    <div class="name btn btn-default
+        {{#levelWithQueue >= maxLevel}}
+        disabled
+        {{/levelWithQueue >= maxLevel}}">
+        {{#levelWithQueue < maxLevel}}
+        <a href="#">
+            {{name}} ур.
+            {{#level == 0}}
+            <br /><span class="level">Не построено</span>
+            {{/level == 0}}
+            {{#level != 0}}
+            <span class="level">{{level}}</span>
+            {{/level != 0}}
+
             <img src="/img/icons/build.png" width="20" height="16" />
         </a>
+        {{/levelWithQueue < maxLevel}}
+        {{#levelWithQueue >= maxLevel}}
+            {{name}} ур. <span class="level">{{level}}</span>
+            <img src="/img/icons/build.png" width="20" height="16" />
+        {{/levelWithQueue >= maxLevel}}
     </div>
-    {{/level < maxLevel}}
-
-    {{#level > maxLevel}}
-    <div class="name">
-        {{name}} ур. <span class="level">{{level}}</span>
-        <img src="/img/icons/build.png" width="20" height="16" />
-    </div>
-    {{/level > maxLevel}}
 
     <div class="popup">
         <div class="build-name">
-            {{name}} ур.
-            {{#level < maxLevel}}
-            <span class="level">  {{level + 1}}</span>
+            {{name}}
+            {{#levelWithQueue < maxLevel}}
+             ур. <span class="level">  {{levelWithQueue + 1}}</span>
             {{/level < maxLevel}}
-
-            {{#level > maxLevel}}
-            <span class="level">  {{level}}</span>
-            {{/level > maxLevel}}
         </div>
 
         <div class="separator"></div>

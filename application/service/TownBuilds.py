@@ -11,7 +11,10 @@ import init_celery
 
 class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
     def get(self, townDomain, user=None):
-        return models.TownBuilds.Factory.TownBuilds_Factory.getByTown(townDomain)
+        return townDomain.getBuilds()
+
+    def getQueue(self, townDomain, user=None):
+        return townDomain.getBuilds().getQueue()
 
     def completeBuild(self, townDomain):
         buildsDomain = townDomain.getBuilds()
@@ -26,6 +29,10 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
 
     def create(self, user, townDomain, buildKey, level):
         buildsDomain = townDomain.getBuilds()
+
+        if level >= buildsDomain.getMaximalLevel(buildKey):
+            level = buildsDomain.getMaximalLevel(buildKey)
+
         resourceDomain = townDomain.getUser().getResources()
 
         maxBuildLevel = buildsDomain.getMaximumBuildLevel(buildKey)
@@ -46,8 +53,10 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
         buildsDomain.getMapper().saveQueue(buildsDomain)
 
     def remove(self, user, townDomain, buildKey, level):
+
         buildsDomain = townDomain.getBuilds()
         resourceDomain = townDomain.getUser().getResources()
+
         queueCode, buildsToRemove = buildsDomain.removeFromQueue(buildKey, level)
 
         if queueCode:

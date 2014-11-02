@@ -17,11 +17,7 @@ class Town_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getUser(self):
         userId = self._getFunc('user')()
-
-        if userId:
-            return models.User.Factory.User_Factory.getDomainById(userId)
-        else:
-            return None
+        return models.User.Factory.User_Factory.getDomainById(userId)
 
     def getBuilds(self):
         """
