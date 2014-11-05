@@ -24,6 +24,8 @@ _arguments.add_option("-d", "--database", help="Select database", default=None)
 _arguments.add_option("-s", "--domain", help="Select domain", default=None)
 _arguments.add_option("-t", "--type", help="Select run type", default=None)
 _arguments.add_option("-j", "--pycharm", help="Is flag using for pycharm unit test", default=None)
+_arguments.add_option("-f", "--balancer_full", help="Set flag for start sub system celery and backend", default=None)
+_arguments.add_option("-w", "--balancer_back_workers", help="How many workers need start", default=None)
 
 
 (options, args) = _arguments.parse_args()
@@ -39,6 +41,13 @@ if options.domain:
 
 if options.database:
     _config['default']['database.mongodb.db'] = options.database
+
+if options.balancer_full:
+    _config['default']['balancer.full'] = 'True'
+    _config['default']['balancer.celery'] = 'True'
+
+if options.balancer_back_workers:
+    _config['default']['balancer.backend.workers'] = str(options.balancer_back_workers)
 
 if options.type:
     configType = options.type
