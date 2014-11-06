@@ -1,4 +1,3 @@
-from jinja2._stringdefs import Co
 import models.Abstract.Mapper
 import exceptions.database
 from . import Common

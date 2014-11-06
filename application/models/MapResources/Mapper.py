@@ -1,4 +1,3 @@
-from jinja2.ext import do
 import models.Abstract.Mapper
 from . import Common
 
