@@ -62,11 +62,15 @@ class Selenium_Abstract_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
-        print(sys.path)
+        basePath = sys.path[1]
+
+        if config.configType == 'jankins_test':
+            basePath = sys.path[0]
+        print(basePath, sys.path)
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
-            '%s/init_balancer.py' % sys.path[1],
+            '%s/init_balancer.py' % basePath,
             '--type=test_server',
             '--database=%s' % self.core.database_name,
             '--port=%s' % self._port,
