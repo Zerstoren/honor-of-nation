@@ -1,11 +1,12 @@
 from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import controller.TownController
+import controller.TownBuildsController
 
 
 class Backend_Controller_UserTest(Backend_Controller_Generic):
     def _getMainController(self):
-        return controller.TownController.MainController()
+        return controller.TownBuildsController.MainController()
 
     def _getModelController(self):
         return controller.TownController.ModelController()
@@ -19,17 +20,18 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
         townDomain = self.addTown(0, 0, user, population=13000, typeTown=0, name='Systemd')
 
         controller.getTownBuilds(transfer, {
-            'id': str(townDomain.getId())
+            'town': str(townDomain.getId())
         })
 
         self.assertDictEqual(
             transfer.getLastMessage(),
             {
                 'async': None,
-                'module': '/town/get_builds',
+                'module': '/town_builds/get_builds',
                 'message': {
                     'done': True,
-                    'data': {
+                    'queue': [],
+                    'builds': {
                         'v_council': 0,
                         'hut': 0,
                         'farm': 0,
@@ -51,17 +53,18 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
         townDomain = self.addTown(0, 0, user, population=13000, typeTown=1, name='Systemd')
 
         controller.getTownBuilds(transfer, {
-            'id': str(townDomain.getId())
+            'town': str(townDomain.getId())
         })
 
         self.assertDictEqual(
             transfer.getLastMessage(),
             {
-                'module': '/town/get_builds',
+                'module': '/town_builds/get_builds',
                 'async': None,
                 'message':  {
                     'done': True,
-                    'data':  {
+                    'queue': [],
+                    'builds':  {
                         'casern': 0,
                         't_council': 0,
                         'prison': 0,
@@ -89,17 +92,18 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
         townDomain = self.addTown(0, 0, user, population=13000, typeTown=2, name='Systemd')
 
         controller.getTownBuilds(transfer, {
-            'id': str(townDomain.getId())
+            'town': str(townDomain.getId())
         })
 
         self.assertDictEqual(
             transfer.getLastMessage(),
             {
-                'module': '/town/get_builds',
+                'module': '/town_builds/get_builds',
                 'async': None,
                 'message': {
                     'done': True,
-                    'data': {
+                    'queue': [],
+                    'builds': {
                         'mine': 0,
                         'smithy': 0,
                         'high_wall': 0,

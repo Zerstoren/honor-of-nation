@@ -1,38 +1,35 @@
 import config
-import nanomsg
+import system.connect.client
 
 import pickle
 
-import threading
 
 
-class Respondent_Instance():
-    def __init__(self):
-        self.messanger = nanomsg.Socket(protocol=nanomsg.RESPONDENT)
-        self.messanger.connect(config.get('nanomsg.everybody.respondent'))
+class Respondent_Instance(system.connect.client.TCPWrapper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    def onMessage(self, data):
-        result, userId = self._onMessage(data['data'], data['user'])
+        self.setReadListener(self.onMessage)
 
-        self.messanger.send(pickle.dumps({
-            'connect': data['connect'],
-            'user': userId,
-            'data': result
-        }))
+
+    def onMessage(self, connect, data):
+        try:
+            data = pickle.loads(data)
+            result, userId = self._onMessage(data['data'], data['user'])
+
+            self.write(pickle.dumps({
+                'connect': data['connect'],
+                'user': userId,
+                'data': result
+            }))
+        except Exception as e:
+            print(e)
 
     def setHandler(self, handler):
         self._onMessage = handler
 
-    def run(self):
-        while True:
-            info = self.messanger.recv()
 
-            self.onMessage(pickle.loads(info))
-            # thread = threading.Thread(
-            #     target=self.onMessage,
-            #     args=(pickle.loads(info),)
-            # )
-
-            # thread.start()
-
-Respondent = Respondent_Instance()
+Respondent = Respondent_Instance(
+    config.get('balancer.backend.client.host'),
+    int(config.get('balancer.backend.client.port'))
+)

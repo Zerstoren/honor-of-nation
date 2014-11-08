@@ -17,7 +17,7 @@ define('model/mapResources', [
         },
 
         onSetUser: function (self, data, oldData) {
-            this.attributes.user = factoryUser.getDomainFromData(data);
+            this.attributes.user = data ? factoryUser.getDomainFromData(data) : data;
         },
 
         getUserLogin: function () {

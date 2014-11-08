@@ -15,6 +15,8 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
 
         self.byCssSelector('.create').click()
 
+        self.waitForElement('.resource-coordinate')
+
         self.byCssSelector('.resource-coordinate').clear()
         self.byCssSelector('.resource-coordinate').send_keys('1x1')
         self.selectOptionText(
@@ -51,6 +53,7 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self._goToAdmin()
 
         self.byCssSelector('.coordinate').send_keys('1x1')
+
         self.byXPath('//button[.="Искать"]').click()
 
         self.waitForElement('.resource-coordinate')

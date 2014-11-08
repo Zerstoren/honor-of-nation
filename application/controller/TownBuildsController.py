@@ -10,7 +10,7 @@ class AbstractResourceController(object):
         return service.TownBuilds.Service_TownBuilds().decorate('Acl', 'JsonPack')
 
     def _getParamsAclTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Acl', 'Params')
+        return service.TownBuilds.Service_TownBuilds().decorate('Params', 'Acl')
 
 
 class MainController(AbstractResourceController):

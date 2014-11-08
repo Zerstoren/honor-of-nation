@@ -35,6 +35,20 @@ if __name__ == '__main__':
     workers.run()
 
     try:
-        ioloop.IOLoop.instance().start()
+        import tornado.stack_context
+        import contextlib
+        import sys
+
+        @contextlib.contextmanager
+        def die_on_error():
+            try:
+                yield
+            except Exception:
+                print("exception in asynchronous operation")
+                sys.exit(1)
+
+        with tornado.stack_context.StackContext(die_on_error):
+            ioloop.IOLoop.instance().start()
+
     except KeyboardInterrupt:
         workers.stop()

@@ -47,6 +47,8 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('.search-user-login').send_keys(self.fixture.getUser(0).getLogin())
         self.byCssSelector('.search-user').click()
 
+        self.waitForElement('div.from .x')
+
         self.byCssSelector('div.from .x').send_keys(1)
         self.byCssSelector('div.from .y').send_keys(1)
 

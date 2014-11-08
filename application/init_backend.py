@@ -11,6 +11,8 @@ import json
 
 import system.nanomsgRespondent
 
+from tornado import ioloop
+
 
 def handler(content, userId):
     transfer = UserTransfer()
@@ -65,6 +67,6 @@ if __name__ == '__main__':
     system.nanomsgRespondent.Respondent.setHandler(handler)
 
     try:
-        system.nanomsgRespondent.Respondent.run()
+        ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         pass
