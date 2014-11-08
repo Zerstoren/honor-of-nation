@@ -1,9 +1,18 @@
 import models.Abstract.Mapper
 from . import Common
 
-
 class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'map_user_visible'
+
+    def getByPosition(self, mapCoordinate, user):
+        queryFilter = Common.Common_Filter()
+        queryFilter.add('pos_id', mapCoordinate.getPosId())
+        queryFilter.add('user_id', user.getId())
+
+        limit = Common.Common_Limit()
+        limit.setOne()
+
+        return self._select(queryFilter, limit)
 
     def getByIds(self, user, ids):
         queryFilter = Common.Common_Filter()
@@ -21,7 +30,7 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         for i in region:
             commonSet = Common.Common_Set()
-            commonSet.add('pos_id', i.getPosId())
+            commonSet.add('pos_id', i.getId())
             commonSet.add('chunk', i.getChunk())
             commonSet.add('user_id', user.getId())
 

@@ -6,18 +6,6 @@ from . import Mapper
 from . import Math
 
 class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
-    def getDomainByPosition(self, x, y):
-        """
-        :rtype: models.Map.Domain.Map_Domain
-        """
-        domain = self.getDomainFromData(
-            Mapper.Map_Mapper.getByPositionId(
-                Math.fromPositionToId(x, y)
-            )
-        )
-
-        return domain
-
     def getDomainById(self, domainId):
         """
         :rtype: models.Map.Domain.Map_Domain

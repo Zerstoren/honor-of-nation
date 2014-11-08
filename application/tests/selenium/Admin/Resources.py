@@ -1,6 +1,7 @@
 from tests.selenium.Admin import generic
 
 import service.MapResources
+import helpers.MapCoordinate
 
 class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
     def _goToAdmin(self):
@@ -13,6 +14,8 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self._goToAdmin()
 
         self.byCssSelector('.create').click()
+
+        self.waitForElement('.resource-coordinate')
 
         self.byCssSelector('.resource-coordinate').clear()
         self.byCssSelector('.resource-coordinate').send_keys('1x1')
@@ -27,7 +30,9 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('.save').click()
         self.operationIsSuccess()
 
-        resource = service.MapResources.Service_MapResources().getResourceByPosition(1, 1)
+        resource = service.MapResources.Service_MapResources().getResourceByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
 
         self.assertEqual(resource.getType(), 'wood')
         self.assertEqual(resource.getAmount(), 2500000)
@@ -48,6 +53,7 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self._goToAdmin()
 
         self.byCssSelector('.coordinate').send_keys('1x1')
+
         self.byXPath('//button[.="Искать"]').click()
 
         self.waitForElement('.resource-coordinate')
@@ -65,7 +71,9 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('.save').click()
         self.operationIsSuccess()
 
-        resource = service.MapResources.Service_MapResources().getResourceByPosition(1, 1)
+        resource = service.MapResources.Service_MapResources().getResourceByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
 
         self.assertEqual(resource.getType(), 'wood')
         self.assertEqual(resource.getAmount(), 2500000)

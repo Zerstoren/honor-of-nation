@@ -4,10 +4,11 @@ class Decorate():
         """
         :type domain: models.User.Domain.User_Domain
         """
-        result = domain.toDict()
-        del result['password']
-
-        return result
+        return {
+            '_id': str(domain.getId()),
+            'login': domain.getLogin(),
+            'position': domain.getPosition()
+        }
 
 
     def login(self, login, password):
@@ -29,3 +30,8 @@ class Decorate():
             })
 
         return result
+
+    def getUserDomain(self, userId):
+        return self.packDomainToDict(
+            super().getUserDomain(userId)
+        )

@@ -110,7 +110,7 @@ define('service/standalone/map/gameMapItems/Draw', [], function () {
                         '<div class="level1"></div>' +
                         '<div class="level2"></div>' +
                         '<div class="level3"></div>' +
-                        '<div class="container"></div>';
+                        '<div class="cont"></div>';
                 }
 
                 table.appendChild(bufferRow);

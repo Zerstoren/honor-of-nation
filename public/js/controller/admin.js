@@ -1,10 +1,8 @@
 define('controller/admin', [
-    'system/preStart',
     'service/standalone/mapInterface',
 
     'service/admin/main',
 ], function(
-    preStart,
     mapInterface,
 
     ServiceAdminMain

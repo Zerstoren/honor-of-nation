@@ -5,10 +5,9 @@ from . import Mapper
 
 
 class MapResources_Factory_Main(models.Abstract.Factory.Abstract_Factory):
-    def getDomainByPosition(self, x, y):
-
+    def getDomainByPosition(self, mapCoordinate):
         return self.getDomainFromData(
-            Mapper.MapResources_Mapper.getResourceByPosition(x, y)
+            Mapper.MapResources_Mapper.getResourceByPosition(mapCoordinate)
         )
 
     def getDomainFromData(self, data):

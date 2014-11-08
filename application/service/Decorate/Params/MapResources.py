@@ -3,10 +3,14 @@ import helpers.mongo
 import service.User
 import models.Map.Math
 
+import helpers.MapCoordinate
 
 class Decorate():
-    def getResourceByPosition(self, x, y):
-        return super().getResourceByPosition(int(x), int(y))
+    def getResourceByPosition(self, x, y, user=None):
+        return super().getResourceByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=x, y=y),
+            user
+        )
 
     def saveResources(self, data):
         data['amount'] = int(data['amount'])

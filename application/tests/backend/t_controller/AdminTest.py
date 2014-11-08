@@ -4,15 +4,20 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 import controller.AdminController
 
 import service.MapResources
+import service.Town
 
 import exceptions.httpCodes
 import exceptions.database
 import exceptions.args
+import exceptions.map
 
 import models.MapUserVisible.Mapper
-import models.Map.Mapper
 
+import models.Map.Mapper
 import models.Map.Factory
+import models.Map.Common
+
+import helpers.MapCoordinate
 
 
 class Backend_Controller_AdminTest(Backend_Controller_Generic):
@@ -379,11 +384,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
-        self.assertEqual(mapDomain.getPosId(), mapResourceDomain.getPosId())
+        self.assertEqual(mapDomain.getId(), mapResourceDomain.getPosId())
+        self.assertEqual(mapDomain.getBuild(), models.Map.Common.BUILD_RESOURCES)
         self.assertEqual(2500000, mapResourceDomain.getAmount())
         self.assertEqual(13000, mapResourceDomain.getBaseOutput())
         self.assertEqual('rubins', mapResourceDomain.getType())
@@ -410,13 +418,17 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
 
     def testUpdateMapResource(self):
+        self.fillTerrain(0, 0, 3, 3)
+
         service.MapResources.Service_MapResources().saveResources({
             'amount': 500000,
             'base_output': 5000,
@@ -427,9 +439,9 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
             'type': 'steel'
         })
 
-        resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(1, 1)
-
-        self.fillTerrain(0, 0, 3, 3)
+        resourceDomain = service.MapResources.Service_MapResources().getResourceByPosition(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1)
+        )
 
         controller = self._getModelController()
         transfer = self._login()
@@ -450,10 +462,104 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        mapDomain = models.Map.Factory.Map_Factory.getDomainByPosition(1,1)
+        mapDomain = models.Map.Factory.Map_Factory.getDomainById(
+            helpers.MapCoordinate.MapCoordinate(x=1, y=1).getPosId()
+        )
         mapResourceDomain = mapDomain.getResource()
 
         self.assertTrue(result['done'])
         self.assertEqual(mapResourceDomain.getUser(), None)
-        self.assertEqual(mapResourceDomain.getgetAmount(), 2500000)
+        self.assertEqual(mapResourceDomain.getAmount(), 2500000)
         self.assertEqual(mapResourceDomain.getType(), "rubins")
+
+    def testLoadTownMap(self):
+        controller = self._getModelController()
+        transfer = self._login()
+
+        self.fillTerrain(0, 0, 3, 3)
+        townDomain = self.addTown(1, 1, transfer.getUser())
+
+        controller.loadTownMap(transfer, {
+            'x': 1,
+            'y': 1
+        })
+
+        result = transfer.getLastMessage()
+        self.assertDictEqual(
+            result['message']['town'],
+            {
+                '_id': str(townDomain.getId()),
+                'population': townDomain.getPopulation(),
+                'type': 0,
+                'user': str(transfer.getUser().getId()),
+                'pos_id': 2001,
+                'name': townDomain.getName()
+            }
+        )
+
+    def testSaveTown(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+
+        controller.saveTownDomain(transfer, {
+            "domain": {
+                "type": "0",
+                "user": str(transfer.getUser().getId()),
+                "population": "23543",
+                "pos_id": "1",
+                "name": "City name"
+            }
+        })
+
+        result = transfer.getLastMessage()['message']
+        town = service.Town.Service_Town().loadByPosition(
+            helpers.MapCoordinate.MapCoordinate(posId=1)
+        )
+        self.assertDictEqual(
+            {
+                'done': True,
+                'town': {
+                    '_id': str(town.getId()),
+                    'pos_id': 1,
+                    'name': 'City name',
+                    'population': 23543,
+                    'type': 0,
+                    'user': str(transfer.getUser().getId())
+                }
+            },
+            result
+        )
+
+    def testSaveTown_PositionIsBusy(self):
+        self.fillTerrain(0, 0, 3, 3)
+
+        controller = self._getModelController()
+        transfer = self._login()
+
+        controller.saveTownDomain(transfer, {
+            "domain": {
+                "type": "0",
+                "user": str(transfer.getUser().getId()),
+                "population": "23543",
+                "pos_id": "1",
+                "name": "City name"
+            }
+        })
+        self.assertRaises(
+            exceptions.map.PositionIsBusy,
+            controller.saveTownDomain,
+            transfer,
+            {
+                "domain": {
+                    "type": "0",
+                    "user": str(transfer.getUser().getId()),
+                    "population": "12000",
+                    "pos_id": "1",
+                    "name": "City name"
+                }
+            }
+        )
+

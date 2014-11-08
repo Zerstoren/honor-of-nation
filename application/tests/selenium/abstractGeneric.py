@@ -54,6 +54,7 @@ class Selenium_Abstract_Generic(Generic):
         self.driver = None
         self.driversDict = {}
         self._port = str(random.randint(10000, 65000))
+        self._balancer_port = str(random.randint(10000, 65000))
 
         self.createWindow('main')
         self.useWindow('main')
@@ -64,10 +65,11 @@ class Selenium_Abstract_Generic(Generic):
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
-            '%s/init.py' % sys.path[1],
+            '%s/init_balancer.py' % sys.path[1],
             '--type=test_server',
             '--database=%s' % self.core.database_name,
-            '--port=%s' % self._port
+            '--port=%s' % self._port,
+            '--balancer_port=%s' % self._balancer_port
         ])
 
     def tearDown(self):

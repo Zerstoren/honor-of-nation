@@ -14,14 +14,14 @@ class AbstractAdminController():
     def _getAclAdminService(self):
         return service.Admin.Service_Admin().decorate('Acl')
 
+    def _getAdminService(self):
+        return service.Admin.Service_Admin()
+
     def _getAclParamsAdminService(self):
         return service.Admin.Service_Admin().decorate('Acl', 'Params')
 
     def _getJsonPackResourceService(self):
         return service.Resources.Service_Resources().decorate('JsonPack')
-
-    def _getJsonPackUserService(self):
-        return service.User.Service_User().decorate('JsonPack')
 
     def _getJsonPackParamsMapResourcesService(self):
         return service.MapResources.Service_MapResources().decorate('JsonPack', 'Params')
@@ -88,7 +88,7 @@ class MainAdminController(AbstractAdminController):
 
     def loadResourceMap(self, transfer, data):
         result = {
-            'users': self._getJsonPackUserService().getAllUsers()
+            'users': self._getAclAdminService().getAllUsers(transfer.getUser())
         }
 
         if 'x' in data and 'y' in data and data['x'] is not False and data['y'] is not False:
@@ -103,6 +103,7 @@ class MainAdminController(AbstractAdminController):
             result['resource'] = False
 
         result['done'] = True
+
         transfer.send('/admin/loadResourceMap', result)
 
     def saveResourceDomain(self, transfer, data):
@@ -111,3 +112,31 @@ class MainAdminController(AbstractAdminController):
         }
 
         transfer.send('/admin/saveResourceDomain', result)
+
+    def loadTownMap(self, transfer, data):
+        result = {
+            'users': self._getAclAdminService().getAllUsers(transfer.getUser())
+        }
+
+        if 'x' in data and 'y' in data and data['x'] is not False and data['y'] is not False:
+            result['town'] = False
+            try:
+                result['town'] = self._getAdminService().getTownByPosition(
+                    data['x'],
+                    data['y']
+                )
+                result['done'] = True
+            except exceptions.database.NotFound:
+                result['done'] = False
+        else:
+            result['done'] = True
+
+        transfer.send('/admin/loadTownMap', result)
+
+    def saveTownDomain(self, transfer, data):
+        result = {
+            'town': self._getAclAdminService().saveTown(transfer.getUser(), data['domain']),
+            'done': True
+        }
+
+        transfer.send('/admin/saveTownDomain', result)

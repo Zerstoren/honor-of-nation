@@ -16,8 +16,7 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
     route.routes = {};
 
     function routeFunc(routeController, routeMethod) {
-        var controllerMethod,
-            args = arguments;
+        var controllerMethod;
 
 
         function triggerCall(routeController, routeMethod) {
@@ -46,6 +45,7 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
         }
 
         return function () {
+            var args = arguments;
             requirejs(['controller/' + routeController], function(controller) {
                 if (controller[routeMethod] === undefined) {
                     throw new Error('Route method ' + routeMethod + ' not found in controller ' + routeController);
@@ -64,15 +64,6 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
         };
     }
 
-    for (item in routes) {
-        if (routes.hasOwnProperty(item)) {
-            data = routes[item].split('/');
-
-            route.routes[item] = routes[item];
-            route[routes[item]] = routeFunc(data[0], data[1]);
-        }
-    }
-
     route.navigate = function (path, trigger, replace) {
         if (!trigger) {
             trigger = true;
@@ -83,6 +74,22 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
             replace : replace === undefined ? false : replace
         }]);
     };
+
+    route.initialize = function () {
+        Backbone.Router.prototype.initialize.apply(this, arguments);
+
+        var routePath;
+        for (item in routes) {
+            if (routes.hasOwnProperty(item)) {
+                data = item.split('/');
+                routePath = routes[item];
+
+                this[item] = routeFunc(data[0], data[1]);
+                this.route(routePath, item);
+            }
+        }
+    };
+
     RouterBone = Backbone.Router.extend(route);
 
     router = new RouterBone();

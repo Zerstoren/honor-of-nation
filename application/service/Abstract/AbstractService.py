@@ -7,7 +7,8 @@ class Service_Abstract(object):
         classList = [self.__class__]
 
         newClassName = 'Service_' + classPrefixes + '_Decorated'
-
+        args = list(args)
+        args.reverse()
         for arg in args:
             path = 'service.Decorate.' + arg + '.' + classPrefixes
             try:

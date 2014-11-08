@@ -5,6 +5,7 @@ define('libs/abstract/factory', [], function () {
 
     _.extend(window.AbstractFactory.prototype, Backbone.Events, {
         __pool: null,
+        index: '_id',
         domain: null,
 
         initialize: function () {
@@ -28,15 +29,15 @@ define('libs/abstract/factory', [], function () {
                 this.__pool = {};
             }
 
-            if (this.getFromPool(domain.get('id')) !== undefined) {
+            if (this.getFromPool(domain.get(this.index)) !== undefined) {
                 throw new Error('Domain already in pool');
             }
 
-            this.__pool[domain.get('id')] = domain;
+            this.__pool[domain.get(this.index)] = domain;
         },
 
         getDomainFromData: function (data) {
-            if (!data.id) {
+            if (!data._id) {
                 return new this.domain(data);
             }
 
@@ -44,7 +45,7 @@ define('libs/abstract/factory', [], function () {
                 this.__pool = {};
             }
 
-            var domain = this.getFromPool(data.id);
+            var domain = this.getFromPool(data._id);
 
             if (domain === undefined) {
                 domain = new this.domain(data);
@@ -52,6 +53,20 @@ define('libs/abstract/factory', [], function () {
             }
 
             return domain;
+        },
+
+        searchInPool: function (index, value) {
+            var item, result = [];
+
+            for (item in this.__pool) {
+                if (this.__pool.hasOwnProperty(item)) {
+                    if (this.__pool[item].get(index) === value) {
+                        result.push(this.__pool[item]);
+                    }
+                }
+            }
+
+            return result;
         }
     });
 

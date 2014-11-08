@@ -1,10 +1,14 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
 
-    'service/standalone/map/gameMapItems/init'
+    'service/standalone/map',
+    'service/standalone/map/gameMapItems/drawObjects/resource',
+    'service/standalone/map/gameMapItems/drawObjects/town'
 ], function (
     userService,
-    mapInstance
+    mapInstance,
+    MapDrawObjectsResource,
+    MapDrawObjectsTown
 ) {
     var Draw = AbstractService.extend({
 
@@ -25,8 +29,8 @@ define('service/standalone/map/draw', [
 
         initialize: function () {
             this.$mapDI = mapInstance;
-//            this.mapDrawObjectsTownsDI = mapDrawObjectsTowns;
-//            this.mapDrawObjectsResourceDI = mapDrawObjectsResource;
+            this.mapDrawObjectsTowns = new MapDrawObjectsTown();
+            this.mapDrawObjectsResource = new MapDrawObjectsResource();
             this.$isInit = false;
         },
 
@@ -42,7 +46,6 @@ define('service/standalone/map/draw', [
                     userDomain.get('position').x,
                     userDomain.get('position').y
                 );
-
             }.bind(this));
 
             this.map  = {};
@@ -56,7 +59,6 @@ define('service/standalone/map/draw', [
                 this.$mapDI.$drawMap();
                 this.$mapDI.setPosition(position[0], position[1]);
             }.bind(this));
-
 
             return true;
         },
@@ -116,14 +118,14 @@ define('service/standalone/map/draw', [
 
             switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
                 case this.BUILD_TOWNS:
-                    return this.mapDrawObjectsTownsDI.getBuildObject(
+                    return this.mapDrawObjectsTowns.getTownObject(
                         x,
                         y,
                         this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
                     );
 
                 case this.BUILD_RESOURCES:
-                    return this.mapDrawObjectsResourceDI.getResourceObject(
+                    return this.mapDrawObjectsResource.getResourceObject(
                         x,
                         y,
                         this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]

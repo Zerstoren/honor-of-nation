@@ -12,10 +12,18 @@ def complete():
     globals()['startTime'] = 0
     return timeItem
 
+def timer():
+    startTime = time.time()
+
+    def complete():
+        timeItem = time.time() - startTime
+        return timeItem
+
+    return complete
 
 def decorate(fn):
     def wrapper(*args, **kwards):
-        start()
+        start = time.time()
         result = fn(*args, **kwards)
 
         text = "Fn %s" % fn.__name__
@@ -25,9 +33,12 @@ def decorate(fn):
         if bool(kwards):
             text += " -> %d kwargs " % len(kwards)
 
-        text += "execute in %s" % complete()
+        text += "execute in %s" % (time.time() - start)
 
         print(text)
 
         return result
     return wrapper
+
+__builtins__['FN_TIMER'] = decorate
+__builtins__['TIMER'] = timer

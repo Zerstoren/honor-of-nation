@@ -37,3 +37,11 @@ class Decorate():
     def saveMapResources(self, user, domainData):
         self._testAccessAdmin(user)
         return super().saveMapResources(user, domainData)
+
+    def saveTown(self, user, townData):
+        self._testAccessAdmin(user)
+        return super().saveTown(user, townData)
+
+    def getAllUsers(self, user):
+        self._testAccessAdmin(user)
+        return super().getAllUsers(user)

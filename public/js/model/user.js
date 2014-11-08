@@ -10,7 +10,7 @@
             model_url: 'user',
 
             auth: function (login, password, callback) {
-                this.sync('login', this, {
+                this.sync('login', {
                     data: {
                         login: login,
                         password: password

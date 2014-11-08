@@ -6,8 +6,14 @@ import service.Map
 import service.MapUserVisible
 
 import models.MapResources.Domain
+import models.Town.Domain
 import models.Map.Math
-import models.Map.Region
+
+import models.TownBuilds.Factory
+import models.TownBuilds.Mapper
+
+import helpers.MapRegion
+import helpers.MapCoordinate
 
 
 class Generic(abstractGeneric.Abstract_Generic):
@@ -25,7 +31,7 @@ class Generic(abstractGeneric.Abstract_Generic):
         user.getMapper().save(user)
 
     def fillTerrain(self, fromX, fromY, toX, toY, land=0):
-        region = models.Map.Region.MapRegion(**{
+        region = helpers.MapRegion.MapRegion(**{
             'fromX': fromX,
             'fromY': fromY,
             'toX': toX,
@@ -48,3 +54,24 @@ class Generic(abstractGeneric.Abstract_Generic):
         domain.setBaseOutput(baseOutput if baseOutput is not None else self.getRandomInt(1000, 10000))
         domain.setOutput(domain.getBaseOutput())
         domain.getMapper().save(domain)
+
+    def addTown(self, x, y, user, population=None, typeTown=0, name=None):
+        population = population if population else self.getRandomInt(100, 10000)
+        name = name if name else self.getRandomName('city-')
+        mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+
+        domain = models.Town.Domain.Town_Domain()
+        domain.setPosId(mapCoordinate.getPosId())
+        domain.setName(name)
+        domain.setType(typeTown)
+        domain.setPopulation(population),
+        domain.setUser(user)
+        domain.getMapper().save(domain)
+
+        buildsTownDomain = models.TownBuilds.Factory.TownBuilds_Factory.getDomainFromData(
+            models.TownBuilds.Mapper.TownBuilds_Mapper.getDefaultData()
+        )
+        buildsTownDomain.setTown(domain)
+
+        buildsTownDomain.getMapper().save(buildsTownDomain)
+        return domain

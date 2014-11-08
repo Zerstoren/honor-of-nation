@@ -5,6 +5,12 @@ define('view/elements/ractive-helper', [
     var mapHelp = new ViewElementsMapHelp();
 
     Ractive.defaults.data = {
+        console: {
+            log: function () {
+                console.log(arguments);
+            }
+        },
+
         formatters: {
             fromIdToPlace: function (posId) {
                 var pos = mapHelp.fromIdToPlace(parseInt(posId, 10));

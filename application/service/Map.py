@@ -8,10 +8,19 @@ import models.Map.Math
 import models.Map.Domain
 import models.MapUserVisible.Factory
 
+import helpers.MapCoordinate
+
 import exceptions.database
 
 
 class Service_Map(AbstractService.Service_Abstract):
+    def getByPosition(self, mapCoordinate):
+        """
+        :type mapPosition: helpers.MapCoordinate.MapCoordinate
+        :rtype: models.Map.Domain.Map_Domain
+        """
+        return models.Map.Factory.Map_Factory.getDomainById(mapCoordinate.getPosId())
+
     def getByVisibleCollection(self, collection):
         """
         :type collection: collection.MapUserVisibleCollection.MapUserVisible_Collection
@@ -25,7 +34,7 @@ class Service_Map(AbstractService.Service_Abstract):
 
     def getRegion(self, regionMap):
         """
-        :type regionMap:models.Map.Region.MapRegion
+        :type regionMap:helpers.MapRegion.MapRegion
         """
         regionResult = models.Map.Mapper.Map_Mapper.getRegion(regionMap)
 
@@ -35,12 +44,14 @@ class Service_Map(AbstractService.Service_Abstract):
 
     def fillCoordinate(self, regionMap, land, landType):
         """
-        :type regionMap:models.Map.Region.MapRegion
+        :type regionMap:helpers.MapRegion.MapRegion
         """
 
         for x in range(regionMap.getFromX(), regionMap.getToX() + 1):
             for y in range(regionMap.getFromY(), regionMap.getToY() + 1):
-                domain = self._getDomainFromData(x, y, land, landType)
+                mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+                domain = self._getDomainFromData(mapCoordinate.getX(), mapCoordinate.getY(), land, landType)
+                domain.setId(mapCoordinate.getPosId())
                 domain.getMapper().save(domain)
 
         return True
@@ -50,7 +61,9 @@ class Service_Map(AbstractService.Service_Abstract):
             fromX, fromY = models.Map.Math.fromChunkToPosition(chunk)
             for x in range(fromX, fromX + int(config.get('map.chunk'))):
                 for y in range(fromY, fromY + int(config.get('map.chunk'))):
-                    domain = self._getDomainFromData(x, y, land, landType)
+                    mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=x, y=y)
+                    domain = self._getDomainFromData(mapCoordinate.getX(), mapCoordinate.getY(), land, landType)
+                    domain.setId(mapCoordinate.getPosId())
                     domain.getMapper().save(domain)
 
         return True
@@ -60,7 +73,9 @@ class Service_Map(AbstractService.Service_Abstract):
         :rtype: models.Map.Domain.Map_Domain
         """
         try:
-            domain = models.Map.Factory.Map_Factory.getDomainByPosition(x, y)
+            domain = models.Map.Factory.Map_Factory.getDomainById(
+                helpers.MapCoordinate.MapCoordinate(x=x, y=y).getPosId()
+            )
             domain.setLand(land)
             domain.setLandType(landType)
             return domain

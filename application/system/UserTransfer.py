@@ -1,8 +1,10 @@
 from models.User.Domain import User_Domain
+
 from exceptions.httpCodes import Page401
 
+import helpers.mongo
+
 import json
-from tornado import websocket
 
 
 class UserNotSet(Page401):
@@ -14,15 +16,13 @@ class UserTransfer(object):
     _user = None
     async = None
 
-    def connect(self, socket):
-        assert isinstance(socket, websocket.WebSocketHandler)
-        self.socket = socket
+    def connect(self):
         self.collect = False
         self.pool = []
 
     def disconnect(self):
-        self.rmUser()
-        self.socket = None
+        pass
+        # self.rmUser()
 
     def setAsync(self, async):
         """
@@ -37,12 +37,12 @@ class UserTransfer(object):
         self.collect = True
 
     def purge(self):
-        self.socket.write_message(json.dumps({
-            'collection': self.pool
-        }))
+        send = {'collection': self.pool}
 
         self.collect = False
         self.pool = []
+
+        return send
 
     def send(self, module, message):
         """
@@ -83,6 +83,14 @@ class UserTransfer(object):
         self._user = userDomain
         userDomain._setTransfer(self)
 
+    def setUserById(self, userId):
+        domain = User_Domain()
+        domain.setId(
+            helpers.mongo.objectId(userId)
+        )
+        domain._setTransfer(self)
+
+        self._user = domain
+
     def rmUser(self):
-        self._user._removeTransfer()
         self._user = None

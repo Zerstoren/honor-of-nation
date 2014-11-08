@@ -6815,7 +6815,7 @@ td.visible-print {
           z-index: 30; }
         #canvas_map table tr td > div.level3 {
           z-index: 40; }
-        #canvas_map table tr td > div.container .box_message {
+        #canvas_map table tr td > div.cont .box_message {
           z-index: 60;
           border-radius: 5px;
           padding: 4px;
@@ -6823,10 +6823,10 @@ td.visible-print {
           position: absolute;
           margin-left: -20px;
           margin-top: 80px; }
-        #canvas_map table tr td > div.container .box_message:hover {
+        #canvas_map table tr td > div.cont .box_message:hover {
           z-index: 65;
           opacity: 0.6; }
-        #canvas_map table tr td > div.container .box_message.user_state_0 {
+        #canvas_map table tr td > div.cont .box_message.user_state_0 {
           background: white;
           background: -moz-radial-gradient(center, ellipse cover, white 52%, #ededed 100%);
           background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(52%, white), color-stop(100%, #ededed));
@@ -6834,7 +6834,7 @@ td.visible-print {
           background: -o-radial-gradient(center, ellipse cover, white 52%, #ededed 100%);
           background: -ms-radial-gradient(center, ellipse cover, white 52%, #ededed 100%);
           background: radial-gradient(ellipse at center, white 52%, #ededed 100%); }
-        #canvas_map table tr td > div.container .box_message.user_state_1 {
+        #canvas_map table tr td > div.cont .box_message.user_state_1 {
           background: #9dd53a;
           /* Old browsers */
           background: -moz-radial-gradient(center, ellipse cover, #9dd53a 0%, #a1d54f 3%, #a1d54f 17%, #80c217 85%, #7cbc0a 100%);
@@ -6849,7 +6849,7 @@ td.visible-print {
           /* IE10+ */
           background: radial-gradient(ellipse at center, #9dd53a 0%, #a1d54f 3%, #a1d54f 17%, #80c217 85%, #7cbc0a 100%);
           /* W3C */ }
-        #canvas_map table tr td > div.container .box_message.user_state_2 {
+        #canvas_map table tr td > div.cont .box_message.user_state_2 {
           color: #eee;
           background: #61badd;
           /* Old browsers */
@@ -6865,7 +6865,7 @@ td.visible-print {
           /* IE10+ */
           background: radial-gradient(ellipse at center, #61badd 0%, #3c7bc9 100%);
           /* W3C */ }
-        #canvas_map table tr td > div.container .box_message.user_state_3 {
+        #canvas_map table tr td > div.cont .box_message.user_state_3 {
           background: #ffe49b;
           /* Old browsers */
           background: -moz-radial-gradient(center, ellipse cover, #ffe49b 0%, #fcc735 100%);
@@ -6880,7 +6880,7 @@ td.visible-print {
           /* IE10+ */
           background: radial-gradient(ellipse at center, #ffe49b 0%, #fcc735 100%);
           /* W3C */ }
-        #canvas_map table tr td > div.container .box_message.user_state_4 {
+        #canvas_map table tr td > div.cont .box_message.user_state_4 {
           background: #f6f8f9;
           background: -moz-radial-gradient(center, ellipse cover, #f6f8f9 0%, #c7c7c9 100%);
           background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f6f8f9), color-stop(100%, #c7c7c9));
@@ -6888,7 +6888,7 @@ td.visible-print {
           background: -o-radial-gradient(center, ellipse cover, #f6f8f9 0%, #c7c7c9 100%);
           background: -ms-radial-gradient(center, ellipse cover, #f6f8f9 0%, #c7c7c9 100%);
           background: radial-gradient(ellipse at center, #f6f8f9 0%, #c7c7c9 100%); }
-        #canvas_map table tr td > div.container .box_message.user_state_5 {
+        #canvas_map table tr td > div.cont .box_message.user_state_5 {
           background: #febbbb;
           background: -moz-radial-gradient(center, ellipse cover, #febbbb 0%, #ff5c5c 99%);
           background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #febbbb), color-stop(99%, #ff5c5c));
@@ -6896,50 +6896,50 @@ td.visible-print {
           background: -o-radial-gradient(center, ellipse cover, #febbbb 0%, #ff5c5c 99%);
           background: -ms-radial-gradient(center, ellipse cover, #febbbb 0%, #ff5c5c 99%);
           background: radial-gradient(ellipse at center, #febbbb 0%, #ff5c5c 99%); }
-        #canvas_map table tr td div.container .town_container.focused .town_image {
+        #canvas_map table tr td div.cont .town_container.focused .town_image {
           border: 1px solid #efff23;
           border-radius: 5px;
           width: 112px;
           height: 92px;
           margin: -1px 0 0 -1px; }
-        #canvas_map table tr td div.container .town_container {
+        #canvas_map table tr td div.cont .town_container {
           width: 114px;
           height: 96px; }
-          #canvas_map table tr td div.container .town_container .town_image {
+          #canvas_map table tr td div.cont .town_container .town_image {
             position: absolute;
             z-index: 20;
             width: 114px;
             height: 96px; }
-          #canvas_map table tr td div.container .town_container .town_type_0 {
+          #canvas_map table tr td div.cont .town_container .town_type_0 {
             background-image: url(/img/objects/city/village.png); }
-          #canvas_map table tr td div.container .town_container .town_box {
+          #canvas_map table tr td div.cont .town_container .town_box {
             width: 140px;
             height: 40px; }
-            #canvas_map table tr td div.container .town_container .town_box div {
+            #canvas_map table tr td div.cont .town_container .town_box div {
               text-align: center; }
-        #canvas_map table tr td div.container .resource_container.focused .resource_image {
+        #canvas_map table tr td div.cont .resource_container.focused .resource_image {
           border: 1px solid #efff23;
           border-radius: 5px;
           width: 64px;
           height: 64px;
           margin: 9px 0 0 7px; }
-        #canvas_map table tr td div.container .resource_container .resource_image {
+        #canvas_map table tr td div.cont .resource_container .resource_image {
           width: 66px;
           height: 66px;
           background-repeat: no-repeat; }
-        #canvas_map table tr td div.container .resource_container .town_type_rubins {
+        #canvas_map table tr td div.cont .resource_container .town_type_rubins {
           margin: 10px 0 0 8px;
           background-image: url(/img/objects/resource/rubins.png); }
-        #canvas_map table tr td div.container .resource_container .town_type_wood {
+        #canvas_map table tr td div.cont .resource_container .town_type_wood {
           margin: 10px 0 0 8px;
           background-image: url(/img/objects/resource/wood.png); }
-        #canvas_map table tr td div.container .resource_container .town_type_steel {
+        #canvas_map table tr td div.cont .resource_container .town_type_steel {
           margin: 10px 0 0 8px;
           background-image: url(/img/objects/resource/steel.png); }
-        #canvas_map table tr td div.container .resource_container .town_type_stone {
+        #canvas_map table tr td div.cont .resource_container .town_type_stone {
           margin: 10px 0 0 8px;
           background-image: url(/img/objects/resource/stone.png); }
-        #canvas_map table tr td div.container .resource_container .town_type_eat {
+        #canvas_map table tr td div.cont .resource_container .town_type_eat {
           background-image: url(/img/objects/resource/eat.png); }
       #canvas_map table tr .shadow .level2 {
         background-image: url("/img/texture/shadow.png");
@@ -7024,6 +7024,288 @@ td.visible-print {
       width: 100px; }
     #user-info .show-terrain .save-coordinate {
       margin-top: 20px; }
+
+.ti__block {
+  position: absolute;
+  z-index: 26;
+  width: 100%;
+  height: 100%; }
+  .ti__block .left {
+    float: left;
+    width: 250px;
+    height: 100%; }
+  .ti__block .right {
+    float: right;
+    width: 250px;
+    height: 100%; }
+  .ti__block .middle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0 250px; }
+
+.window-glass {
+  position: fixed;
+  z-index: 25;
+  width: 100%;
+  height: 100%;
+  background: #333334;
+  opacity: 0.75; }
+
+.ti__block .left .list_of_builds {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 250px;
+  width: 210px;
+  padding: 10px; }
+  .ti__block .left .list_of_builds .build_container {
+    padding: 4px 0; }
+    .ti__block .left .list_of_builds .build_container .name {
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      width: 100%; }
+      .ti__block .left .list_of_builds .build_container .name img {
+        float: right;
+        margin-right: 0px;
+        margin-top: 3px; }
+    .ti__block .left .list_of_builds .build_container .name.green a {
+      color: #f00; }
+    .ti__block .left .list_of_builds .build_container .popup {
+      display: none;
+      position: fixed;
+      z-index: 500;
+      padding: 5px;
+      width: 300px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background: #eee;
+      box-shadow: 1px 1px 4px #000; }
+      .ti__block .left .list_of_builds .build_container .popup .build-name {
+        text-align: left;
+        font-weight: bold;
+        font-size: 16px; }
+      .ti__block .left .list_of_builds .build_container .popup .build-detail-info span {
+        display: block;
+        padding: 0 4px 4px 4px;
+        color: #333;
+        font-size: 13px; }
+      .ti__block .left .list_of_builds .build_container .popup .build-detail-info p {
+        padding: 0 4px 4px 10px;
+        color: #666;
+        font-size: 11px;
+        line-height: 11px; }
+      .ti__block .left .list_of_builds .build_container .popup .build-price span {
+        display: inline-block;
+        padding: 5px 0px 0px 26px;
+        width: 110px;
+        height: 22px;
+        background-repeat: no-repeat;
+        font-size: 11px;
+        line-height: 8px; }
+      .ti__block .left .list_of_builds .build_container .popup .build-price .time {
+        width: 100%; }
+.ti__block .left .list_of_progress_builds {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 200px;
+  width: 250px; }
+  .ti__block .left .list_of_progress_builds .nextBuilds {
+    height: 20px; }
+    .ti__block .left .list_of_progress_builds .nextBuilds .triangle {
+      margin: 0 auto;
+      width: 0;
+      height: 0;
+      border-left: 80px solid transparent;
+      border-right: 80px solid transparent;
+      border-bottom: 15px solid #0088cc; }
+    .ti__block .left .list_of_progress_builds .nextBuilds .popup {
+      display: none;
+      position: fixed;
+      left: 0;
+      bottom: 174px;
+      background: #eee;
+      width: 220px;
+      z-index: 500;
+      border-radius: 0px 0px 5px 0px;
+      box-shadow: 1px 1px 4px #000;
+      padding: 5px; }
+      .ti__block .left .list_of_progress_builds .nextBuilds .popup .content {
+        padding: 5px; }
+        .ti__block .left .list_of_progress_builds .nextBuilds .popup .content .block .name {
+          font-size: 16px;
+          padding-top: 5px;
+          float: left; }
+        .ti__block .left .list_of_progress_builds .nextBuilds .popup .content .block .cancel {
+          float: right;
+          padding-top: 5px;
+          padding-right: 10px; }
+  .ti__block .left .list_of_progress_builds .buildInProgress .name {
+    font-size: 18px;
+    text-align: center; }
+  .ti__block .left .list_of_progress_builds .buildInProgress .image {
+    width: 200px;
+    height: 100px; }
+  .ti__block .left .list_of_progress_builds .buildInProgress .completeBar .progress {
+    height: 7px;
+    margin-bottom: 0px; }
+.ti__block .left .background {
+  background: #eee;
+  width: 210px;
+  height: 100%;
+  padding: 10px; }
+.ti__block .left .background.top {
+  border-radius: 0 0 5px 0px; }
+  .ti__block .left .background.top .content {
+    position: relative;
+    top: 250px; }
+.ti__block .left .background.bottom {
+  border-radius: 0 5px 0 0; }
+
+.ti__block .right .list_of_units {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  padding-top: 250px;
+  margin-top: -500px;
+  z-index: 1; }
+.ti__block .right .list_of_progress_units {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 200px;
+  width: 250px;
+  z-index: 2; }
+.ti__block .right .background {
+  background: #eee;
+  width: 220px;
+  height: 100%;
+  margin-left: 20px;
+  padding: 10px 0 10px 10px; }
+.ti__block .right .background.top {
+  border-radius: 0 0 0 5px; }
+  .ti__block .right .background.top .content {
+    position: relative;
+    top: 250px; }
+.ti__block .right .background.bottom {
+  border-radius: 5px 0 0 0; }
+
+.ti__block .middle .towns_move {
+  padding: 10px 0 0 0; }
+  .ti__block .middle .towns_move .prev_town {
+    position: absolute;
+    width: 250px;
+    height: 40px;
+    text-align: left; }
+    .ti__block .middle .towns_move .prev_town .name_left {
+      cursor: pointer;
+      font-size: 18px;
+      background: #eee;
+      padding: 10px 0 10px 10px;
+      border-radius: 95px 0 0 95px; }
+  .ti__block .middle .towns_move .next_town {
+    position: absolute;
+    right: 500px;
+    width: 250px;
+    height: 40px;
+    text-align: right; }
+    .ti__block .middle .towns_move .next_town .name_right {
+      cursor: pointer;
+      font-size: 18px;
+      background: #eee;
+      padding: 10px 10px 10px 0;
+      border-radius: 0 95px 95px 0; }
+  .ti__block .middle .towns_move .current_town_name {
+    padding: 0 750px 0 250px;
+    text-align: center; }
+    .ti__block .middle .towns_move .current_town_name .name {
+      font-size: 30px;
+      background: #eee;
+      padding: 1px 7px 0px 0px;
+      margin: 0 4px;
+      border-radius: 5px;
+      height: 45px; }
+      .ti__block .middle .towns_move .current_town_name .name .close {
+        margin-top: 11px; }
+.ti__block .middle .town_info .buttons {
+  text-align: center; }
+  .ti__block .middle .town_info .buttons button {
+    width: 20%;
+    height: 50px;
+    margin: 4px; }
+.ti__block .middle .bottom_block {
+  position: absolute;
+  bottom: 10px;
+  width: 100%; }
+  .ti__block .middle .bottom_block .wrap .parking_generals .background {
+    background: #eee;
+    padding: 10px;
+    border-radius: 10px;
+    height: 111px; }
+  .ti__block .middle .bottom_block .wrap .parking_generals ul {
+    white-space: nowrap; }
+    .ti__block .middle .bottom_block .wrap .parking_generals ul li {
+      display: inline-block;
+      width: 96px;
+      height: 96px; }
+  .ti__block .middle .bottom_block .wrap .generals_list .background {
+    background: #eee;
+    padding: 10px;
+    border-radius: 10px;
+    height: 111px; }
+  .ti__block .middle .bottom_block .wrap .generals_list ul {
+    white-space: nowrap; }
+    .ti__block .middle .bottom_block .wrap .generals_list ul li {
+      display: inline-block;
+      width: 96px;
+      height: 96px; }
+  .ti__block .middle .bottom_block .wrap .soliders_list .background {
+    background: #eee;
+    padding: 10px;
+    border-radius: 10px;
+    height: 111px; }
+  .ti__block .middle .bottom_block .wrap .soliders_list ul {
+    white-space: nowrap; }
+    .ti__block .middle .bottom_block .wrap .soliders_list ul li {
+      display: inline-block;
+      width: 96px;
+      height: 96px; }
+.ti__block .middle .ti__middle_element {
+  padding: 20px 500px 0 0; }
+
+.tda__block {
+  position: absolute;
+  z-index: 2;
+  height: 100%;
+  width: 100%; }
+  .tda__block .left {
+    position: absolute;
+    left: 0;
+    top: 5%;
+    background: #eee;
+    height: 90%;
+    width: 20%;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 5px 0px 15px #000; }
+  .tda__block .right {
+    position: absolute;
+    right: 0;
+    background: #eee;
+    height: 100%;
+    width: 70%;
+    padding: 30px; }
+    .tda__block .right .soft-wrap {
+      padding-bottom: 20px; }
+  .tda__block .close {
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    font-size: 36px;
+    z-index: 1; }
 
 * {
   font-family: Verdana;

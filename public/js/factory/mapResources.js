@@ -7,7 +7,12 @@ define('factory/mapResources', [
         domain: MapResourcesDomain,
 
         getDomainFromData: function (data) {
-            var domain = new this.domain();
+            var domain;
+
+            if (!(domain = this.getFromPool(data._id))) {
+                domain = new this.domain();
+            }
+
             domain.set('_id', data._id);
             domain.set('pos_id', data.pos_id);
             domain.set('type', data.type);
