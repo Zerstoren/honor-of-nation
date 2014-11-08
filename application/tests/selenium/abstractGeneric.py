@@ -62,6 +62,7 @@ class Selenium_Abstract_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
+        print(sys.path)
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
