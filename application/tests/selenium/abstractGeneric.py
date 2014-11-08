@@ -66,7 +66,7 @@ class Selenium_Abstract_Generic(Generic):
 
         if config.configType == 'jankins_test':
             basePath = sys.path[0]
-        print(basePath, sys.path)
+
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
