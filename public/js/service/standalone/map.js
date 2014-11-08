@@ -25,6 +25,7 @@ define('service/standalone/map', [
             this.$drawMap();
             this.on('mouseMove', this.$onMouseMove, this);
             this.on('mouseClick', this.$onMouseClick, this);
+            this.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
         },
 
         $onMouseMove: function (e) {
@@ -45,7 +46,7 @@ define('service/standalone/map', [
         },
 
         $onMouseClick: function (e) {
-            var container, className, idContainer, type;
+            var container, idContainer, type;
 
             container = this.$GetPrimaryContainer(e.x, e.y);
 
@@ -70,6 +71,21 @@ define('service/standalone/map', [
                     this.$lastFocusedContainer.removeClass('focused');
                     this.$lastFocusedContainer = null;
                 }
+            }
+        },
+
+        $onMouseDoubleClick: function (e) {
+            var type = null,
+                idContainer,
+                container;
+
+            container = this.$GetPrimaryContainer(e.x, e.y);
+
+            if(container !== false) {
+                type = container[0].classList[0].replace('_container', '');
+                idContainer = container[0].id.split('_')[1];
+
+                this.trigger('onMouseDoubleClickObject', e.x, e.y, type, idContainer);
             }
         },
 

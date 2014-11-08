@@ -35,6 +35,7 @@ define('view/block/map/footer', [
             map.on('onMouseMoveObject', this.onFocusObject, this);
 
             map.on('onMouseClickObject', this.onMouseClickObject, this);
+            map.on('onMouseDoubleClickObject', this.onMouseDoubleClickObject, this);
         },
 
         onMouseMove: function (e) {
@@ -73,6 +74,10 @@ define('view/block/map/footer', [
                     this.$focusOnResource(x, y, idContainer);
                     break;
             }
+        },
+
+        onMouseDoubleClickObject: function (x, y, type, idContainer) {
+            this.trigger('open', type, idContainer);
         },
 
         $focusOnTown: function (x, y, idContainer) {

@@ -1,14 +1,28 @@
-define('model/town', [], function () {
+define('model/town', [
+    'system/socket'
+], function (socket) {
     return AbstractModel.extend({
         model_url: 'town',
 
-        mapLoad: function (success) {
+        getById: function (success) {
             this.sync('get', {
+                data: {
+                    'id': this.get('id')
+                },
+                success: function (town) {
+                    this.set(town);
+                    success();
+                }.bind(this)
+            });
+        },
+
+        mapLoad: function (success) {
+            this.sync('get_pos_id', {
                 data: {
                     posId: this.get('pos_id')
                 },
-                success: function (resource) {
-                    this.set(resource);
+                success: function (town) {
+                    this.set(town);
                     success();
                 }.bind(this)
             });

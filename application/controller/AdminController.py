@@ -1,4 +1,3 @@
-from concurrent.futures.process import _ResultItem
 import controller.ResourceController
 
 import service.Admin
@@ -104,6 +103,7 @@ class MainAdminController(AbstractAdminController):
             result['resource'] = False
 
         result['done'] = True
+
         transfer.send('/admin/loadResourceMap', result)
 
     def saveResourceDomain(self, transfer, data):

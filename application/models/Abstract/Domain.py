@@ -35,9 +35,6 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
             self._setFunc(i)(options[i])
 
     def extract(self, force=False):
-        if self._loaded is True:
-            return self
-
         if not self.hasId():
             return self
 

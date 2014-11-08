@@ -9,6 +9,9 @@ import models.MapResources.Domain
 import models.Town.Domain
 import models.Map.Math
 
+import models.TownBuilds.Factory
+import models.TownBuilds.Mapper
+
 import helpers.MapRegion
 import helpers.MapCoordinate
 
@@ -63,7 +66,12 @@ class Generic(abstractGeneric.Abstract_Generic):
         domain.setType(typeTown)
         domain.setPopulation(population),
         domain.setUser(user)
-
         domain.getMapper().save(domain)
 
+        buildsTownDomain = models.TownBuilds.Factory.TownBuilds_Factory.getDomainFromData(
+            models.TownBuilds.Mapper.TownBuilds_Mapper.getDefaultData()
+        )
+        buildsTownDomain.setTown(domain)
+
+        buildsTownDomain.getMapper().save(buildsTownDomain)
         return domain

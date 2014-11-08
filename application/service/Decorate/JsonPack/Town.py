@@ -10,6 +10,11 @@ class Decorate():
             "name": domain.getName()
         }
 
+    def getById(self, townId):
+        return self._pack(
+            super().getById(townId)
+        )
+
     def loadByPosition(self, mapCoordinate):
         return self._pack(
             super().loadByPosition(mapCoordinate)

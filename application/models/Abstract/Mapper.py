@@ -5,7 +5,7 @@ import exceptions.database
 
 
 class Abstract_Mapper(metaclass=abc.ABCMeta):
-    _table = None
+    _table = 'towns_builds'
 
     def __init__(self):
         self._db = system.mongo.mongo
@@ -16,11 +16,7 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
     def _getCollection(self):
         return self._db[self._table] if not self._bulk else self._bulk
 
-    def _select(self, where=None, limit=None):
-        """
-        :type where: models.Abstract.Filter.Common_Filter
-        :type limit: models.Abstract.Limit.Common_Limit
-        """
+    def _select(self, where=None, limit=None, sort=None):
         where = where if where is not None else models.Abstract.Common.Common_Filter()
         limit = limit if limit is not None else models.Abstract.Common.Common_Limit()
 
@@ -31,7 +27,7 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
 
             return action
 
-        action = self._getCollection().find(where)
+        action = self._getCollection().find(where, sort=sort)
 
         if limit.hasLimit():
             action = action.limit(*limit.getLimit())
