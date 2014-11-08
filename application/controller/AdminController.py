@@ -103,6 +103,7 @@ class MainAdminController(AbstractAdminController):
             result['resource'] = False
 
         result['done'] = True
+
         transfer.send('/admin/loadResourceMap', result)
 
     def saveResourceDomain(self, transfer, data):

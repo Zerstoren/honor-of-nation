@@ -37,7 +37,7 @@ define('libs/abstract/factory', [], function () {
         },
 
         getDomainFromData: function (data) {
-            if (!data.id) {
+            if (!data._id) {
                 return new this.domain(data);
             }
 
@@ -45,7 +45,7 @@ define('libs/abstract/factory', [], function () {
                 this.__pool = {};
             }
 
-            var domain = this.getFromPool(data.id);
+            var domain = this.getFromPool(data._id);
 
             if (domain === undefined) {
                 domain = new this.domain(data);

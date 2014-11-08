@@ -9,22 +9,6 @@ app = Celery(
     broker=config.get('celery.broker') + config.get('database.mongodb.db'),
     backend=config.get('celery.backend') + config.get('database.mongodb.db')
 )
-#
-# def reInitApp():
-#     app = Celery(
-#         'hn',
-#         broker=config.get('celery.broker') + config.get('database.mongodb.db'),
-#         backend=config.get('celery.backend') + config.get('database.mongodb.db')
-#     )
-#
-#     @app.task(serializer='json', name='init_celery.builds')
-#     def builds(message):
-#         import controller.CeleryController
-#         celeryController = controller.CeleryController.CeleryPrivateController()
-#
-#         celeryController.buildComplete(message)
-#
-
 
 
 @app.task(serializer='json', name='init_celery.builds')
@@ -41,7 +25,7 @@ if __name__ == '__main__':
     else:
         sys.argv.append('worker')
 
-    if config.configType.find('test') != -1:
+    if config.get('celery.debug') == 'True':
         if 2 in sys.argv:
             sys.argv[2] = '-l'
         else:

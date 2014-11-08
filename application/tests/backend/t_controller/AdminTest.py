@@ -4,6 +4,7 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 import controller.AdminController
 
 import service.MapResources
+import service.Town
 
 import exceptions.httpCodes
 import exceptions.database
@@ -484,9 +485,10 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()
-        self.assertEqual(
+        self.assertDictEqual(
             result['message']['town'],
             {
+                '_id': str(townDomain.getId()),
                 'population': townDomain.getPopulation(),
                 'type': 0,
                 'user': str(transfer.getUser().getId()),
@@ -501,6 +503,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         controller = self._getModelController()
         transfer = self._login()
 
+
         controller.saveTownDomain(transfer, {
             "domain": {
                 "type": "0",
@@ -512,10 +515,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
         })
 
         result = transfer.getLastMessage()['message']
-        self.assertEqual(
+        town = service.Town.Service_Town().loadByPosition(
+            helpers.MapCoordinate.MapCoordinate(posId=1)
+        )
+        self.assertDictEqual(
             {
                 'done': True,
                 'town': {
+                    '_id': str(town.getId()),
                     'pos_id': 1,
                     'name': 'City name',
                     'population': 23543,
