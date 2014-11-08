@@ -9,7 +9,7 @@ import system.router
 
 import json
 
-import system.nanomsgRespondent
+import balancer.client.respondent
 
 from tornado import ioloop
 
@@ -64,7 +64,7 @@ def execute(transfer, data):
 
 
 if __name__ == '__main__':
-    system.nanomsgRespondent.Respondent.setHandler(handler)
+    balancer.client.respondent.Respondent.setHandler(handler)
 
     try:
         ioloop.IOLoop.instance().start()

@@ -1,7 +1,9 @@
-from tornado import websocket
 import uuid
 
-import balancer.userPool
+from tornado import websocket
+
+import balancer.server.userPool
+
 
 class ClientConnector():
     userId = None
@@ -30,11 +32,11 @@ class ClientConnector():
 
     def setUser(self, userId):
         self.userId = userId
-        balancer.userPool.UserPool.addUser(self, userId)
+        balancer.server.userPool.UserPool.addUser(self, userId)
 
     def rmUser(self):
         if self.userId:
-            balancer.userPool.UserPool.removeUser(self.userId)
+            balancer.server.userPool.UserPool.removeUser(self.userId)
 
 
 class ClientPool_Instance():

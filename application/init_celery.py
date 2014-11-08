@@ -25,7 +25,7 @@ if __name__ == '__main__':
     else:
         sys.argv.append('worker')
 
-    if config.configType.find('test') != -1:
+    if config.get('celery.debug') == 'True':
         if 2 in sys.argv:
             sys.argv[2] = '-l'
         else:
