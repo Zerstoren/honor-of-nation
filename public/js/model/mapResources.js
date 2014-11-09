@@ -22,7 +22,7 @@ define('model/mapResources', [
 
         getUserLogin: function () {
 
-            alert(1)
+            alert(1);
             return this.get('user').get('login');
         },
 
