@@ -24,7 +24,7 @@ define('service/standalone/mapInterface', [
 
             preStart.map();
             preStart.map.header.on('onMenuClick', this.onClickMenu, this);
-            preStart.map.footer.on('open', this.onOpen, this)
+            preStart.map.footer.on('open', this.onOpen, this);
 
             return true;
         },

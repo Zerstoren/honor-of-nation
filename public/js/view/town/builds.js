@@ -52,10 +52,10 @@ define('view/town/builds', [
                 if (buildsList.hasOwnProperty(key)) {
                     result.push({
                         'key': key,
-                        'name': builds[key]['name'],
-                        'price': builds[key]['price'],
-                        'desc': builds[key]['desc'],
-                        'maxLevel': builds[key]['maxLevel'][this.currentTown.get('type')],
+                        'name': builds[key].name,
+                        'price': builds[key].price,
+                        'desc': builds[key].desc,
+                        'maxLevel': builds[key].maxLevel[this.currentTown.get('type')],
                         'level': buildsList[key],
                         'levelWithQueue': this._getMaximumLevel(key)
                     });
@@ -85,8 +85,8 @@ define('view/town/builds', [
             for (i = 0; i < this.queue.length; i++) {
                 itemQueue = this.queue[i];
 
-                if (itemQueue['key'] === key) {
-                    currentLevel = itemQueue['level'];
+                if (itemQueue.key === key) {
+                    currentLevel = itemQueue.level;
                 }
             }
 

@@ -17,7 +17,7 @@ define('gateway/town', [], function () {
                 level: level
             }, function (data) {
                 if (data.done) {
-                    success(data.builds, data.queue)
+                    success(data.builds, data.queue);
                 }
             });
         }

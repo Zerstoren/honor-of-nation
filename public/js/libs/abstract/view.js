@@ -21,7 +21,7 @@ define('libs/abstract/view', [
             var key;
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
-                    this.partials[key] = this.getTemplate(data[key])
+                    this.partials[key] = this.getTemplate(data[key]);
                 }
             }
         },
