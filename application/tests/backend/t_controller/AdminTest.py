@@ -11,7 +11,6 @@ import exceptions.database
 import exceptions.args
 import exceptions.map
 
-
 import models.MapUserVisible.Mapper
 
 import models.Map.Mapper
