@@ -1,6 +1,5 @@
 import itertools
 import socket
-import time
 
 import tornado.gen
 import tornado.ioloop

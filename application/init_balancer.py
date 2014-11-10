@@ -6,6 +6,7 @@ from tornado import websocket, web, ioloop
 import balancer.server.clientConnector
 import balancer.server.surveyor
 import balancer.server.workerStarter
+import balancer.celery_receiver.receiver
 
 import config
 

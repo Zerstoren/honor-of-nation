@@ -1,11 +1,11 @@
 from tests.selenium.Admin import generic
 
-class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
+class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
     def _setResource(self, name, value):
         self.byCssSelector('.resources-edit input.' + name).clear()
         self.byCssSelector('.resources-edit input.' + name).send_keys(value)
 
-    def testCreateTerrainByCoordinate(self):
+    def testSetResources(self):
         user = self.login()
         self._goToAdmin()
 
@@ -25,6 +25,21 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('.save-info').click()
 
         self.operationIsSuccess()
+
+        self.byCssSelector('.admin .close').click()
+
+        self.assertDictEqual(
+            self.getResources(),
+            {
+                'rubins': 5,
+                'wood': 10,
+                'steel': 50,
+                'stone': 100,
+                'eat': 200,
+                'gold': 500
+            }
+        )
+
 
     def testCreateTerrainByCoordinate_WrongUser(self):
         self.setUserAsAdmin(self.fixture.getUser(1))

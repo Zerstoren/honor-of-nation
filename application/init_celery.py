@@ -15,7 +15,6 @@ app = Celery(
 def builds(message):
     import controller.CeleryController
     celeryController = controller.CeleryController.CeleryPrivateController()
-
     celeryController.buildComplete(message)
 
 
@@ -37,3 +36,12 @@ if __name__ == '__main__':
             sys.argv.append('INFO')
 
     app.start()
+else:
+    import balancer.celery_sender.sender
+
+
+def message(message, user):
+    balancer.celery_sender.sender.Respondent.writeMessage(
+        message,
+        str(user.getId())
+    )

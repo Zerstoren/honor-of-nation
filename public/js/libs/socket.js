@@ -172,7 +172,9 @@ define('libs/socket', function() {
     Socket.prototype.$Socket_OnMessageGet = function(message) {
         window.console.log('%cGet message: %s - %o', 'color: #aaa;',  message.module, message.message);
 
-        this.trigger('message ' + message.module, message.message);
+        if (message.message.done) {
+            this.trigger('message' + message.module, message.message);
+        }
 
         if(message.async !== null && this.listeners[message.async]) {
             this.listeners[message.async](message.message);

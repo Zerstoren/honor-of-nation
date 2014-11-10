@@ -4,6 +4,7 @@ define('system/preStart', [
     'view/block/error',
     'view/elements/ractive-helper',
     'service/standalone/user',
+    'service/standalone/messages',
 
     'view/block/map/header',
     'view/block/map/footer',
@@ -16,6 +17,7 @@ define('system/preStart', [
     viewBlockError,
     viewElementsRactiveHelper,
     serviceUser,
+    serviceMessages,
 
     ViewBlockMapHeader,
     ViewBlockMapFooter,
@@ -85,6 +87,8 @@ define('system/preStart', [
         viewBlockError._connectionIsEstablished();
         serviceUser.login();
     });
+
+    serviceMessages.init();
 
     systemSocket.connect();
 
