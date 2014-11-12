@@ -14,8 +14,8 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
         return controller.TownBuildsController.MainController()
 
     def _getCeleryController(self):
-        import controller.CeleryController
-        return controller.CeleryController.CeleryPrivateController()
+        import controller.TownBuildsController
+        return controller.TownBuildsController.CeleryPrivateController()
 
     def setUp(self):
         self.initCelery()

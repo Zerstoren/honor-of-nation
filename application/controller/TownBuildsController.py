@@ -1,8 +1,10 @@
 import service.TownBuilds
 import service.Town
 
+import time
 
-class AbstractResourceController(object):
+
+class AbstractTownBuildsController(object):
     def _getParamsTown(self):
         return service.Town.Service_Town().decorate('Params')
 
@@ -12,8 +14,14 @@ class AbstractResourceController(object):
     def _getParamsAclTownBuilds(self):
         return service.TownBuilds.Service_TownBuilds().decorate('Params', 'Acl')
 
+    def _getJsonPackTownBuilds(self):
+        return service.TownBuilds.Service_TownBuilds().decorate('JsonPack')
 
-class MainController(AbstractResourceController):
+    def _getParamsTownBuilds(self):
+        return service.TownBuilds.Service_TownBuilds().decorate('Params')
+
+
+class MainController(AbstractTownBuildsController):
     def _getBuildsAndQueueData(self, transfer, townDomain):
         townBuildsService = self._getAclJsonPackTownBuilds()
 
@@ -68,3 +76,24 @@ class MainController(AbstractResourceController):
             '/town_builds/remove',
             self._getBuildsAndQueueData(transfer, townDomain)
         )
+
+
+class CeleryPrivateController(AbstractTownBuildsController):
+    def buildComplete(self, message):
+        if not (message['start_at'] + message['complete_after']) <= int(time.time()):
+            raise Exception('Слишком рано')
+
+        townDomain = self._getParamsTown().getById(message['town'])
+        self._getParamsTownBuilds().completeBuild(townDomain)
+
+        service = self._getJsonPackTownBuilds()
+        builds = service.get(townDomain)
+        queue = service.getQueue(townDomain)
+
+        user = townDomain.getUser()
+        user.getTransfer().send('/delivery/buildsUpdate', {
+            'done': True,
+            'town': str(townDomain.getId()),
+            'builds': builds,
+            'queue': queue
+        }, True)

@@ -13,6 +13,7 @@ define('view/elements/popup', [], function () {
                 liveTarget: config.liveTarget || false,
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
+                ignoreTop: config.ignoreTop || false,
                 callback: config.popupCallback || false
             };
 
@@ -43,16 +44,22 @@ define('view/elements/popup', [], function () {
         },
 
         showLayer: function () {
-            var offset;
+            var offset, config;
 
             showLayer = this;
             this.popup.css({display: 'block'});
             offset = this.target.offset();
 
-            this.popup.css({
+            config = {
                 top: offset.top,
                 left: offset.left + this.target.width()
-            });
+            };
+
+            if (this.$config.ignoreTop) {
+                delete config.top;
+            }
+
+            this.popup.css(config);
         },
 
         hideLayer: function() {

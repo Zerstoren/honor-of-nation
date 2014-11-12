@@ -24,6 +24,7 @@ class User_Domain(models.Abstract.Domain.Abstract_Domain):
         if not self._transfer:
             import system.UserTransfer
             self._transfer = system.UserTransfer.UserTransfer()
+            self._transfer.setUser(self)
 
         return self._transfer
 

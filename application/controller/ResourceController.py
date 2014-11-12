@@ -26,7 +26,6 @@ class DeliveryController(AbstractResourceController):
         """
         :type user: models.User.Domain.User_Domain
         """
-        pass
         user.getTransfer().send('/delivery/resourceUpdate', {
             'done': True,
             'resources': self._getJsonPackResourceService().getResources(user)
