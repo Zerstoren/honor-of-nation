@@ -5,6 +5,7 @@ define('libs/socket', function() {
     "use strict";
 
     var Socket = function(host, port) {
+        this.counter = 0;
         this.init(host, port);
     };
 
@@ -117,6 +118,7 @@ define('libs/socket', function() {
         window.console.log('%cSend message: %s - %o', 'color: #aaa;', module, message);
 
         if(asyncFn) {
+            this.counter += 1;
             asyncName = Math.random();
             this.listeners[asyncName] = asyncFn;
         }
@@ -177,6 +179,7 @@ define('libs/socket', function() {
         }
 
         if(message.async !== null && this.listeners[message.async]) {
+            this.counter -= 1;
             this.listeners[message.async](message.message);
             delete this.listeners[message.async];
         }

@@ -1,10 +1,14 @@
 define('view/town/builds', [
     'view/elements/popup',
 
+    'service/standalone/math',
+
     'system/config',
     'system/interval'
 ], function (
     ViewElementsPopup,
+
+    serviceStandaloneMath,
 
     config,
     interval
@@ -13,9 +17,9 @@ define('view/town/builds', [
 
     buildsView = AbstractView.extend({
         events: {
-            'click .build_container .btn': 'onCreate'
-//            'click .buildInProgress .cancel': 'onCancelBuild',
-//            'click .triangle .cancel': 'onCancelBuild'
+            'click .build_container .btn': 'onCreate',
+            'click .buildInProgress .cancel': 'onCancelBuild',
+            'click .triangle .cancel': 'onCancelBuild'
         },
 
         initialize: function () {
@@ -49,10 +53,7 @@ define('view/town/builds', [
             );
 
             this.currentTown.on('change:builds', this.updateBuilds, this);
-            this.currentTown.on('change:queue', this.updateQueue, this);
-
-            this.$el.on('click', '.buildInProgress .cancel', this.onCancelBuild.bind(this));
-            this.$el.on('click', '.triangle .cancel', this.onCancelBuild.bind(this));
+            this.currentTown.on('change:queue', this.onQueueUpdate, this);
         },
 
         update: function (buildsList, queue) {
@@ -72,7 +73,7 @@ define('view/town/builds', [
                     result.push({
                         'key': key,
                         'name': builds[key].name,
-                        'price': builds[key].price,
+                        'price': serviceStandaloneMath.getBuildPrice(builds[key].price, this._getMaximumLevel(key)),
                         'desc': builds[key].desc,
                         'maxLevel': builds[key].maxLevel[this.currentTown.get('type')],
                         'level': buildsList[key],
@@ -141,6 +142,11 @@ define('view/town/builds', [
                 jQuery(e.target).attr('data-key'),
                 parseInt(jQuery(e.target).attr('data-level'), 10)
             );
+        },
+
+        onQueueUpdate: function () {
+            this.updateQueue();
+            this.updateBuilds();
         },
 
         _getMaximumLevel: function (key) {

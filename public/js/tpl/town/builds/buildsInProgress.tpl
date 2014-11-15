@@ -16,7 +16,7 @@
                         <div class="block">
 
                             <div class="name">
-                                {{this.name}} ур. {{this.level}}
+                                <span class="build-name">{{this.name}}</span> ур. <span class="build-level">{{this.level}}</span>
                             </div>
                             <div class="cancel" data-key="{{this.key}}" data-level="{{this.level}}">X</div>
 
@@ -37,7 +37,7 @@
     <div class="buildInProgress">
         {{#firstSection}}
         <div class="name">
-            {{firstSection.name}} ур. {{firstSection.level}}
+            <span class="build-name">{{firstSection.name}}</span> ур. <span class="build-level">{{firstSection.level}}</span>
             <span class="cancel" data-key="{{firstSection.key}}" data-level="{{firstSection.level}}">X</span>
         </div>
         <div class="image">
@@ -55,7 +55,7 @@
         {{/firstSection}}
 
         {{#!firstSection}}
-        <div class="name">Ничего не строится</div>
+        <div class="nothing-builds">Ничего не строится</div>
         {{/firstSection}}
     </div>
 </div>

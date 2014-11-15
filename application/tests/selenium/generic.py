@@ -15,6 +15,7 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
 
         self.go('/')
         self.waitForElement('.mpi__resource_wrapper', 'css')
+        self.waitForUserLogin()
 
         return user
 

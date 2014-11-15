@@ -149,20 +149,42 @@ class Selenium_Abstract_Generic(Generic):
         sleepTime = 0
 
         while True:
-            active = self.executeCommand("return pack('COM.Socket').Counter")
+            active = self.executeCommand("return require('system/socket').counter")
 
             if active <= 0:
                 break
             elif sleepTime >= n:
-                break
+                raise TimeoutException("Very long wait for socket")
             else:
                 sleepTime += 50
                 self.sleep(0.05)
 
-        self.sleep(0.2)
 
     def go(self, path):
         self.driver.get('http://' + config.get('server.domain') + path)
+
+    def goAppUrl(self, path):
+        self.executeCommand("""
+        requirejs(['system/route'], function(router){
+            router.navigate('%s')
+        });
+        """ % path)
+
+    def waitForUserLogin(self):
+        def getUserLogin():
+            return self.executeCommand("return require('service/standalone/user').me.get('login')")
+
+        i = 0
+        while True:
+            i += 1
+            s = getUserLogin()
+
+            if s != None:
+                break
+            elif i >= 100:
+                raise TimeoutException('Can`t login')
+
+            self.sleep(0.05)
 
     def getUrl(self):
         # TODO Change for native driver method
