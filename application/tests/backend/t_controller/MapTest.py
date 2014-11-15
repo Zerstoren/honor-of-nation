@@ -3,7 +3,7 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 import controller.MapController
 
 
-class Backend_Controller_UserTest(Backend_Controller_Generic):
+class Backend_Controller_MapTest(Backend_Controller_Generic):
     def _getModelController(self):
         return controller.MapController.MainController()
 

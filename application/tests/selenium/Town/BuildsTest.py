@@ -45,11 +45,11 @@ class Selenium_Town_BuildsTest(generic.Selenium_Town_Generic):
             self._getSelectorBuild() + ' .nothing-builds'
         )
 
-    def testAddMany(self):
-        self._getBuildElement(buildConst.BUILD_FARM)
-        self._getBuildElement(buildConst.BUILD_FARM)
-
-        self.waitForSocket()
+    # def testAddMany(self):
+    #     self._getBuildElement(buildConst.BUILD_FARM)
+    #     self._getBuildElement(buildConst.BUILD_FARM)
+    #
+    #     self.waitForSocket()
 
     def testRemoveChain(self):
         pass

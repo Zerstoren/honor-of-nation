@@ -7,7 +7,7 @@ import service.TownBuilds
 import time
 
 
-class Backend_Controller_UserTest(Backend_Controller_Generic):
+class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
 
     def _getTownBuildsController(self):
         import controller.TownBuildsController
