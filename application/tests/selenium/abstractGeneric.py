@@ -151,7 +151,7 @@ class Selenium_Abstract_Generic(Generic):
         while True:
             active = self.executeCommand("return require('system/socket').counter")
 
-            if active <= 0:
+            if active != None and active <= 0:
                 break
             elif sleepTime >= n:
                 raise TimeoutException("Very long wait for socket")
