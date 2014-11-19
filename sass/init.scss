@@ -125,3 +125,12 @@ pre {
     background: url(/img/icons/close.png);
     background-repeat: no-repeat;
 }
+
+.error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #e11;
+    padding: 10px;
+    z-index: 100000;
+}

@@ -73,4 +73,3 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
         self.byCssSelector('.save-coordinate').click()
 
         self.operationIsSuccess()
-        

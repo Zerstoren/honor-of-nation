@@ -7139,12 +7139,12 @@ td.visible-print {
   .ti__block .left .list_of_progress_builds .buildInProgress .name {
     font-size: 18px;
     text-align: center; }
-  .ti__block .left .list_of_progress_builds .buildInProgress .nothing-builds {
-    font-size: 18px;
-    text-align: center; }
   .ti__block .left .list_of_progress_builds .buildInProgress .image {
     width: 200px;
     height: 100px; }
+  .ti__block .left .list_of_progress_builds .buildInProgress .nothing-builds {
+    font-size: 18px;
+    text-align: center; }
   .ti__block .left .list_of_progress_builds .buildInProgress .completeBar .progress {
     height: 7px;
     margin-bottom: 0px; }
@@ -7404,5 +7404,13 @@ pre {
   margin: 2px 2px 0 0;
   background: url(/img/icons/close.png);
   background-repeat: no-repeat; }
+
+.error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #e11;
+  padding: 10px;
+  z-index: 100000; }
 
 /*# sourceMappingURL=style.css.map */
