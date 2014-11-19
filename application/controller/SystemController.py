@@ -20,4 +20,5 @@ class MainController():
         })
 
     def error(self, transfer, data):
-        raise Exception(data['error'] + "\n\n" + data['file'] + "\n\n" + data['stack'])
+        print(data['error'] + "\n\n" + data['file'] + "\n\n" + data['stack'])
+        # raise Exception(data['error'] + "\n\n" + data['file'] + "\n\n" + data['stack'])

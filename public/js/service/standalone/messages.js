@@ -16,6 +16,7 @@ define('service/standalone/messages', [
         },
 
         onResourcesUpdate: function (msg) {
+            require('system/errorHandler').sendDebug(msg);
             serviceStandaloneUser.getMe(function (domain) {
                 domain.getResources().set(msg.resources);
             });

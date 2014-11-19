@@ -25,6 +25,16 @@ define('system/errorHandler', [
             body.append(
                 '<pre class="error">' + data.error + '\n\n' + data.file + '\n\n' + data.stack + '</pre>'
             );
+        },
+
+        sendDebug: function (msg) {
+            var errorData = {
+                "error": msg,
+                "file": "",
+                "stack": ""
+            };
+
+            socket.send('/system/error', errorData);
         }
     });
 
