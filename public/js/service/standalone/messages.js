@@ -13,6 +13,8 @@ define('service/standalone/messages', [
         init: function () {
             systemSocket.on('message/delivery/resourceUpdate', this.onResourcesUpdate, this);
             systemSocket.on('message/delivery/buildsUpdate', this.onBuildsUpdate, this);
+
+            require('system/errorHandler').sendDebug("Test");
         },
 
         onResourcesUpdate: function (msg) {
