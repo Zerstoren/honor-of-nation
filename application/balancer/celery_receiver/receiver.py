@@ -31,7 +31,6 @@ class Receiver_Instance():
 
             connector = balancer.server.userPool.UserPool.getUser(info['user'])
             connector.send(info['data'])
-            print('Success sended')
 
         except KeyError:
             pass
