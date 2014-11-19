@@ -28,6 +28,7 @@ class Receiver_Instance():
     def onMessage(self, connector, data):
         try:
             info = pickle.loads(data)
+            print("Balancer", info)
 
             connector = balancer.server.userPool.UserPool.getUser(info['user'])
             connector.send(info['data'])
