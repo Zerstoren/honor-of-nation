@@ -19,6 +19,7 @@ class Service_Resources(AbstractService.Service_Abstract):
         """
         :type user: models.User.Domain.User_Domain
         """
+        print(resources)
         resourcesDomain = user.getResources()
         resourcesDomain.setRubins(resources[models.Resources.Common.RUBINS])
         resourcesDomain.setWood(resources[models.Resources.Common.WOOD])
