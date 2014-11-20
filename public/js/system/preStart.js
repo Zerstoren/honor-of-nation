@@ -91,10 +91,10 @@ define('system/preStart', [
     });
 
     serviceMessages.init();
+    systemErrorHandler.init();
 
     systemSocket.connect();
 
-    systemErrorHandler.init();
 
     return {
         map: map,
