@@ -27,6 +27,8 @@ define('system/preStart', [
 
     ViewBlockNoBody
 ) {
+    systemErrorHandler.init();
+
     'use strict';
     var map, no,
         lastRender,
@@ -91,8 +93,6 @@ define('system/preStart', [
     });
 
     serviceMessages.init();
-    systemErrorHandler.init();
-
     systemSocket.connect();
 
 
