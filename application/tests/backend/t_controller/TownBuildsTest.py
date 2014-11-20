@@ -189,7 +189,7 @@ class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
             'level': 1
         })
 
-        time.sleep(2)
+        time.sleep(3)
 
         builds = self.town.getBuilds()
         builds.extract(True)
