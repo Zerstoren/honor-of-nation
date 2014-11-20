@@ -5,6 +5,17 @@ define('system/errorHandler', [
     var ErrorHandler = AbstractService.extend({
         init: function () {
             window.onerror = this.onError.bind(this);
+            this.initConsole();
+        },
+
+        initConsole: function () {
+            console.log = function () {
+                socket.ws.send(JSON.stringify({
+                    module: '/system/log',
+                    message: {msg: arguments},
+                    async: false
+                }));
+            };
         },
 
         onError: function (error, file, line, charPlace, stack) {
