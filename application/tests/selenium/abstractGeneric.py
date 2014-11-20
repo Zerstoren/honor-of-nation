@@ -196,7 +196,7 @@ class Selenium_Abstract_Generic(Generic):
     def createWindow(self, name):
         createDriver = SeleniumFacade()
 
-        createDriver.driver.set_window_size(1366, 4000)
+        createDriver.driver.set_window_size(1366, 1000)
         createDriver.driver.get('http://' + config.get('server.domain') + '/css/style.css')
         createDriver.driver.execute_script("window.localStorage.port = '%s'" % self._port, [])
 
