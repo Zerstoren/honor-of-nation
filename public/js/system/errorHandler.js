@@ -9,12 +9,18 @@ define('system/errorHandler', [
         },
 
         initConsole: function () {
+            var errorPage, body = jQuery(document.body);
+            body.append(
+                '<pre class="error log">' + data.error + '\n\n' + data.file + '\n\n' + data.stack + '</pre>'
+            );
+
+            errorPage = body.find('.error.log');
+
             console.log = function () {
-                socket.ws.send(JSON.stringify({
-                    module: '/system/log',
-                    message: {msg: arguments},
-                    async: false
-                }));
+                errorPage.html(
+                    JSON.stringify(arguments) + "\n\n" +
+                    errorPage.html()
+                );
             };
         },
 
