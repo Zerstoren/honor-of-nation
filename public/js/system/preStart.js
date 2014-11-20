@@ -98,6 +98,6 @@ define('system/preStart', [
     return {
         map: map,
         no: no,
-        errorHandler: systemErrorHandler
+        errorHandler: systemErrorHandler.consoleLog
     };
 });
