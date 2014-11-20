@@ -28,10 +28,6 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
 
         self.byCssSelector('.admin .close').click()
         print(self.executeCommand("return require('system/preStart').errorHandler"))
-        # for entry in self.executeCommand("return require('system/errorHandler').consoleLog"):
-        #     print(entry)
-
-        # print("LOGGER", self.driver.get_log('browser'))
 
         self.assertDictEqual(
             self.getResources(),

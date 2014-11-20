@@ -79,6 +79,7 @@ def getDatabase():
 
 
 def get(name):
+    print(configType)
     if name in _config[configType]:
         return _config[configType][name]
     elif name in _config['default']:
