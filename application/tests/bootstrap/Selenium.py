@@ -8,7 +8,6 @@ from selenium import webdriver
 class SeleniumFacade(object):
     def __init__(self):
         self.driver = None
-        print(config.configType)
         if config.get('testing.browser') == 'Chrome':
             chromeConfig = {
                 'loggingPrefs': {
