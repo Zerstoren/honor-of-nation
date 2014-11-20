@@ -10,12 +10,27 @@ class SeleniumFacade(object):
         self.driver = None
 
         if config.get('testing.browser') == 'Chrome':
+            chromeConfig = {
+                'loggingPrefs': {
+                    'browser':'ALL'
+                }
+            }
+
             chromedriver = config.get('testing.browser.chrome.chromedriver')
             os.environ["webdriver.chrome.driver"] = chromedriver
-            self.driver = webdriver.Chrome(chromedriver)
+            self.driver = webdriver.Chrome(
+                chromedriver,
+                desired_capabilities=chromeConfig
+            )
 
         elif config.get('testing.browser') == 'Firefox':
-            self.driver = webdriver.Firefox()
+            firefoxConfig = {
+                'loggingPrefs': {
+                    'browser':'ALL'
+                }
+            }
+
+            self.driver = webdriver.Firefox(capabilities=firefoxConfig)
 
         else:
             raise Exception('Selenium browser is not selected')

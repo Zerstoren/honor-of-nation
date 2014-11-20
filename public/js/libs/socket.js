@@ -115,7 +115,7 @@ define('libs/socket', function() {
 
         var data, asyncName = false;
 
-        window.console.log('%cSend message: %s - %o', 'color: #aaa;', module, message);
+        window.console.log('%cSend message: ' + module + ' - %o', 'color: #aaa;', message);
 
         if(asyncFn) {
             this.counter += 1;
@@ -172,7 +172,7 @@ define('libs/socket', function() {
     };
 
     Socket.prototype.$Socket_OnMessageGet = function(message) {
-        window.console.log('%cGet message: %s - %o', 'color: #aaa;',  message.module, message.message);
+        window.console.log('%cGet message: ' + message.module + ' - %o', 'color: #aaa;',  message.message);
 
         if (message.message.done) {
             this.trigger('message' + message.module, message.message);
