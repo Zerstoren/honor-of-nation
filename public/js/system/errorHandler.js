@@ -13,7 +13,6 @@ define('system/errorHandler', [
             var self = this, consoleDump = console.log;
             console.log = function () {
                 self.consoleLog.push(arguments);
-//                consoleDump()
             };
         },
 

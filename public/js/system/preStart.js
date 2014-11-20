@@ -1,7 +1,7 @@
 define('system/preStart', [
     'system/bootstrap',
     'system/socket',
-    'system/errorHandler',
+//    'system/errorHandler',
     'view/block/error',
     'view/elements/ractive-helper',
     'service/standalone/user',
@@ -15,7 +15,7 @@ define('system/preStart', [
 ], function (
     systemBootstrap,
     systemSocket,
-    systemErrorHandler,
+//    systemErrorHandler,
     viewBlockError,
     viewElementsRactiveHelper,
     serviceUser,
@@ -91,13 +91,12 @@ define('system/preStart', [
     });
 
     serviceMessages.init();
-    systemErrorHandler.init();
+//    systemErrorHandler.init();
 
     systemSocket.connect();
 
     return {
         map: map,
-        no: no,
-        errorHandler: systemErrorHandler.consoleLog
+        no: no
     };
 });
