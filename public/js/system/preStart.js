@@ -98,6 +98,7 @@ define('system/preStart', [
 
     return {
         map: map,
-        no: no
+        no: no,
+        errorHandler: systemErrorHandler
     };
 });

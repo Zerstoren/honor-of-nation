@@ -27,7 +27,7 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
         self.operationIsSuccess()
 
         self.byCssSelector('.admin .close').click()
-        print(self.executeCommand("return require('system/errorHandler').consoleLog"))
+        print(self.executeCommand("return require('system/preStart').errorHandler.consoleLog"))
         # for entry in self.executeCommand("return require('system/errorHandler').consoleLog"):
         #     print(entry)
 
