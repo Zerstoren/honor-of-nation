@@ -3,25 +3,18 @@ define('system/errorHandler', [
 ], function (socket) {
 
     var ErrorHandler = AbstractService.extend({
+        consoleLog: [],
         init: function () {
             window.onerror = this.onError.bind(this);
             this.initConsole();
         },
 
         initConsole: function () {
-//            var errorPage, body = jQuery(document.body);
-//            body.append(
-//                '<pre class="error log"></pre>'
-//            );
-//
-//            errorPage = body.find('.error.log');
-//
-//            console.log = function () {
-//                errorPage.html(
-//                    JSON.stringify(arguments) + "\n\n" +
-//                    errorPage.html()
-//                );
-//            };
+            var self = this, consoleDump = console.log;
+            console.log = function () {
+                self.consoleLog.push(arguments);
+//                consoleDump()
+            };
         },
 
         onError: function (error, file, line, charPlace, stack) {

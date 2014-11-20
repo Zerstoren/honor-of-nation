@@ -28,8 +28,9 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
 
         self.byCssSelector('.admin .close').click()
 
-        for entry in self.driver.get_log('browser'):
+        for entry in self.executeCommand("return require('system/errorHandler').consoleLog"):
             print(entry)
+
         # print("LOGGER", self.driver.get_log('browser'))
 
         self.assertDictEqual(
