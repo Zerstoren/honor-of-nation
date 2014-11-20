@@ -19,8 +19,7 @@ class SeleniumFacade(object):
             chromedriver = config.get('testing.browser.chrome.chromedriver')
             os.environ["webdriver.chrome.driver"] = chromedriver
             self.driver = webdriver.Chrome(
-                chromedriver,
-                desired_capabilities=chromeConfig
+                chromedriver
             )
 
         elif config.get('testing.browser') == 'Firefox':
