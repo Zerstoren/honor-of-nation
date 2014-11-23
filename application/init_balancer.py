@@ -38,5 +38,5 @@ if __name__ == '__main__':
     try:
         ioloop.IOLoop.instance().start()
 
-    except Exception:
+    except KeyboardInterrupt:
         workers.stop()
