@@ -17,6 +17,7 @@ from tests.bootstrap.Selenium import SeleniumFacade
 import time
 import sys
 import subprocess
+import signal
 import random
 
 # Create alias for most popular actions
@@ -83,7 +84,7 @@ class Selenium_Abstract_Generic(Generic):
 
         if self.core.remove_core:
             self.closeWindow('ALL')
-            self.managedProcess.terminate()
+            self.managedProcess.send_signal(signal.SIGKILL)
             self.managedProcess = None
 
     def _executeTestPart(self, function, outcome, isTest=False):
