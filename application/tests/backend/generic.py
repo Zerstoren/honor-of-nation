@@ -28,7 +28,7 @@ class Backend_Generic(Generic):
         if self._useCelery:
             imp.reload(init_celery)
 
-            self._managedProcess = subprocess.Popen(
+            self._managedProcessCelery = subprocess.Popen(
                 [
                     'python3',
                     '-B',
@@ -42,7 +42,7 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            self._managedProcess.send_signal(signal.SIGKILL)
+            self._managedProcessCelery.send_signal(signal.SIGKILL)
 
 
         super().tearDown()
