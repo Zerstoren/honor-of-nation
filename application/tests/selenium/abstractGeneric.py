@@ -150,6 +150,7 @@ class Selenium_Abstract_Generic(Generic):
 
         while True:
             active = self.executeCommand("return require('system/socket').counter")
+            print(active)
 
             if active != None and active <= 0:
                 break
