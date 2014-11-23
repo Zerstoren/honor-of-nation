@@ -4,6 +4,8 @@ import subprocess
 
 import sys
 import config
+import os
+import signal
 
 import init_celery
 
@@ -40,8 +42,11 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            print("Try kill %s" % str(self._managedProcess.pid))
+            pid = str(self._managedProcess.pid)
+            print("TRY KILL %s" % pid)
             self._managedProcess.terminate()
+            os.kill(signal.SIGKILL, int(pid))
+
 
         super().tearDown()
 
