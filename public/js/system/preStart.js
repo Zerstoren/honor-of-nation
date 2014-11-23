@@ -1,6 +1,7 @@
 define('system/preStart', [
     'system/bootstrap',
     'system/socket',
+    'system/errorHandler',
 
     'view/block/error',
     'view/elements/ractive-helper',
@@ -15,6 +16,7 @@ define('system/preStart', [
 ], function (
     systemBootstrap,
     systemSocket,
+    systemErrorHandler,
 
     viewBlockError,
     viewElementsRactiveHelper,
@@ -68,6 +70,7 @@ define('system/preStart', [
     }
 
     systemSocket.on('message', function (message) {
+        systemErrorHandler.sendDebug(message)
         if (message.done === false || message.done === undefined) {
             if (message.error) {
                 viewBlockError.showErrorBox(message.error);
@@ -91,7 +94,7 @@ define('system/preStart', [
     });
 
     serviceMessages.init();
-//    systemErrorHandler.init();
+    systemErrorHandler.init();
 
     systemSocket.connect();
 
