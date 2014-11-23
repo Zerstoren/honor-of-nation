@@ -27,7 +27,6 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
         self.operationIsSuccess()
 
         self.byCssSelector('.admin .close').click()
-        print(self.executeCommand("return require('system/socket').logsend"))
 
         self.assertDictEqual(
             self.getResources(),
