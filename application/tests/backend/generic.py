@@ -1,4 +1,3 @@
-from distutils.command.config import config
 from tests.generic import Generic
 
 import subprocess

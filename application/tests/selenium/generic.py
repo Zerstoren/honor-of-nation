@@ -1,7 +1,5 @@
 from . import abstractGeneric
 
-import lxml.html
-import json
 
 class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
     def login(self, userDomain=None):
