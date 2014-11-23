@@ -78,4 +78,4 @@ class Process():
         if self.celery:
             pid = self.celery.pid
             self.celery.terminate()
-            os.kill(signal.SIGKILL, pid)
+            os.kill(pid, signal.SIGKILL)

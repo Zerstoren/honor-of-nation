@@ -45,7 +45,7 @@ class Backend_Generic(Generic):
             pid = str(self._managedProcess.pid)
             print("TRY KILL %s" % pid)
             self._managedProcess.terminate()
-            os.kill(signal.SIGKILL, int(pid))
+            os.kill(int(pid), signal.SIGKILL)
 
 
         super().tearDown()
