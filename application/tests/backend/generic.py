@@ -25,7 +25,7 @@ class Backend_Generic(Generic):
 
         if self._useCelery:
             imp.reload(init_celery)
-
+            print('%s/init_celery.py' % path)
             self._managedProcess = subprocess.Popen(
                 [
                     'python3',
