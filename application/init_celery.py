@@ -26,6 +26,7 @@ def message(message, user):
 
 @app.task(serializer='json', name='init_celery.builds')
 def builds(message):
+    print("BUILD COMPLETE", message)
     import controller.TownBuildsController
     celeryController = controller.TownBuildsController.CeleryPrivateController()
     celeryController.buildComplete(message)
