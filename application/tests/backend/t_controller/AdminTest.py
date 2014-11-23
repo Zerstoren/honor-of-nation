@@ -262,18 +262,8 @@ class Backend_Controller_AdminTest(Backend_Controller_Generic):
 
         resources = user.getResources()
 
-        # Message delivery
-        message = transfer.getLastMessage()['message']
-        self.assertTrue(message['done'])
-        self.assertEqual(resources.getRubins(), message['resources']['rubins'])
-        self.assertEqual(resources.getWood(), message['resources']['wood'])
-        self.assertEqual(resources.getSteel(), message['resources']['steel'])
-        self.assertEqual(resources.getStone(), message['resources']['stone'])
-        self.assertEqual(resources.getEat(), message['resources']['eat'])
-        self.assertEqual(resources.getGold(), message['resources']['gold'])
-
         # Controller send
-        message = transfer.getLastMessage(1)['message']
+        message = transfer.getLastMessage()['message']
         self.assertTrue(message['done'])
         self.assertEqual(resources.getRubins(), 10)
         self.assertEqual(resources.getWood(), 100)

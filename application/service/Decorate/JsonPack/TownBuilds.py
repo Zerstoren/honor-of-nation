@@ -44,7 +44,7 @@ class Decorate():
             Common.BUILD_HIGH_WALL: domain.getHighWall()
         }
 
-    def get(self, townDomain, user):
+    def get(self, townDomain, user=None):
         townBuilds = super().get(townDomain, user)
 
         if townDomain.getType() == models.Town.Common.VILLAGE:
@@ -54,7 +54,7 @@ class Decorate():
         elif townDomain.getType() == models.Town.Common.CASTLE:
             return self._packCastle(townBuilds)
 
-    def getQueue(self, townDomain, user):
+    def getQueue(self, townDomain, user=None):
         queue = super().getQueue(townDomain, user)
         result = []
 

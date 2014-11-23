@@ -42,6 +42,12 @@ def handle(fn):
                 'traceback': traceback.format_exc()
             })
 
+        except httpCodes.Page403 as e:
+            transfer.send('/error', {
+                'done': False,
+                'error': str(e)
+            })
+
         except httpCodes.HttpError as e:
             print(traceback.format_exc())
             transfer.send('/error', {

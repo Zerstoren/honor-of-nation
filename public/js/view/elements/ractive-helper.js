@@ -69,6 +69,26 @@ define('view/elements/ractive-helper', [
                 }
 
                 return number.substr(0, mod) + ' ' + (joinArray.join('k'));
+            },
+
+            fromIntToTime: function (time) {
+                var content = '';
+
+                if(time / 3600 >= 1) {
+                    content += parseInt(time / 3600, 10) + ' час. ';
+                    time = time % 3600;
+                }
+
+                if(time / 60 >= 1) {
+                    content += parseInt(time / 60, 10) + ' мин. ';
+                    time = time % 60;
+                }
+
+                if(time > 0) {
+                    content  += time + ' сек.';
+                }
+
+                return content;
             }
         }
     };

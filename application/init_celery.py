@@ -2,6 +2,12 @@ from celery import Celery
 import config
 import sys
 
+from tornado import ioloop
+
+import balancer.celery_sender.sender
+
+import threading
+
 sys.argv = [sys.argv[0]]
 
 app = Celery(
@@ -11,15 +17,24 @@ app = Celery(
 )
 
 
+def message(message, user):
+    balancer.celery_sender.sender.Respondent.writeMessage(
+        message,
+        str(user.getId())
+    )
+
+
 @app.task(serializer='json', name='init_celery.builds')
 def builds(message):
-    import controller.CeleryController
-    celeryController = controller.CeleryController.CeleryPrivateController()
-
+    import controller.TownBuildsController
+    celeryController = controller.TownBuildsController.CeleryPrivateController()
     celeryController.buildComplete(message)
 
 
 if __name__ == '__main__':
+    def ioLoop():
+        ioloop.IOLoop.instance().start()
+
     if 1 in sys.argv:
         sys.argv[1] = 'worker'
     else:
@@ -36,4 +51,8 @@ if __name__ == '__main__':
         else:
             sys.argv.append('INFO')
 
-    app.start()
+    try:
+        threading.Thread(target=ioLoop).start()
+        app.start()
+    except KeyboardInterrupt:
+        ioloop.IOLoop.instance().stop()

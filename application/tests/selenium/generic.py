@@ -1,7 +1,5 @@
 from . import abstractGeneric
 
-import lxml.html
-import json
 
 class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
     def login(self, userDomain=None):
@@ -15,6 +13,7 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
 
         self.go('/')
         self.waitForElement('.mpi__resource_wrapper', 'css')
+        self.waitForUserLogin()
 
         return user
 
@@ -57,16 +56,16 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
     # def getPopup(self):
     #     return self.byXPath('//div[@class=\'popup\' and contains(@style, \'block\')]')
     #
-    # def _getResources(self):
-    #     resourceBlock = self.byCssSelector('.resources')
-    #     return {
-    #         "rubins": int(resourceBlock.byCss('.rubins').get_attribute('ng-hint').replace(' ', '')),
-    #         "steel": int(resourceBlock.byCss('.steel').get_attribute('ng-hint').replace(' ', '')),
-    #         "eat": int(resourceBlock.byCss('.eat').get_attribute('ng-hint').replace(' ', '')),
-    #         "stone": int(resourceBlock.byCss('.stone').get_attribute('ng-hint').replace(' ', '')),
-    #         "wood": int(resourceBlock.byCss('.wood').get_attribute('ng-hint').replace(' ', '')),
-    #         "gold": int(resourceBlock.byCss('.gold').get_attribute('ng-hint').replace(' ', '')),
-    #     }
+    def getResources(self, fromBlock='.mpi__header .resources'):
+        resourceBlock = self.byCssSelector(fromBlock)
+        return {
+            "rubins": int(resourceBlock.byCss('.rubins').get_attribute('data-hint').replace(' ', '')),
+            "steel": int(resourceBlock.byCss('.steel').get_attribute('data-hint').replace(' ', '')),
+            "eat": int(resourceBlock.byCss('.eat').get_attribute('data-hint').replace(' ', '')),
+            "stone": int(resourceBlock.byCss('.stone').get_attribute('data-hint').replace(' ', '')),
+            "wood": int(resourceBlock.byCss('.wood').get_attribute('data-hint').replace(' ', '')),
+            "gold": int(resourceBlock.byCss('.gold').get_attribute('data-hint').replace(' ', '')),
+        }
     #
     # def _setCameraMapPosition(self, x, y):
     #     self.serviceAction('$map', 'service.setCameraPosition(%d, %d)' % (x, y))

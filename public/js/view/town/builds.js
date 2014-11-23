@@ -1,22 +1,36 @@
 define('view/town/builds', [
-    'view/elements/popup'
+    'view/elements/popup',
+
+    'service/standalone/math',
+
+    'system/config',
+    'system/interval'
 ], function (
-    ViewElementsPopup
+    ViewElementsPopup,
+
+    serviceStandaloneMath,
+
+    config,
+    interval
 ) {
     var builds, buildsView;
 
     buildsView = AbstractView.extend({
         events: {
-            'click .build_container .btn a': 'onCreate'
+            'click .build_container .btn': 'onCreate',
+            'click .buildInProgress .cancel': 'onCancelBuild',
+            'click .triangle .cancel': 'onCancelBuild'
         },
 
         initialize: function () {
             this.template = this.getTemplate('town/builds/builds');
             this.setPartials({
-                'buildItem': 'town/builds/buildItem'
+                'buildItem': 'town/builds/buildItem',
+                'buildProgress': 'town/builds/buildsInProgress'
             });
 
             this.initRactive();
+            interval.on(interval.EVERY_1_SEC, this.updateQueue, this);
         },
 
         render: function (holder, currentTown) {
@@ -31,31 +45,37 @@ define('view/town/builds', [
             );
 
             this.popupQueue = new ViewElementsPopup(
-                this.$el.find('.triangle')
+                this.$el, {
+                    timeout: 100,
+                    liveTarget: '.triangle',
+                    ignoreTop: true
+                }
             );
+
+            this.currentTown.on('change:builds', this.updateBuilds, this);
+            this.currentTown.on('change:queue', this.onQueueUpdate, this);
         },
 
         update: function (buildsList, queue) {
-            this.builds = buildsList || this.builds;
-            this.queue = queue || this.queue;
-
-            this.setBuilds();
-            this.setQueue();
+            this.currentTown.set({
+                builds: buildsList,
+                queue: queue
+            });
         },
 
-        setBuilds: function () {
+        updateBuilds: function () {
             var key,
-                buildsList = this.builds,
+                buildsList = this.currentTown.get('builds'),
                 result = [];
 
             for (key in buildsList) {
                 if (buildsList.hasOwnProperty(key)) {
                     result.push({
                         'key': key,
-                        'name': builds[key]['name'],
-                        'price': builds[key]['price'],
-                        'desc': builds[key]['desc'],
-                        'maxLevel': builds[key]['maxLevel'][this.currentTown.get('type')],
+                        'name': builds[key].name,
+                        'price': serviceStandaloneMath.getBuildPrice(builds[key].price, this._getMaximumLevel(key)),
+                        'desc': builds[key].desc,
+                        'maxLevel': builds[key].maxLevel[this.currentTown.get('type')],
                         'level': buildsList[key],
                         'levelWithQueue': this._getMaximumLevel(key)
                     });
@@ -65,8 +85,47 @@ define('view/town/builds', [
             this.set('builds', result);
         },
 
-        setQueue: function () {
+        updateQueue: function () {
+            var key,
+                i = 0,
+                item,
+                tmp,
+                buildsQueue = this.currentTown.get('queue'),
+                result = [],
+                firstSection = {};
 
+            for (key in buildsQueue) {
+                if (buildsQueue.hasOwnProperty(key)) {
+                    item = buildsQueue[key];
+
+                    tmp = {
+                        name: builds[item.key].name,
+                        key: item.key,
+                        level: item.level,
+                        timeToCreate: item.complete_after
+                    };
+
+                    if (i === 0) {
+                        tmp.timeToComplete = item.complete_after - (config.getTime() - item.start_at);
+                        tmp.percentComplete = 100 - parseInt(((config.getTime() - item.start_at) / item.complete_after) * 100, 10);
+
+                        firstSection = tmp;
+                    } else {
+                        result.push(tmp);
+                    }
+
+                    i += 1;
+                }
+            }
+
+            if (_.isEmpty(firstSection)) {
+                firstSection = false;
+            }
+
+            result.reverse();
+
+            this.set('firstSection', firstSection);
+            this.set('queue', result);
         },
 
         onCreate: function (e) {
@@ -77,16 +136,30 @@ define('view/town/builds', [
             return false;
         },
 
+        onCancelBuild: function (e) {
+            this.trigger(
+                'cancelBuild',
+                jQuery(e.target).attr('data-key'),
+                parseInt(jQuery(e.target).attr('data-level'), 10)
+            );
+        },
+
+        onQueueUpdate: function () {
+            this.updateQueue();
+            this.updateBuilds();
+        },
+
         _getMaximumLevel: function (key) {
             var i,
                 itemQueue,
-                currentLevel = this.builds[key];
+                currentLevel = this.currentTown.get('builds')[key],
+                queue = this.currentTown.get('queue');
 
-            for (i = 0; i < this.queue.length; i++) {
-                itemQueue = this.queue[i];
+            for (i = 0; i < queue.length; i++) {
+                itemQueue = queue[i];
 
-                if (itemQueue['key'] === key) {
-                    currentLevel = itemQueue['level'];
+                if (itemQueue.key === key) {
+                    currentLevel = itemQueue.level;
                 }
             }
 

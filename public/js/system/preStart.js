@@ -1,9 +1,11 @@
 define('system/preStart', [
     'system/bootstrap',
     'system/socket',
+
     'view/block/error',
     'view/elements/ractive-helper',
     'service/standalone/user',
+    'service/standalone/messages',
 
     'view/block/map/header',
     'view/block/map/footer',
@@ -13,9 +15,11 @@ define('system/preStart', [
 ], function (
     systemBootstrap,
     systemSocket,
+
     viewBlockError,
     viewElementsRactiveHelper,
     serviceUser,
+    serviceMessages,
 
     ViewBlockMapHeader,
     ViewBlockMapFooter,
@@ -85,6 +89,9 @@ define('system/preStart', [
         viewBlockError._connectionIsEstablished();
         serviceUser.login();
     });
+
+    serviceMessages.init();
+//    systemErrorHandler.init();
 
     systemSocket.connect();
 

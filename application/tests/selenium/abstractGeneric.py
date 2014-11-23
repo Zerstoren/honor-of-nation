@@ -53,8 +53,8 @@ class Selenium_Abstract_Generic(Generic):
 
         self.driver = None
         self.driversDict = {}
-        self._port = str(random.randint(10000, 65000))
-        self._balancer_port = str(random.randint(10000, 65000))
+        self._port = 36450
+        self._balancer_port = 36451
 
         self.createWindow('main')
         self.useWindow('main')
@@ -62,11 +62,16 @@ class Selenium_Abstract_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
+        basePath = sys.path[1]
+
+        if config.configType == 'jankins_test':
+            basePath = sys.path[0]
+
         self.managedProcess = subprocess.Popen([
             'python3',
             '-B',
-            '%s/init_balancer.py' % sys.path[1],
-            '--type=test_server',
+            '%s/init_balancer.py' % basePath,
+            '--type=%s' % config.configType,
             '--database=%s' % self.core.database_name,
             '--port=%s' % self._port,
             '--balancer_port=%s' % self._balancer_port
@@ -144,20 +149,42 @@ class Selenium_Abstract_Generic(Generic):
         sleepTime = 0
 
         while True:
-            active = self.executeCommand("return pack('COM.Socket').Counter")
+            active = self.executeCommand("return require('system/socket').counter;")
 
-            if active <= 0:
+            if active != None and active <= 0:
                 break
             elif sleepTime >= n:
-                break
+                raise TimeoutException("Very long wait for socket")
             else:
-                sleepTime += 50
-                self.sleep(0.05)
+                sleepTime += 500
+                self.sleep(0.5)
 
-        self.sleep(0.2)
 
     def go(self, path):
         self.driver.get('http://' + config.get('server.domain') + path)
+
+    def goAppUrl(self, path):
+        self.executeCommand("""
+        requirejs(['system/route'], function(router){
+            router.navigate('%s')
+        });
+        """ % path)
+
+    def waitForUserLogin(self):
+        def getUserLogin():
+            return self.executeCommand("return require('service/standalone/user').me.get('login')")
+
+        i = 0
+        while True:
+            i += 1
+            s = getUserLogin()
+
+            if s != None:
+                break
+            elif i >= 100:
+                raise TimeoutException('Can`t login')
+
+            self.sleep(0.05)
 
     def getUrl(self):
         # TODO Change for native driver method
@@ -169,7 +196,7 @@ class Selenium_Abstract_Generic(Generic):
     def createWindow(self, name):
         createDriver = SeleniumFacade()
 
-        createDriver.driver.set_window_size(1366, 4000)
+        createDriver.driver.set_window_size(1366, 1000)
         createDriver.driver.get('http://' + config.get('server.domain') + '/css/style.css')
         createDriver.driver.execute_script("window.localStorage.port = '%s'" % self._port, [])
 

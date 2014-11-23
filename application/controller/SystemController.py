@@ -18,3 +18,10 @@ class MainController():
                 'chunk_size': int(config.get('map.chunk'))
             }
         })
+
+    def error(self, transfer, data):
+        print(str(data['error']) + "\n\n" + str(data['file']) + "\n\n" + str(data['stack']))
+        # raise Exception(data['error'] + "\n\n" + data['file'] + "\n\n" + data['stack'])
+
+    def log(self, transfer, data):
+        print("LOG: ", data)

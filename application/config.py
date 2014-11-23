@@ -54,6 +54,9 @@ if options.balancer_port:
     _config['default']['balancer.backend.server.port'] = options.balancer_port
     _config['default']['balancer.backend.client.port'] = options.balancer_port
 
+    _config['default']['balancer.celery.server.port'] = str(int(options.balancer_port) + 1)
+    _config['default']['balancer.celery.client.port'] = str(int(options.balancer_port) + 1)
+
 if options.type:
     configType = options.type
 

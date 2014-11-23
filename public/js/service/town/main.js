@@ -2,6 +2,7 @@ define('service/town/main', [
     'system/preStart',
     'system/route',
     'model/town',
+    'factory/town',
 
     'service/town/builds',
     'service/town/soldiersList',
@@ -13,6 +14,7 @@ define('service/town/main', [
     preStart,
     systemRoute,
     ModelTown,
+    factoryTown,
 
     ServiceTownBuilds,
     ServiceTownSoldiersList,
@@ -30,12 +32,20 @@ define('service/town/main', [
         },
 
         render: function (townId) {
+            var townPoolDomain = factoryTown.getFromPool(townId);
             this.holder = preStart.map.body.getHolder();
 
             this.mainView.render(this.holder);
 
-            this.currentDomain = new ModelTown();
-            this.currentDomain.set('id', townId);
+            if (townPoolDomain) {
+                this.currentDomain = townPoolDomain;
+            } else {
+                this.currentDomain = new ModelTown();
+                this.currentDomain.set('_id', townId);
+
+                factoryTown.pushToPool(this.currentDomain);
+            }
+
             this.currentDomain.getById(this.onTownLoad.bind(this));
 
             this.serviceTownBuilds.render(

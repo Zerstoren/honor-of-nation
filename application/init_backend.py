@@ -16,7 +16,6 @@ from tornado import ioloop
 
 def handler(content, userId):
     transfer = UserTransfer()
-    transfer.connect()
 
     if userId:
         transfer.setUserById(userId)

@@ -31,5 +31,5 @@ define('service/admin/town', [
                 this.townView.successSave(townDomain);
             }.bind(this));
         }
-    })
+    });
 });

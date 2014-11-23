@@ -6,17 +6,18 @@ import helpers.mongo
 
 import json
 
+import init_celery
+
 
 class UserNotSet(Page401):
     pass
 
 
 class UserTransfer(object):
-    socket = None
     _user = None
     async = None
 
-    def connect(self):
+    def __init__(self):
         self.collect = False
         self.pool = []
 
@@ -44,7 +45,7 @@ class UserTransfer(object):
 
         return send
 
-    def send(self, module, message):
+    def send(self, module, message, urgent=False):
         """
         :type module: string
         :type message: dict
@@ -60,8 +61,8 @@ class UserTransfer(object):
 
         self.rmAsync()
 
-        if self.collect is False:
-            self.socket.write_message(json.dumps(sendData))
+        if self.collect is False or urgent is True:
+            init_celery.message(sendData, self.getUser())
         else:
             self.pool.append(sendData)
 
