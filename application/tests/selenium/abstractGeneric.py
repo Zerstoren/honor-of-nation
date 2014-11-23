@@ -149,7 +149,7 @@ class Selenium_Abstract_Generic(Generic):
         sleepTime = 0
 
         while True:
-            active = self.executeCommand("return require('system/socket').counter")
+            active = self.executeCommand("return require('system/socket').counter;")
             print(active)
 
             if active != None and active <= 0:
