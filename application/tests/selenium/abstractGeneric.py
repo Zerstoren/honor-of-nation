@@ -53,8 +53,8 @@ class Selenium_Abstract_Generic(Generic):
 
         self.driver = None
         self.driversDict = {}
-        self._port = str(random.randint(10000, 65000))
-        self._balancer_port = str(random.randint(10000, 65000))
+        self._port = 36450
+        self._balancer_port = 36451
 
         self.createWindow('main')
         self.useWindow('main')
@@ -156,8 +156,8 @@ class Selenium_Abstract_Generic(Generic):
             elif sleepTime >= n:
                 raise TimeoutException("Very long wait for socket")
             else:
-                sleepTime += 50
-                self.sleep(0.05)
+                sleepTime += 500
+                self.sleep(0.5)
 
 
     def go(self, path):
