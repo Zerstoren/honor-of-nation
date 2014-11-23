@@ -11,8 +11,8 @@ define('service/standalone/messages', [
 ) {
     var Messages = AbstractService.extend({
         init: function () {
-            systemSocket.on('message/delivery/resourceUpdate', this.onResourcesUpdate, this);
-            systemSocket.on('message/delivery/buildsUpdate', this.onBuildsUpdate, this);
+            systemSocket.on('message:/delivery/resourceUpdate', this.onResourcesUpdate, this);
+            systemSocket.on('message:/delivery/buildsUpdate', this.onBuildsUpdate, this);
         },
 
         onResourcesUpdate: function (msg) {
