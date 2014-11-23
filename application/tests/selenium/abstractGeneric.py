@@ -84,7 +84,7 @@ class Selenium_Abstract_Generic(Generic):
 
         if self.core.remove_core:
             self.closeWindow('ALL')
-            self.managedProcess.terminate()
+            self.managedProcess.send_signal(signal.SIGINT)
             self.managedProcess = None
 
     def _executeTestPart(self, function, outcome, isTest=False):
