@@ -17,6 +17,16 @@ class Process():
         if config.get('balancer.celery') == 'True':
             self._startCelery()
 
+        def sigterm_handler(_signo, _stack_frame):
+            self.stop()
+
+        for i in [x for x in dir(signal) if x.startswith("SIG")]:
+            try:
+                signum = getattr(signal,i)
+                signal.signal(signum, sigterm_handler)
+            except Exception:
+                print("Skipping %s"%i)
+
     def _startBackend(self):
         workers = int(config.get('balancer.backend.workers'))
         debug = config.get('balancer.backend.debug') == 'True'
@@ -77,5 +87,5 @@ class Process():
 
         if self.celery:
             pid = self.celery.pid
-            self.celery.terminate()
-            os.kill(pid, signal.SIGKILL)
+            self.celery.send_signal(signal.SIGKILL)
+
