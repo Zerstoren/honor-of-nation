@@ -40,7 +40,7 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            print("Celery terminate")
+            print("Try kill %s" % str(self._managedProcess))
             self._managedProcess.terminate()
 
         super().tearDown()
