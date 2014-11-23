@@ -3,6 +3,7 @@ import sys
 import config
 
 import os
+import signal
 
 
 class Process():
@@ -75,4 +76,6 @@ class Process():
             i.terminate()
 
         if self.celery:
+            pid = self.celery.pid
             self.celery.terminate()
+            os.kill(signal.SIGKILL, pid)
