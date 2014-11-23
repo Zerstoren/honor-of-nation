@@ -44,6 +44,8 @@ class Backend_Generic(Generic):
                 stdout=sys.stdout if self.celeryDebug else subprocess.PIPE,
                 stderr=sys.stderr if self.celeryDebug else subprocess.PIPE
             )
+            import time
+            time.sleep(4)
 
     def tearDown(self):
         if self._useCelery:
