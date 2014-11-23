@@ -24,7 +24,15 @@ class Backend_Generic(Generic):
 
 
         if self._useCelery:
+            self.celeryDebug = True
             imp.reload(init_celery)
+            print([
+                    'python3',
+                    '-B',
+                    '%s/init_celery.py' % path,
+                    '--type=%s' % config.configType,
+                    '--database=%s' % self.core.database_name
+                ])
             self._managedProcess = subprocess.Popen(
                 [
                     'python3',
