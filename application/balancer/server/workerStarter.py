@@ -31,7 +31,7 @@ class Process():
 
             process = subprocess.Popen(
                 args,
-                stdout=sys.stdout if debug else subprocess.PIPE,
+                stdout=subprocess.STDOUT if debug else subprocess.STDOUT,
                 stderr=sys.stderr if debug else subprocess.PIPE
             )
 
