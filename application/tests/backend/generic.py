@@ -34,6 +34,7 @@ class Backend_Generic(Generic):
                     '--type=%s' % config.configType,
                     '--database=%s' % self.core.database_name
                 ],
+                shell=True,
                 stdout=sys.stdout if self.celeryDebug else subprocess.PIPE,
                 stderr=sys.stderr if self.celeryDebug else subprocess.PIPE
             )

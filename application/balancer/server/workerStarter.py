@@ -31,6 +31,7 @@ class Process():
 
             process = subprocess.Popen(
                 args,
+                shell=True,
                 stdout=sys.stdout if debug else subprocess.PIPE,
                 stderr=sys.stderr if debug else subprocess.PIPE
             )
@@ -72,9 +73,6 @@ class Process():
 
     def stop(self):
         for i in self.workers:
-            if config.get('balancer.backend.debug') == 'True':
-                print(i.communicate()[0])
-
             i.terminate()
 
         if self.celery:
