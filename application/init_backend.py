@@ -6,6 +6,7 @@ from helpers import times
 
 import exceptions.handler
 import system.router
+import system.log
 
 import json
 
@@ -57,7 +58,7 @@ def execute(transfer, data):
 
     exceptions.handler.handle(method)(transfer, data['message'])
 
-    print("%s-\t\t%s sec" % (
+    system.log.debug("%s -\t\t%s sec" % (
         data['module'], str(times.complete())[0:7]
     ))
 

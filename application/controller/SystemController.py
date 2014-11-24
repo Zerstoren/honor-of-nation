@@ -1,5 +1,8 @@
 import config
 import time
+import json
+
+import system.log
 
 
 class MainController():
@@ -20,9 +23,7 @@ class MainController():
         })
 
     def error(self, transfer, data):
-        print(str(data['error']) + "\n\n" + str(data['file']) + "\n\n" + str(data['stack']))
-        # raise Exception(data['error'] + "\n\n" + data['file'] + "\n\n" + data['stack'])
+        system.log.error("JS ERROR: " + str(data['error']) + "\n\n" + str(data['file']) + "\n\n" + str(data['stack']))
 
     def log(self, transfer, data):
-        import sys, json
-        sys.stdout.write("LOG: " + json.dumps(data) + "\n\n")
+        system.log.warn("JS LOG: " + json.dumps(data))

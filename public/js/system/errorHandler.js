@@ -43,7 +43,7 @@ define('system/errorHandler', [
                 "stack": ""
             };
 
-            socket.send('/system/error', errorData);
+            socket.send('/system/log', errorData);
         }
     });
 

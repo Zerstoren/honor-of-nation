@@ -23,7 +23,6 @@ class Process():
         for i in range(workers):
             args = [
                 'python3',
-                '-B',
                 '%s/init_backend.py' % os.getcwd()
             ]
 
@@ -42,7 +41,6 @@ class Process():
 
         args = [
             'python3',
-            '-B',
             '%s/init_celery.py' % os.getcwd()
         ]
 
