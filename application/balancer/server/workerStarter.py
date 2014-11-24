@@ -31,11 +31,10 @@ class Process():
 
             process = subprocess.Popen(
                 args,
-                stdout=subprocess.STDOUT if debug else subprocess.STDOUT,
+                stdout=sys.stdout if debug else subprocess.PIPE,
                 stderr=sys.stderr if debug else subprocess.PIPE
             )
 
-            print('Server start. Pid ' + str(process.pid))
             self.workers.append(process)
 
     def _startCelery(self):
@@ -73,6 +72,9 @@ class Process():
 
     def stop(self):
         for i in self.workers:
+            if config.get('balancer.backend.debug') == 'True':
+                print(i.communicate()[0])
+
             i.terminate()
 
         if self.celery:
