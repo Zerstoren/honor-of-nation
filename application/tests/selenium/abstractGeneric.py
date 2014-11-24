@@ -69,14 +69,17 @@ class Selenium_Abstract_Generic(Generic):
             basePath = sys.path[0]
 
         self.managedProcess = subprocess.Popen([
-            'python3',
-            '-B',
-            '%s/init_balancer.py' % basePath,
-            '--type=%s' % config.configType,
-            '--database=%s' % self.core.database_name,
-            '--port=%s' % self._port,
-            '--balancer_port=%s' % self._balancer_port
-        ])
+                'python3',
+                '-B',
+                '%s/init_balancer.py' % basePath,
+                '--type=%s' % config.configType,
+                '--database=%s' % self.core.database_name,
+                '--port=%s' % self._port,
+                '--balancer_port=%s' % self._balancer_port
+            ],
+            stdout=sys.stdout,
+            stderr=sys.stderr
+        )
 
     def tearDown(self):
         self.isSetup = False
