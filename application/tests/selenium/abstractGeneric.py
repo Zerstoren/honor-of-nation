@@ -19,6 +19,7 @@ import sys
 import subprocess
 import signal
 import random
+import os
 
 # Create alias for most popular actions
 webdriver.remote.webelement.WebElement.byCss = webdriver.remote.webelement.WebElement.find_element_by_css_selector
@@ -54,8 +55,8 @@ class Selenium_Abstract_Generic(Generic):
 
         self.driver = None
         self.driversDict = {}
-        self._port = 36450
-        self._balancer_port = 36451
+        self._port = random.randint(10000, 65000)
+        self._balancer_port = self._port + 1
 
         self.createWindow('main')
         self.useWindow('main')
@@ -76,21 +77,20 @@ class Selenium_Abstract_Generic(Generic):
                 '--database=%s' % self.core.database_name,
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
-            ],
-            stdout=sys.stdout,
-            stderr=sys.stderr
+            ]
         )
 
     def tearDown(self):
         self.isSetup = False
-        super().tearDown()
 
         if self.core.remove_core:
             self.closeWindow('ALL')
-
             self.managedProcess.send_signal(signal.SIGINT)
-            self.managedProcess.wait()
+
             self.managedProcess = None
+
+        super().tearDown()
+
 
     def _executeTestPart(self, function, outcome, isTest=False):
         def testWrapper(*args, **kwargs):
