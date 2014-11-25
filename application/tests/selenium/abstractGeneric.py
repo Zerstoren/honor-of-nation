@@ -89,7 +89,9 @@ class Selenium_Abstract_Generic(Generic):
             self.closeWindow('ALL')
 
             self.managedProcess.send_signal(signal.SIGINT)
-            self.managedProcess.wait()
+            self.managedProcess.communicate()
+            print(self.managedProcess.returncode)
+
             self.managedProcess = None
 
     def _executeTestPart(self, function, outcome, isTest=False):
