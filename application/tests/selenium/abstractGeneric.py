@@ -89,9 +89,9 @@ class Selenium_Abstract_Generic(Generic):
         if self.core.remove_core:
             self.closeWindow('ALL')
 
-            print("try kill pricess" + str(self.managedProcess.pid))
-            subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid))
-            subprocess.call("kill -TERM " + str(self.managedProcess.pid))
+            print("try kill process" + str(self.managedProcess.pid))
+            subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid), stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.call("kill -TERM " + str(self.managedProcess.pid), stdout=sys.stdout, stderr=sys.stderr)
             print("Kill pricess" + str(self.managedProcess.pid))
 
             # self.managedProcess.send_signal(signal.SIGINT)
