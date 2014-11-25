@@ -68,6 +68,7 @@ class Selenium_Abstract_Generic(Generic):
         if config.configType == 'jankins_test':
             basePath = sys.path[0]
 
+        print("Start process")
         self.managedProcess = subprocess.Popen([
                 'python3',
                 '-B',
@@ -80,6 +81,7 @@ class Selenium_Abstract_Generic(Generic):
             stdout=sys.stdout,
             stderr=sys.stderr
         )
+        print("Process with pid " + str(self.managedProcess.pid))
 
     def tearDown(self):
         self.isSetup = False
@@ -90,6 +92,7 @@ class Selenium_Abstract_Generic(Generic):
 
             subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid))
             subprocess.call("kill -TERM " + str(self.managedProcess.pid))
+            print("Kill pricess" + str(self.managedProcess.pid))
 
             # self.managedProcess.send_signal(signal.SIGINT)
             # print(self.managedProcess.communicate(), self.managedProcess.returncode)
