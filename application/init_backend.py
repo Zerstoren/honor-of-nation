@@ -67,6 +67,7 @@ if __name__ == '__main__':
     balancer.client.respondent.Respondent.setHandler(handler)
 
     try:
+        system.log.info("Server is prepared")
         ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         pass
