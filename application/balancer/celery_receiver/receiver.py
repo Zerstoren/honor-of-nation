@@ -16,7 +16,6 @@ class Receiver_Instance():
         self.tcp.setConnectListener(self.onConnectNewClient)
 
     def onConnectNewClient(self, connector):
-        print("Connected new celery")
         connector.setReadListener(self.onMessage)
         connector.setCloseListener(self.onConnectClose)
         self.connections.append(connector)

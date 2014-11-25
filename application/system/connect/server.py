@@ -64,7 +64,6 @@ class SimpleEchoServer(tornado.tcpserver.TCPServer):
     """
     @tornado.gen.coroutine
     def handle_stream(self, stream, address):
-        print("Accept client")
         conn = SimpleEcho()
 
         stream.set_close_callback(conn.on_disconnect)

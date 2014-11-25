@@ -52,8 +52,6 @@ class Process():
             stderr=sys.stderr if debug else subprocess.PIPE
         )
 
-        print('Celery start. Pid ' + str(self.celery.pid))
-
     def _appendArgs(self, args):
         if config.options.type:
             args.append('--type=%s' % config.options.type)
