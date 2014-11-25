@@ -19,6 +19,7 @@ import sys
 import subprocess
 import signal
 import random
+import os
 
 # Create alias for most popular actions
 webdriver.remote.webelement.WebElement.byCss = webdriver.remote.webelement.WebElement.find_element_by_css_selector
@@ -90,8 +91,8 @@ class Selenium_Abstract_Generic(Generic):
             self.closeWindow('ALL')
 
             print("try kill process" + str(self.managedProcess.pid))
-            subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid), stdout=sys.stdout, stderr=sys.stderr)
-            subprocess.call("kill -TERM " + str(self.managedProcess.pid), stdout=sys.stdout, stderr=sys.stderr)
+            os.system("pkill -TERM -P " + str(self.managedProcess.pid))
+            os.system("kill -TERM " + str(self.managedProcess.pid))
             print("Kill pricess" + str(self.managedProcess.pid))
 
             # self.managedProcess.send_signal(signal.SIGINT)
