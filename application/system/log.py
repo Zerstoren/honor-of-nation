@@ -23,15 +23,17 @@ logging.basicConfig(level=level, formatter=formatter)
 logger = logging.getLogger()
 logger.handlers = []
 
-streamHandle = logging.StreamHandler(stream=sys.stdout)
-streamHandle.setLevel(level)
-streamHandle.setFormatter(formatter)
-logger.addHandler(streamHandle)
+if config.get('loggin.stream') == 'True':
+    streamHandle = logging.StreamHandler(stream=sys.stdout)
+    streamHandle.setLevel(level)
+    streamHandle.setFormatter(formatter)
+    logger.addHandler(streamHandle)
 
-fileHandle = logging.FileHandler("/var/log/" + config.get('loggin.filename'))
-fileHandle.setLevel(level)
-fileHandle.setFormatter(formatter)
-logger.addHandler(fileHandle)
+if config.get('logging.filename') != 'False':
+    fileHandle = logging.FileHandler("/var/log/" + config.get('loggin.filename'))
+    fileHandle.setLevel(level)
+    fileHandle.setFormatter(formatter)
+    logger.addHandler(fileHandle)
 
 debug = logger.debug
 info = logger.info
@@ -42,3 +44,7 @@ critical = logger.critical
 def show():
     with open("/var/log/" + config.get('loggin.filename')) as f:
         print("".join(f.readlines()))
+
+def purge():
+    with open("/var/log/" + config.get('loggin.filename'), "w") as f:
+        pass
