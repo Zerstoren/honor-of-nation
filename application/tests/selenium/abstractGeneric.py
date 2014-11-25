@@ -55,8 +55,8 @@ class Selenium_Abstract_Generic(Generic):
 
         self.driver = None
         self.driversDict = {}
-        self._port = 36450
-        self._balancer_port = 36451
+        self._port = random.randint(10000, 65000)
+        self._balancer_port = self._port + 1
 
         self.createWindow('main')
         self.useWindow('main')
@@ -89,14 +89,7 @@ class Selenium_Abstract_Generic(Generic):
 
         if self.core.remove_core:
             self.closeWindow('ALL')
-
-            print("try kill process" + str(self.managedProcess.pid))
-            os.system("pkill -TERM -P " + str(self.managedProcess.pid))
-            os.system("kill -TERM " + str(self.managedProcess.pid))
-            print("Kill pricess" + str(self.managedProcess.pid))
-
-            # self.managedProcess.send_signal(signal.SIGINT)
-            # print(self.managedProcess.communicate(), self.managedProcess.returncode)
+            self.managedProcess.send_signal(signal.SIGINT)
 
             self.managedProcess = None
 
