@@ -29,7 +29,7 @@ if config.get('loggin.stream') == 'True':
     streamHandle.setFormatter(formatter)
     logger.addHandler(streamHandle)
 
-if config.get('logging.filename') != 'False':
+if config.get('loggin.filename') != 'False':
     fileHandle = logging.FileHandler("/var/log/" + config.get('loggin.filename'))
     fileHandle.setLevel(level)
     fileHandle.setFormatter(formatter)
