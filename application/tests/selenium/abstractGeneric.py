@@ -69,7 +69,6 @@ class Selenium_Abstract_Generic(Generic):
         if config.configType == 'jankins_test':
             basePath = sys.path[0]
 
-        print("Start process")
         self.managedProcess = subprocess.Popen([
                 'python3',
                 '-B',
@@ -78,11 +77,8 @@ class Selenium_Abstract_Generic(Generic):
                 '--database=%s' % self.core.database_name,
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
-            ],
-            stdout=sys.stdout,
-            stderr=sys.stderr
+            ]
         )
-        print("Process with pid " + str(self.managedProcess.pid))
 
     def tearDown(self):
         self.isSetup = False
