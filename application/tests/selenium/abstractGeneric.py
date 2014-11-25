@@ -88,11 +88,14 @@ class Selenium_Abstract_Generic(Generic):
         if self.core.remove_core:
             self.closeWindow('ALL')
 
-            self.managedProcess.send_signal(signal.SIGINT)
+            subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid))
+            subprocess.call("kill -TERM " + str(self.managedProcess.pid))
 
-            print(self.managedProcess.communicate(), self.managedProcess.returncode)
+            # self.managedProcess.send_signal(signal.SIGINT)
+            # print(self.managedProcess.communicate(), self.managedProcess.returncode)
 
             self.managedProcess = None
+
 
     def _executeTestPart(self, function, outcome, isTest=False):
         def testWrapper(*args, **kwargs):
