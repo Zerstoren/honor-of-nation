@@ -87,17 +87,17 @@ class Selenium_Abstract_Generic(Generic):
         self.isSetup = False
         super().tearDown()
 
-        if self.core.remove_core:
-            self.closeWindow('ALL')
+        # if self.core.remove_core:
+        self.closeWindow('ALL')
 
-            subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid))
-            subprocess.call("kill -TERM " + str(self.managedProcess.pid))
-            print("Kill pricess" + str(self.managedProcess.pid))
+        subprocess.call("pkill -TERM -P " + str(self.managedProcess.pid))
+        subprocess.call("kill -TERM " + str(self.managedProcess.pid))
+        print("Kill pricess" + str(self.managedProcess.pid))
 
-            # self.managedProcess.send_signal(signal.SIGINT)
-            # print(self.managedProcess.communicate(), self.managedProcess.returncode)
+        # self.managedProcess.send_signal(signal.SIGINT)
+        # print(self.managedProcess.communicate(), self.managedProcess.returncode)
 
-            self.managedProcess = None
+        self.managedProcess = None
 
 
     def _executeTestPart(self, function, outcome, isTest=False):
