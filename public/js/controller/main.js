@@ -29,7 +29,6 @@ define('controller/main', [
 
             drawMap.init();
             mapInterface.render();
-//            protect.serviceMapMain.render();
         }
     };
 });

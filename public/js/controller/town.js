@@ -25,6 +25,10 @@ define('controller/town', [
 
         leaveShow: function () {
             protect.serviceTownMain.unRender();
+        },
+
+        updateTownBuilds: function (builds, queue) {
+            protect.serviceTownMain.update(builds, queue);
         }
     };
 });

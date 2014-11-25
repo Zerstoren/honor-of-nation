@@ -1,9 +1,12 @@
 define('system/preStart', [
     'system/bootstrap',
     'system/socket',
+    'system/errorHandler',
+
     'view/block/error',
     'view/elements/ractive-helper',
     'service/standalone/user',
+    'service/standalone/messages',
 
     'view/block/map/header',
     'view/block/map/footer',
@@ -13,9 +16,12 @@ define('system/preStart', [
 ], function (
     systemBootstrap,
     systemSocket,
+    systemErrorHandler,
+
     viewBlockError,
     viewElementsRactiveHelper,
     serviceUser,
+    serviceMessages,
 
     ViewBlockMapHeader,
     ViewBlockMapFooter,
@@ -64,6 +70,7 @@ define('system/preStart', [
     }
 
     systemSocket.on('message', function (message) {
+        systemErrorHandler.sendDebug(message)
         if (message.done === false || message.done === undefined) {
             if (message.error) {
                 viewBlockError.showErrorBox(message.error);
@@ -85,6 +92,9 @@ define('system/preStart', [
         viewBlockError._connectionIsEstablished();
         serviceUser.login();
     });
+
+    serviceMessages.init();
+    systemErrorHandler.init();
 
     systemSocket.connect();
 

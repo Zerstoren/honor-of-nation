@@ -4,24 +4,29 @@ import system.connect.client
 import pickle
 
 
-
 class Respondent_Instance(system.connect.client.TCPWrapper):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.setReadListener(self.onMessage)
 
+    def processMessage(self, data):
+        data = pickle.loads(data)
+        result, userId = self._onMessage(data['data'], data['user'])
+
+        return {
+            'connect': data['connect'],
+            'user': userId,
+            'data': result
+        }
 
     def onMessage(self, connect, data):
         try:
-            data = pickle.loads(data)
-            result, userId = self._onMessage(data['data'], data['user'])
-
-            self.write(pickle.dumps({
-                'connect': data['connect'],
-                'user': userId,
-                'data': result
-            }))
+            self.write(
+                pickle.dumps(
+                    self.processMessage(data)
+                )
+            )
         except Exception as e:
             print(e)
 

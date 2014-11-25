@@ -17,13 +17,20 @@ class Backend_Generic(Generic):
     def setUp(self):
         super().setUp()
 
+        if config.get('system.pycharm') == 'True':
+            path = sys.path[1]
+        else:
+            path = sys.path[0]
+
+
         if self._useCelery:
             imp.reload(init_celery)
-            self._managedProcess = subprocess.Popen(
+
+            self._managedProcessCelery = subprocess.Popen(
                 [
                     'python3',
                     '-B',
-                    '%s/init_celery.py' % sys.path[1],
+                    '%s/init_celery.py' % path,
                     '--type=%s' % config.configType,
                     '--database=%s' % self.core.database_name
                 ],
@@ -33,7 +40,8 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            self._managedProcess.terminate()
+            self._managedProcessCelery.kill()
+
         super().tearDown()
 
     def initCelery(self):

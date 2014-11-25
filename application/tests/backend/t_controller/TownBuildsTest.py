@@ -7,15 +7,15 @@ import service.TownBuilds
 import time
 
 
-class Backend_Controller_UserTest(Backend_Controller_Generic):
+class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
 
     def _getTownBuildsController(self):
         import controller.TownBuildsController
         return controller.TownBuildsController.MainController()
 
     def _getCeleryController(self):
-        import controller.CeleryController
-        return controller.CeleryController.CeleryPrivateController()
+        import controller.TownBuildsController
+        return controller.TownBuildsController.CeleryPrivateController()
 
     def setUp(self):
         self.initCelery()
@@ -189,7 +189,7 @@ class Backend_Controller_UserTest(Backend_Controller_Generic):
             'level': 1
         })
 
-        time.sleep(2)
+        time.sleep(3)
 
         builds = self.town.getBuilds()
         builds.extract(True)

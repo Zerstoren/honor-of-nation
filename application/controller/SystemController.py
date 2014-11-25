@@ -1,5 +1,8 @@
 import config
 import time
+import json
+
+import system.log
 
 
 class MainController():
@@ -18,3 +21,9 @@ class MainController():
                 'chunk_size': int(config.get('map.chunk'))
             }
         })
+
+    def error(self, transfer, data):
+        system.log.error("JS ERROR: " + str(data['error']) + "\n\n" + str(data['file']) + "\n\n" + str(data['stack']))
+
+    def log(self, transfer, data):
+        system.log.warn("JS LOG: " + json.dumps(data))

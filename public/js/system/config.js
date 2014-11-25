@@ -31,5 +31,13 @@ define('system/config', [
         return time + $$config.diffTime;
     };
 
+    Config.prototype.getBaseRate = function () {
+        return $$config.rate_base_rate;
+    };
+
+    Config.prototype.getRateBuildUp = function () {
+        return $$config.rate_build_up;
+    };
+
     return new Config();
 });

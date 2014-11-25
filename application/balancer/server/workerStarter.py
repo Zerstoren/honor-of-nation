@@ -16,13 +16,13 @@ class Process():
         if config.get('balancer.celery') == 'True':
             self._startCelery()
 
+
     def _startBackend(self):
         workers = int(config.get('balancer.backend.workers'))
         debug = config.get('balancer.backend.debug') == 'True'
         for i in range(workers):
             args = [
                 'python3',
-                '-B',
                 '%s/init_backend.py' % os.getcwd()
             ]
 
@@ -34,7 +34,6 @@ class Process():
                 stderr=sys.stderr if debug else subprocess.PIPE
             )
 
-            print('Server start. Pid ' + str(process.pid))
             self.workers.append(process)
 
     def _startCelery(self):
@@ -42,7 +41,6 @@ class Process():
 
         args = [
             'python3',
-            '-B',
             '%s/init_celery.py' % os.getcwd()
         ]
 
@@ -53,8 +51,6 @@ class Process():
             stdout=sys.stdout if debug else subprocess.PIPE,
             stderr=sys.stderr if debug else subprocess.PIPE
         )
-
-        print('Celery start. Pid ' + str(self.celery.pid))
 
     def _appendArgs(self, args):
         if config.options.type:
@@ -75,4 +71,5 @@ class Process():
             i.terminate()
 
         if self.celery:
-            self.celery.terminate()
+            self.celery.kill()
+

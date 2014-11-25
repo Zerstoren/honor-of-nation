@@ -6,6 +6,7 @@ from helpers import times
 
 import exceptions.handler
 import system.router
+import system.log
 
 import json
 
@@ -16,7 +17,6 @@ from tornado import ioloop
 
 def handler(content, userId):
     transfer = UserTransfer()
-    transfer.connect()
 
     if userId:
         transfer.setUserById(userId)
@@ -58,7 +58,7 @@ def execute(transfer, data):
 
     exceptions.handler.handle(method)(transfer, data['message'])
 
-    print("%s-\t\t%s sec" % (
+    system.log.debug("%s -\t\t%s sec" % (
         data['module'], str(times.complete())[0:7]
     ))
 
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     balancer.client.respondent.Respondent.setHandler(handler)
 
     try:
+        system.log.info("Server is prepared")
         ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         pass

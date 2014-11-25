@@ -9,6 +9,7 @@ define('service/town/builds', [
         initialize: function () {
             this.buildsView = new ViewTownBuilds();
             this.buildsView.on('createBuild', this.onCreateBuild, this);
+            this.buildsView.on('cancelBuild', this.onCancelBuild, this);
         },
 
         render: function (holder, townDomain) {
@@ -25,11 +26,21 @@ define('service/town/builds', [
 
         onCreateBuild: function (key) {
             var level = this.buildsView._getMaximumLevel(key) + 1;
-            gatewayTown.createBuild(this.currentTown, key, level, this.updateInfo.bind(this));
+            gatewayTown.createBuild(
+                this.currentTown,
+                key,
+                level,
+                this.buildsView.update.bind(this.buildsView)
+            );
         },
 
-        updateInfo: function (builds, queue) {
-            this.buildsView.update(builds, queue);
+        onCancelBuild: function (key, level) {
+            gatewayTown.cancelBuild(
+                this.currentTown,
+                key,
+                level,
+                this.buildsView.update.bind(this.buildsView)
+            );
         }
     });
 });

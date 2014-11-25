@@ -1,6 +1,5 @@
 import models.Abstract.Domain
 from .Mapper import User_Mapper
-import copy
 
 import models.Resources.Mapper
 import models.Resources.Domain
@@ -22,6 +21,11 @@ class User_Domain(models.Abstract.Domain.Abstract_Domain):
         return self._transfer is not None
 
     def getTransfer(self):
+        if not self._transfer:
+            import system.UserTransfer
+            self._transfer = system.UserTransfer.UserTransfer()
+            self._transfer.setUser(self)
+
         return self._transfer
 
     def getResources(self):

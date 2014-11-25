@@ -14,7 +14,7 @@ class TransferMock(UserTransfer):
         self._user = user
         self.__lastMessage = []
 
-    def send(self, module, message):
+    def send(self, module, message, fool=False):
         assert type(message) == dict
         assert type(module) == str
 
