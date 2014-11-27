@@ -1,6 +1,8 @@
 import system.mongo
 from inspect import isfunction
 
+import system.log
+
 class Common_Set(dict):
     require = []
 
@@ -33,7 +35,7 @@ class Common_Set(dict):
         for key in self.require:
             if key not in keys:
                 if exception:
-                    print(self)
+                    system.log.critical('Test ' + self.__class__.__name__ + ' is failed, key %s not exist' % key)
                     raise Exception('Test ' + self.__class__.__name__ + ' is failed, key %s not exist' % key)
                 else:
                     return False

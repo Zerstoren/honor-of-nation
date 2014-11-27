@@ -6,9 +6,11 @@ define('view/town/main', [
 
     return AbstractView.extend({
         events: {
-            'click .close'      : 'onClose',
-            'keydown global'    : 'onKeyDown'
+            'click .close': 'onClose',
+            'keydown global': 'onKeyDown',
+            '.town_info .develop_weapon': 'onDevelopWeapon'
         },
+
         className: 'town',
 
         initialize: function () {
@@ -54,6 +56,10 @@ define('view/town/main', [
             if (e.keyCode === this.keyCodes.esc) {
                 this.onClose();
             }
+        },
+
+        onDevelopWeapon: function () {
+            this.trigger('onDevelopWeapon');
         }
     });
 });
