@@ -22,7 +22,6 @@ define('service/town/main', [
     ServiceTownSoldiersCreate,
     ServiceTownChangeTowns,
     ServiceEquipmentWeapon,
-
     ViewTownMain
 ) {
     return AbstractService.extend({
@@ -72,7 +71,6 @@ define('service/town/main', [
         },
 
         onDevelopWeapon: function () {
-//            debugger;
             this.serviceEquipmentWeapon.render();
         }
     });
