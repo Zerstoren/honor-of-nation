@@ -8,7 +8,7 @@ define('service/town/main', [
     'service/town/soldiersList',
     'service/town/soldiersCreate',
     'service/town/changeTowns',
-    'service/town/developWeapon',
+//    'service/equipment/weapon',
 
     'view/town/main'
 ], function (
@@ -21,7 +21,7 @@ define('service/town/main', [
     ServiceTownSoldiersList,
     ServiceTownSoldiersCreate,
     ServiceTownChangeTowns,
-    ServiceTownDevelopWeapon,
+//    ServiceEquipmentWeapon,
 
     ViewTownMain
 ) {
@@ -29,7 +29,7 @@ define('service/town/main', [
         initialize: function () {
             this.mainView = new ViewTownMain();
             this.serviceTownBuilds = new ServiceTownBuilds();
-            this.serviceTownDevelopWeapon = new ServiceTownDevelopWeapon();
+//            this.serviceEquipmentWeapon = new ServiceEquipmentWeapon();
 
             this.mainView.on('close', this.onClose, this);
 
@@ -72,7 +72,7 @@ define('service/town/main', [
         },
 
         onDevelopWeapon: function () {
-            this.serviceTownDevelopWeapon.render();
+            this.serviceEquipmentWeapon.render();
         }
     });
 });
