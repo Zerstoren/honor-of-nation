@@ -29,6 +29,7 @@ class Abstract_Generic(unittest.TestCase):
         self.setUpDb()
 
     def tearDown(self):
+        self._testDatabaseValues()
         self.fullCleanCache()
         del self.fixture
         self.core.destruct()
@@ -42,16 +43,6 @@ class Abstract_Generic(unittest.TestCase):
     def mockLoad(self, mockName, *args, **kwargs):
         if mockName is 'Transfer':
             return Transfer.TransferMock(*args, **kwargs)
-
-    def _executeTestPart(self, function, outcome, isTest=False):
-        def testWrapper(*args, **kwargs):
-            function(*args, **kwargs)
-            self._testDatabaseValues()
-
-        if isTest:
-            super()._executeTestPart(testWrapper, outcome, isTest)
-        else:
-            super()._executeTestPart(function, outcome, isTest)
 
     def _testDatabaseValues(self):
         tests.bootstrap.CheckDatabaseIndexes.CheckDatabaseIndexes(

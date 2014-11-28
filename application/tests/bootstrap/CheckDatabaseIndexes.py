@@ -9,6 +9,8 @@ class _RefErrorLocalException(Exception):
 class RefError(Exception):
     pass
 
+class EnumError(Exception):
+    pass
 
 class TypeValueError(Exception):
     pass
@@ -37,7 +39,7 @@ class CheckDatabaseIndexes():
             self.parseField(conf, dict(config[conf]))
 
     def parseField(self, collectionName, conf):
-        parsedConf = self.parseConfig(conf)
+        parsedConf = self.parseConfig(conf, collectionName)
         result = self._db[collectionName].find()
 
         for i in result:
@@ -84,17 +86,7 @@ class CheckDatabaseIndexes():
                 collectionName
             ))
 
-    def parseConfig(self, conf):
-        resultFn = {}
-        for i in conf:
-            if i.find('_index_') != -1:
-                continue
-
-            resultFn[i] = self.getParseConfigElement(conf[i])
-
-        return resultFn
-
-    def getParseConfigElement(self, info):
+    def getParseConfigElement(self, info, field, collectionName):
         def started(value):
             return None
 
@@ -135,14 +127,38 @@ class CheckDatabaseIndexes():
                 return fn(value) or True
             return v
 
+        def enumParse(fn, nums):
+            items = nums.split(',')
+
+            def v(value):
+                if not value in items:
+                    raise EnumError("Enum field `%s.%s` has wrong value `%s`, try use some of `%s`" % (collectionName, field, value, nums))
+
+                return fn(value) or True
+
+            return v
+
         fn = started
+
         for i in info.split('|'):
-            if i.find('ref') == -1 and i != 'empty':
+            if i.find('ref') != -1:
+                fn = refParse(fn, i.split(' ')[1])
+            elif i.find('enum') != -1:
+                fn = enumParse(fn, i.split(' ')[1])
+            else:
                 try:
                     fn = locals()[i + 'Parse'](fn)
                 except KeyError as e:
                     raise NotExistsTypeKey('Checker not have type `%s`' % str(i))
-            elif i.find('ref') != -1:
-                fn = refParse(fn, i.split(' ')[1])
 
         return (fn, info)
+
+    def parseConfig(self, conf, collectionName):
+        resultFn = {}
+        for field in conf:
+            if field.find('_index_') != -1:
+                continue
+
+            resultFn[field] = self.getParseConfigElement(conf[field], field, collectionName)
+
+        return resultFn
