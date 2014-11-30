@@ -71,6 +71,7 @@ define('service/town/main', [
         },
 
         onDevelopWeapon: function () {
+//            debugger;
             this.serviceEquipmentWeapon.render();
         }
     });
