@@ -3,7 +3,7 @@ from tests.backend.t_controller.equipment.generic import Backend_Controller_Equi
 import helpers.mongo
 import helpers.math
 
-from controller.EquipmentWeapon import ModelController
+from controller.EquipmentWeaponController import ModelController
 from models.Equipment.Weapon.Factory import Equipment_Weapon_Factory
 
 

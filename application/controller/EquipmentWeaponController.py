@@ -15,7 +15,7 @@ class ModelController(_AbstractController):
         service = self._getParamsJsonPackEquipmentWeaponService()
         weaponData = service.simulate(data)
 
-        transfer.send('/model/equipment/simulate', {
+        transfer.send('/model/equipment/weapon/simulate', {
             'done': True,
             'data': weaponData
         })
@@ -24,7 +24,7 @@ class ModelController(_AbstractController):
         service = self._getParamsEquipmentService()
         domain = service.save(data)
 
-        transfer.send('/model/equipment/save', {
+        transfer.send('/model/equipment/weapon/save', {
             'done': True,
             '_id': str(domain.getId())
         })
@@ -33,7 +33,7 @@ class ModelController(_AbstractController):
         service = self._getParamsJsonPackAclEquipmentWeaponService()
         weaponData = service.get(data['_id'], transfer.getUser())
 
-        transfer.send('/model/equipment/get', {
+        transfer.send('/model/equipment/weapon/get', {
             'done': True,
             'data': weaponData
         })
@@ -42,7 +42,7 @@ class ModelController(_AbstractController):
         service = self._getParamsJsonPackEquipmentWeaponService()
         weaponData = service.load(data['user'])
 
-        transfer.send('/model/equipment/load', {
+        transfer.send('/collection/equipment/weapon/load', {
             'done': True,
             'data': weaponData
         })

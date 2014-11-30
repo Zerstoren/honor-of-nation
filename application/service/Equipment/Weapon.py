@@ -1,4 +1,4 @@
-from application.service.Abstract.AbstractEquipment import AbstractEquipment
+from service.Abstract.AbstractEquipment import AbstractEquipment
 
 from models.Equipment.Weapon.Factory import Equipment_Weapon_Factory
 from models.Equipment.Weapon.Domain import Equipment_Weapon_Domain

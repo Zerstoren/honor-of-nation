@@ -8,7 +8,7 @@ define('view/town/main', [
         events: {
             'click .close': 'onClose',
             'keydown global': 'onKeyDown',
-            '.town_info .develop_weapon': 'onDevelopWeapon'
+            'click .town_info .develop_weapon': 'onDevelopWeapon'
         },
 
         className: 'town',

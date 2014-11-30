@@ -28,7 +28,9 @@ class Respondent_Instance(system.connect.client.TCPWrapper):
                 )
             )
         except Exception as e:
+            import traceback
             print(e)
+            print (traceback.format_exc())
 
     def setHandler(self, handler):
         self._onMessage = handler

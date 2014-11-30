@@ -1,0 +1,18 @@
+.equipment_window {
+    z-index: 31;
+    margin: auto auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 95%;
+    height: 95%;
+
+    @import "weapon";
+}
+
+.extended-glass {
+    z-index: 30;
+    opacity: 0.9;
+}

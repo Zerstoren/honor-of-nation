@@ -744,6 +744,7 @@
         for (i = 0, l = toAdd.length; i < l; i++) {
           (model = toAdd[i]).trigger('add', model, this, options);
         }
+        this.trigger('change', this);
         if (sort || (order && order.length)) this.trigger('sort', this, options);
       }
 
