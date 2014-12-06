@@ -1,5 +1,5 @@
 define('libs/abstract/collection', [
-    'system/socket',
+    'system/socket'
 ], function (
     socket
 ) {
@@ -17,7 +17,13 @@ define('libs/abstract/collection', [
             }
         },
 
-        sync: function (method, model, options) {
+        where: function () {
+            return new this.constructor(
+                Backbone.Collection.prototype.where.apply(this, arguments)
+            );
+        },
+
+        sync: function (method, options) {
             var url = '/collection/' + this.collection_url + '/' + method,
                 data = options.data || {};
 
@@ -27,14 +33,16 @@ define('libs/abstract/collection', [
                 }
 
                 var i, list = data.data;
-                for (i = 0; i < list; i++) {
-                    this.add(this.model(list));
+
+                this.reset();
+                for (i = 0; i < list.length; i++) {
+                    this.add(new this.model(list[i]));
                 }
 
                 if (options.success) {
                     options.success(this);
                 }
-            });
+            }.bind(this));
         }
     });
 });

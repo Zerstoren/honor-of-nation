@@ -3,8 +3,10 @@ from tests.backend.t_controller.equipment.generic import Backend_Controller_Equi
 import helpers.mongo
 import helpers.math
 
-from controller.EquipmentWeaponController import ModelController
+from controller.EquipmentController import WeaponModelController, WeaponCollectionController
 from models.Equipment.Weapon.Factory import Equipment_Weapon_Factory
+
+import service.Equipment.Weapon
 
 
 class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
@@ -22,7 +24,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
         self.transfer = self._login()
 
     def _getModelController(self):
-        return ModelController()
+        return WeaponModelController()
 
     def testGetModel(self):
         self.init()
@@ -45,16 +47,16 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
                 '_id': str(wDomain.getId()),
                 'user': str(wDomain.getUser().getId()),
                 'type': 'sword',
-                'level': 10,
-                'rubins': 134999,
                 'damage': 100,
                 'speed': 40,
-                'time': 39,
                 'critical_chance': 5,
-                'wood': 11087,
-                'critical_damage': 2,
-                'steel': 50858,
-                'eat': 25627
+                'critical_damage': 2.0,
+                'eat': 55651,
+                'rubins': 255095,
+                'steel': 110906,
+                'wood': 17092,
+                'level': 16,
+                'time': 87
             }
         )
 
@@ -68,7 +70,12 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
             wType='spear'
         )
 
-        self.controller.load(
+        wDomain3 = self.createEquipmentWeapon(
+            self.fixture.getUser(3),
+            wType='bow'
+        )
+
+        WeaponCollectionController().load(
             self.transfer,
             {
                 'user': str(self.transfer.getUser().getId())
@@ -76,47 +83,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
         )
 
         result = self.transfer.getLastMessage()['message']
-
-        example = {
-            'done': True,
-            'data': [
-                {
-                    '_id': str(wDomain1.getId()),
-                    'user': str(self.transfer.getUser().getId()),
-                    'type': 'sword',
-                    'wood': 11087,
-                    'eat': 25627,
-                    'level': 10,
-                    'time': 39,
-                    'steel': 50858,
-                    'damage': 100,
-                    'critical_damage': 2,
-                    'rubins': 134999,
-                    'speed': 40,
-                    'critical_chance': 5
-                },
-                {
-                    '_id': str(wDomain2.getId()),
-                    'user': str(self.transfer.getUser().getId()),
-                    'type': 'spear',
-                    'wood': 16872,
-                    'eat': 34701,
-                    'level': 14,
-                    'time': 47,
-                    'steel': 65132,
-                    'damage': 100,
-                    'critical_damage': 2,
-                    'rubins': 175527,
-                    'speed': 40,
-                    'critical_chance': 5
-                }
-            ]
-        }
-
-        self.assertDictEqual(
-            result,
-            example
-        )
+        self.assertEqual(len(result['data']), 2)
 
     def testCreateBase(self):
         self.init()
@@ -223,4 +190,51 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
         self.assertDictEqual(
             weapon._domain_data,
             result
+        )
+
+    def testChangedValues(self):
+        self.init()
+        wDomain1 = self.createEquipmentWeapon(
+            self.transfer.getUser(),
+            critical_damage=2.0
+        )
+        wDomain2 = self.createEquipmentWeapon(
+            self.transfer.getUser(),
+            critical_damage=3.0
+        )
+
+        self.assertNotEqual(
+            wDomain1.getRubins(),
+            wDomain2.getRubins()
+        )
+
+    def testRemove(self):
+        self.init()
+        wDomain = self.createEquipmentWeapon(
+            self.transfer.getUser()
+        )
+        wDomain2 = self.createEquipmentWeapon(
+            self.transfer.getUser()
+        )
+
+        self.assertEqual(
+            len(
+                service.Equipment.Weapon.Service_Equipment_Weapon().load(
+                    self.transfer.getUser()
+                )
+            ),
+            2
+        )
+
+        self.controller.remove(self.transfer, {
+            '_id': str(wDomain.getId())
+        })
+
+        self.assertEqual(
+            len(
+                service.Equipment.Weapon.Service_Equipment_Weapon().load(
+                    self.transfer.getUser()
+                )
+            ),
+            1
         )

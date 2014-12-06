@@ -25,11 +25,18 @@ class Service_Equipment_Weapon(AbstractEquipment):
     def load(self, user):
         return Equipment_Weapon_Factory.load(user)
 
+    def remove(self, _id, user=None):
+        domain = Equipment_Weapon_Factory.get(_id)
+        domain.getMapper().remove(domain)
+        return True
+
     def _getWeaponCalculatedDomain(self, data):
         domain = Equipment_Weapon_Domain()
 
         if '_id' in data:
             domain.setId(data['_id'])
+
+        data = self._fixLevels(data)
 
         domain.setType(data['type'])
         domain.setDamage(data['damage'])
@@ -48,6 +55,25 @@ class Service_Equipment_Weapon(AbstractEquipment):
         domain.setEat(currentPrice['eat'])
 
         return domain
+
+    def _fixLevels(self, data):
+        names = ['damage', 'speed', 'critical_chance', 'critical_damage']
+        weaponType = data['type']
+
+        for name in names:
+            level = data[name]
+            typeItem = name
+
+            if level < Data.weapon[typeItem][weaponType]['min']:
+                level = Data.weapon[typeItem][weaponType]['min']
+            elif 'max' in Data.weapon[typeItem][weaponType]:
+                if level > Data.weapon[typeItem][weaponType]['max']:
+                    level = Data.weapon[typeItem][weaponType]['max']
+
+            data[name] = level
+
+        return data
+
 
     def _calculatePrice(self, domain):
         price = {
@@ -90,10 +116,9 @@ class Service_Equipment_Weapon(AbstractEquipment):
             )
 
             price[priceKey] += self._exponentCalc(
-                self._normalizeLevel(domain.getCriticalDamage(), weaponType, 'speed'),
+                self._normalizeLevel(domain.getCriticalDamage(), weaponType, 'critical_damage'),
                 Data.weapon['critical_damage'][weaponType][priceKey]
             )
-
 
             if price[priceKey] < defaultPrice[priceKey]:
                 price[priceKey] = defaultPrice[priceKey]
@@ -108,7 +133,6 @@ class Service_Equipment_Weapon(AbstractEquipment):
         elif 'max' in Data.weapon[typeItem][weaponType]:
             if level > Data.weapon[typeItem][weaponType]['max']:
                 level = Data.weapon[typeItem][weaponType]['max']
-
 
         return level - Data.weapon[typeItem][weaponType]['base']
 

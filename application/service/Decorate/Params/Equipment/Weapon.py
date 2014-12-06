@@ -35,3 +35,9 @@ class Decorate(object):
         userId = helpers.mongo.objectId(user)
         user = User_Factory.getDomainById(userId)
         return super().load(user)
+
+    def remove(self, _id, user=None):
+        return super().remove(
+            helpers.mongo.objectId(_id),
+            user
+        )

@@ -39,5 +39,9 @@ define('system/config', [
         return $$config.rate_build_up;
     };
 
+    Config.prototype.getEquipmentWeapon = function () {
+        return $$config.equipment_weapon;
+    };
+
     return new Config();
 });

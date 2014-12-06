@@ -12,6 +12,10 @@ define('collection/equipment/weapon', [
             this._user = null;
         },
 
+        comparator: function (model) {
+            return model.get('level');
+        },
+
         setUser: function (user) {
             this._user = user;
         },
@@ -20,12 +24,21 @@ define('collection/equipment/weapon', [
             return this._user;
         },
 
+        searchById: function (id) {
+            var result = this.where({'_id': id});
+            if (result.length === 0) {
+                return null;
+            }
+
+            return result.at(0);
+        },
+
         load: function () {
             if (!this.getUser()) {
                 throw new Error("For collection user not set");
             }
 
-            this.sync('load', null, {
+            this.sync('load', {
                 data: {
                     'user': this.getUser().get('_id')
                 }

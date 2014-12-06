@@ -39,3 +39,10 @@ class Decorate(object):
             result.append(self._pack(domain))
 
         return result
+
+    def save(self, data, user=None):
+        domain = super().save(data, user)
+        return self._pack(domain)
+
+    def remove(self, _id, user=None):
+        return super().remove(_id, user)

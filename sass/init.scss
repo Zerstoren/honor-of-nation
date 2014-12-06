@@ -56,6 +56,12 @@ h1 {
     text-shadow: 0px 0px 10px #000;
 }
 
+hr {
+    height: 0px;
+    border-top: #aaa 1px solid;
+    border-bottom: #fff 1px solid;
+}
+
 .hidden {
     display: none;
 }
@@ -137,6 +143,16 @@ pre {
     height: 100%;
     background: #333334;
     opacity: 0.75;
+}
+
+.space {
+    height: 15px;
+}
+
+.row > .full-height {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 @import "block/init";

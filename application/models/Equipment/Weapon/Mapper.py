@@ -19,7 +19,7 @@ class Equipment_Weapon_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet.add('damage', weapon.getDamage())
         commonSet.add('speed', weapon.getSpeed())
         commonSet.add('critical_chance', weapon.getCriticalChance())
-        commonSet.add('critical_damage', weapon.getCriticalDamage())
+        commonSet.add('critical_damage', float(weapon.getCriticalDamage()))
 
         commonSet.add('level', weapon.getLevel())
         commonSet.add('time', weapon.getTime())

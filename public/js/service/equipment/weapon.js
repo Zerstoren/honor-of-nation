@@ -16,6 +16,9 @@ define('service/equipment/weapon', [
     return AbstractService.extend({
         initialize: function () {
             this.viewEquipmentWeapon = new ViewEquipmentWeapon();
+            this.viewEquipmentWeapon.on('save', this.onSave, this);
+            this.viewEquipmentWeapon.on('remove', this.onRemove, this);
+            this.traverseEvent('close', this.viewEquipmentWeapon);
         },
 
         render: function () {
@@ -30,6 +33,25 @@ define('service/equipment/weapon', [
                 this.collection.setUser(user);
                 this.collection.load();
             }.bind(this));
+        },
+
+        onRemove: function (weapon) {
+            weapon.remove(this.afterRemoveWeapon.bind(this));
+            this.viewEquipmentWeapon.removeCurrentWeaponDomain(weapon);
+        },
+
+        onSave: function (weaponDomain) {
+            weaponDomain.save(this.afterCreateSave.bind(this));
+        },
+
+        afterCreateSave: function () {
+            this.collection.load();
+            this.viewEquipmentWeapon.afterCreateSave();
+        },
+
+        afterRemoveWeapon: function () {
+            this.collection.load();
+            this.viewEquipmentWeapon.afterRemoveWeapon();
         }
     });
 });

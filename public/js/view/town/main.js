@@ -59,6 +59,7 @@ define('view/town/main', [
         },
 
         onDevelopWeapon: function () {
+            this.undelegateEvents();
             this.trigger('onDevelopWeapon');
         }
     });

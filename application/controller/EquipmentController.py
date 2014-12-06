@@ -1,6 +1,9 @@
 from service.Equipment.Weapon import Service_Equipment_Weapon
 
-class _AbstractController(object):
+import time
+
+
+class _AbstractWeaponController(object):
     def _getParamsEquipmentService(self):
         return Service_Equipment_Weapon().decorate('Params.Equipment')
 
@@ -10,10 +13,16 @@ class _AbstractController(object):
     def _getParamsJsonPackAclEquipmentWeaponService(self):
         return Service_Equipment_Weapon().decorate('Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment')
 
-class ModelController(_AbstractController):
+
+class _AbstractArmorController(object):
+    pass
+
+
+class WeaponModelController(_AbstractWeaponController):
     def simulate(self, transfer, data):
         service = self._getParamsJsonPackEquipmentWeaponService()
         weaponData = service.simulate(data)
+        weaponData['stamp'] = time.time()
 
         transfer.send('/model/equipment/weapon/simulate', {
             'done': True,
@@ -21,12 +30,12 @@ class ModelController(_AbstractController):
         })
 
     def save(self, transfer, data):
-        service = self._getParamsEquipmentService()
-        domain = service.save(data)
+        service = self._getParamsJsonPackEquipmentWeaponService()
+        data = service.save(data, transfer.getUser())
 
         transfer.send('/model/equipment/weapon/save', {
-            'done': True,
-            '_id': str(domain.getId())
+            'data': data,
+            'done': True
         })
 
     def get(self, transfer, data):
@@ -38,6 +47,16 @@ class ModelController(_AbstractController):
             'data': weaponData
         })
 
+    def remove(self, transfer, data):
+        service = self._getParamsJsonPackAclEquipmentWeaponService()
+        service.remove(data['_id'], transfer.getUser())
+
+        transfer.send('/model/equipment/weapon/remove', {
+            'done': True
+        })
+
+
+class WeaponCollectionController(_AbstractWeaponController):
     def load(self, transfer, data):
         service = self._getParamsJsonPackEquipmentWeaponService()
         weaponData = service.load(data['user'])
@@ -46,3 +65,11 @@ class ModelController(_AbstractController):
             'done': True,
             'data': weaponData
         })
+
+
+class ArmorModelController(_AbstractArmorController):
+    pass
+
+
+class ArmorCollectionController(_AbstractArmorController):
+    pass

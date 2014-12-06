@@ -71,8 +71,14 @@ define('service/town/main', [
         },
 
         onDevelopWeapon: function () {
-//            debugger;
+            this.mainView.undelegateEvents();
             this.serviceEquipmentWeapon.render();
+            this.serviceEquipmentWeapon.on('close', this.onDevClose, this);
+        },
+
+        onDevClose: function () {
+            this.mainView.delegateEvents();
+            this.serviceEquipmentWeapon.off('close', this.onDevClose, this);
         }
     });
 });

@@ -1,10 +1,6 @@
 <div class="background bottom">
     <div class="nextBuilds">
         <div>
-            <!--popup-->
-            <!--popup-callback="data.builds.func.onShowBuildsQueuePopup($target)"-->
-            <!--popup-without-coordinate="true"-->
-            <!--ng-show="data.builds.vars.queue"-->
 
             {{#queue.length}}
             <div class="triangle">

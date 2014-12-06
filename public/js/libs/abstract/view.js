@@ -109,15 +109,15 @@ define('libs/abstract/view', [
         },
 
         traverseEvent: function (eventName, fromView) {
-            fromView.on(eventName, this._traverseMethod, this);
-        },
+            var traverseFn = function () {
+                this.trigger.apply(this, [eventName]);
+            }.bind(this);
 
-        unTraverseEvent: function (eventName, fromView) {
-            fromView.off(eventName, this._traverseMethod, this);
-        },
+            fromView.on(eventName, traverseFn, this);
 
-        _traverseMethod: function () {
-            this.trigger.apply(this, [eventName].concat(arguments));
+            return function () {
+                fromView.un(eventName, traverseFn, this);
+            }
         },
 
         successMessage: function (str) {
