@@ -96,7 +96,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
             'critical_damage': 0
         })
 
-        result = self.transfer.getLastMessage()['message']
+        result = self.transfer.getLastMessage()['message']['data']
         weapon = Equipment_Weapon_Factory.get(
             helpers.mongo.objectId(result['_id'])
         )
@@ -106,14 +106,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
             {
                 '_id': weapon.getId(),
                  'user': self.transfer.getUser().getId(),
-                 'critical_chance': 0,
-                 'critical_damage': 0.0,
-                 'damage': 0,
+                 'critical_chance': 1,
+                 'critical_damage': 1.4,
+                 'damage': 10,
                  'eat': 500,
                  'level': 0,
                  'remove': 0,
                  'rubins': 3000,
-                 'speed': 0,
+                 'speed': 20,
                  'time': 5,
                  'steel': 150,
                  'type': 'sword',
@@ -132,7 +132,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
             'critical_damage': 3
         })
 
-        result = self.transfer.getLastMessage()['message']
+        result = self.transfer.getLastMessage()['message']['data']
         weapon = Equipment_Weapon_Factory.get(
             helpers.mongo.objectId(result['_id'])
         )
@@ -146,14 +146,14 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
                  'critical_damage': 3.0,
                  'type': 'sword',
                  'damage': 12000,
-                 'eat': 379653814,
-                 'level': 90322,
+                 'eat': 379733918,
+                 'level': 90338,
                  'remove': 0,
-                 'time': 474581,
-                 'rubins': 1614782853,
+                 'time': 474709,
+                 'rubins': 1615103270,
                  'speed': 900,
-                 'steel': 948443356,
-                 'wood': 47738295
+                 'steel': 948603564,
+                 'wood': 47754316
             }
         )
 
@@ -168,7 +168,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
             'critical_damage': 3
         })
 
-        result = self.transfer.getLastMessage()['message']
+        result = self.transfer.getLastMessage()['message']['data']
         weapon = Equipment_Weapon_Factory.get(
             helpers.mongo.objectId(result['_id'])
         )
@@ -186,6 +186,7 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
         del weapon._domain_data['user']
         del weapon._domain_data['remove']
         del weapon._domain_data['_id']
+        del result['stamp']
 
         self.assertDictEqual(
             weapon._domain_data,

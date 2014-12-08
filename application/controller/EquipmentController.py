@@ -1,4 +1,5 @@
 from service.Equipment.Weapon import Service_Equipment_Weapon
+from service.Equipment.Armor import Service_Equipment_Armor
 
 import time
 
@@ -15,7 +16,14 @@ class _AbstractWeaponController(object):
 
 
 class _AbstractArmorController(object):
-    pass
+    def _getParamsEquipmentService(self):
+        return Service_Equipment_Armor().decorate('Params.Equipment')
+
+    def _getParamsJsonPackEquipmentArmorService(self):
+        return Service_Equipment_Armor().decorate('Params.Equipment', 'JsonPack.Equipment')
+
+    def _getParamsJsonPackAclEquipmentArmorService(self):
+        return Service_Equipment_Armor().decorate('Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment')
 
 
 class WeaponModelController(_AbstractWeaponController):
@@ -68,8 +76,49 @@ class WeaponCollectionController(_AbstractWeaponController):
 
 
 class ArmorModelController(_AbstractArmorController):
-    pass
+    def simulate(self, transfer, data):
+        service = self._getParamsJsonPackEquipmentArmorService()
+        armorData = service.simulate(data)
+        armorData['stamp'] = time.time()
+
+        transfer.send('/model/equipment/armor/simulate', {
+            'done': True,
+            'data': armorData
+        })
+
+    def save(self, transfer, data):
+        service = self._getParamsJsonPackEquipmentArmorService()
+        data = service.save(data, transfer.getUser())
+
+        transfer.send('/model/equipment/armor/save', {
+            'data': data,
+            'done': True
+        })
+
+    def get(self, transfer, data):
+        service = self._getParamsJsonPackAclEquipmentArmorService()
+        armorData = service.get(data['_id'], transfer.getUser())
+
+        transfer.send('/model/equipment/armor/get', {
+            'done': True,
+            'data': armorData
+        })
+
+    def remove(self, transfer, data):
+        service = self._getParamsJsonPackAclEquipmentArmorService()
+        service.remove(data['_id'], transfer.getUser())
+
+        transfer.send('/model/equipment/armor/remove', {
+            'done': True
+        })
 
 
 class ArmorCollectionController(_AbstractArmorController):
-    pass
+    def load(self, transfer, data):
+        service = self._getParamsJsonPackEquipmentArmorService()
+        armorData = service.load(data['user'])
+
+        transfer.send('/collection/equipment/armor/load', {
+            'done': True,
+            'data': armorData
+        })
