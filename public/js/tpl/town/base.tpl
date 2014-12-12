@@ -25,7 +25,22 @@
 
         </div>
 
-        <!--<div class="town_info ti__middle_element" ng-inc="town/middle/towns_info"></div>-->
+        <div class="town_info ti__middle_element">
+            <div class="resources">
+
+            </div>
+            <div class="buttons">
+                <button class="btn">Информация о городе</button>
+                <button class="btn">Данные о ресурсах</button>
+                <button class="btn">Бонусы от сооружений</button>
+                <button class="btn">Защита города</button>
+
+                <button class="btn develop_armor">Разработка брони</button>
+                <button class="btn develop_weapon">Разработка оружия</button>
+                <button class="btn develop_people">Воспитание новобранцев</button>
+                <button class="btn linkage_unit">Компоновка солдат</button>
+            </div>
+        </div>
 
         <div class="bottom_block">
             <div class="wrap">

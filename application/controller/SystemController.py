@@ -4,6 +4,8 @@ import json
 
 import system.log
 
+import models.Equipment.Weapon.Data
+
 
 class MainController():
     def get(self, transfer, data):
@@ -18,7 +20,9 @@ class MainController():
                 'rate_base_rate': int(config.get('rate.base_rate')),
 
                 'map_size': int(config.get('map.size')),
-                'chunk_size': int(config.get('map.chunk'))
+                'chunk_size': int(config.get('map.chunk')),
+
+                'equipment_weapon': models.Equipment.Weapon.Data.const.export()
             }
         })
 

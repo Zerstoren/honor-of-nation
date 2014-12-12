@@ -70,7 +70,6 @@ define('system/preStart', [
     }
 
     systemSocket.on('message', function (message) {
-        systemErrorHandler.sendDebug(message)
         if (message.done === false || message.done === undefined) {
             if (message.error) {
                 viewBlockError.showErrorBox(message.error);

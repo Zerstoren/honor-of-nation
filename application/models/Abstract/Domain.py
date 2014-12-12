@@ -76,6 +76,9 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
 
         return setFunc
 
+    def _isIn(self, name):
+        return name in self._domain_data
+
     def __getattribute__(self, item):
         """
         :type item: str

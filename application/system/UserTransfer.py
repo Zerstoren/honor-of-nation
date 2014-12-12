@@ -4,7 +4,7 @@ from exceptions.httpCodes import Page401
 
 import helpers.mongo
 
-import json
+import system.log
 
 import init_celery
 
@@ -71,6 +71,7 @@ class UserTransfer(object):
 
     def getUser(self):
         if self._user is None:
+            system.log.warn("User not set")
             raise UserNotSet('User not set')
 
         return self._user

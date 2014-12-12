@@ -1,5 +1,7 @@
 import traceback
 
+import system.log
+
 from . import database
 from . import httpCodes
 from . import message
@@ -24,8 +26,8 @@ def handle(fn):
         try:
             return fn(transfer, data)
 
-        except (database.NotFound, httpCodes.Page404):
-            print(traceback.format_exc())
+        except (database.NotFound, httpCodes.Page404) as e:
+            system.log.info(traceback.format_exc() + str(e))
             transfer.send('/error', {
                 'done': False,
                 'error': 'Data by current url not found',
@@ -34,7 +36,7 @@ def handle(fn):
             })
 
         except database.Database as e:
-            print(traceback.format_exc())
+            system.log.critical(traceback.format_exc() + str(e))
             transfer.send('/error', {
                 'done': False,
                 'error': str(e),
@@ -43,13 +45,14 @@ def handle(fn):
             })
 
         except httpCodes.Page403 as e:
+            system.log.error(str(e))
             transfer.send('/error', {
                 'done': False,
                 'error': str(e)
             })
 
         except httpCodes.HttpError as e:
-            print(traceback.format_exc())
+            system.log.warn(traceback.format_exc() + str(e))
             transfer.send('/error', {
                 'done': False,
                 'error': str(e),
@@ -64,7 +67,7 @@ def handle(fn):
             })
 
         except Exception as e:
-            print(traceback.format_exc())
+            system.log.critical(traceback.format_exc() + str(e))
             transfer.send('/error', {
                 'done': False,
                 'error': str(e),

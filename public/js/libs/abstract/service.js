@@ -4,7 +4,19 @@ define('libs/abstract/service', [], function () {
     };
     _.extend(window.AbstractService.prototype, Backbone.Events, {
         initialize: function () {
+            this._traverseEvents = {};
+        },
 
+        traverseEvent: function (eventName, fromView) {
+            var traverseFn = function () {
+                this.trigger.apply(this, [eventName]);
+            }.bind(this);
+
+            fromView.on(eventName, traverseFn, this);
+
+            return function () {
+                fromView.un(eventName, traverseFn, this);
+            }
         }
     });
 

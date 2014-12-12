@@ -58,6 +58,14 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
             models.Abstract.Common.Common_Filter({'_id': queryId})
         )
 
+    def remove(self, domain):
+        """
+        :type domain: models.Abstract.Domain.Abstract_Domain
+        """
+        self._remove(
+            domain.getId()
+        )
+
     def bulkStart(self):
         self._bulk = self._db[self._table].initialize_unordered_bulk_op()
 
