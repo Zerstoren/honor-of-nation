@@ -8,7 +8,8 @@ define('view/town/main', [
         events: {
             'click .close': 'onClose',
             'keydown global': 'onKeyDown',
-            'click .town_info .develop_weapon': 'onDevelopWeapon'
+            'click .town_info .develop_weapon': 'onDevelopWeapon',
+            'click .town_info .develop_armor': 'onDevelopArmor'
         },
 
         className: 'town',
@@ -61,6 +62,11 @@ define('view/town/main', [
         onDevelopWeapon: function () {
             this.undelegateEvents();
             this.trigger('onDevelopWeapon');
+        },
+
+        onDevelopArmor: function () {
+            this.undelegateEvents();
+            this.trigger('onDevelopArmor');
         }
     });
 });

@@ -8,7 +8,9 @@ define('service/town/main', [
     'service/town/soldiersList',
     'service/town/soldiersCreate',
     'service/town/changeTowns',
+
     'service/equipment/weapon',
+    'service/equipment/armor',
 
     'view/town/main'
 ], function (
@@ -21,7 +23,10 @@ define('service/town/main', [
     ServiceTownSoldiersList,
     ServiceTownSoldiersCreate,
     ServiceTownChangeTowns,
+
     ServiceEquipmentWeapon,
+    ServiceEquipmentArmor,
+
     ViewTownMain
 ) {
     return AbstractService.extend({
@@ -29,10 +34,12 @@ define('service/town/main', [
             this.mainView = new ViewTownMain();
             this.serviceTownBuilds = new ServiceTownBuilds();
             this.serviceEquipmentWeapon = new ServiceEquipmentWeapon();
+            this.serviceEquipmentArmor = new ServiceEquipmentArmor();
 
             this.mainView.on('close', this.onClose, this);
 
             this.mainView.on('onDevelopWeapon', this.onDevelopWeapon, this);
+            this.mainView.on('onDevelopArmor', this.onDevelopArmor, this);
         },
 
         render: function (townId) {
@@ -76,9 +83,17 @@ define('service/town/main', [
             this.serviceEquipmentWeapon.on('close', this.onDevClose, this);
         },
 
+        onDevelopArmor: function () {
+            this.mainView.undelegateEvents();
+            this.serviceEquipmentArmor.render();
+            this.serviceEquipmentArmor.on('close', this.onDevClose, this);
+
+        },
+
         onDevClose: function () {
             this.mainView.delegateEvents();
             this.serviceEquipmentWeapon.off('close', this.onDevClose, this);
+            this.serviceEquipmentArmor.off('close', this.onDevClose, this);
         }
     });
 });

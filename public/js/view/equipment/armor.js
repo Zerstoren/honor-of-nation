@@ -1,33 +1,34 @@
-define('view/equipment/weapon', [
+define('view/equipment/armor', [
     'system/config',
     'service/standalone/user',
     'model/dummy',
-    'model/equipment/weapon'
+    'model/equipment/armor'
 ], function (
     systemConfig,
     serviceStandaloneUser,
     ModelDummy,
-    ModelEquipmentWeapon
+    ModelEquipmentArmor
 ) {
     return AbstractView.extend({
         events: {
             'click .header-icon-close': 'onClose',
             'keydown global': 'onKeyDown',
-            'click .equipment-item': 'onSelectWeapon',
-            'click .select-filter-weapon .filter': 'onChangeFilterWeapon',
-            'click .select-equipment-type button': 'onChangeWeaponType',
-            'click .save': 'onSaveWeapon',
+            'change .shield_type': 'onChangeShieldType',
+            'click .equipment-item': 'onSelectArmor',
+            'click .select-filter-equipment .filter': 'onChangeFilterArmor',
+            'click .select-equipment-type button': 'onChangeArmorType',
+            'click .save': 'onSaveArmor',
             'click button.add': 'onAdd',
             'click .remove': 'onRemove'
         },
 
         data: {
             collection: null,
-            weapon: null,
+            armor: null,
             settings: null
         },
 
-        names: ['DAMAGE', 'SPEED', 'CRITICAL_DAMAGE', 'CRITICAL_CHANCE'],
+        names: ['HEALTH', 'AGILITY', 'ABSORPTION'],
 
         initialize: function () {
             this.viewCollection = null;
@@ -35,54 +36,60 @@ define('view/equipment/weapon', [
             this.timeoutUpdate = null;
             this.selectedType = null;
 
-            this.template = this.getTemplate('equipment/weapon');
+            this.template = this.getTemplate('equipment/armor');
             this.initRactive();
 
             this.set('settings', new ModelDummy());
         },
 
-        createCurrentWeaponDomain: function () {
-            if (this.weaponDomain) {
-                this.weaponDomain.off('change', this.onWeaponUpdate, this);
+        createCurrentArmorDomain: function () {
+            if (this.armorDomain) {
+                this.armorDomain.off('change', this.onArmorUpdate, this);
             }
 
-            this.weaponDomain = new ModelEquipmentWeapon();
-            this.weaponDomain.set('damage', null);
-            this.weaponDomain.set('speed', null);
-            this.weaponDomain.set('critical_damage', null);
-            this.weaponDomain.set('critical_chance', null);
+            this.armorDomain = new ModelEquipmentArmor();
+            this.armorDomain.set('health', null);
+            this.armorDomain.set('agility', null);
+            this.armorDomain.set('absorption', null);
+
+            this.armorDomain.set('shield_durability', 0);
+            this.armorDomain.set('shield_blocking', 0);
 
             serviceStandaloneUser.getMe(function (user) {
-                this.weaponDomain.set('user', user.get('_id'));
+                this.armorDomain.set('user', user.get('_id'));
             }.bind(this));
 
-            this.weaponDomain.on('change', this.onWeaponUpdate, this);
-            this.changeWeaponType('sword');
 
-            this.set('weapon', this.weaponDomain);
+            this.set('armor', this.armorDomain);
+
+            this.armorDomain.on('change', this.onArmorUpdate, this);
+            this.changeArmorType('leather');
+            this.changeShieldType(null);
+
+
         },
 
-        setCurrentWeaponDomain: function (weaponDomain) {
-            if (this.weaponDomain) {
-                this.weaponDomain.off('change', this.onWeaponUpdate, this);
+        setCurrentArmorDomain: function (armorDomain) {
+            if (this.armorDomain) {
+                this.armorDomain.off('change', this.onArmorUpdate, this);
             }
 
-            this.weaponDomain = weaponDomain;
-            this.changeWeaponType(this.weaponDomain.get('type'));
-            this.set('weapon', this.weaponDomain);
+            this.armorDomain = armorDomain;
+            this.changeArmorType(this.armorDomain.get('type'));
+            this.set('armor', this.armorDomain);
         },
 
-        removeCurrentWeaponDomain: function (selected) {
+        removeCurrentArmorDomain: function (selected) {
             if (
                 selected &&
-                this.weaponDomain &&
-                selected.get('_id') !== this.weaponDomain.get('_id')
+                this.armorDomain &&
+                selected.get('_id') !== this.armorDomain.get('_id')
             ) {
                 return;
             }
 
-            this.set('weapon', null);
-            this.weaponDomain = null;
+            this.set('armor', null);
+            this.armorDomain = null;
         },
 
         render: function (holder, collection) {
@@ -101,19 +108,19 @@ define('view/equipment/weapon', [
             this.undelegateEvents();
         },
 
-        changeWeaponType: function (type) {
+        changeArmorType: function (type) {
             var name,
                 typeName = type.toUpperCase(),
-                config = systemConfig.getEquipmentWeapon(),
+                config = systemConfig.getEquipmentArmor(),
                 i;
 
-            this.weaponDomain.set('type', type);
+            this.armorDomain.set('type', type);
 
             for (i = 0; i < this.names.length; i++) {
                 name = this.names[i];
 
-                if (this.weaponDomain.get(name.toLowerCase()) === null) {
-                    this.weaponDomain.set(name.toLowerCase(), config[typeName + '_' + name + '_BASE']);
+                if (this.armorDomain.get(name.toLowerCase()) === null) {
+                    this.armorDomain.set(name.toLowerCase(), config[typeName + '_' + name + '_BASE']);
                 }
 
                 this.data.settings.set(
@@ -147,8 +154,13 @@ define('view/equipment/weapon', [
             this.successMessage("Оружие успешно создано");
         },
 
-        afterRemoveWeapon: function () {
+        afterRemoveArmor: function () {
             this.successMessage("Оружие успешно удалено");
+        },
+
+        changeShieldType: function (type) {
+            this.armorDomain.set('shield', type ? type : false);
+            this.armorDomain.set('shield_type', type);
         },
 
         onRemove: function (e) {
@@ -159,9 +171,8 @@ define('view/equipment/weapon', [
             return false;
         },
 
-        onSelectWeapon: function (e) {
-            var weaponDomain,
-                targetId = null;
+        onSelectArmor: function (e) {
+            var armorDomain;
 
             target = jQuery(e.target).parents('.equipment-item');
 
@@ -175,15 +186,15 @@ define('view/equipment/weapon', [
 
             targetId = target.attr('data-id');
 
-            weaponDomain = new ModelEquipmentWeapon();
-            weaponDomain.set('_id', targetId);
-            weaponDomain.load(function () {
-                this.setCurrentWeaponDomain(weaponDomain);
+            armorDomain = new ModelEquipmentArmor();
+            armorDomain.set('_id', targetId);
+            armorDomain.load(function () {
+                this.setCurrentArmorDomain(armorDomain);
             }.bind(this));
         },
 
         onAdd: function () {
-            this.createCurrentWeaponDomain();
+            this.createCurrentArmorDomain();
         },
 
         onChangeCollection: function (collection, type) {
@@ -201,11 +212,11 @@ define('view/equipment/weapon', [
             this.set('collection', viewCollection);
         },
 
-        onSaveWeapon: function () {
-            this.trigger('save', this.weaponDomain);
+        onSaveArmor: function () {
+            this.trigger('save', this.armorDomain);
         },
 
-        onWeaponUpdate: function (model) {
+        onArmorUpdate: function (model) {
             if (model._previousAttributes.stamp != model.get('stamp')) {
                 return;
             }
@@ -215,25 +226,36 @@ define('view/equipment/weapon', [
             }
 
             this.timeoutUpdate = setTimeout(function () {
-                this.weaponDomain.simulate();
+                this.armorDomain.simulate();
                 this.timeoutUpdate = null;
             }.bind(this), 300);
         },
 
-        onChangeFilterWeapon: function (e) {
+        onChangeFilterArmor: function (e) {
             var button = jQuery(e.target),
                 type = button.attr('data-type');
 
             this.changeFilterType(type);
         },
 
-        onChangeWeaponType: function (e) {
-            if (this.weaponDomain.get('_id')) {
+        onChangeArmorType: function (e) {
+            if (this.armorDomain.get('_id')) {
                 return;
             }
 
             var button = jQuery(e.target);
-            this.changeWeaponType(button.attr('data-type'));
+            this.changeArmorType(button.attr('data-type'));
+        },
+
+        onChangeShieldType: function (e) {
+            var target = jQuery(e.target),
+                type = target.val();
+
+            if (type === 'none') {
+                type = null;
+            }
+
+            this.changeShieldType(type);
         },
 
         onClose: function () {

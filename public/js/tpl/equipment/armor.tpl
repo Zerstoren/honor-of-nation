@@ -6,10 +6,9 @@
 
                 <div class="btn-group select-filter-equipment" role="group">
                     <button type="button" class="btn btn-default filter all" data-type="all">Все</button>
-                    <button type="button" class="btn btn-default filter sword" data-type="sword">Мечи</button>
-                    <button type="button" class="btn btn-default filter blunt" data-type="blunt">Булавы</button>
-                    <button type="button" class="btn btn-default filter spear" data-type="spear">Копья</button>
-                    <button type="button" class="btn btn-default filter bow" data-type="bow">Луки</button>
+                    <button type="button" class="btn btn-default filter leather" data-type="sword">Кожа</button>
+                    <button type="button" class="btn btn-default filter mail" data-type="blunt">Кольчужные</button>
+                    <button type="button" class="btn btn-default filter plate" data-type="spear">Латные</button>
                     <button type="button" class="btn btn-defaul add"><b class="glyphicon glyphicon-plus"></b></button>
                 </div>
 
@@ -18,7 +17,7 @@
 
                         {{#each this.collection}}
                         <div
-                            class="equipment-item row {{#this._id==weapon._id}}active{{/this._id==weapon._id}}"
+                            class="equipment-item row {{#this._id==armor._id}}active{{/this._id==armor._id}}"
                             data-id="{{this._id}}"
                         >
                             <div class="col-md-2 preview">
@@ -38,7 +37,7 @@
             <div class="col-md-8 col-xs-8 man">
                 <div class="row">
                     <div class="col-md-9">
-                        <h1>Разработка оружия</h1>
+                        <h1>Разработка доспехов</h1>
                     </div>
 
                     <div class="col-md-1 header-icon-close">
@@ -48,74 +47,74 @@
 
                 <div class="dev-wrapper">
                     <div class="develop well">
-                        {{#this.weapon}}
+                        {{#this.armor}}
                         <div class="btn-group select-equipment-type" role="group">
                             <button
                                 type="button"
-                                class="btn btn-default active sword"
-                                data-type="sword"
-                                {{#weapon._id}}
+                                class="btn btn-default active leather"
+                                data-type="leather"
+                                {{#armor._id}}
                                 disabled="disabled"
-                                {{/#weapon._id}}
-                            >Мечь</button>
+                                {{/#armor._id}}
+                            >Кожа</button>
                             <button
                                 type="button"
-                                class="btn btn-default blunt"
-                                data-type="blunt"
-                                {{#weapon._id}}
+                                class="btn btn-default mail"
+                                data-type="mail"
+                                {{#armor._id}}
                                 disabled="disabled"
-                                {{/#weapon._id}}
-                            >Булава</button>
+                                {{/#armor._id}}
+                            >Кольчуга</button>
                             <button
                                 type="button"
-                                class="btn btn-default spear"
-                                data-type="spear"
-                                {{#weapon._id}}
+                                class="btn btn-default plate"
+                                data-type="plate"
+                                {{#armor._id}}
                                 disabled="disabled"
-                                {{/#weapon._id}}
-                            >Копье</button>
-                            <button
-                                type="button"
-                                class="btn btn-default bow"
-                                data-type="bow"
-                                {{#weapon._id}}
-                                disabled="disabled"
-                                {{/#weapon._id}}
-                            >Лук</button>
+                                {{/#armor._id}}
+                            >Латы</button>
                         </div>
 
                         <div class="space"></div><div class="space"></div><div class="space"></div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
-                                    <div class="input-group-addon">Урон</div>
+                                    <div class="input-group-addon">Здоровье</div>
                                     <input
                                         type="number"
                                         class="form-control"
-                                        value="{{weapon.damage}}"
-                                        min="{{settings.damage_min}}"
-                                        max="{{settings.damage_max}}"
-                                        {{#weapon._id}}
+                                        value="{{armor.health}}"
+                                        {{#armor._id}}
                                         disabled="disabled"
-                                        {{/#weapon._id}}
+                                        {{/#armor._id}}
                                     >
                                 </div>
 
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
-                                    <div class="input-group-addon">Сила крита</div>
+                                    <div class="input-group-addon">Ловкость</div>
                                     <input
                                         type="number"
                                         class="form-control"
-                                        step="0.1"
-                                        value="{{weapon.critical_damage}}"
-                                        min="{{settings.critical_damage_min}}"
-                                        max="{{settings.critical_damage_max}}"
-                                        {{#weapon._id}}
+                                        value="{{armor.agility}}"
+                                        {{#armor._id}}
                                         disabled="disabled"
-                                        {{/#weapon._id}}
+                                        {{/#armor._id}}
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Поглощение</div>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        value="{{armor.absorption}}"
+                                        {{#armor._id}}
+                                        disabled="disabled"
+                                        {{/#armor._id}}
                                     >
                                 </div>
                             </div>
@@ -124,35 +123,43 @@
                         <div class="space"></div><div class="space"></div><div class="space"></div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
-                                    <div class="input-group-addon">Скорость атаки</div>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        value="{{weapon.speed}}"
-                                        min="{{settings.speed_min}}"
-                                        max="{{settings.speed_max}}"
-                                        {{#weapon._id}}
-                                        disabled="disabled"
-                                        {{/#weapon._id}}
-                                    >
+                                  <span class="input-group-addon">Щит</span>
+                                  <select class="form-control shield_type">
+                                      <option value="none">Нету</option>
+                                      <option value="wood">Дерево</option>
+                                      <option value="steel">Сталь</option>
+                                  </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="input-group">
-                                    <div class="input-group-addon">Шанс крита</div>
+                                    <div class="input-group-addon">Прочность</div>
                                     <input
                                         type="number"
                                         class="form-control"
-                                        value="{{weapon.critical_chance}}"
-                                        min="{{settings.critical_chance_min}}"
-                                        max="{{settings.critical_chance_max}}"
-                                        {{#weapon._id}}
+                                        value="{{armor.shield_durability}}"
+                                        {{#!armor.shield}}
                                         disabled="disabled"
-                                        {{/#weapon._id}}
+                                        {{/#!armor.shield}}
                                     >
                                 </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Шанс блокировки</div>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        value="{{armor.shield_blocking}}"
+                                        {{#!armor.shield}}
+                                        disabled="disabled"
+                                        {{/#!armor.shield}}
+                                    >
+                                </div>
+
                             </div>
                         </div>
 
@@ -167,7 +174,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.transformNumberToPretty(
-                                                weapon.level
+                                                armor.level
                                             )
                                         }}
                                     </div>
@@ -178,7 +185,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.fromIntToTime(
-                                                weapon.time
+                                                armor.time
                                             )
                                         }}
                                     </div>
@@ -192,7 +199,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.transformNumberToPretty(
-                                                weapon.rubins
+                                                armor.rubins
                                             )
                                         }}
                                     </div>
@@ -203,7 +210,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.transformNumberToPretty(
-                                                weapon.wood
+                                                armor.wood
                                             )
                                         }}
                                     </div>
@@ -214,7 +221,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.transformNumberToPretty(
-                                                weapon.steel
+                                                armor.steel
                                             )
                                         }}
                                     </div>
@@ -225,7 +232,7 @@
                                     <div class="col-md-6 right">
                                         {{
                                             formatters.transformNumberToPretty(
-                                                weapon.eat
+                                                armor.eat
                                             )
                                         }}
                                     </div>
@@ -234,11 +241,11 @@
 
                         </div>
 
-                        {{#!weapon._id}}
+                        {{#!armor._id}}
                         <button class="btn btn-default save">Сохранить</button>
-                        {{/weapon._id}}
+                        {{/armor._id}}
 
-                    {{/this.weapon}}
+                    {{/this.armor}}
                     </div>
                 </div>
             </div>

@@ -28,10 +28,10 @@ define('model/equipment/weapon', [
 
         simulate: function () {
             if (
-                !this.get('damage') ||
-                !this.get('speed') ||
-                !this.get('critical_damage') ||
-                !this.get('critical_chance') ||
+                (!this.get('damage') && !_.isNumber(this.get('damage'))) ||
+                (!this.get('speed') && !_.isNumber(this.get('speed'))) ||
+                (!this.get('critical_damage') && !_.isNumber(this.get('critical_damage'))) ||
+                (!this.get('critical_chance') && !_.isNumber(this.get('critical_chance'))) ||
                 !this.get('type')
             ) {
                 return;

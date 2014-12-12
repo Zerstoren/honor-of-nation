@@ -1,7 +1,7 @@
 .nav {
     height: 100%;
 
-    .select-filter-weapon {
+    .select-filter-equipment {
         width:100%;
 
         button {
@@ -14,18 +14,18 @@
         }
     }
 
-    .weapon-items-wrapper {
+    .equipment-items-wrapper {
         margin-top: -40px;
         padding-top: 40px;
         width: 100%;
         height: 100%;
 
-        .weapons-items {
+        .equipments-items {
             height: 100%;
             overflow-y: auto;
             margin-top: 15px;
 
-            .weapon-item {
+            .equipment-item {
                 background: #eee;
                 width: 98%;
                 height: 75px;
@@ -55,11 +55,11 @@
                 }
             }
 
-            .weapon-item:first-child {
+            .equipment-item:first-child {
                 margin-top: 0px;
             }
 
-            .weapon-item:last-child {
+            .equipment-item:last-child {
                 margin-bottom: 0px;
             }
 

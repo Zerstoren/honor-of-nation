@@ -10,8 +10,8 @@ class Decorate(object):
 
             'shield': domain.getShield(),
             'shield_type': domain.getShieldType(),
-            'shield_blocking': domain.getShieldBlocking(),
-            'shield_durability': domain.getShieldDurability(),
+            'shield_blocking': domain.getShieldBlocking() or 0,
+            'shield_durability': domain.getShieldDurability() or 0,
 
             'level': domain.getLevel(),
             'time': domain.getTime(),

@@ -43,5 +43,9 @@ define('system/config', [
         return $$config.equipment_weapon;
     };
 
+    Config.prototype.getEquipmentArmor = function () {
+        return $$config.equipment_armor;
+    };
+
     return new Config();
 });
