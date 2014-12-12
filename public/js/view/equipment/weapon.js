@@ -1,15 +1,17 @@
 define('view/equipment/weapon', [
+    'view/equipment/abstract',
     'system/config',
     'service/standalone/user',
     'model/dummy',
     'model/equipment/weapon'
 ], function (
+    ViewEquipmentAbstract,
     systemConfig,
     serviceStandaloneUser,
     ModelDummy,
     ModelEquipmentWeapon
 ) {
-    return AbstractView.extend({
+    return ViewEquipmentAbstract.extend({
         events: {
             'click .header-icon-close': 'onClose',
             'keydown global': 'onKeyDown',
@@ -29,17 +31,7 @@ define('view/equipment/weapon', [
 
         names: ['DAMAGE', 'SPEED', 'CRITICAL_DAMAGE', 'CRITICAL_CHANCE'],
 
-        initialize: function () {
-            this.viewCollection = null;
-
-            this.timeoutUpdate = null;
-            this.selectedType = null;
-
-            this.template = this.getTemplate('equipment/weapon');
-            this.initRactive();
-
-            this.set('settings', new ModelDummy());
-        },
+        tpl: 'equipment/weapon',
 
         createCurrentWeaponDomain: function () {
             if (this.weaponDomain) {
@@ -85,22 +77,6 @@ define('view/equipment/weapon', [
             this.weaponDomain = null;
         },
 
-        render: function (holder, collection) {
-            this.viewCollection = collection;
-            this.viewCollection.on('change', this.onChangeCollection, this);
-            this.viewCollection.on('reset', this.onChangeCollection, this);
-            this.changeFilterType('all');
-
-            holder.append(this.$el);
-
-            this.delegateEvents();
-        },
-
-        unRender: function () {
-            this.$el.remove();
-            this.undelegateEvents();
-        },
-
         changeWeaponType: function (type) {
             var name,
                 typeName = type.toUpperCase(),
@@ -130,19 +106,6 @@ define('view/equipment/weapon', [
             this.$el.find('.select-equipment-type .' + type).addClass('active');
         },
 
-        changeFilterType: function (type) {
-            this.$el.find('.select-filter-equipment .filter').removeClass('active');
-            this.$el.find('.select-filter-equipment .' + type).addClass('active');
-
-            if (type === 'all') {
-                this.selectedType = null;
-                this.onChangeCollection(this.viewCollection);
-            } else {
-                this.selectedType = type;
-                this.onChangeCollection(this.viewCollection, type);
-            }
-        },
-
         afterCreateSave: function () {
             this.successMessage("Оружие успешно создано");
         },
@@ -151,13 +114,6 @@ define('view/equipment/weapon', [
             this.successMessage("Оружие успешно удалено");
         },
 
-        onRemove: function (e) {
-            var target = jQuery(e.target).parents('.equipment-item'),
-                id = target.attr('data-id');
-
-            this.trigger('remove', this.viewCollection.searchById(id));
-            return false;
-        },
 
         onSelectWeapon: function (e) {
             var weaponDomain,
@@ -184,21 +140,6 @@ define('view/equipment/weapon', [
 
         onAdd: function () {
             this.createCurrentWeaponDomain();
-        },
-
-        onChangeCollection: function (collection, type) {
-            var viewCollection = collection.clone();
-            viewCollection.sort();
-
-            if (type === undefined) {
-                type = this.selectedType;
-            }
-
-            if (type !== null) {
-                viewCollection = viewCollection.where({type: type});
-            }
-
-            this.set('collection', viewCollection);
         },
 
         onSaveWeapon: function () {
@@ -234,17 +175,6 @@ define('view/equipment/weapon', [
 
             var button = jQuery(e.target);
             this.changeWeaponType(button.attr('data-type'));
-        },
-
-        onClose: function () {
-            this.unRender();
-            this.trigger('close');
-        },
-
-        onKeyDown: function (e) {
-            if (e.keyCode === this.keyCodes.esc) {
-                this.onClose();
-            }
         }
     });
 });
