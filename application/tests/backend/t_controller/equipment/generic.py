@@ -2,10 +2,18 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 from service.Equipment.Weapon import Service_Equipment_Weapon
 from service.Equipment.Armor import Service_Equipment_Armor
+from service.Equipment.Units import Service_Equipment_Units
 
 class Backend_Controller_Equipment_Generic(Backend_Controller_Generic):
-
-    def createEquipmentWeapon(self, user, wType='sword', damage=100, speed=40, critical_chance=5, critical_damage=2):
+    def createEquipmentWeapon(
+        self,
+        user,
+        wType='sword',
+        damage=100,
+        speed=40,
+        critical_chance=5,
+        critical_damage=2
+    ):
         service = Service_Equipment_Weapon()
         domain = service.save({
             'user': user.getId(),
@@ -44,3 +52,42 @@ class Backend_Controller_Equipment_Generic(Backend_Controller_Generic):
         })
 
         return domain
+
+    def createEquipmentUnit(
+        self,
+        user,
+        uType='solider',
+        troopSize=0,
+        health=300,
+        agility=30,
+        absorption=30,
+        stamina=100,
+        strength=20,
+        armor=None,
+        weapon=None,
+        weaponSecond=None
+    ):
+        service = Service_Equipment_Units()
+
+        if armor is None:
+            armor = self.createEquipmentArmor(user)
+
+        if weapon is None:
+            weapon = self.createEquipmentWeapon(user)
+
+        if weaponSecond is None:
+            weaponSecond = False
+
+        return service.save({
+            'user': user.getId(),
+            'type': uType,
+            'troop_size':troopSize,
+            'health': health,
+            'agility': agility,
+            'absorption': absorption,
+            'stamina': stamina,
+            'strength': strength,
+            'armor': armor,
+            'weapon': weapon,
+            'weapon_second': weaponSecond
+        })

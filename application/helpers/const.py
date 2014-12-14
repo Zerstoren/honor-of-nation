@@ -14,6 +14,9 @@ class Const(object):
     def __str__(self):
         return "NoneString"
 
+    def __getattr__(self, item):
+        return object.__getattribute__(self, item)
+
     def __setattr__(self, *wards):
         pass
 
