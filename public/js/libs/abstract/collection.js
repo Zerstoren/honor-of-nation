@@ -17,10 +17,24 @@ define('libs/abstract/collection', [
             }
         },
 
+        search: function (name, value) {
+            var search = {};
+            search[name] = value;
+            return this.where(search).at(0);
+        },
+
         where: function () {
             return new this.constructor(
                 Backbone.Collection.prototype.where.apply(this, arguments)
             );
+        },
+
+        whereIn: function (attr, values) {
+            var result = this.filter(function (model) {
+                return values.indexOf(model.get(attr)) !== -1;
+            });
+
+            return new this.constructor(result);
         },
 
         sync: function (method, options) {

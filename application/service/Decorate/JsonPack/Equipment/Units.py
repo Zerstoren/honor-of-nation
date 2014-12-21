@@ -13,7 +13,7 @@ class Decorate(object):
 
             'armor': str(domain.getArmor().getId()),
             'weapon': str(domain.getWeapon().getId()),
-            'weapon_second': domain.getWeaponSecond().getId() if domain.getWeaponSecond() else False,
+            'weapon_second': str(domain.getWeaponSecond().getId()) if domain.getWeaponSecond() else False,
 
             'time': domain.getTime(),
 

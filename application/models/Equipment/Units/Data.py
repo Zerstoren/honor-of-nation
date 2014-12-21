@@ -1,11 +1,11 @@
 import helpers.const
 
 const = helpers.const.Const(
-    UNIT_GENERAL=0,
+    UNIT_TROOP_SIZE=0,
     UNIT_HEALTH=50,
     UNIT_STRENGTH=40,
     UNIT_AGILITY=0,
-    UNIT_ABSORTION=0,
+    UNIT_ABSORPTION=0,
     UNIT_STAMINA=10
 )
 
@@ -16,8 +16,8 @@ unit = {
         'steel': 2,
         'wood': 2,
         'time': 0.1,
-        'min': const.UNIT_GENERAL,
-        'base': const.UNIT_GENERAL
+        'min': const.UNIT_TROOP_SIZE,
+        'base': const.UNIT_TROOP_SIZE
     },
 
     'health': {
@@ -58,8 +58,8 @@ unit = {
         'steel': 500,
         'wood': 500,
         'time': 5,
-        'min': const.UNIT_ABSORTION,
-        'base': const.UNIT_ABSORTION
+        'min': const.UNIT_ABSORPTION,
+        'base': const.UNIT_ABSORPTION
     },
 
     'stamina': {

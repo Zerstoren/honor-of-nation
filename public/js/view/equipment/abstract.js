@@ -1,4 +1,8 @@
-define('view/equipment/abstract', [], function () {
+define('view/equipment/abstract', [
+    'model/dummy'
+], function (
+    ModelDummy
+) {
     return AbstractView.extend({
         tpl: null,
         initialize: function () {
@@ -27,7 +31,6 @@ define('view/equipment/abstract', [], function () {
         unRender: function () {
             this.$el.remove();
             this.undelegateEvents();
-
         },
 
         changeFilterType: function (type) {
@@ -49,7 +52,6 @@ define('view/equipment/abstract', [], function () {
 
             this.trigger('remove', this.viewCollection.searchById(id));
             return false;
-
         },
 
         onChangeCollection: function (collection, type) {

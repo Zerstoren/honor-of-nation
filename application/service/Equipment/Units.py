@@ -35,8 +35,10 @@ class Service_Equipment_Units(AbstractEquipment):
     def _getArmorCalculatedDomain(self, data):
         domain = Equipment_Units_Domain()
 
-        if '_id' in data:
+        if '_id' in data and data['_id']:
             domain.setId(data['_id'])
+        else:
+            domain._loaded = True
 
         data = self._fixLevels(data)
 

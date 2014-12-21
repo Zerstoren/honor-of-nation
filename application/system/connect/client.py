@@ -5,6 +5,10 @@ import tornado.ioloop
 import tornado.iostream
 import tornado.tcpclient
 
+import system.log
+
+SOCKET_END = b"\r\n\r\n"
+
 
 class TCPWrapper(tornado.tcpclient.TCPClient):
     def __init__(self, host, port):
@@ -27,19 +31,20 @@ class TCPWrapper(tornado.tcpclient.TCPClient):
         def a(d):
             pass
 
-        future = self.stream.write(data + b"\x00\xFF")
+        future = self.stream.write(data + SOCKET_END)
         future.add_done_callback(a)
 
     @tornado.gen.coroutine
     def dispatch(self):
         try:
             while True:
-                msg = yield self.read_until(b"\x00\xFF")
+                msg = yield self.read_until(SOCKET_END)
 
                 if self._read_listener:
                     self._read_listener(self, msg)
 
         except tornado.iostream.StreamClosedError as e:
+            system.log.critical(e)
             print(e)
         return
 

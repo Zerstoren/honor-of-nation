@@ -2,6 +2,8 @@ import traceback
 
 import system.log
 
+import system.UserTransfer
+
 from . import database
 from . import httpCodes
 from . import message
@@ -61,6 +63,13 @@ def handle(fn):
             })
 
         except message.Message as e:
+            transfer.send('/error', {
+                'done': False,
+                'error': str(e)
+            })
+
+        except system.UserTransfer.UserNotSet as e:
+            system.log.warn(str(e) + " User not set")
             transfer.send('/error', {
                 'done': False,
                 'error': str(e)

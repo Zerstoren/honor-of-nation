@@ -14,6 +14,18 @@
         }
     }
 
+    .select-filter-equipment.unit {
+        button {
+            width: 25%;
+        }
+    }
+
+    .select-filter-equipment.armor {
+        button {
+            width: 20%;
+        }
+    }
+
     .equipment-items-wrapper {
         margin-top: -40px;
         padding-top: 40px;
@@ -123,6 +135,51 @@
             .save {
                 position: absolute;
                 top: 94%;
+            }
+        }
+    }
+
+    .unit-equipment-wrapper {
+        width: 100%;
+        height: 100%;
+
+        margin-top: -100px;
+        padding-top: 100px;
+
+        margin-bottom: -230px;
+        padding-bottom: 230px;
+
+        .unit-equipment {
+            height: 100%;
+
+            .cell {
+                height: 100%;
+            }
+
+            .armors,
+            .weapons,
+            .weapons-second {
+                overflow-y: auto;
+                height: 100%;
+
+                .armor,
+                .weapon,
+                .weapon-second {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    padding-left: 5px;
+
+                    img {
+                        float: left;
+                        padding-right: 3px;
+                    }
+                }
+
+                .armor.selected,
+                .weapon.selected,
+                .weapon-second.selected {
+                    background-color: #999;
+                }
             }
         }
     }
