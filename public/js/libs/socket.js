@@ -159,6 +159,14 @@ define('libs/socket', function() {
      * @return {void}
      */
     Socket.prototype.onMessage = function(data) {
+        if (data.data == 'dropdown') {
+            this.trigger('dropdown');
+            return;
+        } else if (data.data == 'startup') {
+            this.trigger('startup');
+            return;
+        }
+
         var i,
             message = JSON.parse(data.data);
 

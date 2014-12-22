@@ -102,6 +102,10 @@ class BalancerBroker():
         self.tcp.setConnectListener(self.onConnectNewClient)
 
     def onConnectNewClient(self, connector):
+        if len(self.connections) == 0:
+            import balancer.server.clientConnector
+            balancer.server.clientConnector.ClientPool.sendStartup()
+
         connector.setReadListener(self.onMessage)
         connector.setCloseListener(self.onConnectClose)
         self.connections.append(connector)
@@ -123,5 +127,12 @@ class BalancerBroker():
     def onMessage(self, connector, data):
         pass
 
+    def isReady(self):
+        return len(self.connections) != 0
+
     def onConnectClose(self, connector):
         self.connections.remove(connector)
+
+        if len(self.connections) == 0:
+            import balancer.server.clientConnector
+            balancer.server.clientConnector.ClientPool.sendDropDown()
