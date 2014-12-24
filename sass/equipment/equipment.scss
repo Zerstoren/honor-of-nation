@@ -184,3 +184,15 @@
         }
     }
 }
+
+.armor .popup, .weapon .popup, .weapon-second .popup {
+    display: none;
+    position: fixed;
+    z-index: 500;
+    padding: 5px;
+    width: 400px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #eee;
+    box-shadow: 1px 1px 4px #000;
+}

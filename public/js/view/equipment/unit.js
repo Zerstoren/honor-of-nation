@@ -1,11 +1,13 @@
 define('view/equipment/unit', [
     'view/equipment/abstract',
+    'view/elements/popup',
     'system/config',
     'service/standalone/user',
     'model/dummy',
     'model/equipment/unit'
 ], function (
     ViewEquipmentAbstract,
+    ViewElementsPopup,
     systemConfig,
     serviceStandaloneUser,
     ModelDummy,
@@ -43,6 +45,30 @@ define('view/equipment/unit', [
             this.weaponCollection = weaponCollection;
 
             ViewEquipmentAbstract.prototype.render.apply(this, [holder, collection]);
+
+            this.popupArmor = new ViewElementsPopup(
+                this.$el, {
+                    liveTarget: '.armor',
+                    timeout: 100,
+                    align: 'left'
+                }
+            );
+
+            this.popupWeapon = new ViewElementsPopup(
+                this.$el, {
+                    liveTarget: '.weapon',
+                    timeout: 100,
+                    align: 'left'
+                }
+            );
+
+            this.popupWeaponSecond = new ViewElementsPopup(
+                this.$el, {
+                    liveTarget: '.weapon-second',
+                    timeout: 100,
+                    align: 'left'
+                }
+            );
         },
 
         createCurrentUnitDomain: function () {
@@ -83,8 +109,12 @@ define('view/equipment/unit', [
             }
 
             this.unitDomain = unitDomain;
-            this.changeUnitType(this.unitDomain.get('type'));
+            this.set('weapon_collection', this.weaponCollection);
+            this.set('weapon_second_collection', this.weaponCollection);
+            this.set('armor_collection', this.armorCollection);
             this.set('unit', this.unitDomain);
+            this.changeUnitType(this.unitDomain.get('type'));
+
         },
 
         removeCurrentUnitDomain: function (selected) {
@@ -161,20 +191,6 @@ define('view/equipment/unit', [
             armor = this.armorCollection.search('_id', id);
 
             if (armor.get('shield')) {
-                if (this.unitDomain.get('weapon')) {
-                    weapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon'));
-                    if (['bow', 'spear'].indexOf(weapon.get('type')) !== -1) {
-                        this.selectWeapon(null);
-                    }
-                }
-
-                if (this.unitDomain.get('weapon_second')) {
-                    weapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon_second'));
-                    if (['bow', 'spear'].indexOf(weapon.get('type')) !== -1) {
-                        this.selectWeaponSecond(null);
-                    }
-                }
-
                 this.set(
                     'weapon_collection',
                     this.weaponCollection.whereIn('type', ['sword', 'blunt'])
@@ -183,18 +199,11 @@ define('view/equipment/unit', [
                 this.set(
                     'weapon_second_collection',
                     this.weaponCollection.whereIn('type', ['sword', 'blunt'])
-                );
-            } else {
-                this.set(
-                    'weapon_collection',
-                    this.weaponCollection
-                );
-
-                this.set(
-                    'weapon_second_collection',
-                    this.weaponCollection
                 );
             }
+
+            this.selectWeapon(this.unitDomain.get('weapon'));
+            this.selectWeaponSecond(this.unitDomain.get('weapon_second'));
         },
 
         // @TODO Refactor this shit
@@ -211,10 +220,10 @@ define('view/equipment/unit', [
                 armor,
                 weapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon'));
 
-            if (weapon && ['bow', 'spear'].indexOf(weapon.get('type')) !== -1) {
+            if (weapon && _.contains(['bow', 'spear'], weapon.get('type'))) {
                 if (this.unitDomain.get('weapon_second')) {
                     secondWeapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon_second'));
-                    if (['bow', 'spear'].indexOf(secondWeapon.get('type')) !== -1) {
+                    if (_.contains(['bow', 'spear'], secondWeapon.get('type'))) {
                         this.set('weapon_second', null);
                     }
                 }
@@ -245,10 +254,10 @@ define('view/equipment/unit', [
                 armor,
                 secondWeapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon_second'));
 
-            if (secondWeapon && ['bow', 'spear'].indexOf(secondWeapon.get('type')) !== -1) {
+            if (secondWeapon && _.contains(['bow', 'spear'], secondWeapon.get('type'))) {
                 if (this.unitDomain.get('weapon')) {
                     weapon = this.weaponCollection.search('_id', this.unitDomain.get('weapon'));
-                    if (['bow', 'spear'].indexOf(weapon.get('type')) !== -1) {
+                    if (_.contains(['bow', 'spear'], weapon.get('type'))) {
                         this.set('weapon', null);
                     }
                 }
@@ -284,6 +293,10 @@ define('view/equipment/unit', [
                 id = target.attr('data-id');
             } else {
                 id = target.parents('.weapon-second').attr('data-id');
+            }
+
+            if (id === 'none') {
+                id = null;
             }
 
             this.selectWeaponSecond(id);

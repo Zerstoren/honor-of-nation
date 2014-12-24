@@ -67,7 +67,26 @@ class Service_Equipment_Units(AbstractEquipment):
         domain.setSteel(currentPrice['steel'])
         domain.setEat(currentPrice['eat'])
 
+        self._addEquipmentToPrice(domain)
+
         return domain
+
+    def _addEquipmentToPrice(self, domain):
+        armor = domain.getArmor()
+        weapon = domain.getWeapon()
+        weaponSecond = domain.getWeaponSecond()
+
+        resources = ['rubins', 'steel', 'wood', 'eat', 'time']
+
+        for resource in resources:
+            domain.set(
+                resource,
+                domain.get(resource) +
+                    armor.get(resource) +
+                    weapon.get(resource) +
+                    (weaponSecond.get(resource) if weaponSecond else 0)
+            )
+
 
     def _fixLevels(self, data):
         names = ['troop_size', 'health', 'agility', 'absorption', 'strength', 'stamina']

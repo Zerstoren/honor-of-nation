@@ -55,7 +55,7 @@ define('service/equipment/unit', [
 
         onRemove: function (unit) {
             unit.remove(this.afterRemoveArmor.bind(this));
-            this.viewEquipmentUnit.removeCurrentArmorDomain(unit);
+            this.viewEquipmentUnit.removeCurrentUnitDomain(unit);
         },
 
         onSave: function (unitDomain) {

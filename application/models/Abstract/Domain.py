@@ -57,6 +57,14 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
 
         return result
 
+    def get(self, name):
+        self.extract()
+        return self._domain_data[name]
+
+    def set(self, name, value):
+        self.extract()
+        self._domain_data[name] = value
+
     def _getFunc(self, name):
         name = self.__convert(name)
         def getFunc():
