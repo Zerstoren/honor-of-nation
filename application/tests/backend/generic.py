@@ -11,6 +11,8 @@ import imp
 
 
 class Backend_Generic(Generic):
+    execution = 'backend'
+
     celeryDebug = False
     _useCelery = False
 

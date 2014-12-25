@@ -17,6 +17,8 @@ import helpers.MapCoordinate
 
 
 class Generic(abstractGeneric.Abstract_Generic):
+    execution = None
+
     def getRandomName(self, prefix='', length=8):
         return prefix + hashlib.md5(str(random.randint(0, 100000000)).encode()).hexdigest()[0:length]
 

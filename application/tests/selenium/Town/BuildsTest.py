@@ -1,5 +1,6 @@
 from tests.selenium.Town import generic
 from models.TownBuilds import Common as buildConst
+import tests.rerun
 
 class Selenium_Town_BuildsTest(generic.Selenium_Town_Generic):
     def setUp(self):
@@ -22,6 +23,7 @@ class Selenium_Town_BuildsTest(generic.Selenium_Town_Generic):
         self.login()
         self.openTown(self.town)
 
+    @tests.rerun.retry()
     def testBaseCreateAndRemove(self):
         self._getBuildElement(buildConst.BUILD_V_COUNCIL).click()
 

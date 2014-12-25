@@ -1,4 +1,5 @@
 from tests.selenium.Admin import generic
+import tests.rerun
 
 import service.MapResources
 import helpers.MapCoordinate
@@ -9,6 +10,7 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         super()._goToAdmin()
         self.byAttribute('data-type', 'resources').click()
 
+    @tests.rerun.retry()
     def testCreateResource(self):
         self.fillTerrain(0, 0, 2, 2)
         self._goToAdmin()
@@ -38,6 +40,7 @@ class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
         self.assertEqual(resource.getAmount(), 2500000)
         self.assertEqual(resource.getBaseOutput(), 2500)
 
+    @tests.rerun.retry()
     def testEditResource(self):
         self.fillTerrain(0, 0, 2, 2)
         service.MapResources.Service_MapResources().saveResources({

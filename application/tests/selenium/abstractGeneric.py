@@ -15,7 +15,7 @@ import selenium.webdriver.support.ui as WebDriverUI
 from tests.bootstrap.Selenium import SeleniumFacade
 
 import time
-import sys
+import os.path
 import subprocess
 import signal
 import random
@@ -46,6 +46,8 @@ webdriver.remote.webdriver.WebDriver.byClassMany = webdriver.remote.webdriver.We
 
 
 class Selenium_Abstract_Generic(Generic):
+    execution = 'selenium'
+
     keys = Keys
     managedProcess = None
     isSetup = False
@@ -68,11 +70,6 @@ class Selenium_Abstract_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
-        # basePath = sys.path[1]
-        #
-        # if config.configType == 'jankins_test':
-        #     basePath = sys.path[0]
-
         self.managedProcess = subprocess.Popen([
                 'python3',
                 '-B',
@@ -81,7 +78,8 @@ class Selenium_Abstract_Generic(Generic):
                 '--database=%s' % self.core.database_name,
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
-            ]
+            ],
+           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
         )
 
     def tearDown(self):

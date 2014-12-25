@@ -1,10 +1,12 @@
 from tests.selenium.Admin import generic
+import tests.rerun
 
 class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
     def _setResource(self, name, value):
         self.byCssSelector('.resources-edit input.' + name).clear()
         self.byCssSelector('.resources-edit input.' + name).send_keys(value)
 
+    @tests.rerun.retry()
     def testSetResources(self):
         user = self.login()
         self._goToAdmin()
@@ -40,7 +42,7 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
             }
         )
 
-
+    @tests.rerun.retry()
     def testCreateTerrainByCoordinate_WrongUser(self):
         self.setUserAsAdmin(self.fixture.getUser(1))
         self.login()
@@ -52,6 +54,7 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
 
         self.operationIsFail()
 
+    @tests.rerun.retry()
     def testOpenMapForUser(self):
         self.fillTerrain(0, 0, 4, 4)
 

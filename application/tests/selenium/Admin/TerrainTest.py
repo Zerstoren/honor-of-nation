@@ -1,6 +1,8 @@
 from tests.selenium.Admin import generic
+import tests.rerun
 
 class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
+    @tests.rerun.retry()
     def testCreateTerrainByCoordinate(self):
         self.login()
         self._goToAdmin()
@@ -17,6 +19,7 @@ class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
 
         self.operationIsSuccess()
 
+    @tests.rerun.retry()
     def testCreateTerrainByChunks(self):
         self.login()
         self._goToAdmin()
