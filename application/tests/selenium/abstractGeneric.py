@@ -19,7 +19,11 @@ import sys
 import subprocess
 import signal
 import random
-import os
+
+import logging
+selenium_logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
+# Only display possible problems
+selenium_logger.setLevel(logging.WARNING)
 
 # Create alias for most popular actions
 webdriver.remote.webelement.WebElement.byCss = webdriver.remote.webelement.WebElement.find_element_by_css_selector
@@ -64,15 +68,15 @@ class Selenium_Abstract_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
-        basePath = sys.path[1]
-
-        if config.configType == 'jankins_test':
-            basePath = sys.path[0]
+        # basePath = sys.path[1]
+        #
+        # if config.configType == 'jankins_test':
+        #     basePath = sys.path[0]
 
         self.managedProcess = subprocess.Popen([
                 'python3',
                 '-B',
-                '%s/init_balancer.py' % basePath,
+                'init_balancer.py',
                 '--type=%s' % config.configType,
                 '--database=%s' % self.core.database_name,
                 '--port=%s' % self._port,
