@@ -1,6 +1,7 @@
 # Fix for PyCharm run.
 import sys
 import os
+
 if sys.argv[0].find('/utrunner.py') != -1:
     sys.path[0] = sys.path[3]
     sys.argv[0] = sys.path[3]
@@ -85,3 +86,9 @@ def get(name):
         return _config['default'][name]
     else:
         raise Exception("Config attribute %s not found" % name)
+
+def isDevelopment():
+    return configType != 'product'
+
+def isProduction():
+    return configType == 'product'

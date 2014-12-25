@@ -3,13 +3,13 @@ define('view/town/main', [
 ], function (
 
 ) {
-
     return AbstractView.extend({
         events: {
             'click .close': 'onClose',
             'keydown global': 'onKeyDown',
             'click .town_info .develop_weapon': 'onDevelopWeapon',
-            'click .town_info .develop_armor': 'onDevelopArmor'
+            'click .town_info .develop_armor': 'onDevelopArmor',
+            'click .town_info .develop_people': 'onDevelopUnit'
         },
 
         className: 'town',
@@ -67,6 +67,11 @@ define('view/town/main', [
         onDevelopArmor: function () {
             this.undelegateEvents();
             this.trigger('onDevelopArmor');
+        },
+
+        onDevelopUnit: function () {
+            this.undelegateEvents();
+            this.trigger('onDevelopUnit');
         }
     });
 });

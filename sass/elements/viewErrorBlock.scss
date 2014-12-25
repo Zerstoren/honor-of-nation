@@ -1,4 +1,4 @@
-.connect-is-not-estabilished {
+.connect-is-not-estabilished .text {
     position: absolute;
     margin: auto;
     top: 0;
@@ -20,9 +20,11 @@
 
     box-shadow: 0px 0px 3px #333;
     border-radius: 5px;
+
+    z-index: 10000000;
 }
 
-.connect-is-estabilished {
+.connect-is-estabilished .text {
     position: absolute;
     margin: auto;
     top: 0;
@@ -44,4 +46,6 @@
 
     box-shadow: 0px 0px 3px #333;
     border-radius: 5px;
+
+    z-index: 10000000;
 }

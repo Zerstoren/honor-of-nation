@@ -2,6 +2,7 @@ import config
 import system.connect.client
 
 import pickle
+import system.log
 
 
 class Respondent_Instance(system.connect.client.TCPWrapper):
@@ -22,15 +23,23 @@ class Respondent_Instance(system.connect.client.TCPWrapper):
 
     def onMessage(self, connect, data):
         try:
-            self.write(
-                pickle.dumps(
-                    self.processMessage(data)
-                )
-            )
+            result = self.processMessage(data)
+
+            if config.isDevelopment():
+                import json
+                json.dumps(result)
+
         except Exception as e:
             import traceback
-            print(e)
-            print (traceback.format_exc())
+            system.log.critical(e)
+            system.log.critical(traceback.format_exc())
+            return
+
+        self.write(
+            pickle.dumps(
+                result
+            )
+        )
 
     def setHandler(self, handler):
         self._onMessage = handler

@@ -12,7 +12,9 @@ define('system/preStart', [
     'view/block/map/footer',
     'view/block/map/body',
 
-    'view/block/no/body'
+    'view/block/no/body',
+
+    'system/config'
 ], function (
     systemBootstrap,
     systemSocket,
@@ -27,7 +29,9 @@ define('system/preStart', [
     ViewBlockMapFooter,
     ViewBlockMapBody,
 
-    ViewBlockNoBody
+    ViewBlockNoBody,
+
+    config
 ) {
     'use strict';
     var map, no,
@@ -81,15 +85,36 @@ define('system/preStart', [
 
     systemSocket.on('error:notOpen', function () {
         viewBlockError._connectionIsNotEstablished();
+        console.log('notOpen');
     });
 
     systemSocket.on('error:close', function () {
         viewBlockError._connectionIsNotEstablished();
+        console.log('close');
+    });
+
+    systemSocket.on('error:closed', function () {
+        viewBlockError._connectionIsNotEstablished();
+        console.log('closed');
+    });
+
+    systemSocket.on('dropdown', function () {
+        viewBlockError._connectionIsNotEstablished();
+        console.log('dropdown');
     });
 
     systemSocket.on('connect', function () {
         viewBlockError._connectionIsEstablished();
         serviceUser.login();
+        config.$reload();
+        console.log('connect');
+    });
+
+    systemSocket.on('startup', function () {
+        viewBlockError._connectionIsEstablished();
+        serviceUser.login();
+        config.$reload();
+        console.log('startup');
     });
 
     serviceMessages.init();

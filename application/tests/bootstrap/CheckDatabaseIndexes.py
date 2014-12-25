@@ -6,6 +6,10 @@ class _RefErrorLocalException(Exception):
         self.field = field
         super().__init__()
 
+    def __str__(self):
+        return "Collection: " + self.collection + " Field: " + self.field
+
+
 class RefError(Exception):
     pass
 
@@ -51,21 +55,21 @@ class CheckDatabaseIndexes():
         itemKeys = list(item.keys())
 
         for i in configParse:
-            result = False
-            try:
+            if i.find('.') != -1:
+                inc = i.split('.')
+                value = eval('item["' + '"]["'.join(inc) + '"]')
+                configKeys.remove(i)
+            else:
+                value = item[i]
 
-                if i.find('.') != -1:
-                    inc = i.split('.')
-                    value = eval('item["' + '"]["'.join(inc) + '"]')
-                    configKeys.remove(i)
-                else:
-                    value = item[i]
+            result = configParse[i][0](value)
 
-                result = configParse[i][0](value)
-            except (KeyError, _RefErrorLocalException):
+            if isinstance(result, Exception):
                 if configParse[i][1].find('empty') != -1:
                     configKeys.remove(i)
-                continue
+                    continue
+                else:
+                    raise result
 
             if result is False and configParse[i][1].find('empty') == -1:
                 raise TypeValueError("Field `%s` in collection `%s` has wrong type" % (i, collectionName))
@@ -117,24 +121,30 @@ class CheckDatabaseIndexes():
         def refParse(fn, ref):
             collection, field = ref.split('->')
             def v(value):
+                if fn(value) == True:
+                    return True
+
                 search = {}
                 search[field] = value
                 result = system.mongo.mongo[collection].find(search).count()
 
                 if result == 0:
-                    raise _RefErrorLocalException(collection, field)
+                    return _RefErrorLocalException(collection, field)
 
-                return fn(value) or True
+                return True
             return v
 
         def enumParse(fn, nums):
             items = nums.split(',')
 
             def v(value):
-                if not value in items:
-                    raise EnumError("Enum field `%s.%s` has wrong value `%s`, try use some of `%s`" % (collectionName, field, value, nums))
+                if fn(value) == True:
+                    return True
 
-                return fn(value) or True
+                if not value in items:
+                    return EnumError("Enum field `%s.%s` has wrong value `%s`, try use some of `%s`" % (collectionName, field, value, nums))
+
+                return  True
 
             return v
 

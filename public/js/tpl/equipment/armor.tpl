@@ -4,11 +4,11 @@
         <div class="full-height">
             <div class="col-md-4 col-xs-4 nav">
 
-                <div class="btn-group select-filter-equipment" role="group">
+                <div class="btn-group select-filter-equipment armor" role="group">
                     <button type="button" class="btn btn-default filter all" data-type="all">Все</button>
                     <button type="button" class="btn btn-default filter leather" data-type="sword">Кожа</button>
-                    <button type="button" class="btn btn-default filter mail" data-type="blunt">Кольчужные</button>
-                    <button type="button" class="btn btn-default filter plate" data-type="spear">Латные</button>
+                    <button type="button" class="btn btn-default filter mail" data-type="blunt">Кольчуга</button>
+                    <button type="button" class="btn btn-default filter plate" data-type="spear">Латы</button>
                     <button type="button" class="btn btn-defaul add"><b class="glyphicon glyphicon-plus"></b></button>
                 </div>
 
@@ -125,8 +125,13 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="input-group">
-                                  <span class="input-group-addon">Щит</span>
-                                  <select class="form-control shield_type">
+                                    <span class="input-group-addon">Щит</span>
+                                    <select
+                                        class="form-control shield_type"
+                                        {{#armor._id}}
+                                        disabled="disabled"
+                                        {{/#armor._id}}
+                                    >
                                       <option value="none">Нету</option>
                                       <option value="wood">Дерево</option>
                                       <option value="steel">Сталь</option>

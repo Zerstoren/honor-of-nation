@@ -6,6 +6,7 @@ import system.log
 
 import models.Equipment.Weapon.Data
 import models.Equipment.Armor.Data
+import models.Equipment.Units.Data
 
 
 class MainController():
@@ -24,7 +25,8 @@ class MainController():
                 'chunk_size': int(config.get('map.chunk')),
 
                 'equipment_weapon': models.Equipment.Weapon.Data.const.export(),
-                'equipment_armor': models.Equipment.Armor.Data.const.export()
+                'equipment_armor': models.Equipment.Armor.Data.const.export(),
+                'equipment_unit': models.Equipment.Units.Data.const.export()
             }
         })
 

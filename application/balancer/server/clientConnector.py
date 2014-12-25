@@ -1,8 +1,10 @@
 import uuid
+import copy
 
 from tornado import websocket
 
 import balancer.server.userPool
+import balancer.server.surveyor
 
 
 class ClientConnector():
@@ -15,6 +17,9 @@ class ClientConnector():
         self._id = str(uuid.uuid4())
 
         ClientPool.add(self)
+
+        if balancer.server.surveyor.Surveyor.isReady() is False:
+            self.send('dropdown')
 
     def disconnect(self):
         self.socket = None
@@ -50,6 +55,14 @@ class ClientPool_Instance():
 
     def remove(self, connected):
         del self.clients[connected.getSocketId()]
+
+    def sendDropDown(self):
+        for i in self.clients:
+            self.clients[i].send('dropdown')
+
+    def sendStartup(self):
+        for i in self.clients:
+            self.clients[i].send('startup')
 
 
 ClientPool = ClientPool_Instance()

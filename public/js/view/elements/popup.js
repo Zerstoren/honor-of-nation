@@ -5,6 +5,7 @@ define('view/elements/popup', [], function () {
 
     return AbstractView.extend({
         initialize: function (triggerElement, config) {
+            this.$fnCallback = {};
             if (!config) {
                 config = {};
             }
@@ -14,32 +15,53 @@ define('view/elements/popup', [], function () {
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
                 ignoreTop: config.ignoreTop || false,
-                callback: config.popupCallback || false
+                callback: config.popupCallback || false,
+                align: config.align || 'right'
             };
 
             this.element = triggerElement;
             this.addEventListener();
         },
 
+        destroy: function () {
+            this.removeEventListener();
+        },
+
         addEventListener: function () {
             var self = this;
 
             if (this.$config.liveTarget) {
-                this.element.on('mouseenter', this.$config.liveTarget, function(e) {
+                this.$fnCallback.mouseenter = function(e) {
                     self.startShowTimeout(e);
-                });
+                };
 
-                this.element.on('mouseleave', this.$config.liveTarget, function(e) {
+                this.$fnCallback.mouseleave = function(e) {
                     self.stopShowTimeout(e);
-                });
+                };
+
+                this.element.on('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
+                this.element.on('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
             } else {
-                this.element.on('mouseenter', function(e) {
+                this.$fnCallback.mouseenter = function(e) {
                     self.startShowTimeout(e);
-                });
+                };
 
-                this.element.on('mouseleave', function(e) {
+                this.$fnCallback.mouseleave = function(e) {
                     self.stopShowTimeout(e);
-                });
+                };
+
+                this.element.on('mouseenter', this.$fnCallback.mouseenter);
+                this.element.on('mouseleave', this.$fnCallback.mouseleave);
+            }
+        },
+
+        removeEventListener: function () {
+            if (this.$config.liveTarget) {
+                this.element.off('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
+                this.element.off('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
+            } else {
+                this.element.off('mouseenter', this.$fnCallback.mouseenter);
+                this.element.off('mouseleave', this.$fnCallback.mouseleave);
             }
         },
 
@@ -50,9 +72,15 @@ define('view/elements/popup', [], function () {
             this.popup.css({display: 'block'});
             offset = this.target.offset();
 
+            if (this.$config.align === 'right') {
+                left = offset.left + this.target.width()
+            } else {
+                left = offset.left - this.popup[0].getBoundingClientRect().width
+            }
+
             config = {
                 top: offset.top,
-                left: offset.left + this.target.width()
+                left: left
             };
 
             if (this.$config.ignoreTop) {
@@ -70,12 +98,6 @@ define('view/elements/popup', [], function () {
 
         startShowTimeout: function (e) {
             var self = this;
-//            debugger;
-//            if (hideTimer !== -1 && self === showLayer) {
-//                clearTimeout(hideTimer);
-//                hideTimer = -1;
-//                return;
-//            }
 
             if (hideTimer !== -1 && showLayer !== null) {
                 clearTimeout(hideTimer);

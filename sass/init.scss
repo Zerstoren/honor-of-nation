@@ -155,6 +155,10 @@ pre {
     height: 100%;
 }
 
+.cursor_pointer {
+    cursor: pointer;
+}
+
 @import "block/init";
 @import "elements/init";
 @import "user/init";

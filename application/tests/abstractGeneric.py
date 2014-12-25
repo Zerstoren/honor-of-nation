@@ -11,6 +11,7 @@ from tests.mock import Transfer
 
 import models.User.Factory
 
+import pprint
 
 if config.get('system.pycharm') == 'true':
     tests.bootstrap.bootstrap.removeOldCores()
@@ -21,6 +22,9 @@ class Abstract_Generic(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def print(self, *args, **kwargs):
+        pprint.pprint(*args, **kwargs)
 
     def setUp(self):
         self.core = tests.bootstrap.core.Core()

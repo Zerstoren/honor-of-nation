@@ -6,16 +6,19 @@ define('system/config', [
     "use strict";
 
     var $$config = {};
-    socket.send('/system/configs', {}, function(message) {
-        var time = new Date();
-
-        $$config = message.data;
-        $$config.diffTime = parseInt(time.getTime() / 1000, 10) - $$config.time;
-    });
 
     function Config() {
 
     }
+
+    Config.prototype.$reload = function () {
+        socket.send('/system/configs', {}, function(message) {
+            var time = new Date();
+
+            $$config = message.data;
+            $$config.diffTime = parseInt(time.getTime() / 1000, 10) - $$config.time;
+        });
+    };
 
     Config.prototype.getMapSize = function() {
         return $$config.map_size;
@@ -46,6 +49,12 @@ define('system/config', [
     Config.prototype.getEquipmentArmor = function () {
         return $$config.equipment_armor;
     };
+
+    Config.prototype.getEquipmentUnit = function () {
+        return $$config.equipment_unit
+    };
+
+    Config.prototype.$reload();
 
     return new Config();
 });

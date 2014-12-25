@@ -1,5 +1,5 @@
 define('view/block/error', [
-    'libs/alertify',
+    'libs/alertify'
 ], function (alertify) {
     'use strict';
 
@@ -34,26 +34,36 @@ define('view/block/error', [
         },
 
         _connectionIsNotEstablished: function () {
-            if (!this.boxConnection) {
-                this.boxConnection = jQuery('<div class="connect-is-not-estabilished">');
-                this.boxConnection.text('Сервер недоступен. Повтор соединения происходит автоматически');
+            if (this.boxConnection) {
+                this.boxConnection.detach();
 
-                jQuery('body').append(this.boxConnection);
+                if (this.boxConnectionTimeout) {
+                    clearTimeout(this.boxConnectionTimeout);
+                }
             }
+
+            var html = '' +
+            '<div class="connect-is-not-estabilished"><div class="text">' +
+                'Сервер недоступен. Повтор соединения происходит автоматически' +
+            '</div><div class="window-glass"></div></div>';
+
+            jQuery('body').append(html);
+
+            this.boxConnection = jQuery('body .connect-is-not-estabilished');
         },
 
         _connectionIsEstablished: function () {
             if (this.boxConnection) {
                 var boxConnection = this.boxConnection;
-                this.boxConnection = false;
 
                 boxConnection.removeClass('connect-is-not-estabilished');
                 boxConnection.addClass('connect-is-estabilished');
-                boxConnection.text('Соединение установлено, простите за неудобства');
+                boxConnection.find('.text').text('Соединение установлено, простите за неудобства');
 
-                setTimeout(function () {
+                this.boxConnectionTimeout = setTimeout(function () {
                     boxConnection.detach();
-                }, 5000);
+                    this.boxConnection = false;
+                }.bind(this), 4000);
             }
         }
     });

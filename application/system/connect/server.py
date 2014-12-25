@@ -6,12 +6,13 @@ import tornado.ioloop
 import tornado.iostream
 import tornado.tcpserver
 
+SOCKET_END = b"\r\n\r\n"
 
 class SimpleEcho(object):
     """
         Per-connection object.
     """
-
+    stream = None
     @tornado.gen.coroutine
     def on_disconnect(self):
         if self._close_listener:
@@ -24,7 +25,7 @@ class SimpleEcho(object):
     def dispatch(self):
         try:
             while True:
-                msg = yield self.read_until(b"\x00\xFF")
+                msg = yield self.read_until(SOCKET_END)
 
                 if self._read_listener:
                     self._read_listener(self, msg)
@@ -36,13 +37,13 @@ class SimpleEcho(object):
     def read_until(self, delimiter, _idalloc=itertools.count()):
         cb_id = next(_idalloc)
         cb = yield tornado.gen.Callback(cb_id)
-        self.stream.read_until(delimiter, cb)
+        self.stream.read_until(delimiter, cb, 65000)
         result = yield tornado.gen.Wait(cb_id)
         raise tornado.gen.Return(result)
 
     @tornado.gen.coroutine
     def write(self, data):
-        yield tornado.gen.Task(self.stream.write, data + b"\x00\xFF")
+        yield tornado.gen.Task(self.stream.write, data + SOCKET_END)
 
     @tornado.gen.coroutine
     def on_connect(self):
@@ -57,6 +58,12 @@ class SimpleEcho(object):
     def setCloseListener(self, fn):
         self._close_listener = fn
 
+    def setStream(self, stream):
+        """
+        :type stream: tornado.iostream.IOStream
+        """
+        self.stream = stream
+
 
 class SimpleEchoServer(tornado.tcpserver.TCPServer):
     """
@@ -70,7 +77,7 @@ class SimpleEchoServer(tornado.tcpserver.TCPServer):
         stream.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         stream.socket.setsockopt(socket.IPPROTO_TCP, socket.SO_KEEPALIVE, 1)
 
-        conn.stream = stream
+        conn.setStream(stream)
 
         if self._connect_listener:
             self._connect_listener(conn)
@@ -95,6 +102,10 @@ class BalancerBroker():
         self.tcp.setConnectListener(self.onConnectNewClient)
 
     def onConnectNewClient(self, connector):
+        if len(self.connections) == 0:
+            import balancer.server.clientConnector
+            balancer.server.clientConnector.ClientPool.sendStartup()
+
         connector.setReadListener(self.onMessage)
         connector.setCloseListener(self.onConnectClose)
         self.connections.append(connector)
@@ -116,5 +127,12 @@ class BalancerBroker():
     def onMessage(self, connector, data):
         pass
 
+    def isReady(self):
+        return len(self.connections) != 0
+
     def onConnectClose(self, connector):
         self.connections.remove(connector)
+
+        if len(self.connections) == 0:
+            import balancer.server.clientConnector
+            balancer.server.clientConnector.ClientPool.sendDropDown()

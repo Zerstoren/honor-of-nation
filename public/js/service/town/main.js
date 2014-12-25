@@ -11,6 +11,7 @@ define('service/town/main', [
 
     'service/equipment/weapon',
     'service/equipment/armor',
+    'service/equipment/unit',
 
     'view/town/main'
 ], function (
@@ -26,6 +27,7 @@ define('service/town/main', [
 
     ServiceEquipmentWeapon,
     ServiceEquipmentArmor,
+    ServiceEquipmentUnit,
 
     ViewTownMain
 ) {
@@ -35,11 +37,13 @@ define('service/town/main', [
             this.serviceTownBuilds = new ServiceTownBuilds();
             this.serviceEquipmentWeapon = new ServiceEquipmentWeapon();
             this.serviceEquipmentArmor = new ServiceEquipmentArmor();
+            this.serviceEquipmentUnit = new ServiceEquipmentUnit();
 
             this.mainView.on('close', this.onClose, this);
 
             this.mainView.on('onDevelopWeapon', this.onDevelopWeapon, this);
             this.mainView.on('onDevelopArmor', this.onDevelopArmor, this);
+            this.mainView.on('onDevelopUnit', this.onDevelopUnit, this);
         },
 
         render: function (townId) {
@@ -87,13 +91,19 @@ define('service/town/main', [
             this.mainView.undelegateEvents();
             this.serviceEquipmentArmor.render();
             this.serviceEquipmentArmor.on('close', this.onDevClose, this);
+        },
 
+        onDevelopUnit: function () {
+            this.mainView.undelegateEvents();
+            this.serviceEquipmentUnit.render();
+            this.serviceEquipmentUnit.on('close', this.onDevClose, this);
         },
 
         onDevClose: function () {
             this.mainView.delegateEvents();
             this.serviceEquipmentWeapon.off('close', this.onDevClose, this);
             this.serviceEquipmentArmor.off('close', this.onDevClose, this);
+            this.serviceEquipmentUnit.off('close', this.onDevClose, this);
         }
     });
 });
