@@ -27,6 +27,7 @@
                             </div>
                             <div class="col-md-4 manipulate">
                                 <button class="btn btn-default remove">Удалить</button>
+                                <!--<button class="btn btn-default clone">Клон</button>-->
                             </div>
                         </div>
                         {{/each}}
@@ -157,6 +158,9 @@
                                         {{#unit._id}}
                                         disabled="disabled"
                                         {{/#unit._id}}
+                                        {{#unit.type == 'solider'}}
+                                        disabled="disabled"
+                                        {{/unit.type == 'solider'}}
                                     >
                                 </div>
                             </div>
@@ -237,7 +241,7 @@
 
                                             </div>
                                         </div>
-                                        {{/each armor_collection}}
+                                        {{/each}}
                                     </div>
                                 </div>
 
@@ -245,7 +249,7 @@
                                     <div class="weapons scrolling">
                                         {{#each weapon_collection}}
                                         <div
-                                            class="weapon cursor_pointer {{#this._id == unit.armor}}selected{{/this._id == unit.armor}}"
+                                            class="weapon cursor_pointer {{#this._id == unit.weapon}}selected{{/this._id == unit.weapon}}"
                                             data-id="{{this._id}}"
                                         >
                                             <img src="." width="32" height="32" />
@@ -309,7 +313,7 @@
                                             </div>
 
                                         </div>
-                                        {{/each weapon_collection}}
+                                        {{/each}}
                                     </div>
                                 </div>
 
@@ -331,7 +335,7 @@
 
                                         {{#each weapon_second_collection}}
                                         <div
-                                            class="weapon-second cursor_pointer {{#this._id == unit.second_weapon}}selected{{/this._id == unit.second_weapon}}"
+                                            class="weapon-second cursor_pointer {{#this._id == unit.weapon_second}}selected{{/this._id == unit.weapon_second}}"
                                             data-id="{{this._id}}"
                                         >
                                             <img src="." width="32" height="32" />
@@ -395,7 +399,7 @@
                                             </div>
 
                                         </div>
-                                        {{/each weapon_collection}}
+                                        {{/each}}
                                     </div>
                                 </div>
                             </div>
