@@ -93,38 +93,38 @@ class Selenium_Abstract_Generic(Generic):
 
         super().tearDown()
 
-
-    def _executeTestPart(self, function, outcome, isTest=False):
-        def testWrapper(*args, **kwargs):
-            maxAttempts = int(config.get('testing.retry'))
-            attempt = 1
-
-            while True:
-                if self.isSetup is False:
-                    self.setUp()
-
-                if attempt != maxAttempts:
-                    try:
-                        function(*args, **kwargs)
-                        break
-
-                    except:
-                        attempt += 1
-                        self.driver.save_screenshot(
-                            "/tmp/selenium-error-screen-" + self.__class__.__name__ + "--" + self._testMethodName + '.png'
-                        )
-
-                        if self.isSetup is True:
-                            self.tearDown()
-
-                else:
-                    function(*args, **kwargs)
-                    break
-
-        if isTest:
-            super()._executeTestPart(testWrapper, outcome, isTest)
-        else:
-            super()._executeTestPart(function, outcome, isTest)
+    #
+    # def _executeTestPart(self, function, outcome, isTest=False):
+    #     def testWrapper(*args, **kwargs):
+    #         maxAttempts = int(config.get('testing.retry'))
+    #         attempt = 1
+    #
+    #         while True:
+    #             if self.isSetup is False:
+    #                 self.setUp()
+    #
+    #             if attempt != maxAttempts:
+    #                 try:
+    #                     function(*args, **kwargs)
+    #                     break
+    #
+    #                 except:
+    #                     attempt += 1
+    #                     self.driver.save_screenshot(
+    #                         "/tmp/selenium-error-screen-" + self.__class__.__name__ + "--" + self._testMethodName + '.png'
+    #                     )
+    #
+    #                     if self.isSetup is True:
+    #                         self.tearDown()
+    #
+    #             else:
+    #                 function(*args, **kwargs)
+    #                 break
+    #
+    #     if isTest:
+    #         super()._executeTestPart(testWrapper, outcome, isTest)
+    #     else:
+    #         super()._executeTestPart(function, outcome, isTest)
 
     def byCssSelector(self, cssSelector):
         return self.driver.byCss(cssSelector)
