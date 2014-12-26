@@ -117,7 +117,7 @@ define('libs/abstract/view', [
 
             return function () {
                 fromView.un(eventName, traverseFn, this);
-            }
+            };
         },
 
         successMessage: function (str) {

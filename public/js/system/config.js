@@ -51,7 +51,7 @@ define('system/config', [
     };
 
     Config.prototype.getEquipmentUnit = function () {
-        return $$config.equipment_unit
+        return $$config.equipment_unit;
     };
 
     Config.prototype.$reload();

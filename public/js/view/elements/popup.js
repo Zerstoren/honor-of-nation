@@ -66,16 +66,16 @@ define('view/elements/popup', [], function () {
         },
 
         showLayer: function () {
-            var offset, config;
+            var offset, config, left;
 
             showLayer = this;
             this.popup.css({display: 'block'});
             offset = this.target.offset();
 
             if (this.$config.align === 'right') {
-                left = offset.left + this.target.width()
+                left = offset.left + this.target.width();
             } else {
-                left = offset.left - this.popup[0].getBoundingClientRect().width
+                left = offset.left - this.popup[0].getBoundingClientRect().width;
             }
 
             config = {

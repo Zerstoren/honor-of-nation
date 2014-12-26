@@ -177,4 +177,5 @@ module.exports = function(grunt) {
     grunt.registerTask('rebuild', ['_default', 'htmlbuild', 'sass', 'tpls', 'concat', 'clean']);
     grunt.registerTask('release', ['_release']);
     grunt.registerTask('deploy',  ['_deploy', 'htmlbuild', '_deploy_clean']);
+    grunt.registerTask('hint', ['_default', 'jshint']);
 };

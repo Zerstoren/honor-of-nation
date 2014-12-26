@@ -1,13 +1,14 @@
 define('service/standalone/math', [
     'system/config'
 ], function (config) {
-    var Math = AbstractService.extend({
+    var math,
+        Mathematic = AbstractService.extend({
         percent: function (value, percent) {
-            return parseInt(value / 100 * percent, 10)
+            return parseInt(value / 100 * percent, 10);
         },
 
         rate: function (value) {
-            return parseInt(value * config.getBaseRate() / 100, 10)
+            return parseInt(value * config.getBaseRate() / 100, 10);
         },
 
         getBuildPrice: function (price, level, drop) {
@@ -35,5 +36,6 @@ define('service/standalone/math', [
         }
     });
 
-    return new Math();
+    math = new Mathematic();
+    return math;
 });
