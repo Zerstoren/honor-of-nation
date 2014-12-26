@@ -79,7 +79,9 @@ class Selenium_Abstract_Generic(Generic):
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
             ],
-           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
+           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../',
+           stderr=subprocess.PIPE,
+           stdout=subprocess.PIPE
         )
 
     def tearDown(self):
