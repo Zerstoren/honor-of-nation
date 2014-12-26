@@ -92,6 +92,7 @@ class Selenium_Abstract_Generic(Generic):
             self.managedProcess = None
 
         super().tearDown()
+        self.sleep(2)
 
     #
     # def _executeTestPart(self, function, outcome, isTest=False):
