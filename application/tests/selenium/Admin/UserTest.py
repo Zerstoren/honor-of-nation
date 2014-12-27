@@ -11,7 +11,7 @@ class Selenium_Admin_UserTest(
         self.byCssSelector('.resources-edit input.' + name).clear()
         self.byCssSelector('.resources-edit input.' + name).send_keys(value)
 
-    @tests.rerun.retry()
+    @tests.rerun.retry(10)
     def testSetResources(self):
         user = self.login()
         self._goToAdmin()
