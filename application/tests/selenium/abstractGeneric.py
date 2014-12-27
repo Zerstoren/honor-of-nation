@@ -59,14 +59,6 @@ class Selenium_Abstract_Generic(Generic):
         self.isSetup = True
         super().setUp()
 
-        self.driver = None
-        self.driversDict = {}
-        self._port = random.randint(10000, 65000)
-        self._balancer_port = self._port + 1
-
-        self.createWindow('main')
-        self.useWindow('main')
-
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
@@ -83,6 +75,15 @@ class Selenium_Abstract_Generic(Generic):
            # stderr=subprocess.PIPE,
            # stdout=subprocess.PIPE
         )
+
+        self.driver = None
+        self.driversDict = {}
+        self._port = random.randint(10000, 65000)
+        self._balancer_port = self._port + 1
+
+        self.createWindow('main')
+        self.useWindow('main')
+
 
     def tearDown(self):
         self.isSetup = False
