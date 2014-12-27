@@ -9,7 +9,7 @@ from models.Equipment.Armor.Factory import Equipment_Armor_Factory
 import service.Equipment.Armor
 
 
-class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
+class Backend_Controller_Equipment_ArmorTest(Backend_Controller_Equipment_Generic):
     def setUp(self):
         helpers.math.RATE = 100
         super().setUp()

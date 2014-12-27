@@ -9,7 +9,7 @@ from models.Equipment.Units.Factory import Equipment_Units_Factory
 import service.Equipment.Units
 
 
-class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
+class Backend_Controller_Equipment_UnitsTest(Backend_Controller_Equipment_Generic):
     def setUp(self):
         helpers.math.RATE = 100
         super().setUp()
@@ -60,11 +60,11 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
                 'stamina': 100,
                 'strength': 40,
                 'troop_size': 0,
-                'time': 370,
-                'eat': 79349,
-                'rubins': 373157,
-                'steel': 34070,
-                'wood': 35393
+                'time': 482,
+                'eat': 138531,
+                'rubins': 647926,
+                'steel': 145126,
+                'wood': 57516
             }
         )
 
@@ -133,11 +133,11 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
                 'health': 100,
                 'stamina': 400,
                 'strength': 40,
-                'eat': 154600,
-                'rubins': 690491,
-                'steel': 66215,
-                'wood': 65997,
-                'time': 679,
+                'eat': 311546,
+                'rubins': 1442494,
+                'steel': 217161,
+                'wood': 221366,
+                'time': 960,
                 'remove': 0,
             }
         )
@@ -183,11 +183,11 @@ class Backend_Controller_AdminTest(Backend_Controller_Equipment_Generic):
                 'health': 10000,
                 'stamina': 1200,
                 'strength': 4000,
-                'eat': 48928809,
-                'rubins': 219915372,
-                'steel': 15035597,
-                'time': 366486,
-                'wood': 22238294,
+                'eat': 48987991,
+                'rubins': 220190141,
+                'steel': 15146653,
+                'time': 366598,
+                'wood': 22260417,
                 'remove': 0
             }
         )
