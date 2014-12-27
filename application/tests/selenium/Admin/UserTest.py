@@ -30,6 +30,8 @@ class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
 
         self.byCssSelector('.admin .close').click()
 
+        # Wait for update complete
+        self.waitForElement('.mpi__header .resources .rubins[data-hint="5"]')
         self.assertDictEqual(
             self.getResources(),
             {

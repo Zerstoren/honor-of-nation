@@ -6,6 +6,8 @@ import service.TownBuilds
 
 import time
 
+import tests.rerun
+
 
 class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
 
@@ -182,6 +184,7 @@ class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
             townBuildsDomain.getQueue()[0]['queue_code']
         )
 
+    @tests.rerun.retry()
     def testWaitCompleteBuild(self):
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),
@@ -196,6 +199,7 @@ class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
 
         self.assertEqual(builds.getMill(), 1)
 
+    @tests.rerun.retry()
     def testWaitCompleteQueueBuild(self):
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),
@@ -335,6 +339,7 @@ class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
             0
         )
 
+    @tests.rerun.retry()
     def testWaitAfterRemove(self):
         buildsDomain = self.town.getBuilds()
         self.controller.createBuild(self.transfer, {
@@ -371,6 +376,7 @@ class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
             0
         )
 
+    @tests.rerun.retry()
     def testWaitCancelAfterTime(self):
         buildsDomain = self.town.getBuilds()
         self.controller.createBuild(self.transfer, {
