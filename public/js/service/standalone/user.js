@@ -63,19 +63,23 @@ define('service/standalone/user', [
         onLogin: function (data) {
             var self = this;
 
-            this.me.auth(data.login, data.password, function (domain, authResult) {
-                if (authResult === false) {
-                    if (data.auto === true) {
-                        self.renderForm();
+            // Hack.
+            setTimeout(function () {
+                this.me.auth(data.login, data.password, function (domain, authResult) {
+                    if (authResult === false) {
+                        if (data.auto === true) {
+                            self.renderForm();
+                        } else {
+                            libsAlertify.error('Логин или пароль указаны не верно');
+                        }
+                        return;
                     } else {
-                        libsAlertify.error('Логин или пароль указаны не верно');
-                    }
-                } else {
-                    localStorage.authLogin = data.login;
-                    localStorage.authPassword = data.password;
+                        localStorage.authLogin = data.login;
+                        localStorage.authPassword = data.password;
 
-                    if (self.viewUserAuth) {
-                        self.viewUserAuth.clean();
+                        if (self.viewUserAuth) {
+                            self.viewUserAuth.clean();
+                        }
                     }
 
                     _.each(self.getMeFn, function (fn) {
@@ -84,8 +88,8 @@ define('service/standalone/user', [
 
                     self.getMeFn = [];
                     self.trigger('login', self.me);
-                }
-            });
+                });
+            }.bind(this), 300);
         },
 
         redirectToLoginForm: function () {
