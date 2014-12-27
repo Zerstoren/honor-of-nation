@@ -19,8 +19,14 @@ import models.Map.Common
 
 import helpers.MapCoordinate
 
+from tests.package.db.resource import Resource
+from tests.package.db.town import Town
 
-class Backend_Controller_AdminTest(Backend_Controller_Generic):
+class Backend_Controller_AdminTest(
+    Backend_Controller_Generic,
+    Resource,
+    Town
+):
     def _getModelController(self):
         return controller.AdminController.MainAdminController()
 

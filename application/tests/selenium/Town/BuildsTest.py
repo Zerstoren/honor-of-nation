@@ -2,7 +2,15 @@ from tests.selenium.Town import generic
 from models.TownBuilds import Common as buildConst
 import tests.rerun
 
-class Selenium_Town_BuildsTest(generic.Selenium_Town_Generic):
+from tests.package.asserts import Asserts
+
+from tests.package.db.town import Town
+
+class Selenium_Town_BuildsTest(
+    generic.Selenium_Town_Generic,
+    Asserts,
+    Town
+):
     def setUp(self):
         super().setUp()
 
@@ -46,27 +54,3 @@ class Selenium_Town_BuildsTest(generic.Selenium_Town_Generic):
         self.assertElementExist(
             self._getSelectorBuild() + ' .nothing-builds'
         )
-
-    # def testAddMany(self):
-    #     self._getBuildElement(buildConst.BUILD_FARM)
-    #     self._getBuildElement(buildConst.BUILD_FARM)
-    #
-    #     self.waitForSocket()
-    #
-    # def testRemoveChain(self):
-    #     pass
-    #
-    # def testNotEnoughResources(self):
-    #     pass
-    #
-    # def testEmptyQueue(self):
-    #     pass
-    #
-    # def testAddToEmptyQueue(self):
-    #     pass
-    #
-    # def testPopupInfo(self):
-    #     pass
-    #
-    # def testUpdateInfoAfterCreate(self):
-    #     pass

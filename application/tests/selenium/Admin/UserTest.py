@@ -1,7 +1,12 @@
 from tests.selenium.Admin import generic
 import tests.rerun
 
-class Selenium_Admin_UserTest(generic.Selenium_Admin_Generic):
+from tests.package.interface import Interface
+
+class Selenium_Admin_UserTest(
+    generic.Selenium_Admin_Generic,
+    Interface
+):
     def _setResource(self, name, value):
         self.byCssSelector('.resources-edit input.' + name).clear()
         self.byCssSelector('.resources-edit input.' + name).send_keys(value)

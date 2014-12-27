@@ -36,7 +36,9 @@ define('view/elements/tooltip', [], function () {
     };
 
     Tooltip.prototype.onHideHint = function () {
-        this.__tooltip.tooltip('destroy');
+        if (this.__tooltip) {
+            this.__tooltip.tooltip('destroy');
+        }
     };
 
     return Tooltip;

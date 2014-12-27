@@ -3,8 +3,12 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 import controller.TownController
 import controller.TownBuildsController
 
+from tests.package.db.town import Town
 
-class Backend_Controller_TownTest(Backend_Controller_Generic):
+class Backend_Controller_TownTest(
+    Backend_Controller_Generic,
+    Town
+):
     def _getMainController(self):
         return controller.TownBuildsController.MainController()
 

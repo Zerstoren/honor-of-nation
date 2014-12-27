@@ -1,7 +1,12 @@
 from tests.selenium.Admin import generic
 import tests.rerun
 
-class Selenium_Admin_TerrainTest(generic.Selenium_Admin_Generic):
+from tests.package.interface import Interface
+
+class Selenium_Admin_TerrainTest(
+    generic.Selenium_Admin_Generic,
+    Interface
+):
     @tests.rerun.retry()
     def testCreateTerrainByCoordinate(self):
         self.login()

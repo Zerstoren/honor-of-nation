@@ -4,7 +4,14 @@ import tests.rerun
 import service.MapResources
 import helpers.MapCoordinate
 
-class Selenium_Admin_ResourcesTest(generic.Selenium_Admin_Generic):
+from tests.package.dom import Dom
+from tests.package.interface import Interface
+
+class Selenium_Admin_ResourcesTest(
+    generic.Selenium_Admin_Generic,
+    Dom,
+    Interface
+):
     def _goToAdmin(self):
         self.login()
         super()._goToAdmin()

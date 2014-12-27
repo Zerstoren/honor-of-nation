@@ -4,7 +4,6 @@ from tests.selenium import generic
 class Selenium_Town_Generic(generic.Selenium_Generic):
     def openTown(self, town):
         self.goAppUrl('/town/' + str(town.getId()))
-        self.sleep(25)
         self.waitForElement('#map-body-holder > .town .content')
 
     # BUILDS

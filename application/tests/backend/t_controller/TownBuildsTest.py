@@ -7,9 +7,13 @@ import service.TownBuilds
 import time
 
 import tests.rerun
+from tests.package.db.town import Town
 
 
-class Backend_Controller_TownBuildsTest(Backend_Controller_Generic):
+class Backend_Controller_TownBuildsTest(
+    Backend_Controller_Generic,
+    Town
+):
 
     def _getTownBuildsController(self):
         import controller.TownBuildsController

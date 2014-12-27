@@ -1,7 +1,211 @@
-from . import abstractGeneric
+from tests.generic import Generic
+
+import config
+
+from selenium import webdriver
+from selenium.webdriver import ActionChains as WebDriverActionChain
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.common.by import By as WebDriverCommonBy
+import selenium.webdriver.support.expected_conditions as WebDriverExpectedCondition
+import selenium.webdriver.support.ui as WebDriverUI
+
+from tests.bootstrap.Selenium import SeleniumFacade
+
+import time
+import os.path
+import subprocess
+import signal
+import random
+
+import logging
+selenium_logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
+selenium_logger.setLevel(logging.WARNING)
+
+# Create alias for most popular actions
+webdriver.remote.webelement.WebElement.byCss = webdriver.remote.webelement.WebElement.find_element_by_css_selector
+webdriver.remote.webelement.WebElement.byXPath = webdriver.remote.webelement.WebElement.find_element_by_xpath
+webdriver.remote.webelement.WebElement.byId = webdriver.remote.webelement.WebElement.find_element_by_xpath
+webdriver.remote.webelement.WebElement.byClass = webdriver.remote.webelement.WebElement.find_element_by_class_name
+webdriver.remote.webelement.WebElement.byCssMany = webdriver.remote.webelement.WebElement.find_elements_by_css_selector
+webdriver.remote.webelement.WebElement.byXPathMany = webdriver.remote.webelement.WebElement.find_elements_by_xpath
+webdriver.remote.webelement.WebElement.byIdMany = webdriver.remote.webelement.WebElement.find_elements_by_xpath
+webdriver.remote.webelement.WebElement.byClassMany = webdriver.remote.webelement.WebElement.find_elements_by_class_name
+
+webdriver.remote.webdriver.WebDriver.byCss = webdriver.remote.webdriver.WebDriver.find_element_by_css_selector
+webdriver.remote.webdriver.WebDriver.byXPath = webdriver.remote.webdriver.WebDriver.find_element_by_xpath
+webdriver.remote.webdriver.WebDriver.byId = webdriver.remote.webdriver.WebDriver.find_element_by_xpath
+webdriver.remote.webdriver.WebDriver.byClass = webdriver.remote.webdriver.WebDriver.find_element_by_class_name
+webdriver.remote.webdriver.WebDriver.byCssMany = webdriver.remote.webdriver.WebDriver.find_elements_by_css_selector
+webdriver.remote.webdriver.WebDriver.byXPathMany = webdriver.remote.webdriver.WebDriver.find_elements_by_xpath
+webdriver.remote.webdriver.WebDriver.byIdMany = webdriver.remote.webdriver.WebDriver.find_elements_by_xpath
+webdriver.remote.webdriver.WebDriver.byClassMany = webdriver.remote.webdriver.WebDriver.find_elements_by_class_name
 
 
-class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
+class Selenium_Generic(Generic):
+    execution = 'selenium'
+
+    keys = Keys
+    managedProcess = None
+
+    TimeoutException = TimeoutException
+    NoSuchElementException = NoSuchElementException
+
+    def setUp(self):
+        self._port = random.randint(10000, 65000)
+        self._balancer_port = self._port + 1
+        super().setUp()
+
+        if self.managedProcess is not None:
+            raise RuntimeError('Game server already started')
+
+        self.managedProcess = subprocess.Popen([
+                'python3',
+                '-B',
+                'init_balancer.py',
+                '--type=%s' % config.configType,
+                '--database=%s' % self.core.database_name,
+                '--port=%s' % self._port,
+                '--balancer_port=%s' % self._balancer_port
+            ],
+           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
+           ,stderr=subprocess.PIPE,
+           stdout=subprocess.PIPE
+        )
+
+        self.driver = None
+        self.driversDict = {}
+
+        self.createWindow('main')
+        self.useWindow('main')
+
+
+    def tearDown(self):
+        if self.core.remove_core:
+            self.closeWindow('ALL')
+            self.managedProcess.send_signal(signal.SIGINT)
+
+            self.managedProcess = None
+
+        super().tearDown()
+        self.sleep(2)
+
+    def byCssSelector(self, cssSelector):
+        return self.driver.byCss(cssSelector)
+
+    def byXPath(self, xpath):
+        return self.driver.byXPath(xpath)
+
+    def byAttribute(self, attr, value):
+        return self.byXPath('//*[@%(attr)s="%(value)s"]' % {
+            "attr": attr,
+            "value": value
+        })
+
+    def sleep(self, n):
+        time.sleep(n)
+
+    def waitForElement(self, selector, by='css'):
+        waiter = WebDriverUI.WebDriverWait(self.driver, int(config.get('testing.waitUtilTime')))
+
+        if by == 'css':
+            waiter.until(WebDriverExpectedCondition.visibility_of_element_located(
+                (WebDriverCommonBy.CSS_SELECTOR, selector))
+            )
+        elif by == 'xpath':
+            waiter.until(WebDriverExpectedCondition.visibility_of_element_located(
+                (WebDriverCommonBy.XPATH, selector))
+            )
+
+    def waitForElementHide(self, selector, by='css'):
+        waiter = WebDriverUI.WebDriverWait(self.driver, int(config.get('testing.waitUtilTime')))
+
+        if by == 'css':
+            waiter.until(WebDriverExpectedCondition.invisibility_of_element_located(
+                (WebDriverCommonBy.CSS_SELECTOR, selector))
+            )
+        elif by == 'xpath':
+            waiter.until(WebDriverExpectedCondition.invisibility_of_element_located(
+                (WebDriverCommonBy.XPATH, selector))
+            )
+
+    def waitForSocket(self, n=10000):
+        sleepTime = 0
+
+        while True:
+            active = self.executeCommand("return require('system/socket').counter;")
+
+            if active != None and active <= 0:
+                break
+            elif sleepTime >= n:
+                raise TimeoutException("Very long wait for socket")
+            else:
+                sleepTime += 500
+                self.sleep(0.5)
+
+
+    def go(self, path):
+        self.driver.get('http://' + config.get('server.domain') + path)
+
+    def goAppUrl(self, path):
+        self.executeCommand("""
+        requirejs(['system/route'], function(router){
+            router.navigate('%s')
+        });
+        """ % path)
+
+    def waitForUserLogin(self):
+        def getUserLogin():
+            return self.executeCommand("return require('service/standalone/user').me.get('login')")
+
+        i = 0
+        while True:
+            i += 1
+            s = getUserLogin()
+
+            if s != None:
+                break
+            elif i >= 100:
+                raise TimeoutException('Can`t login')
+
+            self.sleep(0.05)
+
+    def getUrl(self):
+        # TODO Change for native driver method
+        return self.executeCommand('return location.pathname')
+
+    def executeCommand(self, script):
+        return self.driver.execute_script(script, [])
+
+    def createWindow(self, name):
+        createDriver = SeleniumFacade()
+
+        createDriver.driver.set_window_size(1366, 1000)
+        createDriver.driver.get('http://' + config.get('server.domain') + '/css/style.css')
+        createDriver.driver.execute_script("window.localStorage.port = '%s'" % self._port, [])
+
+        self.driversDict[name] = createDriver
+
+    def useWindow(self, name):
+        if name not in self.driversDict:
+            raise Exception('Driver %s not created' % name)
+
+        self.driver = self.driversDict[name].driver
+
+    def closeWindow(self, name):
+        if name == 'ALL':
+            for (key, value) in list(self.driversDict.items()):
+                self.closeWindow(key)
+
+        elif name in self.driversDict:
+            self.driversDict[name].driver.quit()
+            del self.driversDict[name]
+
+    def getChainAction(self):
+        return WebDriverActionChain(self.driver)
+
     def login(self, userDomain=None):
         if userDomain:
             user = userDomain
@@ -18,185 +222,3 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
         self.waitForElementHide('.connect-is-estabilished .text')
 
         return user
-
-    def operationIsSuccess(self):
-        try:
-            self.waitForElement('.alertify-log-success')
-        except self.TimeoutException:
-            self.fail('Operation is not success')
-
-        try:
-            self.byCssSelector('.alertify-log-error')
-            self.fail('Operation success show error message')
-        except self.NoSuchElementException:
-            pass
-
-    def operationIsFail(self):
-        try:
-            self.waitForElement('.alertify-log-error')
-        except self.TimeoutException:
-            self.fail('Operation is not failed')
-
-        try:
-            self.byCssSelector('.alertify-log-success')
-            self.fail('Operation error show success message')
-        except self.NoSuchElementException:
-            pass
-
-    # def moveToPath(self, module, data):
-    #     self.serviceAction('$nav', "service.locate('%s', %s);" % (module, json.dumps(data)))
-    #
-    # def serviceAction(self, serviceName, serviceAction):
-    #     return self.executeCommand("""
-    #         var service = angular.element('[ng-view]').injector().get('%(serviceName)s');
-    #         %(serviceAction)s
-    #         """ % {
-    #             "serviceName": serviceName,
-    #             "serviceAction": serviceAction
-    #         })
-    #
-    # def getPopup(self):
-    #     return self.byXPath('//div[@class=\'popup\' and contains(@style, \'block\')]')
-    #
-    def getResources(self, fromBlock='.mpi__header .resources'):
-        resourceBlock = self.byCssSelector(fromBlock)
-        return {
-            "rubins": int(resourceBlock.byCss('.rubins').get_attribute('data-hint').replace(' ', '')),
-            "steel": int(resourceBlock.byCss('.steel').get_attribute('data-hint').replace(' ', '')),
-            "eat": int(resourceBlock.byCss('.eat').get_attribute('data-hint').replace(' ', '')),
-            "stone": int(resourceBlock.byCss('.stone').get_attribute('data-hint').replace(' ', '')),
-            "wood": int(resourceBlock.byCss('.wood').get_attribute('data-hint').replace(' ', '')),
-            "gold": int(resourceBlock.byCss('.gold').get_attribute('data-hint').replace(' ', '')),
-        }
-    #
-    # def _setCameraMapPosition(self, x, y):
-    #     self.serviceAction('$map', 'service.setCameraPosition(%d, %d)' % (x, y))
-    #
-    # def _getMap(self, x, y):
-    #     return MapCell(self, x, y)
-    #
-    # def _doubleClick(self, webElement):
-    #     actionChain = self.getChainAction()
-    #     actionChain.double_click(webElement)
-    #     actionChain.perform()
-    #
-    # def _contextClick(self, webElement):
-    #     actionChain = self.getChainAction()
-    #     actionChain.context_click(webElement)
-    #     actionChain.perform()
-    #
-    # def _moveCursor(self, toPosition):
-    #     assert isinstance(toPosition, MapCell)
-    #
-    #     actionChain = self.getChainAction()
-    #     actionChain.move_to_element(toPosition.getItem())
-    #     actionChain.perform()
-    #
-    # def _moveCamera(self, fromPosition, toPosition):
-    #     assert isinstance(fromPosition, MapCell)
-    #     assert isinstance(toPosition, MapCell) or type(toPosition) is tuple
-    #
-    #     actionChain = self.getChainAction()
-    #     startX, startY = fromPosition.getPosition()
-    #     completeX, completeY = toPosition if type(toPosition) is tuple else toPosition.getPosition()
-    #
-    #     currentPosition = [startX, startY, ]
-    #
-    #     if completeX - startX > 0:
-    #         directionX = -1
-    #     elif completeX - startX < 0:
-    #         directionX = 1
-    #     else:
-    #         directionX = 0
-    #
-    #     if completeY - startY > 0:
-    #         directionY = -1
-    #     elif completeY - startY < 0:
-    #         directionY = 1
-    #     else:
-    #         directionY = 0
-    #
-    #     actionChain.move_to_element(fromPosition.getOrigin())
-    #
-    #     while currentPosition[0] != completeX or currentPosition[1] != completeY:
-    #         actionChain.click_and_hold()
-    #         actionChain.move_by_offset(96 * directionX, 96 * directionY)
-    #         actionChain.release()
-    #         actionChain.move_by_offset(int((96 * directionX) / -1), int((96 * directionY) / -1))
-    #
-    #         currentPosition[0] -= directionX
-    #         currentPosition[1] -= directionY
-    #
-    #     actionChain.perform()
-
-
-# class MapCell(object):
-#     NEXT_LEFT = (-1, 0, )
-#     NEXT_LEFT_TOP = (-1, -1, )
-#     NEXT_LEFT_BOTTOM = (-1, 1, )
-#
-#     NEXT_RIGHT = (1, 0, )
-#     NEXT_RIGHT_TOP = (1, -1, )
-#     NEXT_RIGHT_BOTTOM = (1, 1, )
-#
-#     NEXT_TOP = (0, -1, )
-#     NEXT_BOTTOM = (0, 1, )
-#
-#     def __init__(self, inst, x, y):
-#         posX, posY = inst.serviceAction('$map', 'return service.getPosition()')
-#         winWidth, winHeight = inst.serviceAction('$map', 'return [service.getMapWidth(), service.getMapHeight()]')
-#
-#         if not posX < x < posX + winWidth or not posY < y < posY + winHeight:
-#             raise Exception('Map position %(x)sx%(y)s is invisible for user' % {"x": x, "y": y})
-#
-#         mapHTMLItem = inst.byXPath(
-#             '//td[@data-position="%(x)dx%(y)d"]' % {
-#                 "x": x - posX,
-#                 "y": y - posY
-#             }
-#         )
-#
-#         self.__inst = inst
-#         self.__item = mapHTMLItem
-#         self.__x = x
-#         self.__y = y
-#         self.__classList = mapHTMLItem.get_attribute('class').split(' ')
-#         self.__html = mapHTMLItem.get_attribute('innerHTML')
-#         self.__lxml = None
-#
-#     def getItem(self):
-#         return self.__item
-#
-#     def getPosition(self):
-#         return (self.__x, self.__y, )
-#
-#     def getNext(self, nextMap):
-#         assert type(nextMap) is tuple and len(nextMap) == 2
-#         x = self.__x + nextMap[0]
-#         y = self.__y + nextMap[1]
-#
-#         return MapCell(self.__inst, x, y)
-#
-#     def getDomain(self):
-#         return models.Map.Factory.factory.getByPosition(self.__x, self.__y)
-#
-#     def getLand(self):
-#         for i in self.__classList:
-#             if i[0:4] == 'land':
-#                 landType, landNumber = i.replace('land-', '').split('-')
-#                 return (landType, landNumber, )
-#
-#         return (None, None, )
-#
-#     def isHidden(self):
-#         return self.__classList[0] == 'shadow'
-#
-#     def getOrigin(self):
-#         return self.__item
-#
-#     def getContainer(self, containerId):
-#         return self.__item.byCss('#container_' + str(containerId))
-#
-#     def __loadLXML(self):
-#         if self.__lxml is None:
-#             self.__lxml = lxml.html.document_fromstring(self.__html)

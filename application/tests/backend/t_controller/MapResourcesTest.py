@@ -4,8 +4,12 @@ import controller.MapResourcesController
 
 import exceptions.httpCodes
 
+from tests.package.db.resource import Resource
 
-class Backend_Controller_MapResources(Backend_Controller_Generic):
+class Backend_Controller_MapResources(
+    Backend_Controller_Generic,
+    Resource
+):
     def _getModelController(self):
         return controller.MapResourcesController.ModelController()
 
