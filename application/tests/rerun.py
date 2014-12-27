@@ -19,7 +19,7 @@ def retry(retry=None):
                         print("Rerun test. Attempt %i of %i" % (attempt, maxAttempts, ))
                         attempt += 1
                         if self.execution == 'selenium':
-                            self.driver.save_screenshot(
+                            self.driver.get_screenshot_as_file(
                                 "/tmp/selenium-error-screen-" + self.__class__.__name__ + "--" + self._testMethodName + '.png'
                             )
 
