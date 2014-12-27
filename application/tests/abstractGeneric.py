@@ -19,6 +19,7 @@ if config.get('system.pycharm') == 'true':
 
 class Abstract_Generic(unittest.TestCase):
     maxDiff = None
+    isSetup = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,12 +28,14 @@ class Abstract_Generic(unittest.TestCase):
         pprint.pprint(*args, **kwargs)
 
     def setUp(self):
+        self.isSetup = True
         self.core = tests.bootstrap.core.Core()
 
         print("Output -> " + self.__class__.__name__ + " -- " + self._testMethodName)
         self.setUpDb()
 
     def tearDown(self):
+        self.isSetup = False
         self._testDatabaseValues()
         self.fullCleanCache()
         del self.fixture

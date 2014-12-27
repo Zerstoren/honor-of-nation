@@ -50,7 +50,6 @@ class Selenium_Abstract_Generic(Generic):
 
     keys = Keys
     managedProcess = None
-    isSetup = False
 
     TimeoutException = TimeoutException
     NoSuchElementException = NoSuchElementException
@@ -58,7 +57,6 @@ class Selenium_Abstract_Generic(Generic):
     def setUp(self):
         self._port = random.randint(10000, 65000)
         self._balancer_port = self._port + 1
-        self.isSetup = True
         super().setUp()
 
         if self.managedProcess is not None:
@@ -86,8 +84,6 @@ class Selenium_Abstract_Generic(Generic):
 
 
     def tearDown(self):
-        self.isSetup = False
-
         if self.core.remove_core:
             self.closeWindow('ALL')
             self.managedProcess.send_signal(signal.SIGINT)
