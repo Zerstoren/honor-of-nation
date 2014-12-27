@@ -79,9 +79,9 @@ class Selenium_Abstract_Generic(Generic):
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
             ],
-           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../',
-           stderr=subprocess.PIPE,
-           stdout=subprocess.PIPE
+           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
+           # stderr=subprocess.PIPE,
+           # stdout=subprocess.PIPE
         )
 
     def tearDown(self):
@@ -153,6 +153,18 @@ class Selenium_Abstract_Generic(Generic):
             )
         elif by == 'xpath':
             waiter.until(WebDriverExpectedCondition.visibility_of_element_located(
+                (WebDriverCommonBy.XPATH, selector))
+            )
+
+    def waitForElementHide(self, selector, by='css'):
+        waiter = WebDriverUI.WebDriverWait(self.driver, int(config.get('testing.waitUtilTime')))
+
+        if by == 'css':
+            waiter.until(WebDriverExpectedCondition.invisibility_of_element_located(
+                (WebDriverCommonBy.CSS_SELECTOR, selector))
+            )
+        elif by == 'xpath':
+            waiter.until(WebDriverExpectedCondition.invisibility_of_element_located(
                 (WebDriverCommonBy.XPATH, selector))
             )
 

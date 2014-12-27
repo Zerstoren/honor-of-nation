@@ -14,6 +14,8 @@ class Selenium_Generic(abstractGeneric.Selenium_Abstract_Generic):
         self.go('/')
         self.waitForElement('.mpi__resource_wrapper', 'css')
         self.waitForUserLogin()
+        self.waitForElementHide('.connect-is-not-estabilished .text')
+        self.waitForElementHide('.connect-is-estabilished .text')
 
         return user
 

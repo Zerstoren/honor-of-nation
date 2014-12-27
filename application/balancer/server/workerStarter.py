@@ -4,6 +4,8 @@ import config
 
 import os
 
+import system.log
+
 
 class Process():
     workers = []
@@ -36,6 +38,8 @@ class Process():
 
             self.workers.append(process)
 
+            system.log.info('New backend instance is started, PID: %i' % int(process.pid))
+
     def _startCelery(self):
         debug = config.get('balancer.celery.debug') == 'True'
 
@@ -51,6 +55,7 @@ class Process():
             stdout=sys.stdout if debug else subprocess.PIPE,
             stderr=sys.stderr if debug else subprocess.PIPE
         )
+        system.log.info('New celery instance is started, PID: %i' % int(self.celery.pid))
 
     def _appendArgs(self, args):
         if config.options.type:
