@@ -1,5 +1,6 @@
 import config
 import system.connect.server
+import system.log
 
 import balancer.server.userPool
 
@@ -25,14 +26,16 @@ class Receiver_Instance():
         raise DeprecationWarning('Receiver not support message send')
 
     def onMessage(self, connector, data):
+        info = pickle.loads(data)
+
         try:
-            info = pickle.loads(data)
 
             connector = balancer.server.userPool.UserPool.getUser(info['user'])
             connector.send(info['data'])
+            system.log.debug("Data send to user ID %s" % str(info['user']))
 
         except KeyError:
-            pass
+            system.log.debug("User with ID %s is offline" % str(info['user']))
 
     def onConnectClose(self, connector):
         self.connections.remove(connector)

@@ -59,7 +59,6 @@ class TCPWrapper(tornado.tcpclient.TCPClient):
 
         except tornado.iostream.StreamClosedError as e:
             system.log.critical(e)
-            print(e)
         return
 
     @tornado.gen.coroutine

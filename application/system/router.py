@@ -1,5 +1,6 @@
 import importlib
 import config
+import system.log
 
 routers = config.getRoutes()
 
@@ -12,17 +13,17 @@ def searchExecControllerMethod(path):
         try:
             controllerClass = module.__getattribute__(actionClass + 'Controller')()
         except AttributeError:
-            print("No class", actionClass)
+            system.log.warn("No class %s" % actionClass)
             return False
 
         try:
             controllerMethod = controllerClass.__getattribute__(actionMethod)
         except AttributeError:
-            print("No method", actionMethod)
+            system.log.warn("No method %s" % actionMethod)
             return False
 
         return controllerMethod
 
     except KeyError as e:
-        print("Wrong Path", str(e))
+        system.log.warn("Wrong Path %s" % str(e))
         return False

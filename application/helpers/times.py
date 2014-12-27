@@ -1,4 +1,5 @@
 import time
+import system.log
 
 startTime = 0.0
 
@@ -35,7 +36,7 @@ def decorate(fn):
 
         text += "execute in %s" % (time.time() - start)
 
-        print(text)
+        system.log.info(text)
 
         return result
     return wrapper

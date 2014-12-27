@@ -83,6 +83,7 @@ define('service/standalone/user', [
                     });
 
                     self.getMeFn = [];
+                    self.trigger('login', self.me);
                 }
             });
         },

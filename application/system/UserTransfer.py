@@ -45,7 +45,7 @@ class UserTransfer(object):
 
         return send
 
-    def send(self, module, message, urgent=False):
+    def send(self, module, message):
         """
         :type module: string
         :type message: dict
@@ -60,11 +60,24 @@ class UserTransfer(object):
         }
 
         self.rmAsync()
+        self.pool.append(sendData)
 
-        if self.collect is False or urgent is True:
-            init_celery.message(sendData, self.getUser())
-        else:
-            self.pool.append(sendData)
+    def forceSend(self, module, message):
+        """
+        :type module: string
+        :type message: dict
+        """
+        assert type(message) == dict
+        assert type(module) == str
+
+        sendData = {
+            "message": message,
+            "module": module,
+            "async": self.async
+        }
+
+        self.rmAsync()
+        init_celery.message(sendData, self.getUser())
 
     def hasUser(self):
         return self._user is not None

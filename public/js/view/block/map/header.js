@@ -37,7 +37,7 @@ define('view/block/map/header', [
 
             this.holder.append(this.$el);
 
-            serviceStandaloneUser.getMe(function (domain) {
+            serviceStandaloneUser.on('login', function (domain) {
                 this.viewResource.setUserResources(domain.getResources());
             }.bind(this));
         }
