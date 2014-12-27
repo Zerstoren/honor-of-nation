@@ -56,6 +56,8 @@ class Selenium_Abstract_Generic(Generic):
     NoSuchElementException = NoSuchElementException
 
     def setUp(self):
+        self._port = random.randint(10000, 65000)
+        self._balancer_port = self._port + 1
         self.isSetup = True
         super().setUp()
 
@@ -78,8 +80,6 @@ class Selenium_Abstract_Generic(Generic):
 
         self.driver = None
         self.driversDict = {}
-        self._port = random.randint(10000, 65000)
-        self._balancer_port = self._port + 1
 
         self.createWindow('main')
         self.useWindow('main')
