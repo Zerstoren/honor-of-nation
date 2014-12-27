@@ -1,3 +1,5 @@
+import sys
+import signal
 import os
 os.chdir(os.path.split(os.path.abspath(__file__))[0])
 
@@ -66,8 +68,13 @@ def execute(transfer, data):
 if __name__ == '__main__':
     balancer.client.respondent.Respondent.setHandler(handler)
 
-    try:
-        system.log.info("Server is prepared")
-        ioloop.IOLoop.instance().start()
-    except KeyboardInterrupt:
-        pass
+    system.log.info("Server is prepared")
+
+    def signal_handler(signal, frame):
+        system.log.info('Backend instance get SIGINT')
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    ioloop.IOLoop.instance().start()

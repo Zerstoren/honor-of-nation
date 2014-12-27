@@ -1,7 +1,7 @@
-from selenium.webdriver import ActionChains as WebDriverActionChain
 from selenium.common.exceptions import NoSuchElementException
+from . import abstract
 
-class Asserts(object):
+class Asserts(abstract.AbstractDeclaration):
 
     def assertElementExist(self, selector, by='css', parent=None):
         """

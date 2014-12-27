@@ -1,4 +1,6 @@
-class Dom(object):
+from . import abstract
+
+class Dom(abstract.AbstractDeclaration):
     def selectOptionText(self, element, optionText):
         element.byXPath('//option[.="' + optionText + '"]').click()
 

@@ -1,4 +1,6 @@
-class Interface(object):
+from . import abstract
+
+class Interface(abstract.AbstractDeclaration):
     def operationIsSuccess(self):
         try:
             self.waitForElement('.alertify-log-success')
