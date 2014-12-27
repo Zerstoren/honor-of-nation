@@ -74,8 +74,8 @@ class Selenium_Abstract_Generic(Generic):
                 '--balancer_port=%s' % self._balancer_port
             ],
            cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
-           # stderr=subprocess.PIPE,
-           # stdout=subprocess.PIPE
+           ,stderr=subprocess.PIPE,
+           stdout=subprocess.PIPE
         )
 
         self.driver = None

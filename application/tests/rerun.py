@@ -4,7 +4,7 @@ def retry(retry=None):
     def wrapp(f):
         def testWrapper(self, *args, **kwargs):
             maxAttempts = retry or int(config.get('testing.retry'))
-            attempt = 1
+            attempt = 0
 
             while True:
                 if self.isSetup is False:
@@ -12,7 +12,7 @@ def retry(retry=None):
 
                 if attempt != maxAttempts:
                     try:
-                        f(*args, **kwargs)
+                        f(self, *args, **kwargs)
                         break
 
                     except:
