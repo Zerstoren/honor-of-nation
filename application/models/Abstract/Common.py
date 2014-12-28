@@ -70,6 +70,9 @@ class Common_Filter(dict):
         self.add('_id', system.mongo.mongo.id(recordId))
         return self
 
+    def rm(self, field):
+        del self[field]
+
 class Common_Limit(object):
     limit = None
     start = None

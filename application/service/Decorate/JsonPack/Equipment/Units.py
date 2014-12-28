@@ -1,6 +1,11 @@
+import service.Equipment.Armor
+import service.Equipment.Weapon
 
 class Decorate(object):
     def _pack(self, domain):
+        serviceArmor = service.Equipment.Armor.Service_Equipment_Armor().decorate('JsonPack.Equipment')
+        serviceWeapon = service.Equipment.Weapon.Service_Equipment_Weapon().decorate('JsonPack.Equipment')
+
         data = {
             'type': domain.getType(),
 
@@ -14,6 +19,10 @@ class Decorate(object):
             'armor': str(domain.getArmor().getId()),
             'weapon': str(domain.getWeapon().getId()),
             'weapon_second': str(domain.getWeaponSecond().getId()) if domain.getWeaponSecond() else False,
+
+            'armor_data': serviceArmor.getForce(domain.getArmor().getId()),
+            'weapon_data': serviceWeapon.getForce(domain.getWeapon().getId()),
+            'weapon_second_data': serviceWeapon.getForce(domain.getWeaponSecond().getId()) if domain.getWeaponSecond() else False,
 
             'time': domain.getTime(),
 
@@ -35,6 +44,10 @@ class Decorate(object):
 
     def get(self, _id, user=None):
         domain = super().get(_id, user)
+        return self._pack(domain)
+
+    def getForce(self, _id, user=None):
+        domain = super().getForce(_id, user)
         return self._pack(domain)
 
     def load(self, user):

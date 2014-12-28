@@ -19,7 +19,7 @@ class Selenium_Equipment_ArmorTest(
         armorCollection = self.getArmorByUser(self.user)
 
         try:
-            armorDomain = armorCollection[0]
+            armorCollection[0]
         except IndexError:
             self.fail('Armor is not saved')
 
@@ -121,6 +121,7 @@ class Selenium_Equipment_ArmorTest(
             'plate'
         )
 
+    @tests.rerun.retry()
     def testRemoveArmor(self):
         self.armor = self.addArmor(self.user)
 

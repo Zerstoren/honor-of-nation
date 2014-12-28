@@ -86,6 +86,10 @@ define('view/town/builds', [
         },
 
         updateQueue: function () {
+            if (!this.currentTown) {
+                return;
+            }
+
             var key,
                 i = 0,
                 item,

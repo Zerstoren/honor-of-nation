@@ -42,3 +42,16 @@ class Equipment_Armor_Domain(models.Abstract.Domain.Abstract_Domain):
         required method, for IDE static analyzer
         """
         return Equipment_Armor_Mapper
+
+    def extract(self, force=False):
+        if not self.hasId():
+            return self
+
+        if not self._loaded or force:
+            self._loaded = True
+
+            self.setOptions(
+                self.getMapper().getById(self.getId(), force=True)
+            )
+
+        return self

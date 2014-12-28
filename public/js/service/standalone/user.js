@@ -18,19 +18,15 @@ define('service/standalone/user', [
     var User = AbstractService.extend({
         initialize: function () {
             this.getMeFn = [];
+            this.defferTrigger = new window.DefferedTrigger();
         },
 
         me: new ModelUser(),
-        getMeFn: null,
 
         viewUserAuth: null,
 
-        getMe: function(fn) {
-            if (_.isEmpty(this.me.attributes)) {
-                this.getMeFn.push(fn);
-            } else {
-                fn(this.me);
-            }
+        getDeffer: function () {
+            return this.defferTrigger;
         },
 
         login: function () {
@@ -49,7 +45,6 @@ define('service/standalone/user', [
         },
 
         renderForm: function () {
-
             if (this.viewUserAuth === null) {
                 this.viewUserAuth = new ViewUserAuth();
                 this.viewUserAuth.on('login', this.onLogin, this);
@@ -63,33 +58,26 @@ define('service/standalone/user', [
         onLogin: function (data) {
             var self = this;
 
-            // Hack.
-            setTimeout(function () {
-                this.me.auth(data.login, data.password, function (domain, authResult) {
-                    if (authResult === false) {
-                        if (data.auto === true) {
-                            self.renderForm();
-                        } else {
-                            libsAlertify.error('Логин или пароль указаны не верно');
-                        }
-                        return;
+            this.me.auth(data.login, data.password, function (domain, authResult) {
+                if (authResult === false) {
+                    if (data.auto === true) {
+                        self.renderForm();
                     } else {
-                        localStorage.authLogin = data.login;
-                        localStorage.authPassword = data.password;
-
-                        if (self.viewUserAuth) {
-                            self.viewUserAuth.clean();
-                        }
+                        libsAlertify.error('Логин или пароль указаны не верно');
                     }
+                    return;
+                } else {
+                    localStorage.authLogin = data.login;
+                    localStorage.authPassword = data.password;
 
-                    _.each(self.getMeFn, function (fn) {
-                        fn(self.me);
-                    });
+                    if (self.viewUserAuth) {
+                        self.viewUserAuth.clean();
+                    }
+                }
 
-                    self.getMeFn = [];
-                    self.trigger('login', self.me);
-                });
-            }.bind(this), 300);
+                self.defferTrigger.set(self.me);
+
+            });
         },
 
         redirectToLoginForm: function () {
@@ -99,3 +87,4 @@ define('service/standalone/user', [
 
     return new User();
 });
+

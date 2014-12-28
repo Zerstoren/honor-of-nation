@@ -37,7 +37,7 @@ define('view/block/map/header', [
 
             this.holder.append(this.$el);
 
-            serviceStandaloneUser.on('login', function (domain) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET_AND_UPDATE, function (domain) {
                 this.viewResource.setUserResources(domain.getResources());
             }.bind(this));
         }

@@ -41,10 +41,12 @@ module.exports = function(grunt) {
                         'public/js/libs/underscore.js',
                         'public/js/libs/alertify.js',
                         'public/js/libs/jquery.js',
+                        'public/js/libs/bootstrap.js',
                         'public/js/libs/backbone.js',
                         'public/js/libs/ractive.js',
                         'public/js/libs/ractive-backbone-adapter.js',
                         'public/js/libs/socket.js',
+                        'public/js/libs/defferedTrigger.js',
                         'public/js/libs/bootstrap.js',
 
                         'public/deploy/' + commitHash + '/view.js',

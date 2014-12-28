@@ -29,7 +29,7 @@ define('service/equipment/armor', [
         },
 
         load: function () {
-            serviceStandaloneUser.getMe(function (user) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
                 this.collection.setUser(user);
                 this.collection.load();
             }.bind(this));

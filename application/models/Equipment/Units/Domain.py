@@ -4,8 +4,11 @@ from .Mapper import Equipment_Units_Mapper
 import models.User.Factory
 import models.User.Domain
 
-import models.Equipment.Armor.Factory
-import models.Equipment.Weapon.Factory
+# import models.Equipment.Armor.Factory
+# import models.Equipment.Weapon.Factory
+
+import service.Equipment.Armor
+import service.Equipment.Weapon
 
 from models.Equipment.Armor.Domain import Equipment_Armor_Domain
 from models.Equipment.Weapon.Domain import Equipment_Weapon_Domain
@@ -31,7 +34,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         :rtype: models.Equipment.Armor.Domain.Equipment_Armor_Domain
         """
         if self.armor is None:
-            self.armor = models.Equipment.Armor.Factory.Equipment_Armor_Factory.get(
+            self.armor = service.Equipment.Armor.Service_Equipment_Armor().getForce(
                 self._domain_data['armor']
             )
 
@@ -50,7 +53,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         :rtype: models.Equipment.Weapon.Domain.Equipment_Weapon_Domain
         """
         if self.weapon is None:
-            self.weapon = models.Equipment.Weapon.Factory.Equipment_Weapon_Factory.get(
+            self.weapon = service.Equipment.Weapon.Service_Equipment_Weapon().getForce(
                 self._domain_data['weapon']
             )
 
@@ -72,7 +75,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
             result = self._domain_data['weapon_second']
 
             if result:
-                self.weaponSecond = models.Equipment.Weapon.Factory.Equipment_Weapon_Factory.get(
+                self.weaponSecond = service.Equipment.Weapon.Service_Equipment_Weapon().getForce(
                     result
                 )
             else:
@@ -93,3 +96,16 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         required method, for IDE static analyzer
         """
         return Equipment_Units_Mapper
+
+    def extract(self, force=False):
+        if not self.hasId():
+            return self
+
+        if not self._loaded or force:
+            self._loaded = True
+
+            self.setOptions(
+                self.getMapper().getById(self.getId(), force=True)
+            )
+
+        return self

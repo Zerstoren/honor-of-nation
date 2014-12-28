@@ -46,7 +46,7 @@ define('view/equipment/armor', [
             this.armorDomain.set('shield_durability', 0);
             this.armorDomain.set('shield_blocking', 0);
 
-            serviceStandaloneUser.getMe(function (user) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
                 this.armorDomain.set('user', user.get('_id'));
             }.bind(this));
 

@@ -44,7 +44,7 @@ define('view/equipment/weapon', [
             this.weaponDomain.set('critical_damage', null);
             this.weaponDomain.set('critical_chance', null);
 
-            serviceStandaloneUser.getMe(function (user) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
                 this.weaponDomain.set('user', user.get('_id'));
             }.bind(this));
 

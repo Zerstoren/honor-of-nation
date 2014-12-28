@@ -24,6 +24,9 @@ class Service_Equipment_Units(AbstractEquipment):
     def get(self, _id, user=None):
         return Equipment_Units_Factory.get(_id)
 
+    def getForce(self, _id, user=None):
+        return Equipment_Units_Factory.get(_id, force=True)
+
     def load(self, user):
         return Equipment_Units_Factory.load(user)
 

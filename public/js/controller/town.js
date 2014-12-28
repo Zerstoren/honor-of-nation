@@ -1,11 +1,13 @@
 define('controller/town', [
     'service/standalone/mapInterface',
 
-    'service/town/main'
+    'service/town/main',
+    'service/standalone/user'
 ], function(
     mapInterface,
 
-    ServiceTownMain
+    ServiceTownMain,
+    ServiceStandaloneUser
 ) {
     'use strict';
 
@@ -19,8 +21,10 @@ define('controller/town', [
                 protect.serviceTownMain = new ServiceTownMain();
             }
 
-            mapInterface.render();
-            protect.serviceTownMain.render(townId);
+            ServiceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (domain) {
+                mapInterface.render();
+                protect.serviceTownMain.render(townId);
+            });
         },
 
         leaveShow: function () {

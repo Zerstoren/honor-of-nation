@@ -3,15 +3,33 @@ from . import Common
 
 import models.Resources.Common
 
+import exceptions.database
+
 
 class Equipment_Units_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'equipment_units'
+
+    def getById(self, queryId, force=False):
+        commonFilter = Common.Common_Filter()
+        commonFilter.setId(queryId)
+
+        if force:
+            commonFilter.rm('remove')
+
+        result = self._select(
+            Common.Common_Filter().setId(queryId),
+            Common.Common_Limit().setOne()
+        )
+
+        if result is None:
+            raise exceptions.database.NotFound('Data by _id %s not found in table `%s`' % (queryId, self._table))
+
+        return result
 
     def save(self, unit):
         """
         :type domain: models.Equipment.Units.Domain.Equipment_Units_Domain
         """
-
         commonSet = Common.Common_Set()
         commonSet.add('type', unit.getType())
         commonSet.add('user', unit.getUser().getId())

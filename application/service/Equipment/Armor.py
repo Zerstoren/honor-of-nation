@@ -22,6 +22,9 @@ class Service_Equipment_Armor(AbstractEquipment):
     def get(self, _id, user=None):
         return Equipment_Armor_Factory.get(_id)
 
+    def getForce(self, _id, user=None):
+        return Equipment_Armor_Factory.get(_id, force=True)
+
     def load(self, user):
         return Equipment_Armor_Factory.load(user)
 

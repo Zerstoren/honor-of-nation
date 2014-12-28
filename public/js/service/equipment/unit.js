@@ -41,7 +41,7 @@ define('service/equipment/unit', [
         },
 
         load: function () {
-            serviceStandaloneUser.getMe(function (user) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
                 this.collection.setUser(user);
                 this.collection.load();
 

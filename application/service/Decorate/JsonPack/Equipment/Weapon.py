@@ -31,6 +31,10 @@ class Decorate(object):
         domain = super().get(_id, user)
         return self._pack(domain)
 
+    def getForce(self, _id, user=None):
+        domain = super().getForce(_id, user)
+        return self._pack(domain)
+
     def load(self, user):
         collection = super().load(user)
         result = []

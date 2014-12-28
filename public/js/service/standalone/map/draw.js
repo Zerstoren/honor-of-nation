@@ -41,7 +41,7 @@ define('service/standalone/map/draw', [
 
             this.$isInit = true;
 
-            userService.getMe(function (userDomain) {
+            userService.getDeffer().deffer(DefferedTrigger.ON_GET_AND_UPDATE, function (userDomain) {
                 this.$mapDI.setCameraPosition(
                     userDomain.get('position').x,
                     userDomain.get('position').y

@@ -172,6 +172,7 @@
                             <div class="row unit-equipment">
                                 <div class="col-md-4 cell">
                                     <div class="armors scrolling">
+                                        {{#armor_collection.length}}
                                         {{#each armor_collection}}
                                         <div
                                             class="armor cursor_pointer {{#this._id == unit.armor}}selected{{/this._id == unit.armor}}"
@@ -242,11 +243,13 @@
                                             </div>
                                         </div>
                                         {{/each}}
+                                        {{/armor_collection.length}}
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 cell">
                                     <div class="weapons scrolling">
+                                        {{#weapon_collection.length}}
                                         {{#each weapon_collection}}
                                         <div
                                             class="weapon cursor_pointer {{#this._id == unit.weapon}}selected{{/this._id == unit.weapon}}"
@@ -314,11 +317,13 @@
 
                                         </div>
                                         {{/each}}
+                                        {{/weapon_collection.length}}
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 cell">
                                     <div class="weapons-second scrolling">
+                                        {{#weapon_second_collection.length}}
                                         <div
                                             class="weapon-second cursor_pointer"
                                             data-id="none"
@@ -400,6 +405,7 @@
 
                                         </div>
                                         {{/each}}
+                                        {{/weapon_second_collection.length}}
                                     </div>
                                 </div>
                             </div>

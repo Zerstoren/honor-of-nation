@@ -13,6 +13,12 @@ class Decorate(object):
 
         return domain
 
+    def getForce(self, _id, user=None):
+        domain = super().getForce(_id, user)
+        self._canAccess(domain, user)
+
+        return domain
+
     def remove(self, _id, user=None):
         domain = models.Equipment.Weapon.Factory.Equipment_Weapon_Factory.get(_id)
         self._canAccess(domain, user)

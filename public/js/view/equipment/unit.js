@@ -89,7 +89,7 @@ define('view/equipment/unit', [
             this.unitDomain.set('weapon', null);
             this.unitDomain.set('weapon_second', null);
 
-            serviceStandaloneUser.getMe(function (user) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
                 this.unitDomain.set('user', user.get('_id'));
             }.bind(this));
 

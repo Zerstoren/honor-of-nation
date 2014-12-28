@@ -1,4 +1,6 @@
 import models.Abstract.Mapper
+import exceptions.database
+
 from . import Common
 
 import models.Resources.Common
@@ -6,6 +8,23 @@ import models.Resources.Common
 
 class Equipment_Armor_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'equipment_armor'
+
+    def getById(self, queryId, force=False):
+        commonFilter = Common.Common_Filter()
+        commonFilter.setId(queryId)
+
+        if force:
+            commonFilter.rm('remove')
+
+        result = self._select(
+            commonFilter,
+            Common.Common_Limit().setOne()
+        )
+
+        if result is None:
+            raise exceptions.database.NotFound('Data by _id %s not found in table `%s`' % (queryId, self._table))
+
+        return result
 
     def save(self, armor):
         """

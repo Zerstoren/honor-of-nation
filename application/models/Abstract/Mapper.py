@@ -3,6 +3,8 @@ import system.mongo
 import models.Abstract.Common
 import exceptions.database
 
+import system.log
+
 
 class Abstract_Mapper(metaclass=abc.ABCMeta):
     _table = 'towns_builds'
@@ -23,6 +25,7 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         if limit.isOneRecord():
             action = self._getCollection().find_one(where)
             if action is None:
+                system.log.critical('Data not found in collection %s by query %s' % (self._table, str(where)))
                 raise exceptions.database.NotFound('Data not found by ' + str(where))
 
             return action

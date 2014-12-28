@@ -16,7 +16,7 @@ define('service/standalone/messages', [
         },
 
         onResourcesUpdate: function (msg) {
-            serviceStandaloneUser.getMe(function (domain) {
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (domain) {
                 domain.getResources().set(msg.resources);
             });
         },
