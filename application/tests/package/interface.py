@@ -25,6 +25,14 @@ class Interface(abstract.AbstractDeclaration):
         except self.NoSuchElementException:
             pass
 
+    def hideSuccessOperation(self):
+        self.byCssSelector('.alertify-log-success').click()
+        self.waitForElementHide('.alertify-log-success')
+
+    def hideFailOperation(self):
+        self.byCssSelector('.alertify-log-error').click()
+        self.waitForElementHide('.alertify-log-error')
+
     def getResources(self, fromBlock='.mpi__header .resources'):
         resourceBlock = self.byCssSelector(fromBlock)
         return {
@@ -35,6 +43,10 @@ class Interface(abstract.AbstractDeclaration):
             "wood": int(resourceBlock.byCss('.wood').get_attribute('data-hint').replace(' ', '')),
             "gold": int(resourceBlock.byCss('.gold').get_attribute('data-hint').replace(' ', '')),
         }
+
+    def openTown(self, town):
+        self.goAppUrl('/town/' + str(town.getId()))
+        self.waitForElement('#map-body-holder > .town .content')
 
 
     # def _getMap(self, x, y):

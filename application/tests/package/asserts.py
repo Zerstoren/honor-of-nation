@@ -48,3 +48,7 @@ class Asserts(abstract.AbstractDeclaration):
                 pass
         else:
             raise Exception('Select wrong type search')
+
+    def assertStringContains(self, haystack, needleStack):
+        if haystack.find(needleStack) == -1:
+            self.fail('In haystack %s in needle stack %s not found' % (haystack, needleStack))

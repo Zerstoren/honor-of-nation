@@ -113,11 +113,11 @@ define('view/equipment/armor', [
         },
 
         afterCreateSave: function () {
-            this.successMessage("Оружие успешно создано");
+            this.successMessage("Доспех успешно создано");
         },
 
         afterRemoveArmor: function () {
-            this.successMessage("Оружие успешно удалено");
+            this.successMessage("Доспех успешно удалено");
         },
 
         changeShieldType: function (type) {

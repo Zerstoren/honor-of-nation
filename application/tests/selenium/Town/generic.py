@@ -2,10 +2,6 @@ from tests.selenium import generic
 
 
 class Selenium_Town_Generic(generic.Selenium_Generic):
-    def openTown(self, town):
-        self.goAppUrl('/town/' + str(town.getId()))
-        self.waitForElement('#map-body-holder > .town .content')
-
     # BUILDS
     def _getBuildElement(self, key):
         return self.byCssSelector('#' + key + ' .name img')

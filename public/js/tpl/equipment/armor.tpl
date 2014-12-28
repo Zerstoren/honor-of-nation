@@ -6,9 +6,9 @@
 
                 <div class="btn-group select-filter-equipment armor" role="group">
                     <button type="button" class="btn btn-default filter all" data-type="all">Все</button>
-                    <button type="button" class="btn btn-default filter leather" data-type="sword">Кожа</button>
-                    <button type="button" class="btn btn-default filter mail" data-type="blunt">Кольчуга</button>
-                    <button type="button" class="btn btn-default filter plate" data-type="spear">Латы</button>
+                    <button type="button" class="btn btn-default filter leather" data-type="leather">Кожа</button>
+                    <button type="button" class="btn btn-default filter mail" data-type="mail">Кольчуга</button>
+                    <button type="button" class="btn btn-default filter plate" data-type="plate">Латы</button>
                     <button type="button" class="btn btn-defaul add"><b class="glyphicon glyphicon-plus"></b></button>
                 </div>
 
@@ -83,7 +83,7 @@
                                     <div class="input-group-addon">Здоровье</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_health"
                                         value="{{armor.health}}"
                                         {{#armor._id}}
                                         disabled="disabled"
@@ -97,7 +97,7 @@
                                     <div class="input-group-addon">Ловкость</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_agility"
                                         value="{{armor.agility}}"
                                         {{#armor._id}}
                                         disabled="disabled"
@@ -110,7 +110,7 @@
                                     <div class="input-group-addon">Поглощение</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_absorption"
                                         value="{{armor.absorption}}"
                                         {{#armor._id}}
                                         disabled="disabled"
@@ -127,7 +127,7 @@
                                 <div class="input-group">
                                     <span class="input-group-addon">Щит</span>
                                     <select
-                                        class="form-control shield_type"
+                                        class="form-control shield_type field_shield"
                                         {{#armor._id}}
                                         disabled="disabled"
                                         {{/#armor._id}}
@@ -143,7 +143,7 @@
                                     <div class="input-group-addon">Прочность</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_shield_durability"
                                         value="{{armor.shield_durability}}"
                                         {{#!armor.shield}}
                                         disabled="disabled"
@@ -157,7 +157,7 @@
                                     <div class="input-group-addon">Шанс блокировки</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_shield_blocking"
                                         value="{{armor.shield_blocking}}"
                                         {{#!armor.shield}}
                                         disabled="disabled"

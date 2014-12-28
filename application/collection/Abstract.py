@@ -5,6 +5,14 @@ class AbstractCollection(list):
         super().__init__(*args)
         self._loaded = False
 
+    def filter(self, field, value):
+        result = AbstractCollection()
+        for item in self:
+            if item.get(field) == value:
+                result.append(item)
+
+        return result
+
     def getById(self, itemId):
         for i in self:
             if self[i].hasId() and self[i].getId() == itemId:

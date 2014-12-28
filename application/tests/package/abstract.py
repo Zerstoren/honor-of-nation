@@ -5,6 +5,9 @@ class AbstractDeclaration(object):
     def waitForElement(self, selector, by='css'):
         pass
 
+    def waitForElementHide(self, selector, by='css'):
+        pass
+
     def byCssSelector(self, selector):
         pass
 
@@ -15,4 +18,7 @@ class AbstractDeclaration(object):
         pass
 
     def getChainAction(self):
+        pass
+
+    def goAppUrl(self, path):
         pass

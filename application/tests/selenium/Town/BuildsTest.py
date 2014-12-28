@@ -3,13 +3,14 @@ from models.TownBuilds import Common as buildConst
 import tests.rerun
 
 from tests.package.asserts import Asserts
-
+from tests.package.interface import Interface
 from tests.package.db.town import Town
 
 class Selenium_Town_BuildsTest(
     generic.Selenium_Town_Generic,
     Asserts,
-    Town
+    Town,
+    Interface
 ):
     def setUp(self):
         super().setUp()
