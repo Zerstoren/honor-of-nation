@@ -45,6 +45,9 @@ class Backend_Controller_Equipment_UnitsTest(Backend_Controller_Equipment_Generi
         result = self.transfer.getLastMessage()['message']
         self.assertTrue(result['done'])
 
+        del result['data']['armor_data']
+        del result['data']['weapon_data']
+
         self.assertDictEqual(
             result['data'],
             {
@@ -235,6 +238,8 @@ class Backend_Controller_Equipment_UnitsTest(Backend_Controller_Equipment_Generi
         del unit._domain_data['remove']
         del unit._domain_data['_id']
         del result['stamp']
+        del result['armor_data']
+        del result['weapon_data']
 
         unit._domain_data['armor'] = str(unit._domain_data['armor'])
         unit._domain_data['weapon'] = str(unit._domain_data['weapon'])
