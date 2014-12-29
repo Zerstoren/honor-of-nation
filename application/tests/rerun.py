@@ -16,7 +16,6 @@ def retry(retry=None):
                         break
 
                     except:
-                        print("Rerun test. Attempt %i of %i" % (attempt, maxAttempts, ))
                         attempt += 1
                         if self.execution == 'selenium':
                             self.driver.get_screenshot_as_file(
