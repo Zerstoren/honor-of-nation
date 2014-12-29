@@ -57,6 +57,7 @@ class Selenium_Equipment_Generic(
         self.byCssSelector('.select-filter-equipment .filter.%s' % fType).click()
 
     def getEquipmentByIdFromList(self, equipment):
+        self.waitForElement('.equipments-items div[data-id="%s"]' % str(equipment.getId()))
         return self.byCssSelector('.equipments-items div[data-id="%s"]' % str(equipment.getId()))
 
     def getEquipmentRemoveButton(self, equipment):

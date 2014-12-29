@@ -63,10 +63,17 @@ class Selenium_Equipment_UnitTest(Selenium_Equipment_Generic):
         self._openUnit()
         self.getAddButton().click()
 
-        self.setFieldValue('damage', 100)
-        self.setFieldValue('speed', 100)
-        self.setFieldValue('critical_damage', 3)
-        self.setFieldValue('critical_chance', 10)
+        self.getFilterButton('general').click()
+
+        self.setFieldValue('health', 100)
+        self.setFieldValue('agility', 100)
+        self.setFieldValue('absorption', 100)
+        self.setFieldValue('strength', 100)
+        self.setFieldValue('stamina', 100)
+        self.setFieldValue('troop_size', 100)
+
+        self.selectArmor(self.armor)
+        self.selectWeapon(self.weapon)
 
         self.save()
         self.operationIsSuccess()
@@ -74,46 +81,32 @@ class Selenium_Equipment_UnitTest(Selenium_Equipment_Generic):
         unitCollection = self.getUnitByUser(self.user)
         unitDomain = unitCollection[0]
 
-        self.assertEqual(unitDomain.getDamage(), 100)
-        self.assertEqual(unitDomain.getSpeed(), 100)
-        self.assertEqual(unitDomain.getCriticalDamage(), 3.0)
-        self.assertEqual(unitDomain.getCriticalChance(), 10)
+        self.assertEqual(unitDomain.getHealth(), 100)
+        self.assertEqual(unitDomain.getAgility(), 100)
+        self.assertEqual(unitDomain.getAbsorption(), 100)
+        self.assertEqual(unitDomain.getStrength(), 100)
+        self.assertEqual(unitDomain.getStamina(), 100)
+        self.assertEqual(unitDomain.getTroopSize(), 100)
 
     @tests.rerun.retry()
     def testLeftFilter(self):
-        self.unitSword = self.createEquipmentUnit(self.user,wType='sword')
-        self.unitBlunt = self.createEquipmentUnit(self.user, wType='blunt')
-        self.unitSpear = self.createEquipmentUnit(self.user, wType='spear')
-        self.unitBow = self.createEquipmentUnit(self.user, wType='bow')
+        self.unitSolider = self.createEquipmentUnit(self.user, uType='solider')
+        self.unitGeneral = self.createEquipmentUnit(self.user, uType='general')
 
         self._openUnit()
 
-        self.setListFilterType('sword')
-        leather = self.getEquipmentByIdFromList(self.unitSword)
+        self.setListFilterType('solider')
+        leather = self.getEquipmentByIdFromList(self.unitSolider)
         self.assertStringContains(
             leather.byCss('.name').text,
-            'sword'
+            'solider'
         )
 
-        self.setListFilterType('blunt')
-        leather = self.getEquipmentByIdFromList(self.unitBlunt)
+        self.setListFilterType('general')
+        leather = self.getEquipmentByIdFromList(self.unitGeneral)
         self.assertStringContains(
             leather.byCss('.name').text,
-            'blunt'
-        )
-
-        self.setListFilterType('spear')
-        leather = self.getEquipmentByIdFromList(self.unitSpear)
-        self.assertStringContains(
-            leather.byCss('.name').text,
-            'spear'
-        )
-
-        self.setListFilterType('bow')
-        leather = self.getEquipmentByIdFromList(self.unitBow)
-        self.assertStringContains(
-            leather.byCss('.name').text,
-            'bow'
+            'general'
         )
 
     @tests.rerun.retry()

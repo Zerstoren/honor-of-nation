@@ -6,8 +6,8 @@
 
                 <div class="btn-group select-filter-equipment unit" role="group">
                     <button type="button" class="btn btn-default filter all" data-type="all">Все</button>
-                    <button type="button" class="btn btn-default filter soliders" data-type="solider">Солдаты</button>
-                    <button type="button" class="btn btn-default filter generals" data-type="general">Генералы</button>
+                    <button type="button" class="btn btn-default filter solider" data-type="solider">Солдаты</button>
+                    <button type="button" class="btn btn-default filter general" data-type="general">Генералы</button>
                     <button type="button" class="btn add"><b class="glyphicon glyphicon-plus"></b></button>
                 </div>
 
@@ -74,7 +74,7 @@
                                     <div class="input-group-addon">Здоровье</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_health"
                                         value="{{unit.health}}"
                                         min="{{setting.health}}"
                                         {{#unit._id}}
@@ -89,7 +89,7 @@
                                     <div class="input-group-addon">Ловкость</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_agility"
                                         value="{{unit.agility}}"
                                         min="{{setting.agility}}"
                                         {{#unit._id}}
@@ -103,7 +103,7 @@
                                     <div class="input-group-addon">Поглощение</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_absorption"
                                         value="{{unit.absorption}}"
                                         min="{{setting.absorption}}"
                                         {{#unit._id}}
@@ -122,7 +122,7 @@
                                     <div class="input-group-addon">Сила</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_strength"
                                         value="{{unit.strength}}"
                                         min="{{setting.strength}}"
                                         {{#unit._id}}
@@ -137,7 +137,7 @@
                                     <div class="input-group-addon">Выносливость</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_stamina"
                                         value="{{unit.stamina}}"
                                         min="{{setting.stamina}}"
                                         {{#unit._id}}
@@ -151,7 +151,7 @@
                                     <div class="input-group-addon">Отряд</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_troop_size"
                                         value="{{unit.troop_size}}"
                                         min="{{setting.troop_size}}"
                                         {{#unit._id}}
