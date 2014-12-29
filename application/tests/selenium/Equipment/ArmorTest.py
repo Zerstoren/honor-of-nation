@@ -3,11 +3,7 @@ from tests.package.db.equipment import Equipment
 from tests.package.dom import Dom
 import tests.rerun
 
-class Selenium_Equipment_ArmorTest(
-    Selenium_Equipment_Generic,
-    Equipment,
-    Dom
-):
+class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
     @tests.rerun.retry()
     def testAddArmorBase(self):
         self._openArmor()
@@ -94,9 +90,9 @@ class Selenium_Equipment_ArmorTest(
 
     @tests.rerun.retry()
     def testLeftFilter(self):
-        self.armorLeather = self.addArmor(self.user, aType='leather')
-        self.armorMail = self.addArmor(self.user, aType='mail')
-        self.armorPlate = self.addArmor(self.user, aType='plate')
+        self.armorLeather = self.createEquipmentArmor(self.user, aType='leather')
+        self.armorMail = self.createEquipmentArmor(self.user, aType='mail')
+        self.armorPlate = self.createEquipmentArmor(self.user, aType='plate')
 
         self._openArmor()
 
@@ -123,7 +119,7 @@ class Selenium_Equipment_ArmorTest(
 
     @tests.rerun.retry()
     def testRemoveArmor(self):
-        self.armor = self.addArmor(self.user)
+        self.armor = self.createEquipmentArmor(self.user)
 
         self._openArmor()
 

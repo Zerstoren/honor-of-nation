@@ -30,15 +30,14 @@
 
             </div>
             <div class="buttons">
-                <button class="btn">Информация о городе</button>
-                <button class="btn">Данные о ресурсах</button>
-                <button class="btn">Бонусы от сооружений</button>
-                <button class="btn">Защита города</button>
+                <!--<button class="btn" disabled>Информация о городе</button>-->
+                <!--<button class="btn" disabled>Данные о ресурсах</button>-->
+                <!--<button class="btn" disabled>Бонусы от сооружений</button>-->
+                <!--<button class="btn" disabled>Защита города</button>-->
 
                 <button class="btn develop_armor">Разработка брони</button>
                 <button class="btn develop_weapon">Разработка оружия</button>
                 <button class="btn develop_people">Воспитание новобранцев</button>
-                <button class="btn linkage_unit">Компоновка солдат</button>
             </div>
         </div>
 

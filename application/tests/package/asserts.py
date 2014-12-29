@@ -51,4 +51,4 @@ class Asserts(abstract.AbstractDeclaration):
 
     def assertStringContains(self, haystack, needleStack):
         if haystack.find(needleStack) == -1:
-            self.fail('In haystack %s in needle stack %s not found' % (haystack, needleStack))
+            self.fail('In haystack %s needle stack %s not found' % (haystack, needleStack))

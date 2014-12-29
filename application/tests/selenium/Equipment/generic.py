@@ -2,13 +2,17 @@ from tests.selenium.generic import Selenium_Generic
 
 from tests.package.interface import Interface
 from tests.package.asserts import Asserts
+from tests.package.db.equipment import Equipment
+from tests.package.dom import Dom
 from tests.package.db.town import Town
 
 class Selenium_Equipment_Generic(
     Selenium_Generic,
-    Asserts,
     Town,
-    Interface
+    Equipment,
+    Asserts,
+    Interface,
+    Dom
 ):
     def setUp(self):
         super().setUp()
@@ -30,7 +34,7 @@ class Selenium_Equipment_Generic(
     def _openUnit(self):
         self.login(self.user)
         self.openTown(self.town)
-        self.byCssSelector('.develop_unit').click()
+        self.byCssSelector('.develop_people').click()
 
     def getAddButton(self):
         return self.byCssSelector('.select-filter-equipment .add')
@@ -57,3 +61,12 @@ class Selenium_Equipment_Generic(
 
     def getEquipmentRemoveButton(self, equipment):
         return self.getEquipmentByIdFromList(equipment).byCss('button')
+
+    def selectArmor(self, armor):
+        self.byCssSelector('.armors .armor[data-id="%s"]' % str(armor.getId())).click()
+
+    def selectWeapon(self, weapon):
+        self.byCssSelector('.weapons .weapon[data-id="%s"]' % str(weapon.getId())).click()
+
+    def selectWeaponSecond(self, weapon):
+        self.byCssSelector('.weapons-second .weapon-second[data-id="%s"]' % str(weapon.getId())).click()

@@ -92,7 +92,7 @@
                                     <div class="input-group-addon">Урон</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_damage"
                                         value="{{weapon.damage}}"
                                         min="{{settings.damage_min}}"
                                         max="{{settings.damage_max}}"
@@ -108,7 +108,7 @@
                                     <div class="input-group-addon">Сила крита</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_critical_damage"
                                         step="0.1"
                                         value="{{weapon.critical_damage}}"
                                         min="{{settings.critical_damage_min}}"
@@ -129,7 +129,7 @@
                                     <div class="input-group-addon">Скорость атаки</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_speed"
                                         value="{{weapon.speed}}"
                                         min="{{settings.speed_min}}"
                                         max="{{settings.speed_max}}"
@@ -144,7 +144,7 @@
                                     <div class="input-group-addon">Шанс крита</div>
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control field_critical_chance"
                                         value="{{weapon.critical_chance}}"
                                         min="{{settings.critical_chance_min}}"
                                         max="{{settings.critical_chance_max}}"

@@ -27,7 +27,6 @@
                             </div>
                             <div class="col-md-4 manipulate">
                                 <button class="btn btn-default remove">Удалить</button>
-                                <!--<button class="btn btn-default clone">Клон</button>-->
                             </div>
                         </div>
                         {{/each}}
@@ -244,6 +243,78 @@
                                         </div>
                                         {{/each}}
                                         {{/armor_collection.length}}
+                                        {{#unit.armor_data}}
+
+                                        <div
+                                            class="armor cursor_pointer {{#this._id == unit.armor}}selected{{/this._id == unit.armor}}"
+                                            data-id="{{this._id}}"
+                                        >
+                                            <img src="." width="32" height="32" />
+                                            <div class="text">
+                                                {{this.type}} {{this.level}}
+                                            </div>
+                                            <div class="reset"></div>
+                                            <div class="popup">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        Тип брони:
+                                                        {{#this.type == 'leather'}}
+                                                        кожа
+                                                        {{/this.type == 'leather'}}
+                                                        {{#this.type == 'mail'}}
+                                                        кольчуга
+                                                        {{/this.type == 'mail'}}
+                                                        {{#this.type == 'plate'}}
+                                                        латы
+                                                        {{/this.type == 'plate'}}
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Здоровье: {{this.health}}</div>
+                                                    <div class="col-xs-6">Ловкость:  {{this.agility}}</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Поглощение:  {{this.absorption}}</div>
+                                                </div>
+
+                                                {{#this.shield}}
+                                                    <div class="row">
+                                                        <div class="col-xs-6">Прочность щита:  {{this.shield_durability}}</div>
+                                                        <div class="col-xs-6">Шанс Блокировки:  {{this.shield_blocking}}</div>
+                                                    </div>
+                                                {{/this.shield}}
+
+                                                <hr />
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Уровень:  {{this.level}}</div>
+                                                    <div class="col-xs-6">Время:
+                                                        {{formatters.fromIntToTime(this.time)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Рубины:
+                                                        {{formatters.transformNumberToPretty(this.rubins)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Дерево:
+                                                        {{formatters.transformNumberToPretty(this.wood)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Сталь:
+                                                        {{formatters.transformNumberToPretty(this.steel)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Еда:
+                                                        {{formatters.transformNumberToPretty(this.eat)}}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        {{/unit.armor_data}}
                                     </div>
                                 </div>
 
@@ -318,6 +389,74 @@
                                         </div>
                                         {{/each}}
                                         {{/weapon_collection.length}}
+
+                                        {{#unit.weapon_data}}
+                                        <div
+                                            class="weapon cursor_pointer {{#this._id == unit.weapon}}selected{{/this._id == unit.weapon}}"
+                                            data-id="{{this._id}}"
+                                        >
+                                            <img src="." width="32" height="32" />
+                                            <div class="text">
+                                                {{this.type}} {{this.level}}
+                                            </div>
+                                            <div class="reset"></div>
+                                            <div class="popup">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        Тип оружия:
+                                                        {{#this.type == 'sword'}}
+                                                        меч
+                                                        {{/this.type == 'sword'}}
+                                                        {{#this.type == 'blunt'}}
+                                                        булава
+                                                        {{/this.type == 'blunt'}}
+                                                        {{#this.type == 'spear'}}
+                                                        копье
+                                                        {{/this.type == 'spear'}}
+                                                        {{#this.type == 'bow'}}
+                                                        лук
+                                                        {{/this.type == 'bow'}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Урон: {{this.damage}}</div>
+                                                    <div class="col-xs-6">Сила крита:  {{this.critical_damage}}</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Скорость атаки:  {{this.speed}}</div>
+                                                    <div class="col-xs-6">Шанс крита:  {{this.critical_chance}}</div>
+                                                </div>
+
+                                                <hr />
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Уровень: {{this.level}}</div>
+                                                    <div class="col-xs-6">Время:
+                                                        {{formatters.fromIntToTime(this.time)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Рубины:
+                                                        {{formatters.transformNumberToPretty(this.rubins)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Дерево:
+                                                        {{formatters.transformNumberToPretty(this.wood)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Сталь:
+                                                        {{formatters.transformNumberToPretty(this.steel)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Еда:
+                                                        {{formatters.transformNumberToPretty(this.eat)}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        {{/unit.weapon_data}}
                                     </div>
                                 </div>
 
@@ -406,6 +545,74 @@
                                         </div>
                                         {{/each}}
                                         {{/weapon_second_collection.length}}
+
+                                        {{#unit.weapon_second_data}}
+                                        <div
+                                            class="weapon-second cursor_pointer {{#this._id == unit.weapon_second}}selected{{/this._id == unit.weapon_second}}"
+                                            data-id="{{this._id}}"
+                                        >
+                                            <img src="." width="32" height="32" />
+                                            <div class="text">
+                                                {{this.type}} {{this.level}}
+                                            </div>
+                                            <div class="reset"></div>
+                                            <div class="popup">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        Тип оружия:
+                                                        {{#this.type == 'sword'}}
+                                                        меч
+                                                        {{/this.type == 'sword'}}
+                                                        {{#this.type == 'blunt'}}
+                                                        булава
+                                                        {{/this.type == 'blunt'}}
+                                                        {{#this.type == 'spear'}}
+                                                        копье
+                                                        {{/this.type == 'spear'}}
+                                                        {{#this.type == 'bow'}}
+                                                        лук
+                                                        {{/this.type == 'bow'}}
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Урон: {{this.damage}}</div>
+                                                    <div class="col-xs-6">Сила крита:  {{this.critical_damage}}</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Скорость атаки:  {{this.speed}}</div>
+                                                    <div class="col-xs-6">Шанс крита:  {{this.critical_chance}}</div>
+                                                </div>
+
+                                                <hr />
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">Уровень: {{this.level}}</div>
+                                                    <div class="col-xs-6">Время:
+                                                        {{formatters.fromIntToTime(this.time)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Рубины:
+                                                        {{formatters.transformNumberToPretty(this.rubins)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Дерево:
+                                                        {{formatters.transformNumberToPretty(this.wood)}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">Сталь:
+                                                        {{formatters.transformNumberToPretty(this.steel)}}
+                                                    </div>
+                                                    <div class="col-xs-6">Еда:
+                                                        {{formatters.transformNumberToPretty(this.eat)}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        {{/unit.weapon_second_data}}
                                     </div>
                                 </div>
                             </div>

@@ -109,9 +109,9 @@ define('view/equipment/unit', [
             }
 
             this.unitDomain = unitDomain;
-            this.set('weapon_collection', this.weaponCollection);
-            this.set('weapon_second_collection', this.weaponCollection);
-            this.set('armor_collection', this.armorCollection);
+            this.set('weapon_collection', null);
+            this.set('weapon_second_collection', null);
+            this.set('armor_collection', null);
             this.set('unit', this.unitDomain);
             this.changeUnitType(this.unitDomain.get('type'));
 
