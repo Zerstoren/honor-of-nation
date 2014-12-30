@@ -19,6 +19,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry()
     def testAddWeaponDifferenceFilter(self):
+        self.showBrowserLogs = True
         self._openWeapon()
 
         self.getAddButton().click()
@@ -26,19 +27,19 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-
+        self.sleep(1)
         self.getAddButton().click()
         self.getFilterButton('blunt').click()
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-
+        self.sleep(1)
         self.getAddButton().click()
         self.getFilterButton('spear').click()
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-
+        self.sleep(1)
         self.getAddButton().click()
         self.getFilterButton('bow').click()
         self.save()

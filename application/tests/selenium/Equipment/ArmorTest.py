@@ -21,6 +21,7 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry()
     def testAddArmorDifferenceFilter(self):
+        self.showBrowserLogs = True
         self._openArmor()
 
         self.getAddButton().click()
@@ -28,12 +29,14 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
+        self.sleep(1)
 
         self.getAddButton().click()
         self.getFilterButton('mail').click()
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
+        self.sleep(1)
 
         self.getAddButton().click()
         self.getFilterButton('plate').click()

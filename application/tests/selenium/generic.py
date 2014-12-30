@@ -56,6 +56,7 @@ class Selenium_Generic(Generic):
     NoSuchElementException = NoSuchElementException
 
     def setUp(self):
+        self.showBrowserLogs = False
         self._port = random.randint(10000, 65000)
         self._balancer_port = self._port + 1
         super().setUp()
@@ -90,9 +91,9 @@ class Selenium_Generic(Generic):
         self.useWindow('main')
 
     def tearDown(self):
-        result = self.executeCommand('return window.consoleLog')
-        self.print(result)
-        # system.log.debug(entry)
+        if self.showBrowserLogs:
+            result = self.executeCommand('return window.consoleLog')
+            self.print(result)
 
         if self.core.remove_core:
             self.closeWindow('ALL')
