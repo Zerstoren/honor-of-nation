@@ -47,7 +47,7 @@ class Backend_Controller_Equipment_UnitsTest(Backend_Controller_Equipment_Generi
 
         del result['data']['armor_data']
         del result['data']['weapon_data']
-        del result['weapon_second_data']
+        del result['data']['weapon_second_data']
 
         self.assertDictEqual(
             result['data'],
