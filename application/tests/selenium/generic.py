@@ -20,6 +20,8 @@ import subprocess
 import signal
 import random
 
+import system.log
+
 import logging
 selenium_logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
 selenium_logger.setLevel(logging.WARNING)
@@ -87,8 +89,10 @@ class Selenium_Generic(Generic):
         self.createWindow('main')
         self.useWindow('main')
 
-
     def tearDown(self):
+        for entry in self.driver.get_log('browser'):
+            system.log.debug(entry)
+
         if self.core.remove_core:
             self.closeWindow('ALL')
             self.managedProcess.send_signal(signal.SIGINT)
