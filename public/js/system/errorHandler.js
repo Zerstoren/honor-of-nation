@@ -1,20 +1,19 @@
 define('system/errorHandler', [
     'system/socket'
 ], function (socket) {
-
+    window.consoleLog = [];
     var ErrorHandler = AbstractService.extend({
-        consoleLog: [],
+        consoleLog: window.consoleLog,
         init: function () {
             window.onerror = this.onError.bind(this);
-            //this.initConsole();
+            this.initConsole();
         },
 
         initConsole: function () {
             var self = this, consoleDump = console.log;
             console.log = function () {
                 var args = Array.prototype.slice.call(arguments);
-                self.sendDebug(args.join(" "));
-                //self.consoleLog.push(arguments);
+                self.consoleLog.push(args);
             };
         },
 

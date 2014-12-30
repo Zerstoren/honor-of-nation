@@ -90,8 +90,9 @@ class Selenium_Generic(Generic):
         self.useWindow('main')
 
     def tearDown(self):
-        for entry in self.driver.get_log('browser'):
-            system.log.debug(entry)
+        result = self.executeCommand('return window.consoleLog')
+        self.print(result)
+        # system.log.debug(entry)
 
         if self.core.remove_core:
             self.closeWindow('ALL')
