@@ -24,29 +24,35 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
 
         self.getAddButton().click()
         self.getFilterButton('sword').click()
+        self.sleep(1)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-        self.sleep(1)
+
         self.getAddButton().click()
         self.getFilterButton('blunt').click()
+        self.sleep(1)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-        self.sleep(1)
+
         self.getAddButton().click()
         self.getFilterButton('spear').click()
+        self.sleep(1)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-        self.sleep(1)
+
         self.getAddButton().click()
         self.getFilterButton('bow').click()
+        self.sleep(1)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
 
         weaponCollection = self.getWeaponByUser(self.user)
+        for i in weaponCollection:
+            print(i.getType())
 
         self.assertEqual(
             len(weaponCollection.filter('type', 'sword')),

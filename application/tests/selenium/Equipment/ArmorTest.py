@@ -26,25 +26,28 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
 
         self.getAddButton().click()
         self.getFilterButton('leather').click()
+        self.sleep(2)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-        self.sleep(1)
 
         self.getAddButton().click()
         self.getFilterButton('mail').click()
+        self.sleep(2)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
-        self.sleep(1)
 
         self.getAddButton().click()
         self.getFilterButton('plate').click()
+        self.sleep(2)
         self.save()
         self.operationIsSuccess()
         self.hideSuccessOperation()
 
         armorCollection = self.getArmorByUser(self.user)
+        for i in armorCollection:
+            print(i.getType())
 
         self.assertEqual(
             len(armorCollection.filter('type', 'leather')),
