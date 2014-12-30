@@ -61,6 +61,12 @@ class Selenium_Generic(Generic):
         if self.managedProcess is not None:
             raise RuntimeError('Game server already started')
 
+        if config.get('testing.logDir') and config.configType == 'jankins_test':
+            fileName = self.__class__.__name__ + "--" + self._testMethodName
+            f = open("%s/%s" % (config.get('testing.logDir'), fileName), 'w+')
+        else:
+            f = subprocess.PIPE
+
         self.managedProcess = subprocess.Popen([
                 'python3',
                 '-B',
@@ -70,9 +76,9 @@ class Selenium_Generic(Generic):
                 '--port=%s' % self._port,
                 '--balancer_port=%s' % self._balancer_port
             ],
-           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../'
-           # ,stderr=subprocess.PIPE,
-           # stdout=subprocess.PIPE
+           cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../',
+           stderr=f,
+           stdout=f
         )
 
         self.driver = None

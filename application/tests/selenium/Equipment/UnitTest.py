@@ -45,7 +45,6 @@ class Selenium_Equipment_UnitTest(Selenium_Equipment_Generic):
         self.operationIsSuccess()
         self.hideSuccessOperation()
 
-
         unitCollection = self.getUnitByUser(self.user)
 
         self.assertEqual(
