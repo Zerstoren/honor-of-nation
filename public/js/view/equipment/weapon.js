@@ -49,6 +49,7 @@ define('view/equipment/weapon', [
             }.bind(this));
 
             this.weaponDomain.on('change', this.onWeaponUpdate, this);
+            console.log(">>>>>>>Create new weapon, type basic")
             this.changeWeaponType('sword');
 
             this.set('weapon', this.weaponDomain);
@@ -82,7 +83,7 @@ define('view/equipment/weapon', [
                 typeName = type.toUpperCase(),
                 config = systemConfig.getEquipmentWeapon(),
                 i;
-
+            console.log(">>>>>>>>>>>Change weapon type to " + type)
             this.weaponDomain.set('type', type);
 
             for (i = 0; i < this.names.length; i++) {
