@@ -19,7 +19,6 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry()
     def testAddWeaponDifferenceFilter(self):
-        self.showBrowserLogs = True
         self._openWeapon()
 
         self.getAddButton().click()
@@ -51,8 +50,6 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
         self.hideSuccessOperation()
 
         weaponCollection = self.getWeaponByUser(self.user)
-        for i in weaponCollection:
-            print(i.getType())
 
         self.assertEqual(
             len(weaponCollection.filter('type', 'sword')),
