@@ -6,7 +6,7 @@ define('system/errorHandler', [
         consoleLog: window.consoleLog,
         init: function () {
             window.onerror = this.onError.bind(this);
-            this.initConsole();
+            //this.initConsole();
         },
 
         initConsole: function () {

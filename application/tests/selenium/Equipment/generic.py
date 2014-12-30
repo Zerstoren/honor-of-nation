@@ -56,6 +56,10 @@ class Selenium_Equipment_Generic(
     def setListFilterType(self, fType):
         self.byCssSelector('.select-filter-equipment .filter.%s' % fType).click()
 
+    def getEquipmentNumberItems(self):
+        self.waitForElement('.equipments-items *')
+        return len(self.byCssSelector('.equipments-items').byXPathMany('./*'))
+
     def getEquipmentByIdFromList(self, equipment):
         self.waitForElement('.equipments-items div[data-id="%s"]' % str(equipment.getId()))
         return self.byCssSelector('.equipments-items div[data-id="%s"]' % str(equipment.getId()))

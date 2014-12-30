@@ -16,6 +16,9 @@ class UnitsModelController(_AbstractController):
         service = self._getParamsJsonPackEquipmentService()
         unitData = service.simulate(data)
         unitData['stamp'] = time.time()
+        del unitData['armor_data']
+        del unitData['weapon_data']
+        del unitData['weapon_second_data']
 
         transfer.send('/model/equipment/unit/simulate', {
             'done': True,

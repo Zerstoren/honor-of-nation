@@ -35,16 +35,17 @@ define('model/equipment/armor', [
             if (
                 (!this.get('health') && !_.isNumber(this.get('health'))) ||
                 (!this.get('agility') && !_.isNumber(this.get('agility'))) ||
-                (!this.get('absorption') && !_.isNumber(this.get('absorption')))
+                (!this.get('absorption') && !_.isNumber(this.get('absorption'))) ||
+                this.get('_id')
             ) {
                 return;
             } else {
                 if (
                     this.get('shield') &&
                     (
-                        (!this.get('shield_type') && _.isNumber(this.get('shield_type'))) ||
-                        (!this.get('shield_durability') && _.isNumber(this.get('shield_durability'))) ||
-                        (!this.get('shield_blocking') && _.isNumber(this.get('shield_blocking')))
+                        (!this.get('shield_type') && !_.isNumber(this.get('shield_type'))) ||
+                        (!this.get('shield_durability') && !_.isNumber(this.get('shield_durability'))) ||
+                        (!this.get('shield_blocking') && !_.isNumber(this.get('shield_blocking')))
                     )
                 ) {
                     return;

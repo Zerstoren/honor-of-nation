@@ -41,7 +41,8 @@ define('model/equipment/unit', [
                 (!this.get('stamina') && !_.isNumber(this.get('stamina'))) ||
                 (!this.get('strength') && !_.isNumber(this.get('strength'))) ||
                 !this.get('armor') ||
-                !this.get('weapon')
+                !this.get('weapon') ||
+                this.get('_id')
             ) {
                 return;
             }

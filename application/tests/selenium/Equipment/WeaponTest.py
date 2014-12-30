@@ -94,12 +94,14 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry()
     def testLeftFilter(self):
-        self.weaponSword = self.createEquipmentWeapon(self.user,wType='sword')
+        self.weaponSword = self.createEquipmentWeapon(self.user, wType='sword')
         self.weaponBlunt = self.createEquipmentWeapon(self.user, wType='blunt')
         self.weaponSpear = self.createEquipmentWeapon(self.user, wType='spear')
         self.weaponBow = self.createEquipmentWeapon(self.user, wType='bow')
 
         self._openWeapon()
+
+        self.assertEqual(self.getEquipmentNumberItems(), 4)
 
         self.setListFilterType('sword')
         leather = self.getEquipmentByIdFromList(self.weaponSword)
@@ -107,6 +109,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
             leather.byCss('.name').text,
             'sword'
         )
+        self.assertEqual(self.getEquipmentNumberItems(), 1)
 
         self.setListFilterType('blunt')
         leather = self.getEquipmentByIdFromList(self.weaponBlunt)
@@ -114,6 +117,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
             leather.byCss('.name').text,
             'blunt'
         )
+        self.assertEqual(self.getEquipmentNumberItems(), 1)
 
         self.setListFilterType('spear')
         leather = self.getEquipmentByIdFromList(self.weaponSpear)
@@ -121,6 +125,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
             leather.byCss('.name').text,
             'spear'
         )
+        self.assertEqual(self.getEquipmentNumberItems(), 1)
 
         self.setListFilterType('bow')
         leather = self.getEquipmentByIdFromList(self.weaponBow)
@@ -128,6 +133,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
             leather.byCss('.name').text,
             'bow'
         )
+        self.assertEqual(self.getEquipmentNumberItems(), 1)
 
     @tests.rerun.retry()
     def testRemoveWeapon(self):
