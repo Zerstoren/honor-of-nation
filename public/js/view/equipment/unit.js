@@ -183,6 +183,10 @@ define('view/equipment/unit', [
         selectArmor: function (id) {
             var armor, weapon;
 
+            if (this.unitDomain && this.unitDomain.get('_id')) {
+                return;
+            }
+
             this.$el.find('.armor[data-id]').removeClass('selected');
             this.$el.find('.armor[data-id="' + id  + '"]').addClass('selected');
 
@@ -208,6 +212,10 @@ define('view/equipment/unit', [
 
         // @TODO Refactor this shit
         selectWeapon: function (id) {
+            if (this.unitDomain && this.unitDomain.get('_id')) {
+                return;
+            }
+
             this.$el.find('.weapon[data-id]').removeClass('selected');
 
             if (id) {
@@ -242,6 +250,10 @@ define('view/equipment/unit', [
 
         // @TODO Refactor this shit
         selectWeaponSecond: function (id) {
+            if (this.unitDomain && this.unitDomain.get('_id')) {
+                return;
+            }
+
             this.$el.find('.weapon-second[data-id]').removeClass('selected');
 
             if (id) {
@@ -329,6 +341,10 @@ define('view/equipment/unit', [
         },
 
         onSaveUnit: function () {
+            if (!this.unitDomain.get('armor') || !this.unitDomain.get('weapon')) {
+                return;
+            }
+
             this.trigger('save', this.unitDomain);
         },
 

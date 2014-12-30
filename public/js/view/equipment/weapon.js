@@ -16,7 +16,7 @@ define('view/equipment/weapon', [
             'click .header-icon-close': 'onClose',
             'keydown global': 'onKeyDown',
             'click .equipment-item': 'onSelectWeapon',
-            'click .select-filter-weapon .filter': 'onChangeFilterWeapon',
+            'click .select-filter-equipment .filter': 'onChangeFilterWeapon',
             'click .select-equipment-type button': 'onChangeWeaponType',
             'click .save': 'onSaveWeapon',
             'click button.add': 'onAdd',

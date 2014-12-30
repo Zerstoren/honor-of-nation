@@ -32,7 +32,8 @@ define('model/equipment/weapon', [
                 (!this.get('speed') && !_.isNumber(this.get('speed'))) ||
                 (!this.get('critical_damage') && !_.isNumber(this.get('critical_damage'))) ||
                 (!this.get('critical_chance') && !_.isNumber(this.get('critical_chance'))) ||
-                !this.get('type')
+                !this.get('type') ||
+                this.get('_id')
             ) {
                 return;
             }
