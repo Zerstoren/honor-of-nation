@@ -12,7 +12,9 @@ define('system/errorHandler', [
         initConsole: function () {
             var self = this, consoleDump = console.log;
             console.log = function () {
-                self.consoleLog.push(arguments);
+                var args = Array.prototype.slice.call(arguments);
+                self.sendDebug(args.join(" "));
+                //self.consoleLog.push(arguments);
             };
         },
 
