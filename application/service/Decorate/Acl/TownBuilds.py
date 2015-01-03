@@ -3,7 +3,7 @@ import exceptions.httpCodes
 class Decorate():
     def _userCanAccessToTownManipulation(self, user, townDomain):
         if (townDomain.getUser().getId() != user.getId()):
-            exceptions.httpCodes.Page403('Доступ закрыт на эту страницу')
+            raise exceptions.httpCodes.Page403('Доступ закрыт на эту страницу')
 
     def get(self, townDomain, user):
         self._userCanAccessToTownManipulation(user, townDomain)

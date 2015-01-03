@@ -1,6 +1,7 @@
 
 
 class AbstractCollection(list):
+    domain = None
     def __init__(self, *args):
         super().__init__(*args)
         self._loaded = False
@@ -17,6 +18,17 @@ class AbstractCollection(list):
         for i in self:
             if self[i].hasId() and self[i].getId() == itemId:
                 return self[i]
+
+    def setOptions(self, data):
+        if self.domain is None:
+            raise Exception("Domain not setup")
+
+        for i in data:
+            domain = self.domain()
+            domain.setOptions(i)
+            self.append(domain)
+
+        return self
 
     def extract(self, force=False):
         if len(self) == 0:

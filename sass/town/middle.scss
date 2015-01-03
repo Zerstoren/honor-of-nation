@@ -54,10 +54,19 @@
     }
 
     .town_info {
-        .buttons {
+        .button_top {
             text-align: center;
             button {
-                width: 20%;
+                width: 22%;
+                height: 50px;
+                margin: 4px;
+            }
+        }
+
+        .button_bottom {
+            text-align: center;
+            button {
+                width: 30%;
                 height: 50px;
                 margin: 4px;
             }

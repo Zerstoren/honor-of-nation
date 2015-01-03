@@ -28,12 +28,11 @@ class Equipment_Units_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def save(self, unit):
         """
-        :type domain: models.Equipment.Units.Domain.Equipment_Units_Domain
+        :type unit: models.Equipment.Units.Domain.Equipment_Units_Domain
         """
         commonSet = Common.Common_Set()
         commonSet.add('type', unit.getType())
         commonSet.add('user', unit.getUser().getId())
-
 
         if unit.getType() == Common.TYPE_GENERAL:
             commonSet.add('troop_size', unit.getTroopSize())

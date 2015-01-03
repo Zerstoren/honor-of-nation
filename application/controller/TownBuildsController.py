@@ -3,6 +3,8 @@ import service.Town
 
 import time
 
+import system.log
+
 
 class AbstractTownBuildsController(object):
     def _getParamsTown(self):
@@ -81,6 +83,7 @@ class MainController(AbstractTownBuildsController):
 class CeleryPrivateController(AbstractTownBuildsController):
     def buildComplete(self, message):
         if not (message['start_at'] + message['complete_after']) <= int(time.time()):
+            system.log.critical('To early. %s. Current time %i' % (str(message), int(time.time())))
             raise Exception('Слишком рано')
 
         townDomain = self._getParamsTown().getById(message['town'])

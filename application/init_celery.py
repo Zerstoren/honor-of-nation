@@ -31,6 +31,13 @@ def builds(message):
     celeryController.buildComplete(message)
 
 
+@app.task(serializer='json', name='init_celery.army')
+def army(message):
+    import controller.ArmyQueueController
+    celeryController = controller.ArmyQueueController.CeleryPrivateController()
+    celeryController.armyCreated(message)
+
+
 if __name__ == '__main__':
     def ioLoop():
         ioloop.IOLoop.instance().start()

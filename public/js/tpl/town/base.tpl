@@ -29,12 +29,14 @@
             <div class="resources">
 
             </div>
-            <div class="buttons">
-                <!--<button class="btn" disabled>Информация о городе</button>-->
-                <!--<button class="btn" disabled>Данные о ресурсах</button>-->
-                <!--<button class="btn" disabled>Бонусы от сооружений</button>-->
-                <!--<button class="btn" disabled>Защита города</button>-->
+            <div class="button_top">
+                <button class="btn" disabled>Информация о городе</button>
+                <button class="btn" disabled>Данные о ресурсах</button>
+                <button class="btn" disabled>Бонусы от сооружений</button>
+                <button class="btn" disabled>Защита города</button>
 
+            </div>
+            <div class="button_bottom">
                 <button class="btn develop_armor">Разработка брони</button>
                 <button class="btn develop_weapon">Разработка оружия</button>
                 <button class="btn develop_people">Воспитание новобранцев</button>
