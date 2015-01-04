@@ -34,7 +34,7 @@ define('view/town/main', [
         },
 
         getRightSide: function () {
-//            return this.$el.find('.left');
+            return this.$el.find('.right');
         },
 
         getTownList: function () {

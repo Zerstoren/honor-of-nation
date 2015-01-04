@@ -6,13 +6,7 @@
         {{#levelWithQueue < maxLevel}}
         <a href="#">
             {{name}} ур.
-            {{#level == 0}}
-            <br /><span class="level">Не построено</span>
-            {{/level == 0}}
-            {{#level != 0}}
             <span class="level">{{level}}</span>
-            {{/level != 0}}
-
             <img src="/img/icons/build.png" width="20" height="16" />
         </a>
         {{/levelWithQueue < maxLevel}}
