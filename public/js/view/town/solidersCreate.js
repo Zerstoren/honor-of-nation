@@ -7,9 +7,16 @@ define('view/town/solidersCreate', [
         initialize: function () {
             this.template = this.getTemplate('town/createUnits/units');
             this.setPartials({
-                equipmentUnitsItem: 'town/createUnits/createUnitsItem'
+                equipmentUnitsItem: 'town/createUnits/createUnitsItem',
+                unitsInProgress: 'town/createUnits/unitsInProgress'
             });
             this.initRactive();
+        },
+
+        data: {
+            armyQueue: null,
+            equipmentUnits: null,
+            createCount: 1
         },
 
         render: function (holder) {

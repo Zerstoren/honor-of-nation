@@ -10,5 +10,6 @@
     </div>
 </div>
 
-<div class="list_of_progress_builds">
+<div class="list_of_progress_units">
+    {{>unitsInProgress}}
 </div>

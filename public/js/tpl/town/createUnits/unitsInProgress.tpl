@@ -1,7 +1,6 @@
 <div class="background bottom">
     <div class="nextBuilds">
         <div>
-
             <!--{{#queue.length}}-->
             <!--<div class="triangle">-->
 
@@ -51,7 +50,7 @@
         {{/firstSection}}
 
         {{#!firstSection}}
-        <div class="nothing-builds">Ничего не строится</div>
+        <div class="nothing-builds">Никто не тренируется</div>
         {{/firstSection}}
     </div>
 </div>
