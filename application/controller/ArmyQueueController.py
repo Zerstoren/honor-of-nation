@@ -44,16 +44,19 @@ class MainController(_AbstractArmyQueue):
             'done': True
         })
 
+
+class CollectionController(_AbstractArmyQueue):
     def load(self, transfer, data):
         result = self._getParamsAclJsonPackArmyQueueService().getQueue(
             data['town'],
             transfer.getUser()
         )
 
-        transfer.send('/army/queue/load', {
+        transfer.send('/collection/army/queue/load', {
             'done': True,
             'data': result
         })
+
 
 class CeleryPrivateController(_AbstractArmyQueue):
     def armyCreated(self, message):

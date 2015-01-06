@@ -1,4 +1,4 @@
-<div class="units_container" id="{{_id}}">
+<div class="units_container" data-id="{{_id}}">
     <div class="name btn btn-default">
         <a href="#">
             {{#this.type == 'solider'}}
@@ -139,13 +139,13 @@
        <div class="input-group">
             <input
                 type="number"
-                class="form-control field_strength"
+                class="form-control count_to_create"
                 value="{{createCount}}"
                 min="1"
                 max="100"
             >
             <div class="input-group-btn">
-                <button class="btn btn-default">Создать</button>
+                <button class="btn btn-default create">Создать</button>
             </div>
         </div>
 

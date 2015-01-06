@@ -4,6 +4,10 @@ define('view/town/solidersCreate', [
     ViewElementsPopup
 ) {
     return AbstractView.extend({
+        events: {
+            'click .create': 'onCreateUnit'
+        },
+
         initialize: function () {
             this.template = this.getTemplate('town/createUnits/units');
             this.setPartials({
@@ -38,6 +42,18 @@ define('view/town/solidersCreate', [
         setEquipmentUnitsCollection: function (collection) {
             this.set('equipmentUnits', collection);
             this.equipmentUnits = collection;
+        },
+
+        onCreateUnit: function (ev) {
+            container = jQuery(ev.target).parents('.units_container');
+            if (!container) {
+                throw new Error("Clicked not in container");
+            }
+
+            var unitId = container.attr('data-id'),
+                count = container.find('.count_to_create');
+
+            this.trigger('create', unitId, count);
         }
     });
 });
