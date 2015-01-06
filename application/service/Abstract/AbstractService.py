@@ -1,6 +1,10 @@
 import importlib
 
 class Service_Abstract(object):
+    DECOR_ACL = 'Acl'
+    DECOR_PARAMS = 'Params'
+    DECOR_JSON_PACK = 'JsonPack'
+
     def decorate(self, *args):
         currentClassName = self.__class__.__name__
         classPrefixes = currentClassName.split('_')[-1]

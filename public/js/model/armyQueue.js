@@ -1,4 +1,4 @@
-define('model/town', [], function () {
+define('model/armyQueue', [], function () {
     return AbstractModel.extend({
         model_url: 'army/queue'
     });

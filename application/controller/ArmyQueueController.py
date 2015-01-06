@@ -13,6 +13,9 @@ class _AbstractArmyQueue(object):
     def _getParamsArmyQueueService(self):
         return Service_ArmyQueue().decorate('Params')
 
+    def _getJsonPackArmyQueueService(self):
+        return Service_ArmyQueue().decorate('JsonPack')
+
     def _getParamsAclArmyQueueService(self):
         return Service_ArmyQueue().decorate('Params', 'Acl')
 
@@ -64,8 +67,11 @@ class CeleryPrivateController(_AbstractArmyQueue):
             system.log.critical('To early. %s. Current time %i' % (str(message), int(time.time())))
             raise Exception('Слишком рано')
 
-        self._getParamsArmyService().create(
-            message['unit'],
-            message['town'],
-            message['count']
+        town = self._getParamsArmyQueueService().create(message['queue_id'])
+        town.getUser().getTransfer().forceSend('/delivery/unitsUpdate',
+            {
+                'done': True,
+                'town': str(town.getId()),
+                'armyQueue': self._getJsonPackArmyQueueService().getQueue(town)
+            }
         )

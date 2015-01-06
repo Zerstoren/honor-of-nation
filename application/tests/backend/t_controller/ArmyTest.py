@@ -45,6 +45,9 @@ class Backend_Controller_ArmyTest(
     def _getArmyQueueController(self):
         return controller.ArmyQueueController.MainController()
 
+    def _getArmyQueueCollectionController(self):
+        return controller.ArmyQueueController.CollectionController()
+
     def _getArmyService(self):
         return service.Army.Service_Army()
 
@@ -153,7 +156,7 @@ class Backend_Controller_ArmyTest(
         self.createQueue(self.town, self.unit, count=10)
         self.createQueue(self.town, self.unit, count=25)
 
-        armyController = self._getArmyQueueController()
+        armyController = self._getArmyQueueCollectionController()
         armyController.load(
             self.transfer,
             {

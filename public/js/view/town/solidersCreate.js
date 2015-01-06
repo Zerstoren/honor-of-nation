@@ -1,11 +1,18 @@
 define('view/town/solidersCreate', [
-    'view/elements/popup'
+    'view/elements/popup',
+
+    'system/config',
+    'system/interval'
 ], function (
-    ViewElementsPopup
+    ViewElementsPopup,
+
+    config,
+    interval
 ) {
     return AbstractView.extend({
         events: {
-            'click .create': 'onCreateUnit'
+            'click .create': 'onCreateUnit',
+            'click .cancel': 'onCancelUnit'
         },
 
         initialize: function () {
@@ -15,6 +22,8 @@ define('view/town/solidersCreate', [
                 unitsInProgress: 'town/createUnits/unitsInProgress'
             });
             this.initRactive();
+
+            interval.on(interval.EVERY_1_SEC, this.updateQueue, this);
         },
 
         data: {
@@ -33,10 +42,19 @@ define('view/town/solidersCreate', [
                     align: 'left'
                 }
             );
+
+            this.popupQueue = new ViewElementsPopup(
+                this.$el, {
+                    timeout: 100,
+                    liveTarget: '.triangle',
+                    ignoreTop: true,
+                    align: 'left'
+                }
+            );
         },
 
         setArmyQueue: function (collection) {
-            this.set('armyQueue', collection);
+            this.armyQueue = collection;
         },
 
         setEquipmentUnitsCollection: function (collection) {
@@ -44,16 +62,63 @@ define('view/town/solidersCreate', [
             this.equipmentUnits = collection;
         },
 
+        updateQueue: function () {
+            if (!this.armyQueue) {
+                return;
+            }
+
+            var i,
+                item,
+                tmp,
+                armyQueue = this.armyQueue,
+                result = [],
+                firstSection = {};
+
+            for (i = 0; i < armyQueue.length; i++) {
+                item = armyQueue.at(i);
+
+                tmp = {
+                    _id: item.get('_id'),
+                    type: item.get('unit_data').type,
+                    count: item.get('count'),
+                    timeToCreate: item.get('complete_after')
+                };
+
+                if (i === 0) {
+                    tmp.timeToComplete = item.get('complete_after') - (config.getTime() - item.get('start_at'));
+                    tmp.percentComplete = 100 - parseInt(((config.getTime() - item.get('start_at')) / item.get('complete_after')) * 100, 10);
+
+                    firstSection = tmp;
+                } else {
+                    result.push(tmp);
+                }
+            }
+
+            if (_.isEmpty(firstSection)) {
+                firstSection = false;
+            }
+
+            result.reverse();
+
+            this.set('firstSection', firstSection);
+            this.set('armyQueue', result);
+        },
+
         onCreateUnit: function (ev) {
-            container = jQuery(ev.target).parents('.units_container');
+            var count, unitId, container = jQuery(ev.target).parents('.units_container');
             if (!container) {
                 throw new Error("Clicked not in container");
             }
 
-            var unitId = container.attr('data-id'),
-                count = container.find('.count_to_create');
+            unitId = container.attr('data-id');
+            count = container.find('.count_to_create').val();
 
             this.trigger('create', unitId, count);
+        },
+
+        onCancelUnit: function (ev) {
+            var _id = jQuery(ev.target).attr('data-id');
+            this.trigger('remove', _id);
         }
     });
 });

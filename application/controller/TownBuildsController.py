@@ -94,9 +94,9 @@ class CeleryPrivateController(AbstractTownBuildsController):
         queue = service.getQueue(townDomain)
 
         user = townDomain.getUser()
-        user.getTransfer().send('/delivery/buildsUpdate', {
+        user.getTransfer().forceSend('/delivery/buildsUpdate', {
             'done': True,
             'town': str(townDomain.getId()),
             'builds': builds,
             'queue': queue
-        }, True)
+        })

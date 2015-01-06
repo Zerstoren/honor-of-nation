@@ -1,39 +1,55 @@
 <div class="background bottom">
     <div class="nextBuilds">
         <div>
-            <!--{{#queue.length}}-->
-            <!--<div class="triangle">-->
+            {{#armyQueue.length}}
+            <div class="triangle">
 
-                <!--<div class="popup">-->
-                    <!--<div class="content">-->
-                        <!--{{#each queue}}-->
+                <div class="popup">
+                    <div class="content">
+                        {{#each armyQueue}}
 
-                        <!--<div class="block">-->
+                        <div class="block">
 
-                            <!--<div class="name">-->
-                                <!--<span class="build-name">{{this.name}}</span> ур. <span class="build-level">{{this.level}}</span>-->
-                            <!--</div>-->
-                            <!--<div class="cancel" data-key="{{this.key}}" data-level="{{this.level}}">X</div>-->
+                            <div class="name">
+                                <span class="build-name">
+                                    {{#this.type == 'solider'}}
+                                    Солдат
+                                    {{/this.type == 'solider'}}
 
-                            <!--<div class="reset"></div>-->
+                                    {{#this.type == 'general'}}
+                                    Генерал
+                                    {{/this.type == 'general'}}
+                                </span>. Кол-во <span class="build-level">{{this.count}}</span>
+                            </div>
+                            <div class="cancel" data-id="{{this._id}}">X</div>
 
-                            <!--<div class="build_time">{{ formatters.fromIntToTime(this.timeToCreate) }}</div>-->
-                        <!--</div>-->
-                        <!--{{/each}}-->
-                    <!--</div>-->
-                    <!--<div class="reset"></div>-->
+                            <div class="reset"></div>
 
-                <!--</div>-->
-            <!--</div>-->
-            <!--{{/queue}}-->
+                            <div class="build_time">{{ formatters.fromIntToTime(this.timeToCreate) }}</div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="reset"></div>
+
+                </div>
+            </div>
+            {{/armyQueue}}
         </div>
     </div>
 
     <div class="buildInProgress">
         {{#firstSection}}
         <div class="name">
-            <span class="build-name">{{firstSection.name}}</span> ур. <span class="build-level">{{firstSection.level}}</span>
-            <span class="cancel" data-key="{{firstSection.key}}" data-level="{{firstSection.level}}">X</span>
+            <span class="build-name">
+                {{#this.type == 'solider'}}
+                Солдат
+                {{/this.type == 'solider'}}
+
+                {{#this.type == 'general'}}
+                Генерал
+                {{/this.type == 'general'}}
+            </span>. Кол-во <span class="build-level">{{firstSection.count}}</span>
+            <span class="cancel" data-id="{{firstSection._id}}">X</span>
         </div>
         <div class="image">
         </div>

@@ -1,3 +1,4 @@
+from service.Equipment.Units import Service_Equipment_Units
 
 """
 Access Layer Level for decorate base service class
@@ -6,11 +7,13 @@ class Decorate():
     def _pack(self, domain):
         return {
             '_id': str(domain.getId()),
-            'town': domain.getTown().getId(),
-            'unit': domain.getUnit().getId(),
-            'count': domain.getCount(),
+            'town': str(domain.getTown().getId()),
+            'unit': str(domain.getUnit().getId()),
+            'count': int(domain.getCount()),
             'complete_after': domain.getCompleteAfter(),
-            'start_at': domain.getStartAt()
+            'start_at': domain.getStartAt(),
+            'unit_data': Service_Equipment_Units().decorate(Service_Equipment_Units.DECOR_JSON_PACK)
+                .get(domain.getUnit().getId())
         }
 
     def getQueue(self, town, user=None):

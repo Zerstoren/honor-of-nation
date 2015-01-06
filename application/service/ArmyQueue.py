@@ -83,15 +83,21 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
     def getQueue(self, town, user=None):
         return self._getQueue(town)
 
-    def create(self, town, unit, count):
+    def create(self, queueId):
+        queueDomain = ArmyQueue_Factory.get(queueId)
+
         armyService = service.Army.Service_Army()
         armyService.create(
-            unit,
-            town,
-            count
+            queueDomain.getUnit(),
+            queueDomain.getTown(),
+            queueDomain.getCount()
         )
 
-        self._updateQueueCode(town)
+        # Complete
+        queueDomain.getMapper().remove(queueDomain)
+        self._updateQueueCode(queueDomain.getTown())
+
+        return queueDomain.getTown()
 
     def _getQueue(self, town):
         return ArmyQueue_Factory.load(town)
@@ -104,9 +110,7 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
         currentQueue = queue[0]
 
         queueItem = {
-            'town': str(town.getId()),
-            'unit': str(currentQueue.getUnit().getId()),
-            'count': currentQueue.getCount(),
+            'queue_id': str(currentQueue.getId()),
             'complete_after': currentQueue.getCompleteAfter(),
             'start_at': int(time.time())
         }
