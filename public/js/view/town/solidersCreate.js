@@ -12,7 +12,8 @@ define('view/town/solidersCreate', [
     return AbstractView.extend({
         events: {
             'click .create': 'onCreateUnit',
-            'click .cancel': 'onCancelUnit'
+            'click .cancel': 'onCancelUnit',
+            'keydown .count_to_create': 'onChanceCount'
         },
 
         initialize: function () {
@@ -48,7 +49,7 @@ define('view/town/solidersCreate', [
                     timeout: 100,
                     liveTarget: '.triangle',
                     ignoreTop: true,
-                    align: 'left'
+                    align: 'center'
                 }
             );
         },
@@ -111,7 +112,11 @@ define('view/town/solidersCreate', [
             }
 
             unitId = container.attr('data-id');
-            count = container.find('.count_to_create').val();
+            count = this.get('createCount');
+
+            if (count === 0) {
+                count = 1;
+            }
 
             this.trigger('create', unitId, count);
         },
@@ -119,6 +124,23 @@ define('view/town/solidersCreate', [
         onCancelUnit: function (ev) {
             var _id = jQuery(ev.target).attr('data-id');
             this.trigger('remove', _id);
+        },
+
+        onChanceCount: function (e) {
+            setTimeout(function () {
+                var target = jQuery(e.target),
+                    integer = target.val();
+                integer = parseInt(integer);
+
+                if (!integer) {
+                    return;
+                } else if (integer > 100) {
+                    integer = 100;
+                }
+
+                this.set('createCount', integer);
+                target.val(integer);
+            }.bind(this), 0);
         }
     });
 });

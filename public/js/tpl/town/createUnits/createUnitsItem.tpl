@@ -15,7 +15,7 @@
         <div class="head">Параметры:</div>
         <div class="row">
             <div class="col-xs-4">Здоровье: {{this.health}}</div>
-            <div class="col-xs-4">Ловеость: {{this.agility}}</div>
+            <div class="col-xs-4">Ловкость: {{this.agility}}</div>
             <div class="col-xs-4">Поглощение: {{this.absorption}}</div>
         </div>
 

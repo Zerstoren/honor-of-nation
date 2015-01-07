@@ -21,8 +21,8 @@ define('view/elements/ractive-helper', [
                 var i, pos,
                     newString = '';
 
-                if(num === undefined) {
-                    return '0';
+                if(num === undefined || isNaN(num)) {
+                    return '';
                 }
 
                 num = num.toString();
@@ -53,8 +53,8 @@ define('view/elements/ractive-helper', [
             },
 
             transformNumberToView: function (num) {
-                if(num === undefined) {
-                    num = 0;
+                if(num === undefined || isNaN(num)) {
+                    return '';
                 }
 
                 var number = num.toString(),
@@ -72,6 +72,10 @@ define('view/elements/ractive-helper', [
             },
 
             fromIntToTime: function (time) {
+                if(time === undefined || isNaN(time)) {
+                    return '';
+                }
+
                 var content = '';
 
                 if(time / 3600 >= 1) {
