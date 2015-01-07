@@ -5,10 +5,10 @@ import time
 
 class _AbstractController(object):
     def _getParamsJsonPackEquipmentService(self):
-        return Service_Equipment_Units().decorate('Params.Equipment', 'JsonPack.Equipment')
+        return Service_Equipment_Units().decorate(Service_Equipment_Units.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentService(self):
-        return Service_Equipment_Units().decorate('Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment')
+        return Service_Equipment_Units().decorate(Service_Equipment_Units.PARAMS_ACL_JSONPACK)
 
 
 class UnitsModelController(_AbstractController):

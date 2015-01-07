@@ -1,5 +1,5 @@
-import service.TownBuilds
-import service.Town
+from service.TownBuilds import Service_TownBuilds
+from service.Town import Service_Town
 
 import time
 
@@ -8,19 +8,19 @@ import system.log
 
 class AbstractTownBuildsController(object):
     def _getParamsTown(self):
-        return service.Town.Service_Town().decorate('Params')
+        return Service_Town().decorate(Service_Town.PARAMS)
 
     def _getAclJsonPackTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Acl', 'JsonPack')
+        return Service_TownBuilds().decorate(Service_TownBuilds.ACL_JSONPACK)
 
     def _getParamsAclTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Params', 'Acl')
+        return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS_ACL)
 
     def _getJsonPackTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('JsonPack')
+        return Service_TownBuilds().decorate(Service_TownBuilds.JSONPACK)
 
     def _getParamsTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Params')
+        return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS)
 
 
 class MainController(AbstractTownBuildsController):

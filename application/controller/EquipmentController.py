@@ -6,24 +6,24 @@ import time
 
 class _AbstractWeaponController(object):
     def _getParamsEquipmentService(self):
-        return Service_Equipment_Weapon().decorate('Params.Equipment')
+        return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS)
 
     def _getParamsJsonPackEquipmentWeaponService(self):
-        return Service_Equipment_Weapon().decorate('Params.Equipment', 'JsonPack.Equipment')
+        return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentWeaponService(self):
-        return Service_Equipment_Weapon().decorate('Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment')
+        return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS_ACL_JSONPACK)
 
 
 class _AbstractArmorController(object):
     def _getParamsEquipmentService(self):
-        return Service_Equipment_Armor().decorate('Params.Equipment')
+        return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS)
 
     def _getParamsJsonPackEquipmentArmorService(self):
-        return Service_Equipment_Armor().decorate('Params.Equipment', 'JsonPack.Equipment')
+        return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentArmorService(self):
-        return Service_Equipment_Armor().decorate('Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment')
+        return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS_ACL_JSONPACK)
 
 
 class WeaponModelController(_AbstractWeaponController):

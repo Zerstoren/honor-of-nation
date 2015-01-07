@@ -1,21 +1,21 @@
-import service.Town
-import service.User
-import service.TownBuilds
+from service.Town import Service_Town
+from service.User import Service_User
+from service.TownBuilds import Service_TownBuilds
 import helpers.MapCoordinate
 
 
 class AbstractTownController(object):
     def _getAclParamsJsonPackTown(self):
-        return service.Town.Service_Town().decorate('Acl', 'Params', 'JsonPack')
+        return Service_Town().decorate(Service_Town.PARAMS_ACL_JSONPACK)
 
     def _getParamsAclJsonPackTown(self):
-        return service.Town.Service_Town().decorate('Acl', 'JsonPack')
+        return Service_Town().decorate(Service_Town.ACL_JSONPACK)
 
     def _getParamsAclJsonPackUser(self):
-        return service.User.Service_User().decorate('JsonPack')
+        return Service_User().decorate(Service_User.JSONPACK)
 
     def _getParamsAclJsonPackTownBuilds(self):
-        return service.TownBuilds.Service_TownBuilds().decorate('Params', 'Acl', 'JsonPack')
+        return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS_ACL_JSONPACK)
 
 
 class ModelController(AbstractTownController):

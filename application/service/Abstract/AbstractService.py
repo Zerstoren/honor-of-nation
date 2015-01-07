@@ -1,9 +1,14 @@
 import importlib
 
 class Service_Abstract(object):
-    DECOR_ACL = 'Acl'
-    DECOR_PARAMS = 'Params'
-    DECOR_JSON_PACK = 'JsonPack'
+    ACL = 'Acl'
+    PARAMS = 'Params'
+    JSONPACK = 'JsonPack'
+
+    ACL_JSONPACK = ['Acl', 'JsonPack']
+    PARAMS_ACL = ['Params', 'Acl']
+    PARAMS_JSONPACK = ['Params', 'JsonPack']
+    PARAMS_ACL_JSONPACK = ['Params', 'Acl', 'JsonPack']
 
     def decorate(self, *args):
         currentClassName = self.__class__.__name__
@@ -11,6 +16,10 @@ class Service_Abstract(object):
         classList = [self.__class__]
 
         newClassName = 'Service_' + classPrefixes + '_Decorated'
+
+        if len(args) and type(args[0]) is list:
+            args = args[0]
+
         args = list(args)
         args.reverse()
         for arg in args:

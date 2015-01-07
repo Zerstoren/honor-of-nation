@@ -9,7 +9,6 @@ from models.ArmyQueue.Domain import ArmyQueue_Domain
 from models.ArmyQueue.Factory import ArmyQueue_Factory
 
 import config
-import system.log
 import time
 
 

@@ -3,9 +3,9 @@ import math
 
 
 class AbstractEquipment(AbstractService.Service_Abstract):
-    DECOR_ACL = 'Acl.Equipment'
-    DECOR_PARAMS = 'Params.Equipment'
-    DECOR_JSON_PACK = 'JsonPack.Equipment'
+    ACL = 'Acl.Equipment'
+    PARAMS = 'Params.Equipment'
+    JSON_PACK = 'JsonPack.Equipment'
 
     def _linearCalc(self, lvl, cost, degrage=False):
         if degrage:

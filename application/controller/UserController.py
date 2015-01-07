@@ -1,11 +1,11 @@
-import service.User
+from service.User import Service_User
 
 class _AbstractUserController(object):
     def _getAclUserService(self):
-        return service.User.Service_User().decorate('Acl')
+        return Service_User().decorate(Service_User.ACL)
 
     def _getAclPackUserService(self):
-        return service.User.Service_User().decorate('Acl', 'JsonPack')
+        return Service_User().decorate(Service_User.ACL_JSONPACK)
 
 
 class MainController(_AbstractUserController):

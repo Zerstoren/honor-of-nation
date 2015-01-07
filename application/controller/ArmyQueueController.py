@@ -8,19 +8,19 @@ from service.Army import Service_Army
 
 class _AbstractArmyQueue(object):
     def _getParamsArmyService(self):
-        return Service_Army().decorate('Params')
+        return Service_Army().decorate(Service_Army.PARAMS)
 
     def _getParamsArmyQueueService(self):
-        return Service_ArmyQueue().decorate('Params')
+        return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS)
 
     def _getJsonPackArmyQueueService(self):
-        return Service_ArmyQueue().decorate('JsonPack')
+        return Service_ArmyQueue().decorate(Service_ArmyQueue.JSONPACK)
 
     def _getParamsAclArmyQueueService(self):
-        return Service_ArmyQueue().decorate('Params', 'Acl')
+        return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_ACL)
 
     def _getParamsAclJsonPackArmyQueueService(self):
-        return Service_ArmyQueue().decorate('Params', 'Acl', 'JsonPack')
+        return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_ACL_JSONPACK)
 
 
 class MainController(_AbstractArmyQueue):
