@@ -12,7 +12,7 @@ class _AbstractWeaponController(object):
         return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentWeaponService(self):
-        return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS_ACL_JSONPACK)
+        return Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.PARAMS_JSONPACK_ACL)
 
 
 class _AbstractArmorController(object):
@@ -23,7 +23,7 @@ class _AbstractArmorController(object):
         return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentArmorService(self):
-        return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS_ACL_JSONPACK)
+        return Service_Equipment_Armor().decorate(Service_Equipment_Armor.PARAMS_JSONPACK_ACL)
 
 
 class WeaponModelController(_AbstractWeaponController):

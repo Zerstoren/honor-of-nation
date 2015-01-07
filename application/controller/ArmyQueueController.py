@@ -20,7 +20,7 @@ class _AbstractArmyQueue(object):
         return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_ACL)
 
     def _getParamsAclJsonPackArmyQueueService(self):
-        return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_ACL_JSONPACK)
+        return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_JSONPACK_ACL)
 
 
 class MainController(_AbstractArmyQueue):

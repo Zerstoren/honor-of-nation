@@ -5,10 +5,10 @@ class Service_Abstract(object):
     PARAMS = 'Params'
     JSONPACK = 'JsonPack'
 
-    ACL_JSONPACK = ['Acl', 'JsonPack']
+    JSONPACK_ACL = ['JsonPack', 'Acl']
     PARAMS_ACL = ['Params', 'Acl']
     PARAMS_JSONPACK = ['Params', 'JsonPack']
-    PARAMS_ACL_JSONPACK = ['Params', 'Acl', 'JsonPack']
+    PARAMS_JSONPACK_ACL = ['Params', 'JsonPack', 'Acl']
 
     def decorate(self, *args):
         currentClassName = self.__class__.__name__

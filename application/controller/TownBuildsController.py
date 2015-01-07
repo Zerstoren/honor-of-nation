@@ -11,7 +11,7 @@ class AbstractTownBuildsController(object):
         return Service_Town().decorate(Service_Town.PARAMS)
 
     def _getAclJsonPackTownBuilds(self):
-        return Service_TownBuilds().decorate(Service_TownBuilds.ACL_JSONPACK)
+        return Service_TownBuilds().decorate(Service_TownBuilds.JSONPACK_ACL)
 
     def _getParamsAclTownBuilds(self):
         return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS_ACL)

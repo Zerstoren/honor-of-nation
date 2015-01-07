@@ -6,16 +6,16 @@ import helpers.MapCoordinate
 
 class AbstractTownController(object):
     def _getAclParamsJsonPackTown(self):
-        return Service_Town().decorate(Service_Town.PARAMS_ACL_JSONPACK)
+        return Service_Town().decorate(Service_Town.PARAMS_JSONPACK_ACL)
 
     def _getParamsAclJsonPackTown(self):
-        return Service_Town().decorate(Service_Town.ACL_JSONPACK)
+        return Service_Town().decorate(Service_Town.JSONPACK_ACL)
 
     def _getParamsAclJsonPackUser(self):
         return Service_User().decorate(Service_User.JSONPACK)
 
     def _getParamsAclJsonPackTownBuilds(self):
-        return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS_ACL_JSONPACK)
+        return Service_TownBuilds().decorate(Service_TownBuilds.PARAMS_JSONPACK_ACL)
 
 
 class ModelController(AbstractTownController):

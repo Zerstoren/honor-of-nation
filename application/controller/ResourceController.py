@@ -4,7 +4,7 @@ from service.User import Service_User
 
 class AbstractResourceController(object):
     def _getAclJsonPackResourceService(self):
-        return Service_Resources().decorate(Service_Resources.ACL_JSONPACK)
+        return Service_Resources().decorate(Service_Resources.JSONPACK_ACL)
 
     def _getJsonPackResourceService(self):
         return Service_Resources().decorate(Service_Resources.JSONPACK)

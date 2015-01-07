@@ -5,7 +5,7 @@ class _AbstractUserController(object):
         return Service_User().decorate(Service_User.ACL)
 
     def _getAclPackUserService(self):
-        return Service_User().decorate(Service_User.ACL_JSONPACK)
+        return Service_User().decorate(Service_User.JSONPACK_ACL)
 
 
 class MainController(_AbstractUserController):

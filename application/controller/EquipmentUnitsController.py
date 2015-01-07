@@ -8,7 +8,7 @@ class _AbstractController(object):
         return Service_Equipment_Units().decorate(Service_Equipment_Units.PARAMS_JSONPACK)
 
     def _getParamsJsonPackAclEquipmentService(self):
-        return Service_Equipment_Units().decorate(Service_Equipment_Units.PARAMS_ACL_JSONPACK)
+        return Service_Equipment_Units().decorate(Service_Equipment_Units.PARAMS_JSONPACK_ACL)
 
 
 class UnitsModelController(_AbstractController):
