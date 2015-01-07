@@ -5,7 +5,7 @@ import math
 class AbstractEquipment(AbstractService.Service_Abstract):
     ACL = 'Acl.Equipment'
     PARAMS = 'Params.Equipment'
-    JSON_PACK = 'JsonPack.Equipment'
+    JSONPACK = 'JsonPack.Equipment'
 
     JSONPACK_ACL = ['JsonPack.Equipment', 'Acl.Equipment']
     PARAMS_ACL = ['Params.Equipment', 'Acl.Equipment']

@@ -12,7 +12,7 @@ class Decorate():
             'count': int(domain.getCount()),
             'complete_after': domain.getCompleteAfter(),
             'start_at': domain.getStartAt(),
-            'unit_data': Service_Equipment_Units().decorate(Service_Equipment_Units.DECOR_JSON_PACK)
+            'unit_data': Service_Equipment_Units().decorate(Service_Equipment_Units.JSONPACK)
                 .get(domain.getUnit().getId())
         }
 
