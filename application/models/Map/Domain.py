@@ -24,7 +24,7 @@ class Map_Domain(models.Abstract.Domain.Abstract_Domain):
         return super().extract(force)
 
     def isMapLoaded(self):
-        return 'map_status' in self._domain_data
+        return self.has('map_status')
 
     def isBusyByBuild(self):
         return self.getBuild() != 0

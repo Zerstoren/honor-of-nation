@@ -13,14 +13,14 @@ import time
 class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
     def getTown(self):
         return models.Town.Factory.Town_Factory.getDomainById(
-            self._domain_data['town']
+            self.get('town')
         )
 
     def setTown(self, town):
         if isinstance(town, models.Town.Domain.Town_Domain):
-            self._domain_data['town'] = town.getId()
+            self.set('town', town.getId())
         else:
-            self._domain_data['town'] = town
+            self.set('town', town)
 
     def getMaximalLevel(self, key):
         townDomain = self.getTown()

@@ -98,7 +98,7 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
     });
 
     define('system/socket', function () {
-        return new Socket(window.socketHost || '127.0.0.1', window.port || localStorage.port || 8080);
+        return new Socket(window.socketHost || '127.0.0.1', window.port || localStorage.port || 10585);
     });
 
 

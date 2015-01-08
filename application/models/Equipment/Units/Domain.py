@@ -25,9 +25,9 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def setUser(self, user):
         if isinstance(user, models.User.Domain.User_Domain):
-            self._domain_data['user'] = user.getId()
+            self.set('user', user.getId())
         else:
-            self._domain_data['user'] = user
+            self.set('user', user)
 
     def getArmor(self):
         """
@@ -35,7 +35,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         """
         if self.armor is None:
             self.armor = service.Equipment.Armor.Service_Equipment_Armor().getForce(
-                self._domain_data['armor']
+                self.get('armor')
             )
 
         return self.armor
@@ -44,9 +44,9 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         self.armor = None
 
         if isinstance(armor, Equipment_Armor_Domain):
-            self._domain_data['armor'] = armor.getId()
+            self.set('armor', armor.getId())
         else:
-            self._domain_data['armor'] = armor
+            self.set('armor', armor)
 
     def getWeapon(self):
         """
@@ -54,7 +54,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         """
         if self.weapon is None:
             self.weapon = service.Equipment.Weapon.Service_Equipment_Weapon().getForce(
-                self._domain_data['weapon']
+                self.get('weapon')
             )
 
         return self.weapon
@@ -63,16 +63,16 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         self.weapon = None
 
         if isinstance(weapon, Equipment_Weapon_Domain):
-            self._domain_data['weapon'] = weapon.getId()
+            self.set('weapon', weapon.getId())
         else:
-            self._domain_data['weapon'] = weapon
+            self.set('weapon', weapon)
 
     def getWeaponSecond(self):
         """
         :rtype: models.Equipment.Weapon.Domain.Equipment_Weapon_Domain
         """
         if self.weaponSecond is None:
-            result = self._domain_data['weapon_second']
+            result = self.get('weapon_second')
 
             if result:
                 self.weaponSecond = service.Equipment.Weapon.Service_Equipment_Weapon().getForce(
@@ -87,9 +87,9 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
         self.weaponSecond = None
 
         if isinstance(weapon, Equipment_Weapon_Domain):
-            self._domain_data['weapon_second'] = weapon.getId()
+            self.set('weapon_second', weapon.getId())
         else:
-            self._domain_data['weapon_second'] = weapon
+            self.set('weapon_second', weapon)
 
     def getMapper(self):
         """

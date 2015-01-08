@@ -13,9 +13,9 @@ import models.Town.Domain
 class ArmyQueue_Domain(models.Abstract.Domain.Abstract_Domain):
     def setUnit(self, unit):
         if isinstance(unit, Equipment_Units_Domain):
-            self._domain_data['unit'] = unit.getId()
+            self.set('unit', unit.getId())
         else:
-            self._domain_data['unit'] = unit
+            self.set('unit', unit)
 
     def getUnit(self):
         unitId = self.get('unit')
@@ -23,14 +23,14 @@ class ArmyQueue_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getTown(self):
         return models.Town.Factory.Town_Factory.getDomainById(
-            self._domain_data['town']
+            self.get('town')
         )
 
     def setTown(self, town):
         if isinstance(town, models.Town.Domain.Town_Domain):
-            self._domain_data['town'] = town.getId()
+            self.set('town', town.getId())
         else:
-            self._domain_data['town'] = town
+            self.set('town', town)
 
     def getMapper(self):
         """
