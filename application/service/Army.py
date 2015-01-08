@@ -20,12 +20,12 @@ class Service_Army(AbstractService.Service_Abstract):
     def get(self, _id, user=None):
         return Army_Factory.get(_id)
 
-    def load(self, user, position):
-        return Army_Factory.getByPosition(user, position)
+    def load(self, armyUser, position, user=None):
+        return Army_Factory.getByPosition(armyUser, position)
 
     def decorate(self, *args):
         """
         required for IDE static analyzer
-        :rtype: Service_News
+        :rtype: Service_Army
         """
         return super().decorate(*args)

@@ -5,6 +5,7 @@ from tests.package.db.equipment import Equipment
 from tests.package.db.army import Army
 
 import controller.ArmyQueueController
+import controller.ArmyController
 
 import service.ArmyQueue
 import service.Army
@@ -39,9 +40,6 @@ class Backend_Controller_ArmyTest(
             weapon=self.weapon
         )
 
-    def _getArmyController(self):
-        return
-
     def _getArmyQueueController(self):
         return controller.ArmyQueueController.MainController()
 
@@ -75,6 +73,26 @@ class Backend_Controller_ArmyTest(
                 'count': 100
             }
         )
+
+    def testLoadArmy(self):
+        town2 = self.addTown(0, 1, self.user, 1)
+
+        self.createArmy(self.town, self.unit, 100)
+        self.createArmy(self.town, self.unit, 100)
+        self.createArmy(town2, self.unit, 120)
+
+        armyController = controller.ArmyController.CollectionController()
+        armyController.load(
+            self.transfer,
+            {
+                'user': str(self.user.getId()),
+                'pos_id': str(self.town.getMap().getPosition().getPosId())
+            }
+        )
+
+        result = self.transfer.getLastMessage()['message']
+        self.assertTrue(result['done'])
+        self.assertEqual(2, len(result['data']))
 
     def testCreateArmy(self):
         armyController = self._getArmyQueueController()
