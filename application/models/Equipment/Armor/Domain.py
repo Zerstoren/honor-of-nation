@@ -7,28 +7,28 @@ import models.User.Domain
 
 class Equipment_Armor_Domain(models.Abstract.Domain.Abstract_Domain):
     def getShield(self):
-        return True if self._isIn('shield') and self._getFunc('shield')() else False
+        return True if self.has('shield') and self.get('shield') else False
 
     def getShieldType(self):
         if self.getShield():
-            return self._getFunc('shield_type')()
+            return self.get('shield_type')
         else:
             return False
 
     def getShieldBlocking(self):
         if self.getShield():
-            return self._getFunc('shield_blocking')()
+            return self.get('shield_blocking')
         else:
             return False
 
     def getShieldDurability(self):
         if self.getShield():
-            return self._getFunc('shield_durability')()
+            return self.get('shield_durability')
         else:
             return False
 
     def getUser(self):
-        userId = self._getFunc('user')()
+        userId = self.get('user')
         return models.User.Factory.User_Factory.getDomainById(userId)
 
     def setUser(self, user):

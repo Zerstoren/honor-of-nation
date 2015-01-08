@@ -80,7 +80,7 @@ class TownBuilds_Domain(models.Abstract.Domain.Abstract_Domain):
     def getMaximumBuildLevel(self, key):
         queue = self.getQueue()
 
-        maxLevel = self._getFunc(key)()
+        maxLevel = self.get(key)
 
         for i in queue:
             if i['key'] == key:

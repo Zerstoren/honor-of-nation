@@ -20,7 +20,7 @@ class Equipment_Units_Domain(models.Abstract.Domain.Abstract_Domain):
     weaponSecond = None
 
     def getUser(self):
-        userId = self._getFunc('user')()
+        userId = self.get('user')
         return models.User.Factory.User_Factory.getDomainById(userId)
 
     def setUser(self, user):

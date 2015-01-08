@@ -32,7 +32,7 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         self.extract()
 
         for i in options:
-            self._setFunc(i)(options[i])
+            self.set(i, options[i])
 
     def extract(self, force=False):
         if not self.hasId():
@@ -86,9 +86,6 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
             return self
 
         return setFunc
-
-    def _isIn(self, name):
-        return name in self._domain_data
 
     def __getattribute__(self, item):
         """
