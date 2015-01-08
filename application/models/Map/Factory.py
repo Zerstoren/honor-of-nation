@@ -38,7 +38,7 @@ class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         """
         :rtype: models.Map.Domain.Map_Domain
         """
-        domain = Domain.Map_Domain()
+        domain = Domain.Map_Domain(loaded=True)
         domain.setOptions(data)
         return domain
 
