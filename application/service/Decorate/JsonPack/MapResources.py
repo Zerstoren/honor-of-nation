@@ -1,4 +1,4 @@
-import service.User
+from service.User import Service_User
 
 class Decorate():
     def packDomainToJson(self, domain):
@@ -6,7 +6,7 @@ class Decorate():
         town = domain.getTown()
 
         if user:
-            userId = service.User.Service_User().decorate('JsonPack').getUserDomain(
+            userId = Service_User().decorate(Service_User.JSONPACK).getUserDomain(
                 user.getId()
             )
         else:

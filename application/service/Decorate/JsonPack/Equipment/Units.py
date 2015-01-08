@@ -1,10 +1,10 @@
-import service.Equipment.Armor
-import service.Equipment.Weapon
+from service.Equipment.Armor import Service_Equipment_Armor
+from service.Equipment.Weapon import Service_Equipment_Weapon
 
 class Decorate(object):
     def _pack(self, domain):
-        serviceArmor = service.Equipment.Armor.Service_Equipment_Armor().decorate('JsonPack.Equipment')
-        serviceWeapon = service.Equipment.Weapon.Service_Equipment_Weapon().decorate('JsonPack.Equipment')
+        serviceArmor = Service_Equipment_Armor().decorate(Service_Equipment_Armor.JSONPACK)
+        serviceWeapon = Service_Equipment_Weapon().decorate(Service_Equipment_Weapon.JSONPACK)
 
         data = {
             'type': domain.getType(),
