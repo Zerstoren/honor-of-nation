@@ -27,8 +27,8 @@
 
         <div class="town_info ti__middle_element">
             <div class="resources">
-
             </div>
+
             <div class="button_top">
                 <button class="btn" disabled>Информация о городе</button>
                 <button class="btn" disabled>Данные о ресурсах</button>
@@ -41,6 +41,11 @@
                 <button class="btn develop_weapon">Разработка оружия</button>
                 <button class="btn develop_people">Воспитание новобранцев</button>
             </div>
+        </div>
+
+        <div class="listUnits">
+            <div class="listUnitsOuterTown"></div>
+            <div class="listUnitsInnerTown"></div>
         </div>
 
         <div class="bottom_block">

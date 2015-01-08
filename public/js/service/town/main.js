@@ -36,6 +36,7 @@ define('service/town/main', [
             this.mainView = new ViewTownMain();
             this.serviceTownBuilds = new ServiceTownBuilds();
             this.serviceTownSolidersCreate = new ServiceTownSoldiersCreate();
+            this.serviceTownSoldiersList = new ServiceTownSoldiersList();
 
             // Buttons
             this.serviceEquipmentWeapon = new ServiceEquipmentWeapon();
@@ -73,6 +74,11 @@ define('service/town/main', [
 
             this.serviceTownSolidersCreate.render(
                 this.mainView.getRightSide(),
+                this.currentDomain
+            );
+
+            this.serviceTownSoldiersList.render(
+                this.mainView.getUnitsPosition(),
                 this.currentDomain
             );
         },

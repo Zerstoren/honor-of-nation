@@ -37,12 +37,8 @@ define('view/town/main', [
             return this.$el.find('.right');
         },
 
-        getTownList: function () {
-//            return this.$el.find('.left');
-        },
-
         getUnitsPosition: function () {
-//            return this.$el.find('.left');
+            return this.$el.find('.listUnits');
         },
 
         setDomain: function (townDomain) {
