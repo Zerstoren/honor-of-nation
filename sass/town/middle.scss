@@ -79,7 +79,7 @@
 
     .bottom_block {
         position: absolute;
-        bottom: 0;
+        bottom: 0px;
         height: 200px;
         width: 100%;
 
@@ -91,19 +91,25 @@
 
             .listUnits {
                 div.unitsWrap {
+                    margin-top: 10px;
                     width: 100%;
                     overflow: auto;
 
                     ul.units {
                         float: left;
                         white-space: nowrap;
+                        height: 140px;
 
                         li {
                             display: inline-block;
                             width: 116px;
-                            height: 136px;
+                            height: 116px;
                             background: #ccc;
                             margin: 0 2px;
+
+                            img {
+                                width: 116px;
+                            }
                         }
                     }
                 }

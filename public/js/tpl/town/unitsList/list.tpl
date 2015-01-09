@@ -9,19 +9,11 @@
 
 <div class="unitsWrap vscrolling">
     <ul class="units">
+        {{#army}}
         <li>
-            <img src="" />
+            <img src="test.png">
+            <div class="popover"></div>
         </li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        {{/army}}
     </ul>
 </div>
