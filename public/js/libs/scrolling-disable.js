@@ -4,11 +4,23 @@ define('libs/scrolling-disable', [], function () {
     var keys = [];
 
     function preventDefault(e) {
+        var targetScrolling;
+
         e = e || window.event;
         var target = jQuery(e.target);
 
         if (target.hasClass('scrolling') || target.parents('.scrolling').length) {
             return true;
+        }
+
+        if (target.hasClass('vscrolling') || target.parents('.vscrolling').length) {
+            targetScrolling = target.hasClass('vscrolling') || target.parents('.vscrolling');
+
+            if (targetScrolling === true) {
+                targetScrolling = target
+            }
+
+            targetScrolling[0].scrollLeft += e.wheelDelta > 0 ? -16 : 16;
         }
 
         if (e.preventDefault) {

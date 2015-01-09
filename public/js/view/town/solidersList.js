@@ -6,7 +6,7 @@ define('view/town/solidersList', [], function () {
         },
 
         render: function (holder, town) {
-
+            holder.append(this.$el);
         }
     });
 });

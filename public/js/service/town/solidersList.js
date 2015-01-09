@@ -1,4 +1,4 @@
-define('service/town/soldiersList', [
+define('service/town/solidersList', [
     'view/town/solidersList'
 ], function (
     VeiwTownSoliderList

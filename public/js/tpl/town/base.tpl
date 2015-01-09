@@ -43,30 +43,10 @@
             </div>
         </div>
 
-        <div class="listUnits">
-            <div class="listUnitsOuterTown"></div>
-            <div class="listUnitsInnerTown"></div>
-        </div>
-
         <div class="bottom_block">
             <div class="wrap">
-                <!--<div class="parking_generals ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/parking_generals"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-        <!---->
-                <!--<div class="generals_list ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/generals_list"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-        <!---->
-                <!--<div class="soliders_list ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/soliders_list"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <div class="listUnits">
+                </div>
             </div>
         </div>
 
