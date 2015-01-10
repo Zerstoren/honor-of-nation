@@ -100,17 +100,41 @@
                         white-space: nowrap;
                         height: 140px;
 
+                        .popover {
+                            width: 500px;
+                            max-width: none;
+                        }
+
                         li {
                             display: inline-block;
                             width: 116px;
                             height: 116px;
                             background: #ccc;
-                            margin: 0 2px;
+                            margin: 1px 3px;
 
                             img {
                                 width: 116px;
                             }
+
+                            .popup {
+                                display: none;
+                                position: fixed;
+                                bottom: 185px;
+                                z-index: 500;
+                                padding: 5px;
+                                width: 420px;
+                                border: 1px solid #333;
+                                border-radius: 5px;
+                                background: #eee;
+                                box-shadow: 1px 1px 4px #000;
+                            }
                         }
+
+                        li.active {
+                            border: 1px solid #ffff00;
+                            margin: 0 3px;
+                        }
+
                     }
                 }
 

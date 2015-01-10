@@ -76,11 +76,6 @@ define('service/town/main', [
                 this.mainView.getRightSide(),
                 this.currentDomain
             );
-
-            this.serviceTownSoldiersList.render(
-                this.mainView.getUnitsPosition(),
-                this.currentDomain
-            );
         },
 
         unRender: function () {
@@ -89,6 +84,11 @@ define('service/town/main', [
 
         onTownLoad: function () {
             this.mainView.setDomain(this.currentDomain);
+
+            this.serviceTownSoldiersList.render(
+                this.mainView.getUnitsPosition(),
+                this.currentDomain
+            );
         },
 
         onClose: function () {
