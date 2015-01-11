@@ -73,10 +73,9 @@ class UserTransfer(object):
         sendData = {
             "message": message,
             "module": module,
-            "async": self.async
+            "async": None
         }
 
-        self.rmAsync()
         init_celery.message(sendData, self.getUser())
 
     def hasUser(self):

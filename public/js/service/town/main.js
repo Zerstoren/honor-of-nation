@@ -5,8 +5,8 @@ define('service/town/main', [
     'factory/town',
 
     'service/town/builds',
-    'service/town/soldiersList',
-    'service/town/soldiersCreate',
+    'service/town/solidersList',
+    'service/town/solidersCreate',
     'service/town/changeTowns',
 
     'service/equipment/weapon',
@@ -35,6 +35,10 @@ define('service/town/main', [
         initialize: function () {
             this.mainView = new ViewTownMain();
             this.serviceTownBuilds = new ServiceTownBuilds();
+            this.serviceTownSolidersCreate = new ServiceTownSoldiersCreate();
+            this.serviceTownSoldiersList = new ServiceTownSoldiersList();
+
+            // Buttons
             this.serviceEquipmentWeapon = new ServiceEquipmentWeapon();
             this.serviceEquipmentArmor = new ServiceEquipmentArmor();
             this.serviceEquipmentUnit = new ServiceEquipmentUnit();
@@ -67,6 +71,11 @@ define('service/town/main', [
                 this.mainView.getLeftSide(),
                 this.currentDomain
             );
+
+            this.serviceTownSolidersCreate.render(
+                this.mainView.getRightSide(),
+                this.currentDomain
+            );
         },
 
         unRender: function () {
@@ -75,6 +84,11 @@ define('service/town/main', [
 
         onTownLoad: function () {
             this.mainView.setDomain(this.currentDomain);
+
+            this.serviceTownSoldiersList.render(
+                this.mainView.getUnitsPosition(),
+                this.currentDomain
+            );
         },
 
         onClose: function () {

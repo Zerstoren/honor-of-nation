@@ -1,12 +1,12 @@
-import service.Map
-import service.MapUserVisible
+from service.Map import Service_Map
+from service.MapUserVisible import Service_MapUserVisible
 
 class AbstractMapController:
     def _getAclJsonPackMapService(self):
-        return service.Map.Service_Map().decorate('JsonPack')
+        return Service_Map().decorate(Service_Map.JSONPACK)
 
     def _getMapUserVisibleService(self):
-        return service.MapUserVisible.Service_MapUserVisible()
+        return Service_MapUserVisible()
 
 
 class MainController(AbstractMapController):

@@ -1,9 +1,8 @@
 import controller.ResourceController
 
-import service.Admin
-import service.Resources
-import service.User
-import service.MapResources
+from service.Admin import Service_Admin
+from service.Resources import Service_Resources
+from service.MapResources import Service_MapResources
 
 import exceptions.httpCodes
 import exceptions.database
@@ -12,19 +11,19 @@ import exceptions.args
 
 class AbstractAdminController():
     def _getAclAdminService(self):
-        return service.Admin.Service_Admin().decorate('Acl')
+        return Service_Admin().decorate(Service_Admin.ACL)
 
     def _getAdminService(self):
-        return service.Admin.Service_Admin()
+        return Service_Admin()
 
     def _getAclParamsAdminService(self):
-        return service.Admin.Service_Admin().decorate('Acl', 'Params')
+        return Service_Admin().decorate(Service_Admin.PARAMS_ACL)
 
     def _getJsonPackResourceService(self):
-        return service.Resources.Service_Resources().decorate('JsonPack')
+        return Service_Resources().decorate(Service_Resources.JSONPACK)
 
     def _getJsonPackParamsMapResourcesService(self):
-        return service.MapResources.Service_MapResources().decorate('JsonPack', 'Params')
+        return Service_MapResources().decorate(Service_MapResources.PARAMS_JSONPACK)
 
 
 class MainAdminController(AbstractAdminController):
@@ -71,7 +70,7 @@ class MainAdminController(AbstractAdminController):
 
     def saveResources(self, transfer, data):
         user = self._getAclAdminService().searchUser(data['userLogin'], transfer.getUser())
-        service.Resources.Service_Resources().decorate('Params').setResources(user, data['resources'])
+        Service_Resources().decorate(Service_Resources.PARAMS).setResources(user, data['resources'])
         transfer.send('/admin/searchUser', {
             'done': True
         })

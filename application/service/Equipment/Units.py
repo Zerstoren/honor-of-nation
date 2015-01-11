@@ -198,6 +198,6 @@ class Service_Equipment_Units(AbstractEquipment):
     def decorate(self, *args):
         """
         required for IDE static analyzer
-        :rtype: Service_Equipment_Armor
+        :rtype: Service_Equipment_Units
         """
         return super().decorate(*args)

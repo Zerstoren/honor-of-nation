@@ -66,20 +66,38 @@ define('view/elements/popup', [], function () {
         },
 
         showLayer: function () {
-            var offset, config, left;
-
+            var config, left, top, popupBR, targetBR;
             showLayer = this;
             this.popup.css({display: 'block'});
-            offset = this.target.offset();
+
+            popupBR = this.popup[0].getBoundingClientRect();
+            targetBR = this.target[0].getBoundingClientRect();
+
+            top = targetBR.top;
 
             if (this.$config.align === 'right') {
-                left = offset.left + this.target.width();
-            } else {
-                left = offset.left - this.popup[0].getBoundingClientRect().width;
+                left = targetBR.left + targetBR.width;
+            } else if (this.$config.align === 'left') {
+                left = targetBR.left - popupBR.width;
+            } else if (this.$config.align === 'center') {
+                // (target left + (target width / 2)) - popup width / 2
+                left = (targetBR.left + parseInt(targetBR.width / 2)) - parseInt(popupBR.width / 2);
+            }
+
+            if ((top + popupBR.height) > window.innerHeight) {
+                top = window.innerHeight - popupBR.height;
+            } else if (top < 0) {
+                top = 0;
+            }
+
+            if ((left + popupBR.width) > window.innerWidth) {
+                left = window.innerWidth - popupBR.width;
+            } else if (left < 0) {
+                left = 0;
             }
 
             config = {
-                top: offset.top,
+                top: top,
                 left: left
             };
 

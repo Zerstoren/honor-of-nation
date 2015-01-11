@@ -13,6 +13,7 @@ define('service/standalone/messages', [
         init: function () {
             systemSocket.on('message:/delivery/resourceUpdate', this.onResourcesUpdate, this);
             systemSocket.on('message:/delivery/buildsUpdate', this.onBuildsUpdate, this);
+            systemSocket.on('message:/delivery/unitsUpdate', this.onUnitsUpdate, this);
         },
 
         onResourcesUpdate: function (msg) {
@@ -27,6 +28,10 @@ define('service/standalone/messages', [
                 'queue': msg.queue,
                 'builds': msg.builds
             });
+        },
+
+        onUnitsUpdate: function (msg) {
+            this.trigger('unitsUpdate', msg.town, msg.armyQueue);
         }
     });
 

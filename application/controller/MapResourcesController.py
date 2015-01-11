@@ -1,10 +1,10 @@
-import service.MapResources
+from service.MapResources import Service_MapResources
 import helpers.MapCoordinate
 
 
 class AbstractResourceController(object):
     def _getParamsAclJsonPackMapResources(self):
-        return service.MapResources.Service_MapResources().decorate('Acl', 'JsonPack')
+        return Service_MapResources().decorate(Service_MapResources.JSONPACK_ACL)
 
 class ModelController(AbstractResourceController):
     def get(self, transfer, data):

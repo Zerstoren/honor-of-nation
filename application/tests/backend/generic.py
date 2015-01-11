@@ -7,6 +7,7 @@ import config
 
 import init_celery
 
+import os
 import imp
 
 
@@ -32,10 +33,11 @@ class Backend_Generic(Generic):
                 [
                     'python3',
                     '-B',
-                    '%s/init_celery.py' % path,
+                    'init_celery.py',
                     '--type=%s' % config.configType,
                     '--database=%s' % self.core.database_name
                 ],
+                cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../',
                 stdout=sys.stdout if self.celeryDebug else subprocess.PIPE,
                 stderr=sys.stderr if self.celeryDebug else subprocess.PIPE
             )

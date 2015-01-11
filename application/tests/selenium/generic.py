@@ -110,6 +110,12 @@ class Selenium_Generic(Generic):
     def byXPath(self, xpath):
         return self.driver.byXPath(xpath)
 
+    def byCssSelectorMany(self, cssSelector):
+        return self.driver.byCssMany(cssSelector)
+
+    def byXPathMany(self, xpath):
+        return self.driver.byXPathMany(xpath)
+
     def byAttribute(self, attr, value):
         return self.byXPath('//*[@%(attr)s="%(value)s"]' % {
             "attr": attr,

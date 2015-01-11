@@ -4,7 +4,7 @@ import models.Resources.Domain
 import models.Resources.Common
 
 class Service_Resources(AbstractService.Service_Abstract):
-    def getResources(self, userDomain):
+    def getResources(self, userDomain, user=None):
         """
         :type userDomain: models.User.Domain.User_Domain
         """

@@ -1,19 +1,19 @@
-import service.Resources
-import service.User
+from service.Resources import Service_Resources
+from service.User import Service_User
 
 
 class AbstractResourceController(object):
     def _getAclJsonPackResourceService(self):
-        return service.Resources.Service_Resources().decorate('Acl', 'JsonPack')
+        return Service_Resources().decorate(Service_Resources.JSONPACK_ACL)
 
     def _getJsonPackResourceService(self):
-        return service.Resources.Service_Resources().decorate('JsonPack')
+        return Service_Resources().decorate(Service_Resources.JSONPACK)
 
 class ModelController(AbstractResourceController):
     def get(self, transfer, data):
 
         resourceService = self._getAclJsonPackResourceService()
-        userDomain = service.User.Service_User().getUserDomain(data['user'])
+        userDomain = Service_User().getUserDomain(data['user'])
 
         transfer.send('/model/resources/get', {
             'done': True,

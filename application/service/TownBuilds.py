@@ -24,7 +24,7 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
         buildsInQueue.remove(buildInQueue)
         self._updateQueueCode(buildsDomain)
 
-        buildsDomain._setFunc(buildInQueue['key'])(buildInQueue['level'])
+        buildsDomain.set(buildInQueue['key'], buildInQueue['level'])
         buildsDomain.getMapper().save(buildsDomain)
 
     def create(self, user, townDomain, buildKey, level):

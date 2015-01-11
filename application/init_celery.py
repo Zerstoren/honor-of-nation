@@ -1,12 +1,14 @@
-from celery import Celery
-import config
 import sys
+import threading
+
+from celery import Celery
 
 from tornado import ioloop
 
 import balancer.celery_sender.sender
+import config
+import system.log
 
-import threading
 
 sys.argv = [sys.argv[0]]
 
@@ -29,6 +31,13 @@ def builds(message):
     import controller.TownBuildsController
     celeryController = controller.TownBuildsController.CeleryPrivateController()
     celeryController.buildComplete(message)
+
+
+@app.task(serializer='json', name='init_celery.army')
+def army(message):
+    import controller.ArmyQueueController
+    celeryController = controller.ArmyQueueController.CeleryPrivateController()
+    celeryController.armyCreated(message)
 
 
 if __name__ == '__main__':

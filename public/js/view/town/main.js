@@ -34,15 +34,11 @@ define('view/town/main', [
         },
 
         getRightSide: function () {
-//            return this.$el.find('.left');
-        },
-
-        getTownList: function () {
-//            return this.$el.find('.left');
+            return this.$el.find('.right');
         },
 
         getUnitsPosition: function () {
-//            return this.$el.find('.left');
+            return this.$el.find('.listUnits');
         },
 
         setDomain: function (townDomain) {

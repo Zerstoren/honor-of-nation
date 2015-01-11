@@ -3,10 +3,10 @@ import copy
 import re
 
 class Abstract_Domain(object, metaclass=abc.ABCMeta):
-    def __init__(self):
+    def __init__(self, loaded=False):
         self._isLoaded = False
         self._domain_data = {}
-        self._loaded = False
+        self._loaded = loaded
 
     def __convert(self, name):
         return re.sub('(?!^)([A-Z]+)', r'_\1',name).lower()
@@ -32,7 +32,8 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         self.extract()
 
         for i in options:
-            self._setFunc(i)(options[i])
+            name = self.__convert(i)
+            self.set(name, options[i])
 
     def extract(self, force=False):
         if not self.hasId():
@@ -65,6 +66,9 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
         self.extract()
         self._domain_data[name] = value
 
+    def has(self, name):
+        return name in self._domain_data
+
     def _getFunc(self, name):
         name = self.__convert(name)
         def getFunc():
@@ -83,9 +87,6 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
             return self
 
         return setFunc
-
-    def _isIn(self, name):
-        return name in self._domain_data
 
     def __getattribute__(self, item):
         """

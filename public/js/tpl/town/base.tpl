@@ -27,14 +27,16 @@
 
         <div class="town_info ti__middle_element">
             <div class="resources">
+            </div>
+
+            <div class="button_top">
+                <button class="btn" disabled>Информация о городе</button>
+                <button class="btn" disabled>Данные о ресурсах</button>
+                <button class="btn" disabled>Бонусы от сооружений</button>
+                <button class="btn" disabled>Защита города</button>
 
             </div>
-            <div class="buttons">
-                <!--<button class="btn" disabled>Информация о городе</button>-->
-                <!--<button class="btn" disabled>Данные о ресурсах</button>-->
-                <!--<button class="btn" disabled>Бонусы от сооружений</button>-->
-                <!--<button class="btn" disabled>Защита города</button>-->
-
+            <div class="button_bottom">
                 <button class="btn develop_armor">Разработка брони</button>
                 <button class="btn develop_weapon">Разработка оружия</button>
                 <button class="btn develop_people">Воспитание новобранцев</button>
@@ -43,23 +45,8 @@
 
         <div class="bottom_block">
             <div class="wrap">
-                <!--<div class="parking_generals ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/parking_generals"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-        <!---->
-                <!--<div class="generals_list ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/generals_list"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-        <!---->
-                <!--<div class="soliders_list ti__middle_element">-->
-                    <!--<div class="background">-->
-                        <!--<div class="scrolled" scroll scroll-direction="x" ng-inc="town/middle/soliders_list"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <div class="listUnits">
+                </div>
             </div>
         </div>
 

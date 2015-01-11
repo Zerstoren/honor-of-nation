@@ -9,7 +9,7 @@ import helpers.MapCoordinate
 
 class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
     def getUser(self):
-        userId = self._getFunc('user')()
+        userId = self.get('user')
 
         if userId:
             return models.User.Factory.User_Factory.getDomainById(userId)
@@ -17,7 +17,7 @@ class MapResources_Domain(models.Abstract.Domain.Abstract_Domain):
             return None
 
     def getTown(self):
-        townId = self._getFunc('town')()
+        townId = self.get('town')
 
         if townId:
             return models.Town.Factory.Town_Factory.getDomainById(townId)

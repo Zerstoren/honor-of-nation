@@ -18,6 +18,17 @@ class Selenium_Town_Generic(generic.Selenium_Generic):
     def _getCurrentBuildLevel(self):
         return self._getCurrentBuild().byCss('.name .build-level').text
 
-    def _getBuildsList(self, n):
-        pass
-        # return self.byCssSelector('.')
+    def _showUnitPopup(self, unitEquipment):
+        chain = self.getChainAction()
+        chain.move_to_element(self.byCssSelector('.units_container[data-id="%s"]' % str(unitEquipment.getId())))
+        chain.perform()
+        self.sleep(1)
+
+    def _createUnit(self, unitEquipment, count):
+        self._showUnitPopup(unitEquipment)
+        unit = self.byCssSelector('.units_container[data-id="%s"]' % str(unitEquipment.getId()))
+        unit.byCss('.count_to_create').clear()
+        unit.byCss('.count_to_create').send_keys(str(count))
+        unit.byCss('.create').click()
+
+        self.waitForElement('.buildInProgress .name')

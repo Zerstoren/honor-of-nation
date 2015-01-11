@@ -19,7 +19,6 @@ class Backend_Controller_Equipment_WeaponTest(Backend_Controller_Equipment_Gener
         super().tearDown()
 
     def init(self):
-        super().setUp()
         self.controller = self._getModelController()
         self.transfer = self._login()
 

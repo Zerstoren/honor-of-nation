@@ -37,6 +37,14 @@ define('libs/abstract/collection', [
             return new this.constructor(result);
         },
 
+        update: function (data) {
+            var i;
+
+            for (i = 0; i < data.length; i++) {
+                this.add(new this.model(data[i]));
+            }
+        },
+
         sync: function (method, options) {
             var url = '/collection/' + this.collection_url + '/' + method,
                 data = options.data || {};
@@ -46,12 +54,8 @@ define('libs/abstract/collection', [
                     return;
                 }
 
-                var i, list = data.data;
-
                 this.reset();
-                for (i = 0; i < list.length; i++) {
-                    this.add(new this.model(list[i]));
-                }
+                this.update(data.data);
 
                 if (options.success) {
                     options.success(this);

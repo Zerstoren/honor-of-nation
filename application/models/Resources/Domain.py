@@ -30,14 +30,14 @@ class Resources_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getUser(self):
         return models.User.Factory.User_Factory.getDomainById(
-            self._getFunc('user')()
+            self.get('user')
         )
 
     def setUser(self, user):
         if isinstance(user, models.User.Domain.User_Domain):
-            self._setFunc('user')(user.getId())
+            self.set('user', user.getId())
         else:
-            self._setFunc('user')(user)
+            self.set('user', user)
 
     def getMapper(self):
         return Resources_Mapper

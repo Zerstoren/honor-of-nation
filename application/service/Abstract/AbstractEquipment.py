@@ -3,6 +3,15 @@ import math
 
 
 class AbstractEquipment(AbstractService.Service_Abstract):
+    ACL = 'Acl.Equipment'
+    PARAMS = 'Params.Equipment'
+    JSONPACK = 'JsonPack.Equipment'
+
+    JSONPACK_ACL = ['JsonPack.Equipment', 'Acl.Equipment']
+    PARAMS_ACL = ['Params.Equipment', 'Acl.Equipment']
+    PARAMS_JSONPACK = ['Params.Equipment', 'JsonPack.Equipment']
+    PARAMS_JSONPACK_ACL = ['Params.Equipment', 'JsonPack.Equipment', 'Acl.Equipment']
+
     def _linearCalc(self, lvl, cost, degrage=False):
         if degrage:
             if lvl < 0:

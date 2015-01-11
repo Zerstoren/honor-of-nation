@@ -2,7 +2,7 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 
 import exceptions.resources
 
-import service.TownBuilds
+from service.TownBuilds import Service_TownBuilds
 
 import time
 
@@ -163,7 +163,7 @@ class Backend_Controller_TownBuildsTest(
 
     def testCeleryControllerBuilds(self):
         controller = self._getCeleryController()
-        serviceTownBuilds = service.TownBuilds.Service_TownBuilds().decorate('Params')
+        serviceTownBuilds = Service_TownBuilds().decorate(Service_TownBuilds.PARAMS)
 
         serviceTownBuilds.create(
             self.user,

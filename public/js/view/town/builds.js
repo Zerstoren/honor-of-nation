@@ -48,7 +48,8 @@ define('view/town/builds', [
                 this.$el, {
                     timeout: 100,
                     liveTarget: '.triangle',
-                    ignoreTop: true
+                    ignoreTop: true,
+                    align: 'center'
                 }
             );
 
