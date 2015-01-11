@@ -14,8 +14,29 @@ class Army_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return domain
 
+    def getByIds(self, ids):
+        result = Mapper.Army_Mapper.getByIds(ids)
+        armyCollection = Army_Collection()
+        armyCollection.setOptions(result)
+
+        return armyCollection
+
     def getByPosition(self, user, position):
         result = Mapper.Army_Mapper.getByPosition(user, position)
+        armyCollection = Army_Collection()
+        armyCollection.setOptions(result)
+
+        return armyCollection
+
+    def getSubGenerals(self, generalDomain):
+        result = Mapper.Army_Mapper.getSubGenerals(generalDomain)
+        armyCollection = Army_Collection()
+        armyCollection.setOptions(result)
+
+        return armyCollection
+
+    def getCollectionByGeneral(self, generalDomain):
+        result = Mapper.Army_Mapper.getByGeneral(generalDomain)
         armyCollection = Army_Collection()
         armyCollection.setOptions(result)
 

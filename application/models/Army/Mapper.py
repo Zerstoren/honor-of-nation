@@ -15,6 +15,18 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter)
 
+    def getSubGenerals(self, generalDomain):
+        commonFilter = Common.Common_Filter()
+        commonFilter.add('commander', generalDomain.getId())
+        commonFilter.add('is_general', True)
+
+        return self._select(commonFilter)
+
+    def getByGeneral(self, generalDomain):
+        commonFilter = Common.Common_Filter()
+        commonFilter.add('commander', generalDomain.getId())
+
+        return self._select(commonFilter)
 
     def save(self, unit):
         """
@@ -23,9 +35,15 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet = Common.Common_Set()
         commonSet.add('user', unit.getUser().getId())
         commonSet.add('unit', unit.getUnit().getId())
+        commonSet.add('suite', unit.getSuite().getId() if unit.getSuite() else None)
         commonSet.add('commander', unit.getCommander().getId() if unit.getCommander() else None)
         commonSet.add('count', unit.getCount())
         commonSet.add('location', unit.getMap().getPosition().getPosId())
+        commonSet.add('in_build', unit.getInBuild())
+        commonSet.add('power', unit.getPower())
+        commonSet.add('mode', unit.getMode())
+        commonSet.add('move_path', unit.getMovePath())
+        commonSet.add('formation', unit.getFormation())
 
         if unit.hasId():
             commonFilter = Common.Common_Filter()

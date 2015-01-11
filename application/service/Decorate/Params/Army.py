@@ -3,6 +3,8 @@ from service.User import Service_User
 from service.Town import Service_Town
 from service.Equipment.Units import Service_Equipment_Units
 
+from models.Army.Factory import Army_Factory
+
 
 class Decorate():
     def create(self, unit, town, count, user=None):
@@ -17,3 +19,50 @@ class Decorate():
         position = helpers.MapCoordinate.MapCoordinate(posId=int(position))
 
         return super().load(armyUser, position, user)
+
+    def move(self, general, path, user=None):
+        return super().move(general, path, user)
+
+    def changeMoveType(self, general, mode, user=None):
+        return super().changeMoveType(general, mode, user)
+
+    def addSuite(self, generalArmy, solidersArmy, user=None):
+        generalDomain = Army_Factory.get(generalArmy)
+        soliderDomain = Army_Factory.get(solidersArmy)
+        return super().addSuite(generalDomain, soliderDomain, user)
+
+    def removeSuite(self, generalArmy, solidersArmy, user=None):
+        generalDomain = Army_Factory.get(generalArmy)
+        soliderDomain = Army_Factory.get(solidersArmy)
+        return super().removeSuite(generalDomain, soliderDomain, user)
+
+    def addSolidersToGeneral(self, generalArmy, solidersCollection, user=None):
+        domain = Army_Factory.get(generalArmy)
+        collection = Army_Factory.getByIds(solidersCollection)
+        return super().addSolidersToGeneral(domain, collection, user)
+
+    def removeSolidersFromGeneral(self, generalArmy, solidersCollection, user=None):
+        domain = Army_Factory.get(generalArmy)
+        collection = Army_Factory.getByIds(solidersCollection)
+        return super().removeSolidersToGeneral(domain, collection, user)
+
+    def moveInBuild(self, armyDomain, user=None):
+        domain = Army_Factory.get(armyDomain)
+        return super().moveInBuild(domain, user)
+
+    def moveOutBuild(self, armyDomain, user=None):
+        domain = Army_Factory.get(armyDomain)
+        return super().moveOutBuild(domain, user)
+
+    def merge(self, armyCollection, user=None):
+        collection = Army_Factory.getByIds(armyCollection)
+        return super().merge(collection, user)
+
+    def split(self, armyDomain, size, user=None):
+        domain = Army_Factory.get(armyDomain)
+        size = int(size)
+        return super().split(domain, size, user)
+
+    def dissolution(self, armyDomain, user=None):
+        domain = Army_Factory.get(armyDomain)
+        return super().dissolution(domain, user)

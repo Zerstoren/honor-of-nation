@@ -47,6 +47,21 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
 
         return Factory.Army_Factory.get(commanderId)
 
+    def setSuite(self, suite):
+        if isinstance(suite, Army_Domain):
+            self.set('suite', suite.getId())
+        else:
+            self.set('suite', suite)
+
+    def getSuite(self):
+        from . import Factory
+        suiteId = self.get('suite')
+
+        if suiteId is None:
+            return None
+
+        return Factory.Army_Factory.get(suiteId)
+
     def setMap(self, location):
         self.set('location', location.getPosition().getPosId())
 
