@@ -13,12 +13,27 @@ import service.Army
 import time
 
 
-class Backend_Controller_ArmyTest(
+class _Abstract_Controller(
     tests.backend.t_controller.generic.Backend_Controller_Generic,
     Town,
     Equipment,
     Army
 ):
+
+    def _getArmyQueueController(self):
+        return controller.ArmyQueueController.MainController()
+
+    def _getArmyQueueCollectionController(self):
+        return controller.ArmyQueueController.CollectionController()
+
+    def _getArmyService(self):
+        return service.Army.Service_Army()
+
+    def _getArmyQueueService(self):
+        return service.ArmyQueue.Service_ArmyQueue()
+
+
+class Backend_Controller_ArmyTest(_Abstract_Controller):
     def setUp(self):
         self.initCelery()
         super().setUp()
@@ -39,18 +54,6 @@ class Backend_Controller_ArmyTest(
             armor=self.armor,
             weapon=self.weapon
         )
-
-    def _getArmyQueueController(self):
-        return controller.ArmyQueueController.MainController()
-
-    def _getArmyQueueCollectionController(self):
-        return controller.ArmyQueueController.CollectionController()
-
-    def _getArmyService(self):
-        return service.Army.Service_Army()
-
-    def _getArmyQueueService(self):
-        return service.ArmyQueue.Service_ArmyQueue()
 
     def testServiceCreateArmy(self):
         armyService = service.Army.Service_Army()
@@ -188,3 +191,7 @@ class Backend_Controller_ArmyTest(
 
         self.assertEqual(result[0]['count'], 10)
         self.assertEqual(result[1]['count'], 25)
+
+
+class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
+    pass

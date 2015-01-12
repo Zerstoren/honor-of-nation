@@ -18,9 +18,6 @@ class Decorate():
             'location': int(domain.getMap().getId())
         }
 
-    def merge(self, armyCollection, user=None):
-        return super().merge(armyCollection, user)
-
     def load(self, armyUser, position, user=None):
         collection = super().load(armyUser, position, user)
         result = []
