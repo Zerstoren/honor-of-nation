@@ -73,7 +73,14 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
                 'user': self.user.getId(),
                 'location': 0,
                 'commander': None,
-                'count': 100
+                'count': 100,
+                'formation': None,
+                'in_build': True,
+                'is_general': False,
+                'mode': 1,
+                'move_path': {},
+                'power': 100,
+                'suite': None
             }
         )
 
