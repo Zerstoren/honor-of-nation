@@ -218,6 +218,7 @@ class Backend_Controller_TownBuildsTest(
 
         self.assertEqual(builds.getMill(), 2)
 
+    @tests.rerun.retry()
     def testWaitCompleteMixedQueueBuilds(self):
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),
@@ -235,7 +236,7 @@ class Backend_Controller_TownBuildsTest(
             'level': 2
         })
 
-        time.sleep(6)
+        time.sleep(8)
 
         builds = self.town.getBuilds()
         builds.extract(True)
