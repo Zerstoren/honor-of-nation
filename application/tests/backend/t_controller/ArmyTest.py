@@ -126,7 +126,14 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
                 'unit': self.unit.getId(),
                 'location': self.town.getMap().getPosition().getPosId(),
                 'count': 1,
-                'commander': None
+                'commander': None,
+                'formation': None,
+                'in_build': True,
+                'mode': 1,
+                'is_general': False,
+                'move_path': {},
+                'power': 100,
+                'suite': None
             }
         )
 

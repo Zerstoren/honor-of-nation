@@ -60,7 +60,10 @@ class CheckDatabaseIndexes():
                 value = eval('item["' + '"]["'.join(inc) + '"]')
                 configKeys.remove(i)
             else:
-                value = item[i]
+                try:
+                    value = item[i]
+                except KeyError:
+                    raise NotExistsTypeKey("In collection `%s` field `%s` not found" % (collectionName, i, ))
 
             result = configParse[i][0](value)
 
@@ -141,7 +144,7 @@ class CheckDatabaseIndexes():
                 if fn(value) == True:
                     return True
 
-                if not value in items:
+                if not str(value) in items:
                     return EnumError("Enum field `%s.%s` has wrong value `%s`, try use some of `%s`" % (collectionName, field, value, nums))
 
                 return  True
