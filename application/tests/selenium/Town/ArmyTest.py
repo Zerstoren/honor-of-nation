@@ -51,8 +51,8 @@ class Selenium_Town_ArmyTest(
     @tests.rerun.retry()
     def testCreateArmy(self):
         self._createUnit(self.unit, 1)
-        self.sleep(2)
 
+        self.waitForElement('.unitsWrap ul li')
         result = self.byCssSelectorMany('.unitsWrap ul li')
         self.assertEqual(
             len(result),
