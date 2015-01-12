@@ -12,6 +12,8 @@ import service.Army
 
 import time
 
+import tests.rerun
+
 
 class _Abstract_Controller(
     tests.backend.t_controller.generic.Backend_Controller_Generic,
@@ -104,6 +106,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
         self.assertTrue(result['done'])
         self.assertEqual(2, len(result['data']))
 
+    @tests.rerun.retry()
     def testCreateArmy(self):
         armyController = self._getArmyQueueController()
         armyController.create(
@@ -117,7 +120,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
         queue = service.ArmyQueue.Service_ArmyQueue().getQueue(self.town)
 
-        time.sleep(2)
+        time.sleep(3)
 
         townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
         result = townUnits[0].toDict()
