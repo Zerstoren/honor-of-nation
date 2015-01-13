@@ -9,6 +9,9 @@ class Service_Town(service.Abstract.AbstractService.Service_Abstract):
         return models.Town.Factory.Town_Factory.getDomainById(townId)
 
     def loadByPosition(self, mapCoordinate):
+        """
+        :type mapCoordinate: helpers.MapCoordinate.MapCoordinate
+        """
         return models.Town.Factory.Town_Factory.getByPosition(mapCoordinate)
 
     def save(self, townData):

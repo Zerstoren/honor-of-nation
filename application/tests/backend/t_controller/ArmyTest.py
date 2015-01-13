@@ -14,6 +14,8 @@ import time
 
 import tests.rerun
 
+import exceptions.database
+
 
 class _Abstract_Controller(
     tests.backend.t_controller.generic.Backend_Controller_Generic,
@@ -21,6 +23,9 @@ class _Abstract_Controller(
     Equipment,
     Army
 ):
+
+    def _getArmyController(self):
+        return controller.ArmyController.MainController()
 
     def _getArmyQueueController(self):
         return controller.ArmyQueueController.MainController()
@@ -211,4 +216,226 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
 
 class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
-    pass
+    def setUp(self):
+        super().setUp()
+        self.transfer = self._login()
+        self.user = self.transfer.getUser()
+        self.terrain = self.fillTerrain(0, 0, 1, 1)
+        self.town = self.addTown(0, 0, self.user, 1)
+
+        self.armor = self.createEquipmentArmor(self.user, health=0, agility=0, absorption=0)
+        self.weapon = self.createEquipmentWeapon(self.user, damage=0, speed=0, critical_chance=0, critical_damage=0)
+        self.unit = self.createEquipmentUnit(
+            self.user,
+            health=0,
+            agility=0,
+            absorption=0,
+            stamina=0,
+            strength=0,
+            armor=self.armor,
+            weapon=self.weapon
+        )
+
+        self.unitGeneral = self.createEquipmentUnit(
+            self.user,
+            uType='general',
+            troopSize=500,
+            health=0,
+            agility=0,
+            absorption=0,
+            stamina=0,
+            strength=0,
+            armor=self.armor,
+            weapon=self.weapon
+        )
+
+    def testMoveInBuild(self):
+        army = self.createArmy(self.town, self.unitGeneral)
+        army.setInBuild(False)
+        army.getMapper().save(army)
+
+        self._getArmyController().moveInBuild(
+            self.transfer,
+            {
+                'army': str(army.getId())
+            }
+        )
+
+        army.extract(force=True)
+        self.assertTrue(army.getInBuild())
+
+    def testMoveOutBuild(self):
+        army = self.createArmy(self.town, self.unitGeneral)
+
+        self._getArmyController().moveOutBuild(
+            self.transfer,
+            {
+                'army': str(army.getId())
+            }
+        )
+
+        army.extract(force=True)
+        self.assertFalse(army.getInBuild())
+
+    def testMerge(self):
+        army = self.createArmy(self.town, self.unit, count=25)
+        army2 = self.createArmy(self.town, self.unit, count=50)
+
+        self._getArmyController().merge(
+            self.transfer,
+            {
+                'army_list': [
+                    str(army.getId()),
+                    str(army2.getId())
+                ]
+            }
+        )
+
+        try:
+            army2.extract(force=True)
+            self.fail("Second unit not deleted")
+        except exceptions.database.Database:
+            pass
+
+        army.extract(force=True)
+        self.assertEqual(army.getCount(), 75)
+
+    def testSplit(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+
+        self._getArmyController().split(
+            self.transfer,
+            {
+                'army': str(army.getId()),
+                'size': '50'
+            }
+        )
+
+        armyCollection = service.Army.Service_Army().load(
+            self.user,
+            self.town.getMap().getPosition()
+        )
+
+
+        for domain in armyCollection:
+            self.assertEqual(domain.getCount(), 50)
+
+
+    def testAddSolidersToGeneral(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+        army2 = self.createArmy(self.town, self.unit, count=200)
+        general = self.createArmy(self.town, self.unitGeneral)
+
+        self._getArmyController().addSolidersToGeneral(
+            self.transfer,
+            {
+                'general': str(general.getId()),
+                'soliders': [
+                    str(army.getId()),
+                    str(army2.getId())
+                ]
+            }
+        )
+
+        army.extract(force=True)
+        army2.extract(force=True)
+
+        self.assertEqual(
+            army.getCommander().getId(),
+            general.getId()
+        )
+        self.assertEqual(
+            army2.getCommander().getId(),
+            general.getId()
+        )
+
+    def testRemoveSolidersToGeneral(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+        army2 = self.createArmy(self.town, self.unit, count=200)
+        general = self.createArmy(self.town, self.unitGeneral)
+
+        army.setCommander(general.getId())
+        army.getMapper().save(army)
+        army2.setCommander(general.getId())
+        army2.getMapper().save(army2)
+
+        self._getArmyController().removeSolidersGeneral(
+            self.transfer,
+            {
+                'general': str(general.getId()),
+                'soliders': [
+                    str(army.getId()),
+                    str(army2.getId())
+                ]
+            }
+        )
+
+        army.extract(force=True)
+        army2.extract(force=True)
+
+        self.assertEqual(
+            army.getCommander(),
+            None
+        )
+        self.assertEqual(
+            army2.getCommander(),
+            None
+        )
+
+    def testAddSuite(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+        general = self.createArmy(self.town, self.unitGeneral)
+
+        self._getArmyController().addSuite(
+            self.transfer,
+            {
+                'general': str(general.getId()),
+                'solider': str(army.getId())
+            }
+        )
+
+        army.extract(force=True)
+        general.extract(force=True)
+
+        self.assertEqual(army.getCommander().getId(), general.getId())
+        self.assertEqual(general.getSuite().getId(), army.getId())
+
+    def testRemoveSuite(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+        general = self.createArmy(self.town, self.unitGeneral)
+
+        army.setCommander(general.getId())
+        army.getMapper().save(army)
+
+        general.setSuite(army.getId())
+        general.getMapper().save(general)
+
+        self._getArmyController().removeSuite(
+            self.transfer,
+            {
+                'general': str(general.getId()),
+                'solider': str(army.getId())
+            }
+        )
+
+        army.extract(force=True)
+        general.extract(force=True)
+
+        self.assertEqual(army.getCommander(), None)
+        self.assertEqual(general.getSuite(), None)
+
+    def testDissolution(self):
+        army = self.createArmy(self.town, self.unit, count=100)
+
+        self._getArmyController().dissolution(
+            self.transfer,
+            {
+                'army': str(army.getId())
+            }
+        )
+
+        try:
+            army.extract(force=True)
+            self.fail("Army not deleted")
+        except exceptions.database.Database:
+            pass

@@ -12,22 +12,7 @@ import exceptions.army
 
 class Service_Army(AbstractService.Service_Abstract):
     def create(self, unit, town, count, user=None):
-        domain = Army_Domain()
-        domain.setUnit(unit)
-        domain.setUser(town.getUser())
-        domain.setCount(count)
-        domain.setCommander(None)
-        domain.setMap(town.getMap())
-        domain.setInBuild(True)
-        domain.setPower(100)
-        domain.setMode(1)
-        domain.setMovePath({})
-        domain.setFormation(None)
-        domain.setSuite(None)
-        domain.setIsGeneral(unit.getType() == Common.TYPE_GENERAL)
-
-        domain.getMapper().save(domain)
-        return domain
+        return self._create(unit, town, count)
 
     def get(self, _id, user=None):
         return Army_Factory.get(_id)
@@ -45,7 +30,7 @@ class Service_Army(AbstractService.Service_Abstract):
         if generalArmy.getUnit().getType() != Common.TYPE_GENERAL:
             raise exceptions.army.CommanderNotPermission("Недопустимая операция для командира")
 
-        if solidersArmy.getUnit().getType() == Common.TYPE_SOLIDER:
+        if solidersArmy.getUnit().getType() != Common.TYPE_SOLIDER:
             raise exceptions.army.UnitNotPermission("Недопустимая операция для солдатов")
 
         if generalArmy.getSuite():
@@ -71,7 +56,7 @@ class Service_Army(AbstractService.Service_Abstract):
         if generalArmy.getUnit().getType() != Common.TYPE_GENERAL:
             raise exceptions.army.CommanderNotPermission("Недопустимая операция для командира")
 
-        if solidersArmy.getUnit().getType() == Common.TYPE_SOLIDER:
+        if solidersArmy.getUnit().getType() != Common.TYPE_SOLIDER:
             raise exceptions.army.UnitNotPermission("Недопустимая операция для солдатов")
 
         if not generalArmy.getSuite():
@@ -108,7 +93,7 @@ class Service_Army(AbstractService.Service_Abstract):
 
             solidersSize += self._calculateUnitsSize(army)
 
-        if self._calculateUnitsSize(generalArmy) + solidersCollection > generalArmy.getTroopSize():
+        if self._calculateUnitsSize(generalArmy) + solidersSize > generalArmy.getUnit().getTroopSize():
             raise exceptions.army.ArmyLimit("Командир не может управлять большей армией")
 
         for army in solidersCollection:
@@ -134,11 +119,8 @@ class Service_Army(AbstractService.Service_Abstract):
             army.getMapper().save(army)
 
     def moveInBuild(self, armyDomain, user=None):
-        if armyDomain.getInBuild() is not True:
-            raise exceptions.army.UnitNotInBuild("Юнит обязан находится в городе")
-
-        if armyDomain.getInBuild() is not True:
-            raise exceptions.army.UnitNotInBuild("Юнит обязан находится в городе")
+        if armyDomain.getInBuild() is True:
+            raise exceptions.army.UnitNotInBuild("Юнит обязан находится вне городе")
 
         armyDomain.setInBuild(True)
         armyDomain.getMapper().save(armyDomain)
@@ -194,25 +176,24 @@ class Service_Army(AbstractService.Service_Abstract):
         if armyDomain.getCount() <= size or size <= 0:
             raise exceptions.army.Split("Неверный размер для разделения")
 
-        self.create(
+        self._create(
             armyDomain.getUnit(),
-            Service_Town().loadByPosition(armyDomain.getMap()),
-            size,
-            user
+            Service_Town().loadByPosition(armyDomain.getMap().getPosition()),
+            size
         )
 
         armyDomain.setCount(armyDomain.getCount() - size)
         armyDomain.getMapper().save(armyDomain)
 
     def dissolution(self, armyDomain, user=None):
-        if armyDomain.getCommander() != None:
-            raise exceptions.army.UnitHasCommander("Юнит имеет командира и не может провести операцию")
-
         if armyDomain.getInBuild() is not True:
             raise exceptions.army.UnitNotInBuild("Юнит обязан находится в городе")
 
         if armyDomain.getCommander() is not None:
             raise exceptions.army.UnitHasCommander("Юнит имеет командира и не может провести операцию")
+
+        if armyDomain.getSuite() is not None:
+            raise exceptions.army.CommanderNotPermission("Командир имеет свиту")
 
         armyDomain.getMapper().remove(armyDomain)
 
@@ -240,6 +221,24 @@ class Service_Army(AbstractService.Service_Abstract):
     def _hasDeepGeneral(self, armyDomain):
         collection = Army_Factory.getSubGenerals(armyDomain)
         return bool(collection.length)
+
+    def _create(self, unit, town, count):
+        domain = Army_Domain()
+        domain.setUnit(unit)
+        domain.setUser(town.getUser())
+        domain.setCount(count)
+        domain.setCommander(None)
+        domain.setMap(town.getMap())
+        domain.setInBuild(True)
+        domain.setPower(100)
+        domain.setMode(1)
+        domain.setMovePath({})
+        domain.setFormation(None)
+        domain.setSuite(None)
+        domain.setIsGeneral(unit.getType() == Common.TYPE_GENERAL)
+
+        domain.getMapper().save(domain)
+        return domain
 
     def decorate(self, *args):
         """

@@ -5,6 +5,8 @@ from service.Equipment.Units import Service_Equipment_Units
 
 from models.Army.Factory import Army_Factory
 
+from helpers.mongo import objectId
+
 
 class Decorate():
     def create(self, unit, town, count, user=None):
@@ -37,14 +39,16 @@ class Decorate():
         return super().removeSuite(generalDomain, soliderDomain, user)
 
     def addSolidersToGeneral(self, generalArmy, solidersCollection, user=None):
+        solidersCollection = [objectId(i) for i in solidersCollection]
         domain = Army_Factory.get(generalArmy)
         collection = Army_Factory.getByIds(solidersCollection)
         return super().addSolidersToGeneral(domain, collection, user)
 
     def removeSolidersFromGeneral(self, generalArmy, solidersCollection, user=None):
+        solidersCollection = [objectId(i) for i in solidersCollection]
         domain = Army_Factory.get(generalArmy)
         collection = Army_Factory.getByIds(solidersCollection)
-        return super().removeSolidersToGeneral(domain, collection, user)
+        return super().removeSolidersFromGeneral(domain, collection, user)
 
     def moveInBuild(self, armyDomain, user=None):
         domain = Army_Factory.get(armyDomain)
@@ -55,6 +59,7 @@ class Decorate():
         return super().moveOutBuild(domain, user)
 
     def merge(self, armyCollection, user=None):
+        armyCollection = [objectId(i) for i in armyCollection]
         collection = Army_Factory.getByIds(armyCollection)
         return super().merge(collection, user)
 

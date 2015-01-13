@@ -27,7 +27,7 @@ class MainController(_AbstractArmy):
         })
 
     def moveOutBuild(self, transfer, data):
-        self._getParamsAclService().moveInBuild(
+        self._getParamsAclService().moveOutBuild(
             data['army'],
             transfer.getUser()
         )
@@ -49,6 +49,7 @@ class MainController(_AbstractArmy):
     def split(self, transfer, data):
         self._getParamsAclService().split(
             data['army'],
+            data['size'],
             transfer.getUser()
         )
 
@@ -81,7 +82,7 @@ class MainController(_AbstractArmy):
     def addSuite(self, transfer, data):
         self._getParamsAclService().addSuite(
             data['general'],
-            data['army'],
+            data['solider'],
             transfer.getUser()
         )
 
@@ -92,7 +93,7 @@ class MainController(_AbstractArmy):
     def removeSuite(self, transfer, data):
         self._getParamsAclService().removeSuite(
             data['general'],
-            data['army'],
+            data['solider'],
             transfer.getUser()
         )
 
