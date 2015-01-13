@@ -195,6 +195,35 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
         )
         self.assertDictEqual(firstFixResources, thirdFixResources)
 
+    @tests.rerun.retry(retry=10)
+    def testRemoveArmyFromQueuePartial(self):
+        self._getArmyQueueController().create(
+            self.transfer,
+            {
+                'town': str(self.town.getId()),
+                'unit': str(self.unit.getId()),
+                'count': 5
+            }
+        )
+
+        time.sleep(1)
+
+        queueDomain = self._getArmyQueueService().getQueue(self.town)[0]
+        self._getArmyQueueController().remove(
+            self.transfer,
+            {
+                'town': str(self.town.getId()),
+                'queue_id': str(queueDomain.getId())
+            }
+        )
+
+        armyDomain = service.Army.Service_Army().load(
+            self.user,
+            self.town.getMap().getPosition()
+        )[0]
+
+        self.assertEqual(armyDomain.getCount(), 1)
+
     def testGetQueue(self):
         self.createQueue(self.town, self.unit, count=10)
         self.createQueue(self.town, self.unit, count=25)

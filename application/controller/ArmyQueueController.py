@@ -5,6 +5,8 @@ import system.log
 from service.ArmyQueue import Service_ArmyQueue
 from service.Army import Service_Army
 
+from service.Town import Service_Town
+
 
 class _AbstractArmyQueue(object):
     def _getParamsArmyService(self):
@@ -21,6 +23,9 @@ class _AbstractArmyQueue(object):
 
     def _getParamsAclJsonPackArmyQueueService(self):
         return Service_ArmyQueue().decorate(Service_ArmyQueue.PARAMS_JSONPACK_ACL)
+
+    def _getParamsTownService(self):
+        return Service_Town().decorate(Service_Town.PARAMS)
 
 
 class MainController(_AbstractArmyQueue):
@@ -41,6 +46,10 @@ class MainController(_AbstractArmyQueue):
             data['town'],
             data['queue_id'],
             transfer.getUser()
+        )
+
+        DeliveryController().armyChange(
+            self._getParamsTownService().getById(data['town'])
         )
 
         transfer.send('/army/queue/remove', {
@@ -67,7 +76,18 @@ class CeleryPrivateController(_AbstractArmyQueue):
             system.log.critical('To early. %s. Current time %i' % (str(message), int(time.time())))
             raise Exception('Слишком рано')
 
-        town = self._getParamsArmyQueueService().create(message['queue_id'])
+        self._getParamsArmyQueueService().create(message['queue_id'])
+
+        DeliveryController().armyChange(
+            self._getParamsTownService().getById(message['town'])
+        )
+
+
+class DeliveryController(_AbstractArmyQueue):
+    def armyChange(self, town):
+        """
+        :type town: models.Town.Domain.Town_Domain
+        """
         town.getUser().getTransfer().forceSend('/delivery/unitsUpdate',
             {
                 'done': True,

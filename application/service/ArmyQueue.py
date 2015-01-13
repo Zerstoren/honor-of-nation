@@ -57,8 +57,8 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
             completeAfter = queueDomain.getCompleteAfter()
 
             percentComplete = ((startAt + completeAfter) - int(time.time())) / completeAfter
-            countComplete = int(percentComplete * queueDomain.getCount())
-            countDiscard = queueDomain.getCount() - countComplete
+            countDiscard = int(percentComplete * queueDomain.getCount())
+            countComplete = queueDomain.getCount() - countDiscard
 
             armyService = service.Army.Service_Army()
             armyService.create(
@@ -96,8 +96,6 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
         queueDomain.getMapper().remove(queueDomain)
         self._updateQueueCode(queueDomain.getTown())
 
-        return queueDomain.getTown()
-
     def _getQueue(self, town):
         return ArmyQueue_Factory.load(town)
 
@@ -109,6 +107,7 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
         currentQueue = queue[0]
 
         queueItem = {
+            'town': str(town.getId()),
             'queue_id': str(currentQueue.getId()),
             'complete_after': currentQueue.getCompleteAfter(),
             'start_at': int(time.time())

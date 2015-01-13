@@ -19,7 +19,15 @@ div.cont {
         }
 
         .town_type_0 {
-            background-image: url(/img/objects/city/village.png);
+            background-image: url("/img/objects/city/village.png");
+        }
+
+        .town_type_1 {
+            background-image: url("/img/objects/city/town.png");
+        }
+
+        .town_type_2 {
+            background-image: url("/img/objects/city/castle.png");
         }
 
         .town_box {

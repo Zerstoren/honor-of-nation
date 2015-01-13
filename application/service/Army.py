@@ -1,7 +1,6 @@
 from .Abstract import AbstractService
 from models.Army.Domain import Army_Domain
 from models.Army.Factory import Army_Factory
-from models.Army import Common as Army_Common
 
 from models.Equipment.Units import Common
 
