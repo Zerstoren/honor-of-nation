@@ -1,7 +1,7 @@
 define('view/elements/popup', [], function () {
-    var hideTimer = -1,
-        showTimer = -1,
-        showLayer = null;
+    var hideTimer = {},
+        showTimer = {},
+        showLayer = {};
 
     return AbstractView.extend({
         initialize: function (triggerElement, config) {
@@ -11,14 +11,19 @@ define('view/elements/popup', [], function () {
             }
 
             this.$config = {
-                clickable: config.clickable || false,
+                namespace: config.namespace || 'default',
                 liveTarget: config.liveTarget || false,
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
                 ignoreTop: config.ignoreTop || false,
                 callback: config.popupCallback || false,
-                align: config.align || 'right'
+                align: config.align || 'right', // left, center, right
+                valign: config.valign || 'bottom' // bottom, middle, top
             };
+
+            hideTimer[this.$config.namespace] = -1;
+            showTimer[this.$config.namespace] = -1;
+            showLayer[this.$config.namespace] = null;
 
             this.element = triggerElement;
             this.addEventListener();
@@ -39,11 +44,7 @@ define('view/elements/popup', [], function () {
                 self.stopShowTimeout(e);
             };
 
-            if (this.$config.clickable) {
-                this.element.on('click', this.$config.liveTarget, this.$fnCallback.mouseenter);
-//                jQuery(document).on('click', this.$fnCallback.mouseleave);
-
-            } else if (this.$config.liveTarget) {
+            if (this.$config.liveTarget) {
                 this.element.on('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
                 this.element.on('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
             } else {
@@ -53,10 +54,7 @@ define('view/elements/popup', [], function () {
         },
 
         removeEventListener: function () {
-            if (this.$config.clickable) {
-                this.element.off('click', this.$config.liveTarget, this.$fnCallback.mouseenter);
-                jQuery(document).off('click', this.$fnCallback.mouseleave);
-            } else if (this.$config.liveTarget) {
+            if (this.$config.liveTarget) {
                 this.element.off('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
                 this.element.off('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
             } else {
@@ -66,14 +64,26 @@ define('view/elements/popup', [], function () {
         },
 
         showLayer: function () {
+            if (!this.popup) {
+                return;
+            }
+
             var config, left, top, popupBR, targetBR;
-            showLayer = this;
+            showLayer[this.$config.namespace] = this;
             this.popup.css({display: 'block'});
 
             popupBR = this.popup[0].getBoundingClientRect();
             targetBR = this.target[0].getBoundingClientRect();
 
             top = targetBR.top;
+
+            if (this.$config.valign === 'top') {
+                top = targetBR.top - popupBR.height;
+            } else if (this.$config.valign === 'bottom') {
+                top = targetBR.top + targetBR.width;
+            } else if (this.$config.valign === 'middle') {
+                top = (targetBR.top + parseInt(targetBR.height / 2)) - parseInt(popupBR.height / 2);
+            }
 
             if (this.$config.align === 'right') {
                 left = targetBR.left + targetBR.width;
@@ -109,7 +119,11 @@ define('view/elements/popup', [], function () {
         },
 
         hideLayer: function() {
-            showLayer = null;
+            if (!this.popup) {
+                return;
+            }
+
+            showLayer[this.$config.namespace] = null;
             this.popup.css({display: 'none'});
             this.setPopup();
         },
@@ -117,37 +131,37 @@ define('view/elements/popup', [], function () {
         startShowTimeout: function (e) {
             var self = this;
 
-            if (hideTimer !== -1 && showLayer !== null) {
-                clearTimeout(hideTimer);
-                hideTimer = -1;
-                showLayer.hideLayer();
+            if (hideTimer[this.$config.namespace] !== -1 && showLayer[this.$config.namespace] !== null) {
+                clearTimeout(hideTimer[this.$config.namespace]);
+                hideTimer[this.$config.namespace] = -1;
+                showLayer[this.$config.namespace].hideLayer();
                 this.setPopup(e);
                 this.showLayer();
                 return;
             }
 
-            if (showTimer === -1 && showLayer !== null) {
-                showLayer.hideLayer();
+            if (showTimer[this.$config.namespace] === -1 && showLayer[this.$config.namespace] !== null) {
+                showLayer[this.$config.namespace].hideLayer();
                 this.setPopup(e);
                 this.showLayer();
                 return;
             }
 
-            showTimer = setTimeout(function() {
+            showTimer[this.$config.namespace] = setTimeout(function() {
                 self.setPopup(e);
                 self.showLayer();
-                showTimer = -1;
+                showTimer[self.$config.namespace] = -1;
             }, this.$config.timeout);
         },
 
-        stopShowTimeout: function (e) {
+        stopShowTimeout: function () {
             var self = this;
-            if(showTimer !== -1) {
-                clearTimeout(showTimer);
-                showTimer = -1;
+            if(showTimer[this.$config.namespace] !== -1) {
+                clearTimeout(showTimer[this.$config.namespace]);
+                showTimer[this.$config.namespace] = -1;
             } else {
-                hideTimer = setTimeout(function() {
-                    hideTimer = -1;
+                hideTimer[this.$config.namespace] = setTimeout(function() {
+                    hideTimer[self.$config.namespace] = -1;
                     self.hideLayer();
                 }, this.$config.timeout);
             }

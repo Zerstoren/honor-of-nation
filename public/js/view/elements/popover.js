@@ -1,76 +1,144 @@
 define('view/elements/popover', [], function () {
-
     return AbstractView.extend({
-        PLACE_TOP: 'top',
-        PLACE_LEFT: 'left',
-        PLACE_RIGHT: 'right',
-        PLACE_BOTTOM: 'bottom',
-
-        initialize: function (view, targetElement, config) {
-            this.popover = null;
-
+        initialize: function (triggerElement, config) {
+            this.$fnCallback = {};
             if (!config) {
                 config = {};
             }
 
+            this.enabled = true;
+            this.document = jQuery(document.body);
             this.$config = {
-                content: config.content || '.popover',
-                placement: config.placement || 'top',
-                container: 'body',
-                title: config.title || ''
+                namespace: config.namespace || 'default',
+                liveTarget: config.liveTarget || false,
+                target: config.target || '.popover',
+                timeout: config.timeout || 500,
+                ignoreTop: config.ignoreTop || false,
+                callback: config.popupCallback || false,
+                align: config.align || 'right', // left, center, right
+                valign: config.valign || 'bottom' // bottom, middle, top
             };
 
-            this.targetElement = targetElement;
-            this.element = view.find(targetElement);
-            var options = {
-                html: true,
-                content: this.element.find(this.$config.content).children('*').clone(),
-                template: this.$config.template,
-                placement: this.$config.placement,
-                title: this.$config.title
-            };
-
-            this.element.popover(options);
-
-            this.onHide = function (e) {
-                var target = jQuery(e.target);
-
-                if (target.hasClass('popover')) {
-                    return;
-                }
-
-                if (target.parents('.popover').length) {
-                    return;
-                }
-
-                if (target.is(this.targetElement) && target.find('.popover').length) {
-                    return;
-                }
-
-                this.hide();
-            }.bind(this);
-
+            this.element = triggerElement;
             this.addEventListener();
         },
 
-        addEventListener: function () {
-            jQuery(document).on('click', this.onHide);
+        enable: function () {
+            this.enabled = true;
         },
 
-        showPopover: null,
-        onHide: null,
-
-        show: function () {
-            this.element.popover('show');
-        },
-
-        hide: function () {
-            this.element.popover('hide');
+        disable: function() {
+            this.enabled = false;
         },
 
         destroy: function () {
-            jQuery(document).off('click', this.onHide);
-            this.element.popover('destroy');
+            this.removeEventListener();
+        },
+
+        addEventListener: function () {
+            this.$fnCallback.click = this.showLayer.bind(this);
+            this.$fnCallback.hide = function (e) {
+                var target = jQuery(e.target);
+
+                if (target.hasClass(this.$config.target) || target.parents(this.$config.target).length) {
+                    return;
+                }
+
+                this.hideLayer();
+            }.bind(this);
+
+            this.element.on('click', this.$config.liveTarget, this.$fnCallback.click);
+        },
+
+        removeEventListener: function () {
+            this.element.off('click', this.$config.liveTarget, this.$fnCallback.click);
+        },
+
+        showLayer: function (e) {
+            if (!this.enabled) {
+                return;
+            }
+
+            if (this.popup) {
+                this.hideLayer();
+                return;
+            }
+
+            setTimeout(function () {
+                this.document.bind('click.popover', this.$fnCallback.hide);
+            }.bind(this), 0);
+
+            this.setPopup(e);
+
+            var config, left, top, popupBR, targetBR;
+            this.popup.css({display: 'block'});
+
+            popupBR = this.popup[0].getBoundingClientRect();
+            targetBR = this.target[0].getBoundingClientRect();
+
+            top = targetBR.top;
+
+            if (this.$config.valign === 'top') {
+                top = targetBR.top - popupBR.height;
+            } else if (this.$config.valign === 'bottom') {
+                top = targetBR.top + targetBR.width;
+            } else if (this.$config.valign === 'middle') {
+                top = (targetBR.top + parseInt(targetBR.height / 2)) - parseInt(popupBR.height / 2);
+            }
+
+            if (this.$config.align === 'right') {
+                left = targetBR.left + targetBR.width;
+            } else if (this.$config.align === 'left') {
+                left = targetBR.left - popupBR.width;
+            } else if (this.$config.align === 'center') {
+                // (target left + (target width / 2)) - popup width / 2
+                left = (targetBR.left + parseInt(targetBR.width / 2)) - parseInt(popupBR.width / 2);
+            }
+
+            if ((top + popupBR.height) > window.innerHeight) {
+                top = window.innerHeight - popupBR.height;
+            } else if (top < 0) {
+                top = 0;
+            }
+
+            if ((left + popupBR.width) > window.innerWidth) {
+                left = window.innerWidth - popupBR.width;
+            } else if (left < 0) {
+                left = 0;
+            }
+
+            config = {
+                top: top,
+                left: left
+            };
+
+            if (this.$config.ignoreTop) {
+                delete config.top;
+            }
+
+            this.popup.css(config);
+        },
+
+        hideLayer: function() {
+            this.document.unbind('click.popover');
+            console.log("Unbind");
+
+            if (!this.popup) {
+                return;
+            }
+
+            this.popup.css({display: 'none'});
+            this.setPopup();
+        },
+
+        setPopup: function (e) {
+            if (e) {
+                this.target = jQuery(e.currentTarget);
+                this.popup = this.target.find(this.$config.target);
+            } else {
+                this.target = null;
+                this.popup = null;
+            }
         }
     });
 });

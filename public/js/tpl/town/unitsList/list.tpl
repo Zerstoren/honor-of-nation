@@ -1,23 +1,20 @@
 <ul class="actions">
     <li class="glyphicon glyphicon-resize-small merge {{#!icons.merge}}disabled{{/}}" data-hint="Объеденить юнитов"></li>
     <li class="glyphicon glyphicon-resize-full split {{#!icons.split}}disabled{{/}}" data-hint="Разделить юнита">
-        <div class="popup">
-            <div>
-                <span>1</span> <input type="range" min="1" max="{{splitSize}}" value="1" class="select-split"> <span>30</span>
-                <button class="btn btn-default">Разделить</button>
-            </div>
+        <div class="popover split-block">
+            <span>1</span> <input type="range" min="1" max="{{splitSize}}" value="1" class="select-split"> <span>30</span>
+            <button class="btn btn-default">Разделить</button>
         </div>
     </li>
     <li class="glyphicon glyphicon-arrow-down move_out {{#!icons.move_out}}disabled{{/}}" data-hint="Покинуть город"></li>
     <li class="glyphicon glyphicon-log-in add_soliders_to_general {{#!icons.add_soliders_to_general}}disabled{{/}}" data-hint="Добавить солдат к командиру"></li>
     <li class="glyphicon glyphicon-import add_suite {{#!icons.add_suite}}disabled{{/}}" data-hint="Добавить солдата к командиру в качестве свиты"></li>
     <li class="glyphicon glyphicon-remove dissolution {{#!icons.dissolution}}disabled{{/}}" data-hint="Расформировать отряд">
-        <div class="popup">
+        <div class="popover dissolution-block">
             <p style="align: center">
                 Уверены что хотите расформировать выбранные отряды?
                 <button class="btn btn-default confirm-dissolution">Да</button>
             </p>
-
         </div>
     </li>
 </ul>

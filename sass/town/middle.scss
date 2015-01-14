@@ -148,7 +148,7 @@
                         display: inline;
                         font-size: 24px;
 
-                        .popup {
+                        .popover {
                             display: none;
                             position: fixed;
                             bottom: 210px;
@@ -175,6 +175,14 @@
                                 display: inline;
                                 width: 120px;
                             }
+                        }
+
+                        .popover.split-block {
+                            height: 72px;
+                        }
+
+                        .popover.dissolution-block {
+                            height: 90px;
                         }
                     }
 

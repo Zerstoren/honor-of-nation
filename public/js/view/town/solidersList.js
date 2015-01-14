@@ -1,12 +1,14 @@
 define('view/town/solidersList', [
     'view/elements/popup',
     'view/elements/tooltip',
+    'view/elements/popover',
 
     'model/dummy',
     'collection/army'
 ], function (
     ViewElementsPopup,
     ViewElementsTooltip,
+    ViewElementsPopover,
 
     ModelDummy,
     CollectionArmy
@@ -34,7 +36,7 @@ define('view/town/solidersList', [
             });
         },
 
-        render: function (holder, town) {
+        render: function (holder) {
             holder.append(this.$el);
 
             this.popupUnits = new ViewElementsPopup(
@@ -46,25 +48,27 @@ define('view/town/solidersList', [
                 }
             );
 
-            this.popupSplit = new ViewElementsPopup(
+            this.popupSplit = new ViewElementsPopover(
                 this.$el, {
-                    timeout: 0,
+                    timeout: 1,
                     liveTarget: 'li.split',
-                    clickable: true,
                     align: 'center',
-                    ignoreTop: true
+                    valign: 'top',
+                    namespace: 'manipulation'
                 }
             );
+            this.popupSplit.disable();
 
-            this.popupDissolution = new ViewElementsPopup(
+            this.popupDissolution = new ViewElementsPopover(
                 this.$el, {
-                    timeout: 0,
+                    timeout: 1,
                     liveTarget: 'li.dissolution',
-                    clickable: true,
                     align: 'center',
-                    ignoreTop: true
+                    valign: 'top',
+                    namespace: 'manipulation'
                 }
             );
+            this.popupDissolution.disable();
         },
 
         setArmy: function (armyCollection) {
@@ -129,6 +133,7 @@ define('view/town/solidersList', [
                         this.selectedArmy.at(0).get('count') > 1;
 
             this.get('icons').set('split', result);
+            this.popupSplit[result ? 'enable' : 'disable']();
             if (result) {
                 this.set('splitSize', this.selectedArmy.at(0).get('count'));
             }
@@ -208,7 +213,9 @@ define('view/town/solidersList', [
         },
 
         iconCheckDissolution: function () {
-            this.get('icons').set('dissolution', this.selectedArmy.length >= 1);
+            var result = this.selectedArmy.length >= 1;
+            this.get('icons').set('dissolution', result);
+            this.popupDissolution[result ? 'enable' : 'disable']();
         }
     });
 });
