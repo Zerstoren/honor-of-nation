@@ -119,7 +119,7 @@
                             .popup {
                                 display: none;
                                 position: fixed;
-                                bottom: 185px;
+                                bottom: 210px;
                                 z-index: 500;
                                 padding: 5px;
                                 width: 420px;
@@ -140,10 +140,47 @@
 
                 ul.actions {
                     li {
-                        font-size: 24px;
                         color: white;
-                        padding-right: 14px;
+                        margin-right: 7px;
+                        margin-left: 7px;
                         cursor: pointer;
+                        width: 24px;
+                        display: inline;
+                        font-size: 24px;
+
+                        .popup {
+                            display: none;
+                            position: fixed;
+                            bottom: 210px;
+                            z-index: 500;
+                            padding: 5px;
+                            width: 210px;
+                            border: 1px solid #333;
+                            border-radius: 5px;
+                            background: #eee;
+                            box-shadow: 1px 1px 4px #000;
+                            height: 72px;
+
+                            color: #000;
+                            font-size: 14px;
+
+                            text-align: center;
+
+                            span {
+                                position: relative;
+                                top: -9px;
+                            }
+
+                            .select-split {
+                                display: inline;
+                                width: 120px;
+                            }
+                        }
+                    }
+
+                    li.disabled {
+                        color: gray;
+                        cursor: default;
                     }
                 }
             }

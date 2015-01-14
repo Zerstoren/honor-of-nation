@@ -6,7 +6,7 @@ define('view/elements/popover', [], function () {
         PLACE_RIGHT: 'right',
         PLACE_BOTTOM: 'bottom',
 
-        initialize: function (targetElement, config) {
+        initialize: function (view, targetElement, config) {
             this.popover = null;
 
             if (!config) {
@@ -14,26 +14,53 @@ define('view/elements/popover', [], function () {
             }
 
             this.$config = {
-                content: config.content || '',
+                content: config.content || '.popover',
                 placement: config.placement || 'top',
                 container: 'body',
-//                template: config.template || '',
                 title: config.title || ''
             };
 
-            this.element = targetElement;
-        },
-
-        show: function () {
+            this.targetElement = targetElement;
+            this.element = view.find(targetElement);
             var options = {
                 html: true,
-                content: this.$config.content,
-                placement: this.$config.placement,
+                content: this.element.find(this.$config.content).children('*').clone(),
                 template: this.$config.template,
+                placement: this.$config.placement,
                 title: this.$config.title
             };
 
             this.element.popover(options);
+
+            this.onHide = function (e) {
+                var target = jQuery(e.target);
+
+                if (target.hasClass('popover')) {
+                    return;
+                }
+
+                if (target.parents('.popover').length) {
+                    return;
+                }
+
+                if (target.is(this.targetElement) && target.find('.popover').length) {
+                    return;
+                }
+
+                this.hide();
+            }.bind(this);
+
+            this.addEventListener();
+        },
+
+        addEventListener: function () {
+            jQuery(document).on('click', this.onHide);
+        },
+
+        showPopover: null,
+        onHide: null,
+
+        show: function () {
             this.element.popover('show');
         },
 
@@ -42,6 +69,7 @@ define('view/elements/popover', [], function () {
         },
 
         destroy: function () {
+            jQuery(document).off('click', this.onHide);
             this.element.popover('destroy');
         }
     });

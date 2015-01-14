@@ -11,6 +11,7 @@ define('view/elements/popup', [], function () {
             }
 
             this.$config = {
+                clickable: config.clickable || false,
                 liveTarget: config.liveTarget || false,
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
@@ -30,33 +31,32 @@ define('view/elements/popup', [], function () {
         addEventListener: function () {
             var self = this;
 
-            if (this.$config.liveTarget) {
-                this.$fnCallback.mouseenter = function(e) {
-                    self.startShowTimeout(e);
-                };
+            this.$fnCallback.mouseenter = function(e) {
+                self.startShowTimeout(e);
+            };
 
-                this.$fnCallback.mouseleave = function(e) {
-                    self.stopShowTimeout(e);
-                };
+            this.$fnCallback.mouseleave = function(e) {
+                self.stopShowTimeout(e);
+            };
 
+            if (this.$config.clickable) {
+                this.element.on('click', this.$config.liveTarget, this.$fnCallback.mouseenter);
+//                jQuery(document).on('click', this.$fnCallback.mouseleave);
+
+            } else if (this.$config.liveTarget) {
                 this.element.on('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
                 this.element.on('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
             } else {
-                this.$fnCallback.mouseenter = function(e) {
-                    self.startShowTimeout(e);
-                };
-
-                this.$fnCallback.mouseleave = function(e) {
-                    self.stopShowTimeout(e);
-                };
-
                 this.element.on('mouseenter', this.$fnCallback.mouseenter);
                 this.element.on('mouseleave', this.$fnCallback.mouseleave);
             }
         },
 
         removeEventListener: function () {
-            if (this.$config.liveTarget) {
+            if (this.$config.clickable) {
+                this.element.off('click', this.$config.liveTarget, this.$fnCallback.mouseenter);
+                jQuery(document).off('click', this.$fnCallback.mouseleave);
+            } else if (this.$config.liveTarget) {
                 this.element.off('mouseenter', this.$config.liveTarget, this.$fnCallback.mouseenter);
                 this.element.off('mouseleave', this.$config.liveTarget, this.$fnCallback.mouseleave);
             } else {
@@ -142,7 +142,6 @@ define('view/elements/popup', [], function () {
 
         stopShowTimeout: function (e) {
             var self = this;
-
             if(showTimer !== -1) {
                 clearTimeout(showTimer);
                 showTimer = -1;

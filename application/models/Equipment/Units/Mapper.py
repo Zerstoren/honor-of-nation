@@ -17,7 +17,7 @@ class Equipment_Units_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
             commonFilter.rm('remove')
 
         result = self._select(
-            Common.Common_Filter().setId(queryId),
+            commonFilter,
             Common.Common_Limit().setOne()
         )
 

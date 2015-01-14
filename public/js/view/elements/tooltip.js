@@ -1,10 +1,16 @@
 define('view/elements/tooltip', [], function () {
-    var Tooltip = function (view, holder) {
+    var Tooltip = function (view, holder, options) {
         this.__tooltip = null;
         this.uniqueId = _.uniqueId().toString();
 
+        if (!options) {
+            options = {};
+        }
+
         this.view = view;
         this.holder = holder;
+        this.placement = options.placement || 'right';
+        this.container = options.container || 'body';
 
         this.view['__onShowHint-' + this.uniqueId] = this.onShowHint.bind(this);
         this.view['__onHideHint-' + this.uniqueId] = this.onHideHint.bind(this);
@@ -28,8 +34,8 @@ define('view/elements/tooltip', [], function () {
         this.__tooltip.tooltip({
             trigger: '',
             title: this.__tooltip.data('hint'),
-            placement: 'right',
-            container: 'body'
+            placement: this.placement,
+            container: this.container
         });
 
         this.__tooltip.tooltip('show');

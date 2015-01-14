@@ -10,9 +10,10 @@ class Decorate():
         unitService = Service_Equipment_Units().decorate(Service_Equipment_Units.JSONPACK)
 
         return {
+            '_id': str(domain.getId()),
             'user': str(domain.getUser().getId()),
             'unit': str(domain.getUnit().getId()),
-            'unit_data': unitService.get(domain.getUnit().getId()),
+            'unit_data': unitService.getForce(domain.getUnit().getId()),
             'commander': str(domain.getCommander().getId()) if domain.getCommander() else None,
             'count': domain.getCount(),
             'location': int(domain.getMap().getId())

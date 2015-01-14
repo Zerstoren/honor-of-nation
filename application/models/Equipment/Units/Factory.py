@@ -8,7 +8,7 @@ from . import Mapper
 
 class Equipment_Units_Factory_Main(models.Abstract.Factory.Abstract_Factory):
     def get(self, _id, force=False):
-        result = Mapper.Equipment_Units_Mapper.getById(_id, force)
+        result = Mapper.Equipment_Units_Mapper.getById(_id, force=force)
         domain = Domain.Equipment_Units_Domain()
         domain.setOptions(result)
 
