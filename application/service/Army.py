@@ -17,6 +17,9 @@ class Service_Army(AbstractService.Service_Abstract):
         return Army_Factory.get(_id)
 
     def load(self, armyUser, position, config=None, user=None):
+        if config is None:
+            config = dict()
+
         detail = config['detail'] if 'detail' in config else False
         inBuild = config['inBuild'] if 'inBuild' in config else None
 
