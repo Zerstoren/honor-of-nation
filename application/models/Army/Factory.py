@@ -21,8 +21,8 @@ class Army_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return armyCollection
 
-    def getByPosition(self, user, position):
-        result = Mapper.Army_Mapper.getByPosition(user, position)
+    def getByPosition(self, user, position, detail=False, inBuild=None):
+        result = Mapper.Army_Mapper.getByPosition(user, position, detail=detail, inBuild=inBuild)
         armyCollection = Army_Collection()
         armyCollection.setOptions(result)
 

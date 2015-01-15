@@ -16,9 +16,12 @@ define('view/town/solidersList', [
     return AbstractView.extend({
         events: {
             'click ul.units li': 'onUnitClick',
-            'click .confirm-dissolution': 'onUnitDissolution',
-            'click .confirm-split': 'onUnitSplit',
             'click li.merge': 'onUnitMerge',
+            'click .confirm-split': 'onUnitSplit',
+            'click li.move_out': 'onMoveOut',
+            'click li.add_soliders_to_general': 'onAddSolidersToGeneral',
+            'click li.add_suite': 'onAddSuite',
+            'click .confirm-dissolution': 'onUnitDissolution',
 
             'mousemove .select-split': 'onChangeSplitSize',
             'change .select-split': 'onChangeSplitSize'
@@ -123,6 +126,24 @@ define('view/town/solidersList', [
             this.updateIcons();
         },
 
+        onMoveOut: function () {
+            this.trigger('move_out', this.getSelectedUnitsIds()[0]);
+            this.selectedArmy.clean();
+            this.updateIcons();
+        },
+
+        onAddSolidersToGeneral: function () {
+            this.trigger('add_soliders_to_general', this.selectedArmy);
+            this.selectedArmy.clean();
+            this.updateIcons();
+        },
+
+        onAddSuite: function () {
+            this.trigger('add_suite', this.selectedArmy);
+            this.selectedArmy.clean();
+            this.updateIcons();
+        },
+
         onUnitDissolution: function () {
             this.trigger('dissolution', this.getSelectedUnitsIds()[0]);
             this.selectedArmy.clean();
@@ -193,14 +214,7 @@ define('view/town/solidersList', [
         },
 
         iconCheckMoveOut: function () {
-            var result,
-                armyType = [];
-
-            this.selectedArmy.each(function (domain) {
-                armyType.push(domain.get('unit_data').type);
-            });
-
-            result = _.union(armyType).length === 1 && armyType[0] === 'general';
+            var result = this.selectedArmy.length == 1 && this.selectedArmy.at(0).get('unit_data').type === 'general';
             this.get('icons').set('move_out', result);
         },
 
@@ -255,7 +269,8 @@ define('view/town/solidersList', [
 
             if (
                 solider.get('unit_data').type !== 'solider' ||
-                general.get('unit_data').type !== 'general'
+                general.get('unit_data').type !== 'general' ||
+                general.get('suite')
             ) {
                 this.get('icons').set('add_suite', false);
                 return;

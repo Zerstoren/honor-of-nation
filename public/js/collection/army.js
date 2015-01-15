@@ -23,7 +23,9 @@ define('collection/army', [
             this._user = user;
         },
 
-        load: function (fn) {
+        load: function (fn, details, inBuild) {
+            var config;
+
             if (!this.getTown()) {
                 throw new Error("For collection town not set");
             }
@@ -32,11 +34,19 @@ define('collection/army', [
                 throw new Error("For collection user not set");
             }
 
+            config = {};
+            config.details = !!details;
+
+            if (inBuild !== undefined) {
+                config.inBuild = inBuild;
+            }
+
             this.sync('load', {
                 data: {
                     'town': this.getTown().get('_id'),
                     'pos_id': this.getTown().get('pos_id'),
-                    'user': this.getUser().get('_id')
+                    'user': this.getUser().get('_id'),
+                    'config': config
                 },
                 success: function (data) {
                     fn(data);

@@ -5,6 +5,9 @@ MODE_NORMAL = 2
 MODE_FAST = 3
 MODE_VERY_FAST= 4
 
+BUILD_IN = True
+BUILD_OUT = False
+
 class Common_Set(models.Abstract.Common.Common_Set):
     pass
 

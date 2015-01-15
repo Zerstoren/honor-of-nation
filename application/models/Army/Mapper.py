@@ -5,13 +5,16 @@ from . import Common
 class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
     _table = 'army'
 
-    def getByPosition(self, user, position, detail=False):
+    def getByPosition(self, user, position, detail=False, inBuild=None):
         commonFilter = Common.Common_Filter()
         commonFilter.add('user', user.getId())
         commonFilter.add('location', position.getPosId())
 
-        if detail:
+        if detail is False:
             commonFilter.add('commander', None)
+
+        if inBuild is not None:
+            commonFilter.add('in_build', inBuild)
 
         return self._select(commonFilter)
 

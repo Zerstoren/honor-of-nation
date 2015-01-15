@@ -114,10 +114,12 @@ class MainController(_AbstractArmy):
 
 class CollectionController(_AbstractArmy):
     def load(self, transfer, data):
+        config = data['config'] if 'config' in data else None
         result = self._getParamsArmyService().load(
             data['user'],
             data['pos_id'],
-            transfer.getUser()
+            config=config,
+            user=transfer.getUser()
         )
 
         transfer.send('/collection/army/load', {

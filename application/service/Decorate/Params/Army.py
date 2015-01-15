@@ -16,11 +16,11 @@ class Decorate():
 
         return super().create(unit, town, count, user)
 
-    def load(self, armyUser, position, user=None):
+    def load(self, armyUser, position, config=None, user=None):
         armyUser = Service_User().decorate(Service_User.PARAMS).getUserDomain(armyUser)
         position = helpers.MapCoordinate.MapCoordinate(posId=int(position))
 
-        return super().load(armyUser, position, user)
+        return super().load(armyUser, position, config=config, user=user)
 
     def move(self, general, path, user=None):
         return super().move(general, path, user)

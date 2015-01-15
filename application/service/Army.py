@@ -16,8 +16,11 @@ class Service_Army(AbstractService.Service_Abstract):
     def get(self, _id, user=None):
         return Army_Factory.get(_id)
 
-    def load(self, armyUser, position, user=None):
-        return Army_Factory.getByPosition(armyUser, position)
+    def load(self, armyUser, position, config=None, user=None):
+        detail = config['detail'] if 'detail' in config else False
+        inBuild = config['inBuild'] if 'inBuild' in config else None
+
+        return Army_Factory.getByPosition(armyUser, position, detail=detail, inBuild=inBuild)
 
     def move(self, general, path, user=None):
         pass
@@ -128,7 +131,7 @@ class Service_Army(AbstractService.Service_Abstract):
         if armyDomain.getUnit().getType() == Common.TYPE_SOLIDER:
             raise exceptions.army.UnitNotPermission("Солдаты не могут самостоятельно выходить из строений")
 
-        if armyDomain.getInBuild() is not True:
+        if armyDomain.getInBuild() is False:
             raise exceptions.army.UnitNotInBuild("Юнит обязан находится в городе")
 
         armyDomain.setInBuild(False)

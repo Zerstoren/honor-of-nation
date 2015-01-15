@@ -27,6 +27,9 @@ define('service/town/solidersList', [
             this.mainView.on('dissolution', this.onDissolution, this);
             this.mainView.on('split', this.onSplit, this);
             this.mainView.on('merge', this.onMerge, this);
+            this.mainView.on('move_out', this.onMoveOut, this);
+            this.mainView.on('add_soliders_to_general', this.onAddSolidersToGeneral, this);
+            this.mainView.on('add_suite', this.onAddSuite, this);
         },
 
         render: function (holder, town) {
@@ -42,7 +45,7 @@ define('service/town/solidersList', [
 
                 this.collectionArmy.load(function () {
                     this.mainView.setArmy(this.collectionArmy);
-                }.bind(this));
+                }.bind(this), false, true);
             }.bind(this));
         },
 
@@ -56,6 +59,46 @@ define('service/town/solidersList', [
             gatewayArmy.split(id, size, function () {
                 this.update();
             }.bind(this));
+        },
+
+        onMoveOut: function (id) {
+            gatewayArmy.moveOut(id, function () {
+                this.update();
+            }.bind(this))
+        },
+
+        onAddSolidersToGeneral: function (selectedCollection) {
+            var soliders = [],
+                general = null;
+
+            selectedCollection.each(function (domain) {
+                if (domain.get('unit_data').type === 'general') {
+                    general = domain.get('_id');
+                } else {
+                    soliders.push(domain.get('_id'));
+                }
+            });
+
+            gatewayArmy.addSolidersToGeneral(soliders, general, function () {
+                this.update();
+            }.bind(this))
+        },
+
+        onAddSuite: function (selectedCollection) {
+            var solider = [],
+                general = null;
+
+            selectedCollection.each(function (domain) {
+                if (domain.get('unit_data').type === 'general') {
+                    general = domain.get('_id');
+                } else {
+                    solider = domain.get('_id');
+                }
+            });
+
+            gatewayArmy.addSuite(general, solider, function () {
+                this.update();
+            }.bind(this))
         },
 
         onDissolution: function (id) {
