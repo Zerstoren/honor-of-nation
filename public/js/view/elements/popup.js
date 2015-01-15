@@ -10,13 +10,13 @@ define('view/elements/popup', [], function () {
                 config = {};
             }
 
+            this.enabled = true;
             this.$config = {
                 namespace: config.namespace || 'default',
                 liveTarget: config.liveTarget || false,
                 target: config.target || '.popup',
                 timeout: config.timeout || 500,
                 ignoreTop: config.ignoreTop || false,
-                callback: config.popupCallback || false,
                 align: config.align || 'right', // left, center, right
                 valign: config.valign || 'default' // bottom, middle, top, default
             };
@@ -27,6 +27,17 @@ define('view/elements/popup', [], function () {
 
             this.element = triggerElement;
             this.addEventListener();
+        },
+
+        enable: function () {
+            this.enabled = true;
+            this.trigger('enable');
+        },
+
+        disable: function() {
+            this.enabled = false;
+            this.hideLayer();
+            this.trigger('disable');
         },
 
         destroy: function () {
@@ -116,6 +127,7 @@ define('view/elements/popup', [], function () {
             }
 
             this.popup.css(config);
+            this.trigger('show');
         },
 
         hideLayer: function() {
@@ -126,9 +138,14 @@ define('view/elements/popup', [], function () {
             showLayer[this.$config.namespace] = null;
             this.popup.css({display: 'none'});
             this.setPopup();
+            this.trigger('hide');
         },
 
         startShowTimeout: function (e) {
+            if (!this.enabled) {
+                return;
+            }
+
             var self = this;
 
             if (hideTimer[this.$config.namespace] !== -1 && showLayer[this.$config.namespace] !== null) {

@@ -13,9 +13,13 @@ define('view/town/solidersList', [
     ModelDummy,
     CollectionArmy
 ) {
-    return AbstractView.extend({
+    var baseView, CommanderManipulate;
+
+    baseView = AbstractView.extend({
         events: {
             'click ul.units li': 'onUnitClick',
+            'contextmenu ul.units li': 'onUnitDetails',
+
             'click li.merge': 'onUnitMerge',
             'click .confirm-split': 'onUnitSplit',
             'click li.move_out': 'onMoveOut',
@@ -37,9 +41,13 @@ define('view/town/solidersList', [
             rightSplitPosition: 1
         },
 
-
         initialize: function () {
             this.template = this.getTemplate('town/unitsList/list');
+            this.setPartials({
+                'unitPopupDetail': 'town/unitsList/unitPopupDetail',
+                'unitPopoverDetail': 'town/unitsList/unitPopoverDetail'
+            });
+
             this.initRactive();
             this.popupUnits = null;
             this.selectedArmy = new CollectionArmy();
@@ -61,7 +69,19 @@ define('view/town/solidersList', [
                 }
             );
 
-            this.popupSplit = new ViewElementsPopover(
+            this.popoverUnits = new ViewElementsPopover(
+                this.$el, {
+                    timeout: 1,
+                    liveTarget: 'ul.units li',
+                    align: 'center',
+                    valign: 'top',
+                    manual: true,
+                    namespace: 'manipulation'
+                }
+            );
+            this.popoverUnits.on('hide', this.onUnitDetailsHide, this);
+
+            this.popoverSplit = new ViewElementsPopover(
                 this.$el, {
                     timeout: 1,
                     liveTarget: 'li.split',
@@ -70,9 +90,9 @@ define('view/town/solidersList', [
                     namespace: 'manipulation'
                 }
             );
-            this.popupSplit.disable();
+            this.popoverSplit.disable();
 
-            this.popupDissolution = new ViewElementsPopover(
+            this.popoverDissolution = new ViewElementsPopover(
                 this.$el, {
                     timeout: 1,
                     liveTarget: 'li.dissolution',
@@ -81,7 +101,7 @@ define('view/town/solidersList', [
                     namespace: 'manipulation'
                 }
             );
-            this.popupDissolution.disable();
+            this.popoverDissolution.disable();
         },
 
         setArmy: function (armyCollection) {
@@ -90,6 +110,10 @@ define('view/town/solidersList', [
         },
 
         onUnitClick: function (e) {
+            if (!this.popupUnits.enabled) {
+                return;
+            }
+
             var id, target = jQuery(e.target);
 
             if (!jQuery.nodeName(target, 'li')) {
@@ -113,6 +137,19 @@ define('view/town/solidersList', [
             this.updateIcons();
         },
 
+        onUnitDetails: function (e) {
+            this.popoverUnits.showLayer(e);
+            this.popupUnits.disable();
+
+            return false;
+        },
+
+        onUnitDetailsHide: function (e) {
+            setTimeout(function () {
+                this.popupUnits.enable();
+            }.bind(this), 0);
+        },
+
         onUnitMerge: function () {
             this.trigger('merge', this.getSelectedUnitsIds());
             this.selectedArmy.clean();
@@ -122,7 +159,7 @@ define('view/town/solidersList', [
         onUnitSplit: function () {
             this.trigger('split', this.getSelectedUnitsIds()[0], this.get('rightSplitPosition'));
             this.selectedArmy.clean();
-            this.popupSplit.disable();
+            this.popoverSplit.disable();
             this.updateIcons();
         },
 
@@ -147,7 +184,7 @@ define('view/town/solidersList', [
         onUnitDissolution: function () {
             this.trigger('dissolution', this.getSelectedUnitsIds()[0]);
             this.selectedArmy.clean();
-            this.popupDissolution.disable();
+            this.popoverDissolution.disable();
             this.updateIcons();
         },
 
@@ -205,7 +242,7 @@ define('view/town/solidersList', [
                         this.selectedArmy.at(0).get('count') > 1;
 
             this.get('icons').set('split', result);
-            this.popupSplit[result ? 'enable' : 'disable']();
+            this.popoverSplit[result ? 'enable' : 'disable']();
             if (result) {
                 this.set('splitSize', this.selectedArmy.at(0).get('count'));
                 this.set('rightSplitPosition', this.selectedArmy.at(0).get('count'));
@@ -283,7 +320,19 @@ define('view/town/solidersList', [
         iconCheckDissolution: function () {
             var result = this.selectedArmy.length == 1;
             this.get('icons').set('dissolution', result);
-            this.popupDissolution[result ? 'enable' : 'disable']();
+            this.popoverDissolution[result ? 'enable' : 'disable']();
         }
     });
+
+    CommanderManipulate = AbstractView.extend({
+        initialize: function () {
+
+        },
+
+        render: function () {
+
+        }
+    });
+
+    return baseView;
 });

@@ -50,7 +50,7 @@ define('libs/abstract/view', [
                 eventName += '.delegateEvents' + this.cid;
 
                 if (selector === 'global') {
-                  $(document).on(eventName, method);
+                    $(document).on(eventName, method);
                 }
             }
 

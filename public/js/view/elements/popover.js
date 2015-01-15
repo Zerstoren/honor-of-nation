@@ -15,12 +15,26 @@ define('view/elements/popover', [], function () {
                 timeout: config.timeout || 500,
                 ignoreTop: config.ignoreTop || false,
                 callback: config.popupCallback || false,
+                manual: config.manual || false,
                 align: config.align || 'right', // left, center, right
                 valign: config.valign || 'default' // bottom, middle, top, default
             };
 
             this.element = triggerElement;
-            this.addEventListener();
+
+            this.$fnCallback.click = this.showLayer.bind(this);
+            this.$fnCallback.hide = function (e) {
+                var target = jQuery(e.target);
+                if (target.is(this.$config.target) || target.parents(this.$config.target).length) {
+                    return;
+                }
+
+                this.hideLayer();
+            }.bind(this);
+
+            if (!this.$config.manual) {
+                this.addEventListener();
+            }
         },
 
         enable: function () {
@@ -37,16 +51,6 @@ define('view/elements/popover', [], function () {
         },
 
         addEventListener: function () {
-            this.$fnCallback.click = this.showLayer.bind(this);
-            this.$fnCallback.hide = function (e) {
-                var target = jQuery(e.target);
-                if (target.hasClass(this.$config.target) || target.parents(this.$config.target).length) {
-                    return;
-                }
-
-                this.hideLayer();
-            }.bind(this);
-
             this.element.on('click', this.$config.liveTarget, this.$fnCallback.click);
         },
 
@@ -72,11 +76,17 @@ define('view/elements/popover', [], function () {
 
             var config, left, top, popupBR, targetBR;
             this.popup.css({display: 'block'});
+            this.recalculatePosition();
+            this.trigger('show');
+        },
 
-            popupBR = this.popup[0].getBoundingClientRect();
-            targetBR = this.target[0].getBoundingClientRect();
+        recalculatePosition: function () {
+            var config;
+            var popupBR = this.popup[0].getBoundingClientRect();
+            var targetBR = this.target[0].getBoundingClientRect();
 
-            top = targetBR.top;
+            var top = targetBR.top;
+            var left;
 
             if (this.$config.valign === 'top') {
                 top = targetBR.top - popupBR.height;
@@ -128,6 +138,7 @@ define('view/elements/popover', [], function () {
 
             this.popup.css({display: 'none'});
             this.setPopup();
+            this.trigger('hide');
         },
 
         setPopup: function (e) {
