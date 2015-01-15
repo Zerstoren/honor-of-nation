@@ -4,14 +4,18 @@ define('service/town/solidersList', [
 
     'view/town/solidersList',
 
-    'collection/army'
+    'collection/army',
+
+    'gateway/army'
 ], function (
     serviceStandaloneUser,
     serviceStandaloneMessages,
 
     VeiwTownSoliderList,
 
-    CollectionArmy
+    CollectionArmy,
+
+    gatewayArmy
 ) {
     return AbstractService.extend({
         initialize: function () {
@@ -19,6 +23,10 @@ define('service/town/solidersList', [
             this.collectionArmy = new CollectionArmy();
 
             serviceStandaloneMessages.on('unitsUpdate', this.update, this);
+
+            this.mainView.on('dissolution', this.onDissolution, this);
+            this.mainView.on('split', this.onSplit, this);
+            this.mainView.on('merge', this.onMerge, this);
         },
 
         render: function (holder, town) {
@@ -35,6 +43,24 @@ define('service/town/solidersList', [
                 this.collectionArmy.load(function () {
                     this.mainView.setArmy(this.collectionArmy);
                 }.bind(this));
+            }.bind(this));
+        },
+
+        onMerge: function (army) {
+            gatewayArmy.merge(army, function () {
+                this.update();
+            }.bind(this));
+        },
+
+        onSplit: function (id, size) {
+            gatewayArmy.split(id, size, function () {
+                this.update();
+            }.bind(this));
+        },
+
+        onDissolution: function (id) {
+            gatewayArmy.dissolution(id, function () {
+                this.update();
             }.bind(this));
         }
     });

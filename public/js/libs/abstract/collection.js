@@ -45,6 +45,10 @@ define('libs/abstract/collection', [
             }
         },
 
+        clean: function () {
+            this.remove(this.models);
+        },
+
         sync: function (method, options) {
             var url = '/collection/' + this.collection_url + '/' + method,
                 data = options.data || {};

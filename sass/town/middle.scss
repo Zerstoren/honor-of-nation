@@ -149,6 +149,7 @@
                         font-size: 24px;
 
                         .popover {
+                            cursor: default;
                             display: none;
                             position: fixed;
                             bottom: 210px;
@@ -166,9 +167,11 @@
 
                             text-align: center;
 
-                            span {
+                            .split-help-number {
                                 position: relative;
                                 top: -9px;
+                                display: inline-block;
+                                width: 25px;
                             }
 
                             .select-split {

@@ -18,7 +18,7 @@ define('view/elements/popup', [], function () {
                 ignoreTop: config.ignoreTop || false,
                 callback: config.popupCallback || false,
                 align: config.align || 'right', // left, center, right
-                valign: config.valign || 'bottom' // bottom, middle, top
+                valign: config.valign || 'default' // bottom, middle, top, default
             };
 
             hideTimer[this.$config.namespace] = -1;

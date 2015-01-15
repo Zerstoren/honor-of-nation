@@ -2,8 +2,10 @@
     <li class="glyphicon glyphicon-resize-small merge {{#!icons.merge}}disabled{{/}}" data-hint="Объеденить юнитов"></li>
     <li class="glyphicon glyphicon-resize-full split {{#!icons.split}}disabled{{/}}" data-hint="Разделить юнита">
         <div class="popover split-block">
-            <span>1</span> <input type="range" min="1" max="{{splitSize}}" value="1" class="select-split"> <span>30</span>
-            <button class="btn btn-default">Разделить</button>
+            <span class="split-help-number">{{leftSplitPosition}}</span>
+            <input type="range" min="1" max="{{splitSize - 1}}" value="{{splitSelectedSize}}" class="select-split">
+            <span class="split-help-number">{{rightSplitPosition}}</span>
+            <button class="btn btn-default confirm-split">Разделить</button>
         </div>
     </li>
     <li class="glyphicon glyphicon-arrow-down move_out {{#!icons.move_out}}disabled{{/}}" data-hint="Покинуть город"></li>

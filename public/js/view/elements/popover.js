@@ -16,7 +16,7 @@ define('view/elements/popover', [], function () {
                 ignoreTop: config.ignoreTop || false,
                 callback: config.popupCallback || false,
                 align: config.align || 'right', // left, center, right
-                valign: config.valign || 'bottom' // bottom, middle, top
+                valign: config.valign || 'default' // bottom, middle, top, default
             };
 
             this.element = triggerElement;
@@ -29,6 +29,7 @@ define('view/elements/popover', [], function () {
 
         disable: function() {
             this.enabled = false;
+            this.hideLayer();
         },
 
         destroy: function () {
@@ -39,7 +40,6 @@ define('view/elements/popover', [], function () {
             this.$fnCallback.click = this.showLayer.bind(this);
             this.$fnCallback.hide = function (e) {
                 var target = jQuery(e.target);
-
                 if (target.hasClass(this.$config.target) || target.parents(this.$config.target).length) {
                     return;
                 }
@@ -60,7 +60,7 @@ define('view/elements/popover', [], function () {
             }
 
             if (this.popup) {
-                this.hideLayer();
+                this.$fnCallback.hide(e);
                 return;
             }
 
@@ -121,7 +121,6 @@ define('view/elements/popover', [], function () {
 
         hideLayer: function() {
             this.document.unbind('click.popover');
-            console.log("Unbind");
 
             if (!this.popup) {
                 return;

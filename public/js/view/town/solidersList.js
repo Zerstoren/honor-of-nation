@@ -15,13 +15,23 @@ define('view/town/solidersList', [
 ) {
     return AbstractView.extend({
         events: {
-            'click ul.units li': 'onUnitClick'
+            'click ul.units li': 'onUnitClick',
+            'click .confirm-dissolution': 'onUnitDissolution',
+            'click .confirm-split': 'onUnitSplit',
+            'click li.merge': 'onUnitMerge',
+
+            'mousemove .select-split': 'onChangeSplitSize',
+            'change .select-split': 'onChangeSplitSize'
         },
 
         data: {
             army: null,
             icons: null,
-            splitSize: 0
+
+            splitSize: 0,
+            splitSelectedSize: 1,
+            leftSplitPosition: 1,
+            rightSplitPosition: 1
         },
 
 
@@ -100,6 +110,47 @@ define('view/town/solidersList', [
             this.updateIcons();
         },
 
+        onUnitMerge: function () {
+            this.trigger('merge', this.getSelectedUnitsIds());
+            this.selectedArmy.clean();
+            this.updateIcons();
+        },
+
+        onUnitSplit: function () {
+            this.trigger('split', this.getSelectedUnitsIds()[0], this.get('rightSplitPosition'));
+            this.selectedArmy.clean();
+            this.popupSplit.disable();
+            this.updateIcons();
+        },
+
+        onUnitDissolution: function () {
+            this.trigger('dissolution', this.getSelectedUnitsIds()[0]);
+            this.selectedArmy.clean();
+            this.popupDissolution.disable();
+            this.updateIcons();
+        },
+
+        onChangeSplitSize: function (e) {
+            if (e && e.type === 'mousemove' && e.which !== 1) {
+                return;
+            }
+
+            var max = this.get('splitSize'),
+                value = this.get('splitSelectedSize');
+
+            this.set('leftSplitPosition', max - value);
+            this.set('rightSplitPosition', value);
+        },
+
+        getSelectedUnitsIds: function () {
+            var result = [];
+            this.selectedArmy.each(function (domain) {
+                result.push(domain.get('_id'));
+            });
+
+            return result;
+        },
+
         updateIcons: function () {
             this.iconCheckMerge();
             this.iconCheckSplit();
@@ -136,6 +187,8 @@ define('view/town/solidersList', [
             this.popupSplit[result ? 'enable' : 'disable']();
             if (result) {
                 this.set('splitSize', this.selectedArmy.at(0).get('count'));
+                this.set('rightSplitPosition', this.selectedArmy.at(0).get('count'));
+                this.onChangeSplitSize();
             }
         },
 
@@ -213,7 +266,7 @@ define('view/town/solidersList', [
         },
 
         iconCheckDissolution: function () {
-            var result = this.selectedArmy.length >= 1;
+            var result = this.selectedArmy.length == 1;
             this.get('icons').set('dissolution', result);
             this.popupDissolution[result ? 'enable' : 'disable']();
         }
