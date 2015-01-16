@@ -1,0 +1,24 @@
+ul {
+    li, commander {
+        width: 64px;
+        height: 64px;
+
+        .popup {
+            display: none;
+        }
+    }
+}
+
+img {
+    width: 64px;
+}
+
+
+.base-commander {
+    @include dynamic-left-floating(120px);
+    height: 128px;
+
+    .items .wrap-buffer .buffer {
+
+    }
+}

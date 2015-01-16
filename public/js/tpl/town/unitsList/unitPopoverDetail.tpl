@@ -1,38 +1,44 @@
 <div class="popover">
 
-    <div class="row">
-        <div class="commander col-xs-3">
-            <h3>Командир</h3>
-            <img src="test.png" />
-            <div class="popup">Test</div>
-        </div>
+    <div class="base-commander">
+        <div class="items dynamic-left-floating">
+            <div class="left-side commander">
+                <h3>Командир</h3>
+                <img src="test.png" />
+                <div class="popup">Test</div>
+            </div>
 
-        <div class="col-xs-9 commander vscrolling">
-            <h3>Буффер</h3>
-            <ul>
-                <li>
-                    <img src="test.png" />
-                    <div class="popup">Test</div>
-                </li>
-                <li>
-                    <img src="test.png" />
-                    <div class="popup">Test</div>
-                </li>
-                <li>
-                    <img src="test.png" />
-                    <div class="popup">Test</div>
-                </li>
-            </ul>
+            <div class="right-side wrap-buffer">
+                <div class="buffer vscrolling">
+                    <h3>Буффер</h3>
+                    <ul>
+                        <li>
+                            <img src="test.png" />
+                            <div class="popup">Test</div>
+                        </li>
+                        <li>
+                            <img src="test.png" />
+                            <div class="popup">Test</div>
+                        </li>
+                        <li>
+                            <img src="test.png" />
+                            <div class="popup">Test</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="subordinates vscrolling">
-        <div class="suite">
+    <br />
+
+    <div class="subordinates vscrolling dynamic-left-floating">
+        <div class="suite left-side">
             <img src="test.png" />
             <div class="popup">Test</div>
         </div>
 
-        <div class="units">
+        <div class="units right-side">
             <ul>
                 <li>
                     <img src="test.png" />

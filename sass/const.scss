@@ -31,3 +31,19 @@ $texture-land: '/img/texture/land/';
 @mixin texture-land($name) {
     background-image: url('/img/texture/land/land-' + $name + '.png');
 }
+
+@mixin dynamic-left-floating($leftWidth)  {
+    .left-side {
+        position: absolute;
+        width: $leftWidth;
+    }
+
+    .right-side {
+        position: absolute;
+        width: 100%;
+    }
+
+    .left-side + .right-side {
+        padding-left: $leftWidth;
+    }
+}

@@ -141,7 +141,7 @@ define('view/town/solidersList', [
             this.popoverUnits.showLayer(e);
             this.popupUnits.disable();
 
-            return false;
+            //return false;
         },
 
         onUnitDetailsHide: function (e) {
