@@ -15,10 +15,19 @@ img {
 
 
 .base-commander {
-    @include dynamic-left-floating(120px);
+    @include dynamic-left-floating(140px);
     height: 128px;
 
     .items .wrap-buffer .buffer {
 
     }
+}
+
+.base-subordinates {
+    @include dynamic-left-floating(100px);
+    height: 128px;
+}
+
+.base-soliders {
+    @include dynamic-left-floating(100px);
 }
