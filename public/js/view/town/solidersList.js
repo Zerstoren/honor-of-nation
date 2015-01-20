@@ -2,6 +2,7 @@ define('view/town/solidersList', [
     'view/elements/popup',
     'view/elements/tooltip',
     'view/elements/popover',
+    'view/elements/drag',
 
     'model/dummy',
     'collection/army'
@@ -9,6 +10,7 @@ define('view/town/solidersList', [
     ViewElementsPopup,
     ViewElementsTooltip,
     ViewElementsPopover,
+    ViewElementsDrag,
 
     ModelDummy,
     CollectionArmy
@@ -44,8 +46,8 @@ define('view/town/solidersList', [
         initialize: function () {
             this.template = this.getTemplate('town/unitsList/list');
             this.setPartials({
-                'unitPopupDetail': 'town/unitsList/unitPopupDetail',
-                'unitPopoverDetail': 'town/unitsList/unitPopoverDetail'
+                unitPopupDetail: 'town/unitsList/unitPopupDetail'
+                //'unitPopoverDetail': 'town/unitsList/unitPopoverDetail'
             });
 
             this.initRactive();
@@ -102,6 +104,17 @@ define('view/town/solidersList', [
                 }
             );
             this.popoverDissolution.disable();
+
+            /** FOR DEBUG **/
+            setTimeout(function () {
+                this.viewManipulate = new CommanderManipulate();
+                this.viewManipulate.render(jQuery('li[data-id="54b4f159608fb3278d67f029"]').find('.popover'), '54b4f159608fb3278d67f029');
+
+                this.popoverUnits.showLayer({
+                    currentTarget: jQuery('li[data-id="54b4f159608fb3278d67f029"]')
+                });
+                this.popupUnits.disable();
+            }.bind(this), 2000);
         },
 
         setArmy: function (armyCollection) {
@@ -138,9 +151,22 @@ define('view/town/solidersList', [
         },
 
         onUnitDetails: function (e) {
+            if (this.viewManipulate) {
+                return;
+            }
+
+            var id, target = jQuery(e.target);
+
+            target = target.is('.unit-item') ? target : target.parents('.unit-item');
+            id = target.attr('data-id');
+
+            this.viewManipulate = new CommanderManipulate();
+            this.viewManipulate.render(target.find('.popover'), id);
+
             this.popoverUnits.showLayer(e);
             this.popupUnits.disable();
 
+            //e.stopPropagation();
             //return false;
         },
 
@@ -148,6 +174,9 @@ define('view/town/solidersList', [
             setTimeout(function () {
                 this.popupUnits.enable();
             }.bind(this), 0);
+
+            this.viewManipulate.unRender();
+            this.viewManipulate = null;
         },
 
         onUnitMerge: function () {
@@ -325,12 +354,46 @@ define('view/town/solidersList', [
     });
 
     CommanderManipulate = AbstractView.extend({
-        initialize: function () {
+        events: {
 
         },
 
-        render: function () {
+        data : {
+            buffer: [],
+            commander: null,
+            commander_suite: null,
+            commander_untis: [],
+            show_general: false,
+            general_suite: null,
+            general_units: null
+        },
 
+        initialize: function () {
+            this.template = this.getTemplate('town/unitsList/unitPopoverDetail');
+        },
+
+        render: function (holder, id) {
+            this.$el.append(this.template);
+            holder.append(this.$el);
+
+            this.fromGeneralToBufferDrag = new ViewElementsDrag({
+                section: this.$el.find('.general-units ul'),
+                target: 'li.general-item',
+                destination: this.$el.find('.buffer'),
+                handler: this.fromGeneralToBufferHandler.bind(this)
+            });
+        },
+
+        unRender: function () {
+            this.undelegateEvents();
+            this.$el.empty();
+
+            this.fromGeneralToBufferDrag.remove();
+            delete this.fromGeneralToBufferDrag;
+        },
+
+        fromGeneralToBufferHandler: function () {
+            debugger;
         }
     });
 

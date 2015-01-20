@@ -24,10 +24,13 @@
 <div class="unitsWrap vscrolling">
     <ul class="units">
         {{#army}}
-        <li data-id="{{this._id}}">
+        <li data-id="{{this._id}}" class="unit-item">
             <img src="test.png">
             {{>unitPopupDetail}}
-            {{>unitPopoverDetail}}
+
+            <div class="popover">
+                {{>unitPopoverDetail}}
+            </div>
         </li>
         {{/army}}
     </ul>

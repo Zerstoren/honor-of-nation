@@ -101,6 +101,12 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
         return new Socket(window.socketHost || '127.0.0.1', window.port || localStorage.port || 10585);
     });
 
+    if (window.env === 'production') {
+        jQuery(document).contextmenu(function (e) {
+            e.stopPropagation();
+            return false;
+        });
+    }
 
     requirejs([
         'libs/abstract/collection',

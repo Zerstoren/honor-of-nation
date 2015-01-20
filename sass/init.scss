@@ -159,6 +159,13 @@ pre {
     cursor: pointer;
 }
 
+.draggable {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+}
+
 @import "block/init";
 @import "elements/init";
 @import "user/init";
