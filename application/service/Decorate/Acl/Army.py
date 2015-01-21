@@ -10,6 +10,10 @@ class Decorate():
         self._checkAccess(armyUser, user)
         return super().load(armyUser, position, config=config, user=user)
 
+    def loadDetail(self, armyUser, _id, user=None):
+        self._checkAccess(armyUser, user)
+        return super().loadDetail(armyUser, _id, user)
+
     def move(self, general, path, user=None):
         pass
 

@@ -22,12 +22,13 @@ class Decorate():
 
         return super().load(armyUser, position, config=config, user=user)
 
-    def loadDetail(self, armyUser, _id):
+    def loadDetail(self, armyUser, _id, user=None):
         armyUser = Service_User().decorate(Service_User.PARAMS).getUserDomain(armyUser)
 
         return super().loadDetail(
             armyUser,
-            objectId(_id)
+            objectId(_id),
+            user
         )
 
     def move(self, general, path, user=None):

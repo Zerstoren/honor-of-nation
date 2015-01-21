@@ -1,6 +1,5 @@
 from service.Equipment.Units import Service_Equipment_Units
 
-
 class Decorate():
     def _pack(self, domain):
         """
@@ -29,6 +28,21 @@ class Decorate():
 
         return result
 
-    def loadDetail(self,armyUser, _id):
-        result = super().loadDetail(armyUser, _id)
-        return result
+    def loadDetail(self, armyUser, _id, user=None):
+        def deepPack(block):
+            current = self._pack(block['current'])
+            suite = self._pack(block['suite']) if block['suite'] else None
+            sub_army = []
+
+            if block['sub_army']:
+                for domain in block['sub_army']:
+                    sub_army.append(deepPack(domain))
+
+            return {
+                'current': current,
+                'suite': suite,
+                'sub_army': sub_army
+            }
+
+        result = super().loadDetail(armyUser, _id, user)
+        return deepPack(result)

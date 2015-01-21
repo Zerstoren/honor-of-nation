@@ -25,14 +25,25 @@ class Service_Army(AbstractService.Service_Abstract):
 
         return Army_Factory.getByPosition(armyUser, position, detail=detail, inBuild=inBuild)
 
-    def loadDetail(self, armyUser, _id):
-        commander = Army_Factory.get(_id)
+    def loadDetail(self, armyUser, _id, user=None):
+        def load(leader):
+            suite = leader.getSuite()
+            army = Army_Factory.getCollectionByGeneral(leader)
 
-        return {
-            'commander': commander,
-            'commander_suite': commander.getSuite(),
-            'commander_units': Army_Factory.getCollectionByGeneral(commander)
-        }
+            armyData = []
+
+            for domain in army:
+                if not suite or suite.getId() != domain.getId():
+                    armyData.append(load(domain))
+
+            return {
+                'current': leader,
+                'suite': suite,
+                'sub_army': armyData
+            }
+
+        commander = Army_Factory.get(_id)
+        return load(commander)
 
     def move(self, general, path, user=None):
         pass
@@ -234,7 +245,7 @@ class Service_Army(AbstractService.Service_Abstract):
 
     def _hasDeepGeneral(self, armyDomain):
         collection = Army_Factory.getSubGenerals(armyDomain)
-        return bool(collection.length)
+        return bool(len(collection))
 
     def _create(self, unit, town, count):
         domain = Army_Domain()

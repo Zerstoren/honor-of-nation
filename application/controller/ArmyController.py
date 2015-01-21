@@ -14,7 +14,8 @@ class MainController(_AbstractArmy):
     def detail(self, transfer, data):
         result = self._getParamsArmyService().loadDetail(
             data['user'],
-            data['_id']
+            data['_id'],
+            transfer.getUser()
         )
 
         result['done'] = True

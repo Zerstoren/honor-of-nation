@@ -244,6 +244,7 @@ class Backend_Controller_TownBuildsTest(
         self.assertEqual(builds.getMill(), 2)
         self.assertEqual(builds.getFarm(), 1)
 
+    @tests.rerun.retry()
     def testRemoveOneBuildFromQueue(self):
         buildsDomain = self.town.getBuilds()
 

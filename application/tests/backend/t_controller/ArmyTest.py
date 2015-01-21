@@ -268,7 +268,7 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
         self.unitGeneral = self.createEquipmentUnit(
             self.user,
             uType='general',
-            troopSize=500,
+            troopSize=50000,
             health=0,
             agility=0,
             absorption=0,
@@ -277,6 +277,51 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
             armor=self.armor,
             weapon=self.weapon
         )
+
+    def testLoadDetails(self):
+        commander = self.createArmy(self.town, self.unitGeneral)
+        commanderSuite = self.createArmy(self.town, self.unit)
+        general1 = self.createArmy(self.town, self.unitGeneral)
+        suiteGeneral1 = self.createArmy(self.town, self.unit)
+        soliders1General1 = self.createArmy(self.town, self.unit)
+        soliders2General1 = self.createArmy(self.town, self.unit)
+        general2 = self.createArmy(self.town, self.unitGeneral)
+        suiteGeneral2 = self.createArmy(self.town, self.unit)
+        soliders1General2 = self.createArmy(self.town, self.unit)
+        soliders2General2 = self.createArmy(self.town, self.unit)
+
+        armyService = self._getArmyService()
+        armyService.addSuite(commander, commanderSuite)
+        armyService.addSuite(general1, suiteGeneral1)
+        armyService.addSuite(general2, suiteGeneral2)
+
+        armyService.addSolidersToGeneral(general1, [soliders1General1, soliders2General1])
+        armyService.addSolidersToGeneral(general2, [soliders1General2, soliders2General2])
+        armyService.addSolidersToGeneral(commander, [general1, general2])
+
+        self._getArmyController().detail(self.transfer, {
+            'user': str(self.user.getId()),
+            '_id': str(commander.getId())
+        })
+
+        result = self.transfer.getLastMessage()['message']
+
+        self.assertEqual(result['current']['_id'], str(commander.getId()))
+        self.assertEqual(result['suite']['_id'], str(commanderSuite.getId()))
+
+        self.assertEqual(2, len(result['sub_army']))
+
+        dictGeneral1 = result['sub_army'][0]
+        self.assertEqual(dictGeneral1['current']['_id'], str(general1.getId()))
+        self.assertEqual(dictGeneral1['suite']['_id'], str(suiteGeneral1.getId()))
+        self.assertEqual(dictGeneral1['sub_army'][0]['current']['_id'], str(soliders1General1.getId()))
+        self.assertEqual(dictGeneral1['sub_army'][1]['current']['_id'], str(soliders2General1.getId()))
+
+        dictGeneral2 = result['sub_army'][1]
+        self.assertEqual(dictGeneral2['current']['_id'], str(general2.getId()))
+        self.assertEqual(dictGeneral2['suite']['_id'], str(suiteGeneral2.getId()))
+        self.assertEqual(dictGeneral2['sub_army'][0]['current']['_id'], str(soliders1General2.getId()))
+        self.assertEqual(dictGeneral2['sub_army'][1]['current']['_id'], str(soliders2General2.getId()))
 
     def testMoveInBuild(self):
         army = self.createArmy(self.town, self.unitGeneral)
