@@ -122,6 +122,12 @@ define('view/town/solidersList', [
             this.set('army', this.armyCollection);
         },
 
+        setDetailInfo: function (data) {
+            if (this.viewManipulate) {
+                this.viewManipulate.setData(data);
+            }
+        },
+
         onUnitClick: function (e) {
             if (!this.popupUnits.enabled) {
                 return;
@@ -161,7 +167,9 @@ define('view/town/solidersList', [
             id = target.attr('data-id');
 
             this.viewManipulate = new CommanderManipulate();
-            this.viewManipulate.render(target.find('.popover'), id);
+            this.viewManipulate.render(target.find('.popover'));
+            this.viewManipulate.wait();
+            this.trigger('load_details', id);
 
             this.popoverUnits.showLayer(e);
             this.popupUnits.disable();
@@ -372,16 +380,31 @@ define('view/town/solidersList', [
             this.template = this.getTemplate('town/unitsList/unitPopoverDetail');
         },
 
-        render: function (holder, id) {
+        render: function (holder) {
             this.$el.append(this.template);
             holder.append(this.$el);
 
             this.fromGeneralToBufferDrag = new ViewElementsDrag({
                 section: this.$el.find('.general-units ul'),
                 target: 'li.general-item',
-                destination: this.$el.find('.buffer'),
+                destination: this.$el.find('.buffer ul'),
                 handler: this.fromGeneralToBufferHandler.bind(this)
             });
+
+            this.fromBufferToGeneralDrag = new ViewElementsDrag({
+                section: this.$el.find('.buffer ul'),
+                target: 'li.buffer-item',
+                destination: this.$el.find('.general-units ul'),
+                handler: this.fromGeneralToBufferHandler.bind(this)
+            });
+        },
+
+        wait: function () {
+
+        },
+
+        setData: function (data) {
+
         },
 
         unRender: function () {
@@ -392,8 +415,8 @@ define('view/town/solidersList', [
             delete this.fromGeneralToBufferDrag;
         },
 
-        fromGeneralToBufferHandler: function () {
-            debugger;
+        fromGeneralToBufferHandler: function (target) {
+
         }
     });
 

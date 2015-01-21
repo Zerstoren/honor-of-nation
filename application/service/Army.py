@@ -25,6 +25,15 @@ class Service_Army(AbstractService.Service_Abstract):
 
         return Army_Factory.getByPosition(armyUser, position, detail=detail, inBuild=inBuild)
 
+    def loadDetail(self, armyUser, _id):
+        commander = Army_Factory.get(_id)
+
+        return {
+            'commander': commander,
+            'commander_suite': commander.getSuite(),
+            'commander_units': Army_Factory.getCollectionByGeneral(commander)
+        }
+
     def move(self, general, path, user=None):
         pass
 

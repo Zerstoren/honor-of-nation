@@ -10,15 +10,15 @@
             <div class="buffer vscrolling">
                 <h3>Буффер</h3>
                 <ul>
-                    <li>
+                    <li class="buffer-item">
                         <img src="test.png" />
                         <div class="popup">Test</div>
                     </li>
-                    <li>
+                    <li class="buffer-item">
                         <img src="test.png" />
                         <div class="popup">Test</div>
                     </li>
-                    <li>
+                    <li class="buffer-item">
                         <img src="test.png" />
                         <div class="popup">Test</div>
                     </li>

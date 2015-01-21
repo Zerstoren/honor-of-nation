@@ -9,7 +9,17 @@ class _AbstractArmy(object):
         return Service_Army().decorate(Service_Army.PARAMS_JSONPACK_ACL)
 
 
+
 class MainController(_AbstractArmy):
+    def detail(self, transfer, data):
+        result = self._getParamsArmyService().loadDetail(
+            data['user'],
+            data['_id']
+        )
+
+        result['done'] = True
+        transfer.send('/army/detail', result)
+
     def move(self, transfer, data):
         pass
 

@@ -42,8 +42,7 @@ define('view/elements/drag', [], function () {
         attachDuplicate: function (e) {
             var cloneItem,
                 targetBounce,
-                target,
-                boundaryTarget;
+                target;
 
             target = this.startedFrom;
 
@@ -54,14 +53,7 @@ define('view/elements/drag', [], function () {
             this.pseudoPosition.x = e.pageX - targetBounce.left;
             this.pseudoPosition.y = e.pageY - targetBounce.top;
 
-            boundaryTarget = this.$config.destination[0].getBoundingClientRect();
-            this.destinationPosition = {
-                startY: boundaryTarget.top,
-                endY: boundaryTarget.top + boundaryTarget.height,
-                startX: boundaryTarget.left,
-                endX: boundaryTarget.left + boundaryTarget.width
-            };
-
+            this.destinationPosition = this.$config.destination[0].getBoundingClientRect();
 
             this.showed.addClass('draggable');
             this.showed.css({
@@ -81,7 +73,7 @@ define('view/elements/drag', [], function () {
 
         onMouseMove: function (e) {
             if (!this.dragged) {
-                return false;
+                return;
             }
 
             var moveOut = this.$config.moveOut;
@@ -94,7 +86,7 @@ define('view/elements/drag', [], function () {
             ) {
                 this.attachDuplicate(e);
             } else if (!this.showed) {
-                return false;
+                return;
             }
 
             this.showed.css({
@@ -103,14 +95,11 @@ define('view/elements/drag', [], function () {
             });
 
             if (
-                (this.destinationPosition.startX < e.pageX || this.destinationPosition.endX > e.pageX) &&
-                (this.destinationPosition.startY < e.pageY || this.destinationPosition.endY > e.pageY)
+                (this.destinationPosition.left < e.pageX && this.destinationPosition.right > e.pageX) &&
+                (this.destinationPosition.top < e.pageY && this.destinationPosition.bottom > e.pageY)
             ) {
-                console.log('Add');
                 this.$config.destination.addClass('destinated');
             } else {
-                console.log('Ren');
-                console.log(this.destinationPosition.startX, e.pageX, this.destinationPosition.endX, e.pageX)
                 this.$config.destination.removeClass('destinated');
             }
         },
@@ -121,8 +110,21 @@ define('view/elements/drag', [], function () {
             this.position.x = null;
             this.position.y = null;
 
-            this.showed.detach();
-            this.showed = null;
+            if (this.showed) {
+                if (
+                    (this.destinationPosition.left < e.pageX && this.destinationPosition.right > e.pageX) &&
+                    (this.destinationPosition.top < e.pageY && this.destinationPosition.bottom > e.pageY)
+                ) {
+                    this.$config.destination.removeClass('destinated');
+                    this.$config.handler(
+                        this.showed,
+                        this.$config.destination
+                    );
+                }
+
+                this.showed.detach();
+                this.showed = null;
+            }
         },
 
         addEventListeners: function () {

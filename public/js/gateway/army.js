@@ -1,6 +1,16 @@
 define('gateway/army', [
 ], function () {
     var GatewayArmy = AbstractGateway.extend({
+        detail: function (id, fn) {
+            this.socket.send('/army/detail', {
+                army: id
+            }, function (data) {
+                if (data.done) {
+                    fn(data);
+                }
+            });
+        },
+
         merge: function (army, fn) {
             this.socket.send('/army/merge', {
                 'army_list': army

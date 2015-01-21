@@ -28,3 +28,7 @@ class Decorate():
             result.append(self._pack(i))
 
         return result
+
+    def loadDetail(self,armyUser, _id):
+        result = super().loadDetail(armyUser, _id)
+        return result

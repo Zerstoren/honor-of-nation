@@ -30,6 +30,7 @@ define('service/town/solidersList', [
             this.mainView.on('move_out', this.onMoveOut, this);
             this.mainView.on('add_soliders_to_general', this.onAddSolidersToGeneral, this);
             this.mainView.on('add_suite', this.onAddSuite, this);
+            this.mainView.on('load_details', this.onLoadDetails, this);
         },
 
         render: function (holder, town) {
@@ -46,6 +47,12 @@ define('service/town/solidersList', [
                 this.collectionArmy.load(function () {
                     this.mainView.setArmy(this.collectionArmy);
                 }.bind(this), false, true);
+            }.bind(this));
+        },
+
+        onLoadDetails: function (id) {
+            gatewayArmy.detail(id, function (data) {
+                this.mainView.setDetailInfo(data);
             }.bind(this));
         },
 
