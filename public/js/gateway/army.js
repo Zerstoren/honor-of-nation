@@ -1,14 +1,41 @@
 define('gateway/army', [
-], function () {
+    'model/army',
+    'collection/army'
+], function (
+    ModelArmy,
+    CollectionArmy
+) {
     var GatewayArmy = AbstractGateway.extend({
-        detail: function (id, fn) {
+        detail: function (id, user, fn) {
             this.socket.send('/army/detail', {
-                army: id
+                army: id,
+                user: user.get('_id')
             }, function (data) {
                 if (data.done) {
-                    fn(data);
+                    fn(
+                        this._createArmyFromDeepObject(
+                            data
+                        )
+                    );
                 }
-            });
+            }.bind(this));
+        },
+
+        _createArmyFromDeepObject: function (data) {
+            var i, domain, suite, sub_army = [];
+
+            domain = new ModelArmy(data.current);
+            suite = data.suite ? new ModelArmy(data.suite) : null;
+            for(i = 0; i < data.sub_army.length; i++) {
+                sub_army.push(
+                    this._createArmyFromDeepObject(data.sub_army[i])
+                );
+            }
+
+            domain.set('suite', suite);
+            domain.set('sub_army', sub_army);
+
+            return domain;
         },
 
         merge: function (army, fn) {

@@ -1,10 +1,12 @@
 import uuid
-import copy
 
 from tornado import websocket
 
 import balancer.server.userPool
 import balancer.server.surveyor
+
+import system.log
+import config
 
 
 class ClientConnector():

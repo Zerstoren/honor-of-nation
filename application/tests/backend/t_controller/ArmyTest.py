@@ -423,6 +423,26 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
             general.getId()
         )
 
+    def testAddGeneralToCommander(self):
+        general = self.createArmy(self.town, self.unitGeneral)
+        commander = self.createArmy(self.town, self.unitGeneral)
+
+        self._getArmyController().addSolidersToGeneral(
+            self.transfer,
+            {
+                'general': str(commander.getId()),
+                'soliders': [
+                    str(general.getId())
+                ]
+            }
+        )
+
+        general.extract(force=True)
+        self.assertEqual(
+            general.getCommander().getId(),
+            commander.getId()
+        )
+
     def testRemoveSolidersToGeneral(self):
         army = self.createArmy(self.town, self.unit, count=100)
         army2 = self.createArmy(self.town, self.unit, count=200)

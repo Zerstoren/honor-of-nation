@@ -104,22 +104,40 @@ define('view/town/solidersList', [
                 }
             );
             this.popoverDissolution.disable();
-
-            /** FOR DEBUG **/
-            setTimeout(function () {
-                this.viewManipulate = new CommanderManipulate();
-                this.viewManipulate.render(jQuery('li[data-id="54b4f159608fb3278d67f029"]').find('.popover'), '54b4f159608fb3278d67f029');
-
-                this.popoverUnits.showLayer({
-                    currentTarget: jQuery('li[data-id="54b4f159608fb3278d67f029"]')
-                });
-                this.popupUnits.disable();
-            }.bind(this), 2000);
         },
 
         setArmy: function (armyCollection) {
             this.armyCollection = armyCollection;
             this.set('army', this.armyCollection);
+
+            if (this.generalAction) {
+                this.generalAction.remove();
+            }
+
+            this.generalAction = new ViewElementsDrag({
+                section: this.$el.find('.units'),
+                target: 'li.unit-item',
+                destination: this.$el.find('li.unit-item'),
+                massiveDestination: true,
+                handler: this.onAttachGeneralToGeneral.bind(this)
+            });
+
+
+
+            /** FOR DEBUG **/
+//            this.viewManipulate = new CommanderManipulate();
+//            this.viewManipulate.render(jQuery('li[data-id="54c41f51e0460d1ccf811850"]').find('.popover'));
+//
+//            this.popoverUnits.showLayer({
+//                currentTarget: jQuery('li[data-id="54c41f51e0460d1ccf811850"]')
+//            });
+//            this.popupUnits.disable();
+//            this.trigger('load_details', '54c41f51e0460d1ccf811850');
+
+        },
+
+        onAttachGeneralToGeneral: function (from, to) {
+            this.trigger('add_general_to_commander', to.attr('data-id'), from.attr('data-id'));
         },
 
         setDetailInfo: function (data) {
@@ -173,14 +191,16 @@ define('view/town/solidersList', [
 
             this.popoverUnits.showLayer(e);
             this.popupUnits.disable();
+            this.generalAction.disable();
 
-            //e.stopPropagation();
-            //return false;
+            e.stopPropagation();
+            return false;
         },
 
         onUnitDetailsHide: function (e) {
             setTimeout(function () {
                 this.popupUnits.enable();
+                this.generalAction.enable();
             }.bind(this), 0);
 
             this.viewManipulate.unRender();
@@ -369,42 +389,64 @@ define('view/town/solidersList', [
         data : {
             buffer: [],
             commander: null,
-            commander_suite: null,
-            commander_untis: [],
             show_general: false,
-            general_suite: null,
-            general_units: null
+            wait: false
         },
 
         initialize: function () {
             this.template = this.getTemplate('town/unitsList/unitPopoverDetail');
+            this.setPartials({
+                unitPopupDetail: 'town/unitsList/unitPopupDetail'
+                //'unitPopoverDetail': 'town/unitsList/unitPopoverDetail'
+            });
+            this.initRactive();
+
+            this.popupUnits = new ViewElementsPopup(
+                this.$el, {
+                    liveTarget: '.popupper',
+                    timeout: 500,
+                    align: 'right',
+                    valign: 'middle',
+                    ignoreTop: true
+                }
+            );
         },
 
         render: function (holder) {
-            this.$el.append(this.template);
             holder.append(this.$el);
+
+//
+//
+//            this.fromBufferToGeneralDrag = new ViewElementsDrag({
+//                section: this.$el.find('.buffer ul'),
+//                target: 'li.buffer-item',
+//                destination: this.$el.find('.general-units ul'),
+//                handler: this.fromGeneralToBufferHandler.bind(this)
+//            });
+        },
+
+        wait: function () {
+            this.set('wait', true);
+        },
+
+        setData: function (data) {
+            this.set('wait', false);
+            this.set('commander', data);
 
             this.fromGeneralToBufferDrag = new ViewElementsDrag({
                 section: this.$el.find('.general-units ul'),
                 target: 'li.general-item',
                 destination: this.$el.find('.buffer ul'),
-                handler: this.fromGeneralToBufferHandler.bind(this)
+                handler: this.fromGeneralToBufferHandler.bind(this),
+
+                onStart: function () {
+                    this.popupUnits.disable();
+                }.bind(this),
+
+                onStop: function () {
+                    this.popupUnits.enable();
+                }
             });
-
-            this.fromBufferToGeneralDrag = new ViewElementsDrag({
-                section: this.$el.find('.buffer ul'),
-                target: 'li.buffer-item',
-                destination: this.$el.find('.general-units ul'),
-                handler: this.fromGeneralToBufferHandler.bind(this)
-            });
-        },
-
-        wait: function () {
-
-        },
-
-        setData: function (data) {
-
         },
 
         unRender: function () {

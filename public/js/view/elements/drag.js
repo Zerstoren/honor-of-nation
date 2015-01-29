@@ -5,6 +5,8 @@ define('view/elements/drag', [], function () {
             this.enabled = true;
             this.dragged = false;
             this.startedFrom = null;
+            this.destinated = false;
+            this.massiveTarget = null;
 
             this.position = {
                 x: null,
@@ -21,6 +23,9 @@ define('view/elements/drag', [], function () {
                 target: config.target,
                 destination: config.destination,
                 handler: config.handler,
+                massiveDestination: config.massiveDestination || false,
+                onStart: config.onStart || null,
+                onStop: config.onStop || null,
                 moveOut: config.moveOut || 10
             };
 
@@ -45,24 +50,43 @@ define('view/elements/drag', [], function () {
                 target;
 
             target = this.startedFrom;
-
             this.showed = cloneItem = target.clone();
+
+            if (this.$config.massiveDestination) {
+                this.destinationPosition = [];
+                this.$config.destination.each(function (num, item) {
+                    if (item === cloneItem.prevObject[0]) {
+                        return;
+                    }
+
+                    var clientBound = item.getBoundingClientRect();
+                    clientBound.element = item;
+                    this.destinationPosition.push(clientBound);
+                }.bind(this));
+            } else {
+                this.destinationPosition = this.$config.destination[0].getBoundingClientRect();
+            }
+
             target.after(cloneItem);
 
             targetBounce = target[0].getBoundingClientRect();
             this.pseudoPosition.x = e.pageX - targetBounce.left;
             this.pseudoPosition.y = e.pageY - targetBounce.top;
 
-            this.destinationPosition = this.$config.destination[0].getBoundingClientRect();
-
             this.showed.addClass('draggable');
             this.showed.css({
+                position: 'fixed',
                 top: e.pageY - this.pseudoPosition.y,
                 left: e.pageX - this.pseudoPosition.x
             });
         },
 
         onMouseDown: function (e) {
+//            debugger;
+            if (!this.enabled) {
+                return;
+            }
+
             var target = jQuery(e.target);
 
             this.dragged = true;
@@ -71,12 +95,19 @@ define('view/elements/drag', [], function () {
             this.startedFrom = target.is(this.$config.target) ? target : target.parents(this.$config.target);
         },
 
+        _isInPosition: function (destinationPosition, pagePosition) {
+            return (destinationPosition.left < pagePosition.pageX && destinationPosition.right > pagePosition.pageX) &&
+                (destinationPosition.top < pagePosition.pageY && destinationPosition.bottom > pagePosition.pageY);
+        },
+
         onMouseMove: function (e) {
             if (!this.dragged) {
                 return;
             }
 
-            var moveOut = this.$config.moveOut;
+            var i, destinated, target,
+                moveOut = this.$config.moveOut;
+
             if (
                 this.showed === null &&
                 (
@@ -84,7 +115,12 @@ define('view/elements/drag', [], function () {
                     (e.pageY <= this.position.y - moveOut || this.position.y + moveOut <= e.pageY)
                 )
             ) {
+                if (this.$config.onStart) {
+                    this.$config.onStart();
+                }
+
                 this.attachDuplicate(e);
+
             } else if (!this.showed) {
                 return;
             }
@@ -94,36 +130,84 @@ define('view/elements/drag', [], function () {
                 left: e.pageX - this.pseudoPosition.x
             });
 
-            if (
-                (this.destinationPosition.left < e.pageX && this.destinationPosition.right > e.pageX) &&
-                (this.destinationPosition.top < e.pageY && this.destinationPosition.bottom > e.pageY)
-            ) {
-                this.$config.destination.addClass('destinated');
+            if (this.$config.massiveDestination) {
+                destinated = this.destinated;
+
+                for (i = 0; i < this.destinationPosition.length; i++) {
+                    if (this._isInPosition(this.destinationPosition[i], e)) {
+                        destinated = true;
+                        target = this.destinationPosition[i].element;
+                        break;
+                    } else {
+                        destinated = false;
+                    }
+                }
+
+                if (destinated && (this.massiveTarget !== null && this.massiveTarget !== target)) {
+                    destinated = false;
+                }
+
+                if (destinated) {
+                    this.destinated = true;
+                    this.massiveTarget = target;
+                    jQuery(target).addClass('destinated');
+                } else if (!destinated) {
+                    this.destinated = false;
+                    this.massiveTarget = null;
+                    this.$config.destination.removeClass('destinated');
+                }
             } else {
-                this.$config.destination.removeClass('destinated');
+                if (!this.destinated && this._isInPosition(this.destinationPosition, e)) {
+                    this.destinated = true;
+                    this.$config.destination.addClass('destinated');
+                } else {
+                    this.destinated = false;
+                    this.$config.destination.removeClass('destinated');
+                }
             }
         },
 
         onMouseUp: function (e) {
+            if (!this.dragged) {
+                return;
+            }
+
             this.dragged = false;
 
             this.position.x = null;
             this.position.y = null;
 
             if (this.showed) {
-                if (
-                    (this.destinationPosition.left < e.pageX && this.destinationPosition.right > e.pageX) &&
-                    (this.destinationPosition.top < e.pageY && this.destinationPosition.bottom > e.pageY)
-                ) {
-                    this.$config.destination.removeClass('destinated');
-                    this.$config.handler(
-                        this.showed,
-                        this.$config.destination
-                    );
+                if (this.$config.massiveDestination) {
+                    for (i = 0; i < this.destinationPosition.length; i++) {
+                        if (this._isInPosition(this.destinationPosition[i], e)) {
+                            this.destinated = false;
+                            this.$config.destination.removeClass('destinated');
+                            this.$config.handler(
+                                this.showed,
+                                jQuery(this.destinationPosition[i].element)
+                            );
+                            break;
+                        }
+                    }
+                } else {
+                    if (this._isInPosition(this.destinationPosition, e)) {
+                        this.destinated = false;
+                        this.$config.destination.removeClass('destinated');
+                        this.$config.handler(
+                            this.showed,
+                            this.$config.destination
+                        );
+                    }
                 }
 
                 this.showed.detach();
                 this.showed = null;
+
+            }
+
+            if (this.$config.onStop) {
+                this.$config.onStop();
             }
         },
 

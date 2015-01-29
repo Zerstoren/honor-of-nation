@@ -1,27 +1,35 @@
+{{#wait == true}}
+    Waiting
+{{/wait == true}}
+{{#wait == false}}
 <div class="base-commander">
     <div class="items dynamic-left-floating">
         <div class="left-side commander">
             <h3>Командир</h3>
-            <img src="test.png" />
-            <div class="popup">Test</div>
+            <span class="popupper">
+                <img src="test.png" data-id="{{this.commander.unit_data.troop_size}}" />
+                {{#this.commander}}
+                    {{>unitPopupDetail}}
+                {{/this.commander}}
+            </span>
         </div>
 
         <div class="right-side wrap-buffer">
             <div class="buffer vscrolling">
                 <h3>Буффер</h3>
                 <ul>
-                    <li class="buffer-item">
-                        <img src="test.png" />
-                        <div class="popup">Test</div>
-                    </li>
-                    <li class="buffer-item">
-                        <img src="test.png" />
-                        <div class="popup">Test</div>
-                    </li>
-                    <li class="buffer-item">
-                        <img src="test.png" />
-                        <div class="popup">Test</div>
-                    </li>
+                    <!--<li class="buffer-item">-->
+                        <!--<img src="test.png" />-->
+                        <!--<div class="popup">Test</div>-->
+                    <!--</li>-->
+                    <!--<li class="buffer-item">-->
+                        <!--<img src="test.png" />-->
+                        <!--<div class="popup">Test</div>-->
+                    <!--</li>-->
+                    <!--<li class="buffer-item">-->
+                        <!--<img src="test.png" />-->
+                        <!--<div class="popup">Test</div>-->
+                    <!--</li>-->
                 </ul>
             </div>
         </div>
@@ -30,24 +38,30 @@
 
 <div class="base-subordinates">
     <div class="subordinates vscrolling dynamic-left-floating">
-        <div class="suite left-side">
+        <div class="suite left-side {{#this.commander.suite}}popupper{{/this.commander.suite}}">
             <h3>Свита</h3>
-            <img src="test.png" />
-            <div class="popup">Test</div>
+            <img src="test.png" data-id="this.commander.suite.unit_data.troop_size" />
+            {{#this.commander.suite}}
+                {{>unitPopupDetail}}
+            {{/this.commander.suite}}
         </div>
 
         <div class="general-units right-side">
             <h3>Подчиненные</h3>
             <ul>
-                <li class="general-item">
-                    <img src="test.png" />
-                    <div class="popup">Test</div>
+
+                {{#each this.commander.sub_army}}
+                <li class="general-item popupper">
+                    <img src="test.png" data-id="{{this.unit_data.troop_size}}" />
+                    {{>unitPopupDetail}}
                 </li>
+                {{/each}}
             </ul>
         </div>
     </div>
 </div>
 
+{{#show_general}}
 <div class="base-soliders">
     <div class="subordinates vscrolling dynamic-left-floating">
         <div class="suite left-side">
@@ -67,3 +81,5 @@
         </div>
     </div>
 </div>
+{{/show_general}}
+{{/wait == false}}

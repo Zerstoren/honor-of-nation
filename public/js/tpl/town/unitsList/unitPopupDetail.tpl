@@ -19,7 +19,7 @@
         <div class="col-xs-4">Выносливость: {{this.unit_data.stamina}}</div>
         <div class="col-xs-4">
             {{#this.unit_data.type == 'general'}}
-            Отряд: {{this.troop_size}}
+            Отряд: {{this.unit_data.troop_size}}
             {{/this.unit_data.type == 'general'}}
         </div>
     </div>

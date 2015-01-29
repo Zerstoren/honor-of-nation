@@ -19,6 +19,7 @@ div.unitsWrap {
             height: 116px;
             background: #ccc;
             margin: 1px 3px;
+            padding: 1px;
 
             img {
                 width: 116px;
@@ -55,8 +56,13 @@ div.unitsWrap {
         }
 
         li.active {
+            padding: 0;
             border: 1px solid #ffff00;
-            margin: 0 3px;
+        }
+
+        li.destinated {
+            padding: 0;
+            border: 1px solid #00d6b2;
         }
 
     }

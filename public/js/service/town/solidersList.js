@@ -29,6 +29,7 @@ define('service/town/solidersList', [
             this.mainView.on('merge', this.onMerge, this);
             this.mainView.on('move_out', this.onMoveOut, this);
             this.mainView.on('add_soliders_to_general', this.onAddSolidersToGeneral, this);
+            this.mainView.on('add_general_to_commander', this.onAddGeneralToCommander, this);
             this.mainView.on('add_suite', this.onAddSuite, this);
             this.mainView.on('load_details', this.onLoadDetails, this);
         },
@@ -51,8 +52,10 @@ define('service/town/solidersList', [
         },
 
         onLoadDetails: function (id) {
-            gatewayArmy.detail(id, function (data) {
-                this.mainView.setDetailInfo(data);
+            serviceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
+                gatewayArmy.detail(id, user, function (data) {
+                    this.mainView.setDetailInfo(data);
+                }.bind(this));
             }.bind(this));
         },
 
@@ -88,7 +91,13 @@ define('service/town/solidersList', [
 
             gatewayArmy.addSolidersToGeneral(soliders, general, function () {
                 this.update();
-            }.bind(this))
+            }.bind(this));
+        },
+
+        onAddGeneralToCommander: function (commnader, general) {
+            gatewayArmy.addSolidersToGeneral([general], commnader, function () {
+                this.update();
+            }.bind(this));
         },
 
         onAddSuite: function (selectedCollection) {
@@ -105,7 +114,7 @@ define('service/town/solidersList', [
 
             gatewayArmy.addSuite(general, solider, function () {
                 this.update();
-            }.bind(this))
+            }.bind(this));
         },
 
         onDissolution: function (id) {
