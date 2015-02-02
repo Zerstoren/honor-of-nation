@@ -1,5 +1,5 @@
 define('view/elements/drag', [], function () {
-    return AbstractView.extend({
+    return Backbone.View.extend({
         initialize: function (config) {
             this.showed = null;
             this.enabled = true;
@@ -82,7 +82,6 @@ define('view/elements/drag', [], function () {
         },
 
         onMouseDown: function (e) {
-//            debugger;
             if (!this.enabled) {
                 return;
             }

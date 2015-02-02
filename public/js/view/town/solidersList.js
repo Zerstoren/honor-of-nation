@@ -187,6 +187,13 @@ define('view/town/solidersList', [
             this.viewManipulate = new CommanderManipulate();
             this.viewManipulate.render(target.find('.popover'));
             this.viewManipulate.wait();
+            this.viewManipulateTriggers = [
+                this.traverseEvent('add_soliders_to_general', this.viewManipulate),
+                this.traverseEvent('add_suite', this.viewManipulate),
+                this.traverseEvent('remove_soliders_to_general', this.viewManipulate),
+                this.traverseEvent('remove_suite', this.viewManipulate)
+            ];
+
             this.trigger('load_details', id);
 
             this.popoverUnits.showLayer(e);
@@ -204,6 +211,9 @@ define('view/town/solidersList', [
             }.bind(this), 0);
 
             this.viewManipulate.unRender();
+            _.each(this.viewManipulateTriggers, function (fn) {
+                fn();
+            });
             this.viewManipulate = null;
         },
 
@@ -383,11 +393,15 @@ define('view/town/solidersList', [
 
     CommanderManipulate = AbstractView.extend({
         events: {
-
+            'drag-n-drop .general-units ul li.general-item -> .buffer ul': {
+                handler: 'fromGeneralToBufferHandler',
+                onStart: 'onStart',
+                onStop: 'onStop'
+            }
         },
 
         data : {
-            buffer: [],
+            buffer: new CollectionArmy(),
             commander: null,
             show_general: false,
             wait: false
@@ -397,7 +411,6 @@ define('view/town/solidersList', [
             this.template = this.getTemplate('town/unitsList/unitPopoverDetail');
             this.setPartials({
                 unitPopupDetail: 'town/unitsList/unitPopupDetail'
-                //'unitPopoverDetail': 'town/unitsList/unitPopoverDetail'
             });
             this.initRactive();
 
@@ -433,20 +446,15 @@ define('view/town/solidersList', [
             this.set('wait', false);
             this.set('commander', data);
 
-            this.fromGeneralToBufferDrag = new ViewElementsDrag({
-                section: this.$el.find('.general-units ul'),
-                target: 'li.general-item',
-                destination: this.$el.find('.buffer ul'),
-                handler: this.fromGeneralToBufferHandler.bind(this),
-
-                onStart: function () {
-                    this.popupUnits.disable();
-                }.bind(this),
-
-                onStop: function () {
-                    this.popupUnits.enable();
-                }
-            });
+            //this.fromGeneralToBufferDrag = new ViewElementsDrag({
+            //    section: this.$el.find('.general-units ul'),
+            //    target: 'li.general-item',
+            //    destination: this.$el.find('.buffer ul'),
+            //
+            //    handler: this.fromGeneralToBufferHandler.bind(this),
+            //    onStart: this.popupUnits.disable.bind(this.popupUnits),
+            //    onStop: this.popupUnits.enable.bind(this.popupUnits)
+            //});
         },
 
         unRender: function () {
@@ -458,7 +466,36 @@ define('view/town/solidersList', [
         },
 
         fromGeneralToBufferHandler: function (target) {
+            var targetArmy, parentArmy, isSuite,
+                _id = target.attr('data-id'),
+                result = this.get('commander').deepSearchById(_id);
 
+            if (result === false || !result[1]) {
+                throw new Error("Someting wrong with drag");
+            }
+
+            targetArmy = result[0];
+            parentArmy = result[1];
+            isSuite = result[2];
+
+            if (isSuite) {
+                parentArmy.set('suite', null);
+            } else {
+                parentArmy.get('sub_army').remove(targetArmy)
+            }
+
+            this.get('buffer').push(targetArmy);
+
+            this.ractive.update('commander');
+            this.ractive.update('buffer');
+        },
+
+        onStart: function () {
+            this.popupUnits.disable();
+        },
+
+        onStop: function () {
+            this.popupUnits.enable();
         }
     });
 

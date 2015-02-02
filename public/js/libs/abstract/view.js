@@ -1,16 +1,21 @@
 define('libs/abstract/view', [
     'system/template',
     'view/block/error',
-    'ractive'
+    'ractive',
+
+    'view/elements/drag'
 ], function (
     getTemplate,
     viewBlockError,
-    Ractive
+    Ractive,
+
+    ViewElementsDrag
 ) {
     window.AbstractView = Backbone.View.extend({
         adapt: [Ractive.adaptors.Backbone],
         partials: {},
         initRactive: function () {
+            this._dragEvents = [];
             this.ractive = new Ractive(this);
             this.set = this.ractive.set.bind(this.ractive);
             this.get = this.ractive.get.bind(this.ractive);
@@ -31,21 +36,29 @@ define('libs/abstract/view', [
         getTemplate: getTemplate,
 
         delegateEvents: function (events) {
+            if (!(events || (events = _.result(this, 'events')))) return this;
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
-            if (!(events || (events = _.result(this, 'events')))) return this;
-            var delegateEventSplitter = /^(\S+) (global)$/;
-
             for (var key in events) {
-                var method = events[key];
+                this._eventGlobal(key, events);
+                this._eventDragNDrop(key, events);
+            }
+
+            return this;
+        },
+
+        _eventGlobal: function (key, events) {
+            var match, method,
+                delegateGlobalEvents = /^(\S+) (global)$/;
+
+            if (match = key.match(delegateGlobalEvents)) {
+                method = events[key];
                 if (!_.isFunction(method)) method = this[events[key]];
-                if (!method) continue;
+                if (!method) return;
 
-                var match = key.match(delegateEventSplitter);
+                var eventName = match[1],
+                    selector = match[2];
 
-                if(!match) continue;
-
-                var eventName = match[1], selector = match[2];
                 method = _.bind(method, this);
                 eventName += '.delegateEvents' + this.cid;
 
@@ -54,12 +67,41 @@ define('libs/abstract/view', [
                 }
             }
 
-            return this;
+        },
+
+        _eventDragNDrop: function (key, events) {
+            var match,
+                delegateDragNDropEvents = /^(drag-n-drop) (.*)$/;
+
+            if (match = key.match(delegateDragNDropEvents)) {
+                var drag,
+                    settings = events[key],
+                    selectors = match[2].split('->'),
+                    target = selectors[0].trim(),
+                    destination = selectors[1].trim();
+
+                drag = new ViewElementsDrag({
+                    section: this.$el,
+                    target: target,
+                    destination: this.$el.find(destination),
+
+                    handler: _.bind(this[settings.handler], this),
+                    onStart: settings.onStart ? _.bind(this[settings.onStart], this) : undefined,
+                    onStop: settings.onStop ? _.bind(this[settings.onStop], this) : undefined,
+                    massiveDestination: settings.massiveDestination
+                });
+
+                this._dragEvents.push(drag);
+            }
         },
 
         undelegateEvents: function () {
             Backbone.View.prototype.undelegateEvents.apply(this, arguments);
             $(document).off('.delegateEvents' + this.cid);
+            _.each(this._dragEvents, function (drag) {
+                drag.remove();
+            });
+            this._dragEvents = [];
             return this;
         },
 

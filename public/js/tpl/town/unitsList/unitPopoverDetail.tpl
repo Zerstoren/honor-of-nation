@@ -18,18 +18,12 @@
             <div class="buffer vscrolling">
                 <h3>Буффер</h3>
                 <ul>
-                    <!--<li class="buffer-item">-->
-                        <!--<img src="test.png" />-->
-                        <!--<div class="popup">Test</div>-->
-                    <!--</li>-->
-                    <!--<li class="buffer-item">-->
-                        <!--<img src="test.png" />-->
-                        <!--<div class="popup">Test</div>-->
-                    <!--</li>-->
-                    <!--<li class="buffer-item">-->
-                        <!--<img src="test.png" />-->
-                        <!--<div class="popup">Test</div>-->
-                    <!--</li>-->
+                    {{#each this.buffer}}
+                    <li class="buffer-item popupper" data-id="{{this._id}}">
+                        <img src="test.png" />
+                        {{>unitPopupDetail}}
+                    </li>
+                    {{/each}}
                 </ul>
             </div>
         </div>
@@ -49,9 +43,9 @@
         <div class="general-units right-side">
             <h3>Подчиненные</h3>
             <ul>
-
                 {{#each this.commander.sub_army}}
-                <li class="general-item popupper">
+                {{test()}}
+                <li class="general-item popupper" data-id="{{this._id}}">
                     <img src="test.png" data-id="{{this.unit_data.troop_size}}" />
                     {{>unitPopupDetail}}
                 </li>

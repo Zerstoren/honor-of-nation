@@ -22,7 +22,8 @@ define('gateway/army', [
         },
 
         _createArmyFromDeepObject: function (data) {
-            var i, domain, suite, sub_army = [];
+            var i, domain, suite,
+                sub_army = new CollectionArmy();
 
             domain = new ModelArmy(data.current);
             suite = data.suite ? new ModelArmy(data.suite) : null;

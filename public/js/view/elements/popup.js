@@ -37,6 +37,7 @@ define('view/elements/popup', [], function () {
         disable: function() {
             this.enabled = false;
             this.hideLayer();
+            this.stopShowTimeout();
             this.trigger('disable');
         },
 
@@ -75,7 +76,7 @@ define('view/elements/popup', [], function () {
         },
 
         showLayer: function () {
-            if (!this.popup) {
+            if (!this.popup || !this.enabled) {
                 return;
             }
 
