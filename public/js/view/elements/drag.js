@@ -54,7 +54,8 @@ define('view/elements/drag', [], function () {
 
             if (this.$config.massiveDestination) {
                 this.destinationPosition = [];
-                this.$config.destination.each(function (num, item) {
+                this.destination = this.$config.section.find(this.$config.destination);
+                this.destination.each(function (num, item) {
                     if (item === cloneItem.prevObject[0]) {
                         return;
                     }
@@ -64,7 +65,8 @@ define('view/elements/drag', [], function () {
                     this.destinationPosition.push(clientBound);
                 }.bind(this));
             } else {
-                this.destinationPosition = this.$config.destination[0].getBoundingClientRect();
+                this.destination = this.$config.section.find(this.$config.destination);
+                this.destinationPosition = this.destination[0].getBoundingClientRect();
             }
 
             target.after(cloneItem);
@@ -153,15 +155,15 @@ define('view/elements/drag', [], function () {
                 } else if (!destinated) {
                     this.destinated = false;
                     this.massiveTarget = null;
-                    this.$config.destination.removeClass('destinated');
+                    this.destination.removeClass('destinated');
                 }
             } else {
                 if (!this.destinated && this._isInPosition(this.destinationPosition, e)) {
                     this.destinated = true;
-                    this.$config.destination.addClass('destinated');
+                    this.destination.addClass('destinated');
                 } else {
                     this.destinated = false;
-                    this.$config.destination.removeClass('destinated');
+                    this.destination.removeClass('destinated');
                 }
             }
         },
@@ -181,7 +183,7 @@ define('view/elements/drag', [], function () {
                     for (i = 0; i < this.destinationPosition.length; i++) {
                         if (this._isInPosition(this.destinationPosition[i], e)) {
                             this.destinated = false;
-                            this.$config.destination.removeClass('destinated');
+                            this.destination.removeClass('destinated');
                             this.$config.handler(
                                 this.showed,
                                 jQuery(this.destinationPosition[i].element)
@@ -192,10 +194,10 @@ define('view/elements/drag', [], function () {
                 } else {
                     if (this._isInPosition(this.destinationPosition, e)) {
                         this.destinated = false;
-                        this.$config.destination.removeClass('destinated');
+                        this.destination.removeClass('destinated');
                         this.$config.handler(
                             this.showed,
-                            this.$config.destination
+                            this.destination
                         );
                     }
                 }

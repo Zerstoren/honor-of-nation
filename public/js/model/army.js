@@ -17,7 +17,7 @@ define('model/army', [], function () {
             }
 
             if (model.get('suite') && model.get('suite').get('_id') === _id) {
-                return [model, null, true];
+                return [model.get('suite'), model, true];
             }
 
             subArmyResult = model.get('sub_army').where({'_id': _id});

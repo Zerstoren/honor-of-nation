@@ -397,6 +397,12 @@ define('view/town/solidersList', [
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
                 onStop: 'onStop'
+            },
+
+            'drag-n-drop .suite-middleware -> .buffer ul': {
+                handler: 'fromGeneralToBufferHandler',
+                onStart: 'onStart',
+                onStop: 'onStop'
             }
         },
 
@@ -427,15 +433,6 @@ define('view/town/solidersList', [
 
         render: function (holder) {
             holder.append(this.$el);
-
-//
-//
-//            this.fromBufferToGeneralDrag = new ViewElementsDrag({
-//                section: this.$el.find('.buffer ul'),
-//                target: 'li.buffer-item',
-//                destination: this.$el.find('.general-units ul'),
-//                handler: this.fromGeneralToBufferHandler.bind(this)
-//            });
         },
 
         wait: function () {
@@ -445,24 +442,11 @@ define('view/town/solidersList', [
         setData: function (data) {
             this.set('wait', false);
             this.set('commander', data);
-
-            //this.fromGeneralToBufferDrag = new ViewElementsDrag({
-            //    section: this.$el.find('.general-units ul'),
-            //    target: 'li.general-item',
-            //    destination: this.$el.find('.buffer ul'),
-            //
-            //    handler: this.fromGeneralToBufferHandler.bind(this),
-            //    onStart: this.popupUnits.disable.bind(this.popupUnits),
-            //    onStop: this.popupUnits.enable.bind(this.popupUnits)
-            //});
         },
 
         unRender: function () {
             this.undelegateEvents();
             this.$el.empty();
-
-            this.fromGeneralToBufferDrag.remove();
-            delete this.fromGeneralToBufferDrag;
         },
 
         fromGeneralToBufferHandler: function (target) {
@@ -470,7 +454,7 @@ define('view/town/solidersList', [
                 _id = target.attr('data-id'),
                 result = this.get('commander').deepSearchById(_id);
 
-            if (result === false || !result[1]) {
+            if (result === false || !result[0]) {
                 throw new Error("Someting wrong with drag");
             }
 

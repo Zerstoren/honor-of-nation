@@ -34,10 +34,12 @@
     <div class="subordinates vscrolling dynamic-left-floating">
         <div class="suite left-side {{#this.commander.suite}}popupper{{/this.commander.suite}}">
             <h3>Свита</h3>
-            <img src="test.png" data-id="this.commander.suite.unit_data.troop_size" />
-            {{#this.commander.suite}}
-                {{>unitPopupDetail}}
-            {{/this.commander.suite}}
+            <div class="suite-middleware" data-id="{{this.commander.suite._id}}">
+                <img src="test.png" data-id="this.commander.suite.unit_data.troop_size" />
+                {{#this.commander.suite}}
+                    {{>unitPopupDetail}}
+                {{/this.commander.suite}}
+            </div>
         </div>
 
         <div class="general-units right-side">

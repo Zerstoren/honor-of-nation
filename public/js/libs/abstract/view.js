@@ -36,8 +36,8 @@ define('libs/abstract/view', [
         getTemplate: getTemplate,
 
         delegateEvents: function (events) {
-            if (!(events || (events = _.result(this, 'events')))) return this;
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
+            if (!(events || (events = _.result(this, 'events')))) return this;
 
             for (var key in events) {
                 this._eventGlobal(key, events);
@@ -83,7 +83,7 @@ define('libs/abstract/view', [
                 drag = new ViewElementsDrag({
                     section: this.$el,
                     target: target,
-                    destination: this.$el.find(destination),
+                    destination: destination,
 
                     handler: _.bind(this[settings.handler], this),
                     onStart: settings.onStart ? _.bind(this[settings.onStart], this) : undefined,
