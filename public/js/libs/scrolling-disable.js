@@ -17,7 +17,7 @@ define('libs/scrolling-disable', [], function () {
             targetScrolling = target.hasClass('vscrolling') || target.parents('.vscrolling');
 
             if (targetScrolling === true) {
-                targetScrolling = target
+                targetScrolling = target;
             }
 
             targetScrolling[0].scrollLeft += e.wheelDelta > 0 ? -16 : 16;

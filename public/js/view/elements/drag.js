@@ -180,7 +180,7 @@ define('view/elements/drag', [], function () {
 
             if (this.showed) {
                 if (this.$config.massiveDestination) {
-                    for (i = 0; i < this.destinationPosition.length; i++) {
+                    for (var i = 0; i < this.destinationPosition.length; i++) {
                         if (this._isInPosition(this.destinationPosition[i], e)) {
                             this.destinated = false;
                             this.destination.removeClass('destinated');

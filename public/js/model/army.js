@@ -34,7 +34,7 @@ define('model/army', [], function () {
                 result = subArmyModels[i].deepSearchById(_id);
 
                 if (result !== false) {
-                    return result
+                    return result;
                 }
             }
 

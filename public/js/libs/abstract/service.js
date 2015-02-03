@@ -15,7 +15,7 @@ define('libs/abstract/service', [], function () {
             fromView.on(eventName, traverseFn, this);
 
             return function () {
-                fromView.un(eventName, traverseFn, this);
+                fromView.off(eventName, traverseFn, this);
             };
         }
     });

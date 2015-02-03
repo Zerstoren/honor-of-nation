@@ -74,7 +74,7 @@ define('service/town/solidersList', [
         onMoveOut: function (id) {
             gatewayArmy.moveOut(id, function () {
                 this.update();
-            }.bind(this))
+            }.bind(this));
         },
 
         onAddSolidersToGeneral: function (selectedCollection) {

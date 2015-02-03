@@ -163,7 +163,7 @@ define('view/town/solidersList', [
                 target.removeClass('active');
                 this.selectedArmy.remove(
                     this.armyCollection.search('_id', id)
-                )
+                );
             } else {
                 target.addClass('active');
                 this.selectedArmy.push(
@@ -393,23 +393,32 @@ define('view/town/solidersList', [
 
     CommanderManipulate = AbstractView.extend({
         events: {
+            'click .general-units ul li.general-item': 'onShowDetailGeneral',
+
             'drag-n-drop .general-units ul li.general-item -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
                 onStop: 'onStop'
             },
 
-            'drag-n-drop .suite-middleware -> .buffer ul': {
+            'drag-n-drop .suite-middleware, .suite-downware -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
                 onStop: 'onStop'
+            },
+
+            'drag-n-drop .buffer ul li -> .suite-target-middleware, .suite-target-downware, .commander-units-list, .general-units-list': {
+                handler: 'fromBufferToCommanderHandler',
+                onStart: 'onStart',
+                onStop: 'onStop',
+                massiveDestination: true
             }
         },
 
         data : {
             buffer: new CollectionArmy(),
             commander: null,
-            show_general: false,
+            general: false,
             wait: false
         },
 
@@ -455,7 +464,7 @@ define('view/town/solidersList', [
                 result = this.get('commander').deepSearchById(_id);
 
             if (result === false || !result[0]) {
-                throw new Error("Someting wrong with drag");
+                throw new Error("Something wrong with drag");
             }
 
             targetArmy = result[0];
@@ -465,13 +474,41 @@ define('view/town/solidersList', [
             if (isSuite) {
                 parentArmy.set('suite', null);
             } else {
-                parentArmy.get('sub_army').remove(targetArmy)
+                parentArmy.get('sub_army').remove(targetArmy);
             }
 
             this.get('buffer').push(targetArmy);
 
             this.ractive.update('commander');
             this.ractive.update('buffer');
+        },
+
+        fromBufferToCommanderHandler: function (target, destination) {
+            var army = this.get('buffer').where({'_id': target.attr('data-id')}).at(0),
+                parent = null;
+
+            if (destination.hasClass('suite-target-middleware')) {
+                parent = this.get('commander');
+                parent.set('suite', army);
+            } else if (destination.hasClass('commander-units-list')) {
+                parent = this.get('commander');
+                parent.get('sub_army').push(army);
+            }
+
+            this.get('buffer').remove(army);
+
+            this.ractive.update('commander');
+            this.ractive.update('buffer');
+        },
+
+        onShowDetailGeneral: function (e) {
+            var target = jQuery(e.currentTarget),
+                army = this.get('commander').deepSearchById(target.attr('data-id'));
+
+            target.parent().find('li.selected').removeClass('selected');
+            target.addClass('selected');
+
+            this.set('general', army);
         },
 
         onStart: function () {

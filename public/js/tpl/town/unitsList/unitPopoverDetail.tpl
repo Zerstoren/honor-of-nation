@@ -7,7 +7,7 @@
         <div class="left-side commander">
             <h3>Командир</h3>
             <span class="popupper">
-                <img src="test.png" data-id="{{this.commander.unit_data.troop_size}}" />
+                <img src="test.png" />
                 {{#this.commander}}
                     {{>unitPopupDetail}}
                 {{/this.commander}}
@@ -34,8 +34,8 @@
     <div class="subordinates vscrolling dynamic-left-floating">
         <div class="suite left-side {{#this.commander.suite}}popupper{{/this.commander.suite}}">
             <h3>Свита</h3>
-            <div class="suite-middleware" data-id="{{this.commander.suite._id}}">
-                <img src="test.png" data-id="this.commander.suite.unit_data.troop_size" />
+            <div class="suite-target-middleware {{#this.commander.suite}}suite-middleware{{/this.commander.suite}}" data-id="{{this.commander.suite._id}}">
+                <img src="test.png" />
                 {{#this.commander.suite}}
                     {{>unitPopupDetail}}
                 {{/this.commander.suite}}
@@ -44,9 +44,8 @@
 
         <div class="general-units right-side">
             <h3>Подчиненные</h3>
-            <ul>
+            <ul class="commander-units-list">
                 {{#each this.commander.sub_army}}
-                {{test()}}
                 <li class="general-item popupper" data-id="{{this._id}}">
                     <img src="test.png" data-id="{{this.unit_data.troop_size}}" />
                     {{>unitPopupDetail}}
@@ -57,25 +56,31 @@
     </div>
 </div>
 
-{{#show_general}}
+{{#general != false}}
 <div class="base-soliders">
     <div class="subordinates vscrolling dynamic-left-floating">
-        <div class="suite left-side">
+        <div class="suite left-side {{#this.general.suite}}popupper{{/this.general.suite}}">
             <h3>Свита</h3>
-            <img src="test.png" />
-            <div class="popup">Test</div>
+            <div class="suite-target-downware {{#this.general.suite}}suite-downware{{/this.general.suite}}" data-id="{{this.general.suite._id}}">
+                <img src="test.png" data-id="this.general.suite.unit_data.troop_size" />
+                {{#this.general.suite}}
+                    {{>unitPopupDetail}}
+                {{/this.general.suite}}
+            </div>
         </div>
 
         <div class="units right-side">
             <h3>Подчиненные</h3>
-            <ul>
-                <li>
-                    <img src="test.png" />
-                    <div class="popup">Test</div>
+            <ul class="general-units-list">
+                {{#each this.general.sub_army}}
+                <li class="general-item popupper" data-id="{{this._id}}">
+                    <img src="test.png" data-id="{{this.unit_data.troop_size}}" />
+                    {{>unitPopupDetail}}
                 </li>
+                {{/each}}
             </ul>
         </div>
     </div>
 </div>
-{{/show_general}}
+{{/general != false}}
 {{/wait == false}}

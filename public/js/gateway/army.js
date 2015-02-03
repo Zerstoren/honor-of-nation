@@ -57,7 +57,7 @@ define('gateway/army', [
                 if (data.done) {
                     fn(data);
                 }
-            })
+            });
         },
 
         moveOut: function (id, fn) {

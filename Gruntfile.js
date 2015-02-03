@@ -20,6 +20,14 @@ module.exports = function(grunt) {
         grunt.initConfig({
             //Например проверка кода javascript с помощью утилиты jshint
             jshint: {
+                options: {
+                    globals: {
+                        jQuery: true,
+                        console: true,
+                        module: true
+                    }
+                },
+
                 files: [
                     'public/js/**/*.js',
                     '!public/js/libs/alertify.js',

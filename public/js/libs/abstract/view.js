@@ -48,10 +48,11 @@ define('libs/abstract/view', [
         },
 
         _eventGlobal: function (key, events) {
-            var match, method,
-                delegateGlobalEvents = /^(\S+) (global)$/;
+            var method,
+                delegateGlobalEvents = /^(\S+) (global)$/,
+                match = key.match(delegateGlobalEvents);
 
-            if (match = key.match(delegateGlobalEvents)) {
+            if (match) {
                 method = events[key];
                 if (!_.isFunction(method)) method = this[events[key]];
                 if (!method) return;
@@ -70,10 +71,10 @@ define('libs/abstract/view', [
         },
 
         _eventDragNDrop: function (key, events) {
-            var match,
-                delegateDragNDropEvents = /^(drag-n-drop) (.*)$/;
+            var delegateDragNDropEvents = /^(drag-n-drop) (.*)$/,
+                match = key.match(delegateDragNDropEvents);
 
-            if (match = key.match(delegateDragNDropEvents)) {
+            if (match) {
                 var drag,
                     settings = events[key],
                     selectors = match[2].split('->'),
@@ -158,7 +159,7 @@ define('libs/abstract/view', [
             fromView.on(eventName, traverseFn, this);
 
             return function () {
-                fromView.un(eventName, traverseFn, this);
+                fromView.off(eventName, traverseFn, this);
             };
         },
 
