@@ -301,7 +301,7 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
 
         self._getArmyController().detail(self.transfer, {
             'user': str(self.user.getId()),
-            '_id': str(commander.getId())
+            'army': str(commander.getId())
         })
 
         result = self.transfer.getLastMessage()['message']
