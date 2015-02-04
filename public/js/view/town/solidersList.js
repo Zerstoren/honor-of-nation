@@ -188,9 +188,9 @@ define('view/town/solidersList', [
             this.viewManipulate.render(target.find('.popover'));
             this.viewManipulate.wait();
             this.viewManipulateTriggers = [
-                this.traverseEvent('add_soliders_to_general', this.viewManipulate),
+                this.traverseEvent('add_general_to_commander', this.viewManipulate),
                 this.traverseEvent('add_suite', this.viewManipulate),
-                this.traverseEvent('remove_soliders_to_general', this.viewManipulate),
+                this.traverseEvent('remove_general_from_commander', this.viewManipulate),
                 this.traverseEvent('remove_suite', this.viewManipulate)
             ];
 
@@ -473,8 +473,10 @@ define('view/town/solidersList', [
 
             if (isSuite) {
                 parentArmy.set('suite', null);
+                this.trigger('remove_suite', targetArmy, parentArmy);
             } else {
                 parentArmy.get('sub_army').remove(targetArmy);
+                this.trigger('remove_general_from_commander', targetArmy, parentArmy);
             }
 
             this.get('buffer').push(targetArmy);
@@ -490,9 +492,23 @@ define('view/town/solidersList', [
             if (destination.hasClass('suite-target-middleware')) {
                 parent = this.get('commander');
                 parent.set('suite', army);
+                this.trigger('add_suite', new CollectionArmy([parent, army]), true);
+
             } else if (destination.hasClass('commander-units-list')) {
                 parent = this.get('commander');
                 parent.get('sub_army').push(army);
+                this.trigger('add_general_to_commander', parent, army);
+
+            } else if (destination.hasClass('general-units-list')) {
+                parent = this.get('general');
+                parent.get('sub_army').push(army);
+                this.trigger('add_general_to_commander', parent, army);
+
+            } else if (destination.hasClass('suite-target-downware')) {
+                parent = this.get('general');
+                parent.set('suite', army);
+                this.trigger('add_suite', new CollectionArmy(parent, army));
+
             }
 
             this.get('buffer').remove(army);
@@ -508,7 +524,7 @@ define('view/town/solidersList', [
             target.parent().find('li.selected').removeClass('selected');
             target.addClass('selected');
 
-            this.set('general', army);
+            this.set('general', army[0]);
         },
 
         onStart: function () {

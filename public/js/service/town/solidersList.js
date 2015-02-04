@@ -31,6 +31,10 @@ define('service/town/solidersList', [
             this.mainView.on('add_soliders_to_general', this.onAddSolidersToGeneral, this);
             this.mainView.on('add_general_to_commander', this.onAddGeneralToCommander, this);
             this.mainView.on('add_suite', this.onAddSuite, this);
+
+            this.mainView.on('remove_suite', this.onRemoveSuite, this);
+            this.mainView.on('remove_general_from_commander', this.onRemoveGeneralFromCommander, this);
+
             this.mainView.on('load_details', this.onLoadDetails, this);
         },
 
@@ -100,8 +104,8 @@ define('service/town/solidersList', [
             }.bind(this));
         },
 
-        onAddSuite: function (selectedCollection) {
-            var solider = [],
+        onAddSuite: function (selectedCollection, silent) {
+            var solider = null,
                 general = null;
 
             selectedCollection.each(function (domain) {
@@ -113,7 +117,9 @@ define('service/town/solidersList', [
             });
 
             gatewayArmy.addSuite(general, solider, function () {
-                this.update();
+                if (!silent) {
+                    this.update();
+                }
             }.bind(this));
         },
 
@@ -121,6 +127,18 @@ define('service/town/solidersList', [
             gatewayArmy.dissolution(id, function () {
                 this.update();
             }.bind(this));
+        },
+
+        onRemoveSuite: function (solider, general) {
+            gatewayArmy.removeSuite(general, solider, function () {
+//                this.update();
+            }.bind(this));
+        },
+
+        onRemoveGeneralFromCommander: function (solider, general) {
+            gatewayArmy.removeSolidersFromGeneral(general, solider, function () {
+
+            });
         }
     });
 });

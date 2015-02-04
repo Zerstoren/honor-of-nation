@@ -92,6 +92,28 @@ define('gateway/army', [
             });
         },
 
+        removeSuite: function (general, solider, fn) {
+            this.socket.send('/army/remove_suite', {
+                general: general.get('_id'),
+                solider: solider.get('_id')
+            }, function (data) {
+                if (data.done) {
+                    fn(data);
+                }
+            });
+        },
+
+        removeSolidersFromGeneral: function (general, solider, fn) {
+            this.socket.send('/army/remove_soliders_general', {
+                general: general.get('_id'),
+                soliders: [solider.get('_id')]
+            }, function (data) {
+                if (data.done) {
+                    fn(data);
+                }
+            });
+        },
+
         dissolution: function (id, fn) {
             this.socket.send('/army/dissolution', {
                 'army': id
