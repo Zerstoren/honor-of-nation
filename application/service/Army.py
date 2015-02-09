@@ -113,7 +113,7 @@ class Service_Army(AbstractService.Service_Abstract):
                 raise exceptions.army.UnitNotInBuild("Юнит не находится в здании")
 
             if army.getUnit().getType() == Common.TYPE_GENERAL:
-                if self._hasDeepGeneral(army):
+                if self._hasDeepGeneral(army) or generalArmy.getCommander():
                     raise exceptions.army.AddSolidersToUnit("Нельзя создавать цепочку из 3х генералов")
 
             solidersSize += self._calculateUnitsSize(army)

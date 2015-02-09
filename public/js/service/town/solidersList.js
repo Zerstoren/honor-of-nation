@@ -36,6 +36,7 @@ define('service/town/solidersList', [
             this.mainView.on('remove_general_from_commander', this.onRemoveGeneralFromCommander, this);
 
             this.mainView.on('load_details', this.onLoadDetails, this);
+            this.mainView.on('update', this.update, this);
         },
 
         render: function (holder, town) {
@@ -98,9 +99,11 @@ define('service/town/solidersList', [
             }.bind(this));
         },
 
-        onAddGeneralToCommander: function (commnader, general) {
+        onAddGeneralToCommander: function (commnader, general, silent) {
             gatewayArmy.addSolidersToGeneral([general], commnader, function () {
-                this.update();
+                if (!silent) {
+                    this.update();
+                }
             }.bind(this));
         },
 

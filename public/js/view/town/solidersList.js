@@ -121,19 +121,6 @@ define('view/town/solidersList', [
                 massiveDestination: true,
                 handler: this.onAttachGeneralToGeneral.bind(this)
             });
-
-
-
-            /** FOR DEBUG **/
-//            this.viewManipulate = new CommanderManipulate();
-//            this.viewManipulate.render(jQuery('li[data-id="54c41f51e0460d1ccf811850"]').find('.popover'));
-//
-//            this.popoverUnits.showLayer({
-//                currentTarget: jQuery('li[data-id="54c41f51e0460d1ccf811850"]')
-//            });
-//            this.popupUnits.disable();
-//            this.trigger('load_details', '54c41f51e0460d1ccf811850');
-
         },
 
         onAttachGeneralToGeneral: function (from, to) {
@@ -215,6 +202,7 @@ define('view/town/solidersList', [
                 fn();
             });
             this.viewManipulate = null;
+            this.trigger('update');
         },
 
         onUnitMerge: function () {
@@ -395,16 +383,18 @@ define('view/town/solidersList', [
         events: {
             'click .general-units ul li.general-item': 'onShowDetailGeneral',
 
-            'drag-n-drop .general-units ul li.general-item -> .buffer ul': {
+            'drag-n-drop ul.commander-units-list li.general-item, ul.general-units-list li.general-item -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
-                onStop: 'onStop'
+                onStop: 'onStop',
+                massiveDestination: true
             },
 
             'drag-n-drop .suite-middleware, .suite-downware -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
-                onStop: 'onStop'
+                onStop: 'onStop',
+                massiveDestination: true
             },
 
             'drag-n-drop .buffer ul li -> .suite-target-middleware, .suite-target-downware, .commander-units-list, .general-units-list': {
@@ -494,21 +484,20 @@ define('view/town/solidersList', [
                 parent.set('suite', army);
                 this.trigger('add_suite', new CollectionArmy([parent, army]), true);
 
+            } else if (destination.hasClass('suite-target-downware')) {
+                parent = this.get('general');
+                parent.set('suite', army);
+                this.trigger('add_suite', new CollectionArmy([parent, army]), true);
+
             } else if (destination.hasClass('commander-units-list')) {
                 parent = this.get('commander');
                 parent.get('sub_army').push(army);
-                this.trigger('add_general_to_commander', parent, army);
+                this.trigger('add_general_to_commander', parent.get('_id'), army.get('_id'), true);
 
             } else if (destination.hasClass('general-units-list')) {
                 parent = this.get('general');
                 parent.get('sub_army').push(army);
-                this.trigger('add_general_to_commander', parent, army);
-
-            } else if (destination.hasClass('suite-target-downware')) {
-                parent = this.get('general');
-                parent.set('suite', army);
-                this.trigger('add_suite', new CollectionArmy(parent, army));
-
+                this.trigger('add_general_to_commander', parent.get('_id'), army.get('_id'), true);
             }
 
             this.get('buffer').remove(army);
