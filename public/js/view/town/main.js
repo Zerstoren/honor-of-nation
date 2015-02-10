@@ -6,10 +6,13 @@ define('view/town/main', [
     return AbstractView.extend({
         events: {
             'click .close': 'onClose',
-            'keydown global': 'onKeyDown',
             'click .town_info .develop_weapon': 'onDevelopWeapon',
             'click .town_info .develop_armor': 'onDevelopArmor',
             'click .town_info .develop_people': 'onDevelopUnit'
+        },
+
+        eventsGlobal: {
+            'keydown': 'onKeyDown'
         },
 
         className: 'town',

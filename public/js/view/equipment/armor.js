@@ -14,7 +14,6 @@ define('view/equipment/armor', [
     return ViewEquipmentAbstract.extend({
         events: {
             'click .header-icon-close': 'onClose',
-            'keydown global': 'onKeyDown',
             'change .shield_type': 'onChangeShieldType',
             'click .equipment-item': 'onSelectArmor',
             'click .select-filter-equipment .filter': 'onChangeFilterArmor',
@@ -22,6 +21,10 @@ define('view/equipment/armor', [
             'click .save': 'onSaveArmor',
             'click button.add': 'onAdd',
             'click .remove': 'onRemove'
+        },
+
+        eventsGlobal: {
+            'keydown': 'onKeyDown'
         },
 
         data: {

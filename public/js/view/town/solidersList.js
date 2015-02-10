@@ -381,23 +381,25 @@ define('view/town/solidersList', [
 
     CommanderManipulate = AbstractView.extend({
         events: {
-            'click .general-units ul li.general-item': 'onShowDetailGeneral',
+            'click .general-units ul li.general-item': 'onShowDetailGeneral'
+        },
 
-            'drag-n-drop ul.commander-units-list li.general-item, ul.general-units-list li.general-item -> .buffer ul': {
+        eventsDragNDrop: {
+            'ul.commander-units-list li.general-item, ul.general-units-list li.general-item -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
                 onStop: 'onStop',
                 massiveDestination: true
             },
 
-            'drag-n-drop .suite-middleware, .suite-downware -> .buffer ul': {
+            '.suite-middleware, .suite-downware -> .buffer ul': {
                 handler: 'fromGeneralToBufferHandler',
                 onStart: 'onStart',
                 onStop: 'onStop',
                 massiveDestination: true
             },
 
-            'drag-n-drop .buffer ul li -> .suite-target-middleware, .suite-target-downware, .commander-units-list, .general-units-list': {
+            '.buffer ul li -> .suite-target-middleware, .suite-target-downware, .commander-units-list, .general-units-list': {
                 handler: 'fromBufferToCommanderHandler',
                 onStart: 'onStart',
                 onStop: 'onStop',

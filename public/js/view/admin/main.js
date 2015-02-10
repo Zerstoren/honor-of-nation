@@ -2,8 +2,11 @@ define('view/admin/main', [], function () {
     return AbstractView.extend({
         events: {
             'click .close'      : "onClose",
-            'click ul li button': 'onSelectType',
-            'keydown global'    : 'onKeyDown'
+            'click ul li button': 'onSelectType'
+        },
+
+        eventsGlobal: {
+            'keydown': 'onKeyDown'
         },
 
         className: 'admin',

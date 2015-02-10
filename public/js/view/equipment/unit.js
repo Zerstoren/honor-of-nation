@@ -16,7 +16,6 @@ define('view/equipment/unit', [
     return ViewEquipmentAbstract.extend({
         events: {
             'click .header-icon-close': 'onClose',
-            'keydown global': 'onKeyDown',
             'click .equipment-item': 'onSelectUnit',
             'click .select-filter-equipment .filter': 'onChangeFilterUnit',
             'click .select-equipment-type button': 'onChangeUnitType',
@@ -26,6 +25,10 @@ define('view/equipment/unit', [
             'click .armors .armor': 'onSelectArmor',
             'click .weapons .weapon': 'onSelectWeapon',
             'click .weapons-second .weapon-second': 'onSelectWeaponSecond'
+        },
+
+        eventsGlobal: {
+            'keydown': 'onKeyDown'
         },
 
         data: {

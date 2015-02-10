@@ -14,13 +14,16 @@ define('view/equipment/weapon', [
     return ViewEquipmentAbstract.extend({
         events: {
             'click .header-icon-close': 'onClose',
-            'keydown global': 'onKeyDown',
             'click .equipment-item': 'onSelectWeapon',
             'click .select-filter-equipment .filter': 'onChangeFilterWeapon',
             'click .select-equipment-type button': 'onChangeWeaponType',
             'click .save': 'onSaveWeapon',
             'click button.add': 'onAdd',
             'click .remove': 'onRemove'
+        },
+
+        eventsGlobal: {
+            'keydown': 'onKeyDown'
         },
 
         data: {

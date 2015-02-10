@@ -14,6 +14,7 @@ define('libs/abstract/view', [
     window.AbstractView = Backbone.View.extend({
         adapt: [Ractive.adaptors.Backbone],
         partials: {},
+
         initRactive: function () {
             this._dragEvents = [];
             this.ractive = new Ractive(this);
@@ -37,49 +38,26 @@ define('libs/abstract/view', [
 
         delegateEvents: function (events) {
             Backbone.View.prototype.delegateEvents.apply(this, arguments);
-            if (!(events || (events = _.result(this, 'events')))) return this;
-
-            for (var key in events) {
-                this._eventGlobal(key, events);
-                this._eventDragNDrop(key, events);
-            }
-
+            this.__delegateDragNdropEvents();
+            this.__delegateGlobalEvents();
             return this;
         },
 
-        _eventGlobal: function (key, events) {
-            var method,
-                delegateGlobalEvents = /^(\S+) (global)$/,
-                match = key.match(delegateGlobalEvents);
+        __delegateDragNdropEvents: function () {
+            var events,
+                drag,
+                settings,
+                selectors,
+                target,
+                destination;
 
-            if (match) {
-                method = events[key];
-                if (!_.isFunction(method)) method = this[events[key]];
-                if (!method) return;
+            if (!(events = this.eventsDragNDrop)) return this;
 
-                var eventName = match[1],
-                    selector = match[2];
-
-                method = _.bind(method, this);
-                eventName += '.delegateEvents' + this.cid;
-
-                if (selector === 'global') {
-                    $(document).on(eventName, method);
-                }
-            }
-
-        },
-
-        _eventDragNDrop: function (key, events) {
-            var delegateDragNDropEvents = /^(drag-n-drop) (.*)$/,
-                match = key.match(delegateDragNDropEvents);
-
-            if (match) {
-                var drag,
-                    settings = events[key],
-                    selectors = match[2].split('->'),
-                    target = selectors[0].trim(),
-                    destination = selectors[1].trim();
+            for (var key in events) {
+                settings = events[key],
+                selectors = key.split('->'),
+                target = selectors[0].trim(),
+                destination = selectors[1].trim();
 
                 drag = new ViewElementsDrag({
                     section: this.$el,
@@ -96,15 +74,46 @@ define('libs/abstract/view', [
             }
         },
 
+        __delegateGlobalEvents: function () {
+            var events,
+                method,
+                eventName;
+
+            if (!(events = this.eventsGlobal)) return this;
+
+            for (var key in events) {
+                method = events[key];
+                if (!_.isFunction(method)) method = this[events[key]];
+                if (!method) return;
+
+                eventName = key;
+
+                method = _.bind(method, this);
+                eventName += '.delegateEvents' + this.cid;
+                $(document).on(eventName, method);
+            }
+        },
+
         undelegateEvents: function () {
             Backbone.View.prototype.undelegateEvents.apply(this, arguments);
-            $(document).off('.delegateEvents' + this.cid);
+            this.__undelegateDragNdropEvents();
+            this.__undelegateGlobalEvents();
+            return this;
+        },
+
+        __undelegateDragNdropEvents: function () {
+            if (!this.eventsDragNDrop) return;
             _.each(this._dragEvents, function (drag) {
                 drag.remove();
             });
             this._dragEvents = [];
-            return this;
         },
+
+        __undelegateGlobalEvents: function () {
+            if (!this.eventsGlobal) return;
+            $(document).off('.delegateEvents' + this.cid);
+        },
+
 
         keyCodes: {
             // Alphabet
