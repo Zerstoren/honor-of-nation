@@ -42,4 +42,14 @@ class Army_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return armyCollection
 
+    def loadByMapCollection(self, collection):
+        """
+        :type collection: collection.MapCollection.Map_Collection
+        """
+        result = Mapper.Army_Mapper.getByPositions(collection)
+        armyCollection = Army_Collection()
+        armyCollection.setOptions(result)
+
+        return armyCollection
+
 Army_Factory = Army_Factory_Main()

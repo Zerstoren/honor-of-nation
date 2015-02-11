@@ -16,6 +16,12 @@ class Service_Army(AbstractService.Service_Abstract):
     def get(self, _id, user=None):
         return Army_Factory.get(_id)
 
+    def loadByMapCollection(self, collection):
+        """
+        :type collection: collection.MapCollection.Map_Collection
+        """
+        return Army_Factory.loadByMapCollection(collection)
+
     def load(self, armyUser, position, config=None, user=None):
         if config is None:
             config = dict()

@@ -137,3 +137,11 @@ class CollectionController(_AbstractArmy):
             'done': True,
             'data': result
         })
+
+
+class DeliveryController(_AbstractArmy):
+    def updateUnitsOnMap(self, user, unitsList):
+        user.getTransfer().forceSend('/delivery/unitsUpdateOnMap', {
+            'done': True,
+            'units': unitsList
+        })

@@ -35,3 +35,14 @@ class Service_Abstract(object):
 
         classList.reverse()
         return type(newClassName, tuple(classList), {})()
+
+    def getDecorateClass(self, decorateType):
+        currentClassName = self.__class__.__name__
+        classPrefixes = currentClassName.split('_')[-1]
+
+        path = 'service.Decorate.' + decorateType + '.' + classPrefixes
+
+        try:
+            return importlib.import_module(path).Decorate()
+        except AttributeError:
+            raise ImportError('Not found class Decorated in %s' % path)

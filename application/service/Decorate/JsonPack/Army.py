@@ -28,6 +28,15 @@ class Decorate():
 
         return result
 
+    def loadByMapCollection(self, mapCollection):
+        collection = super().loadByMapCollection(mapCollection)
+        result = []
+
+        for domain in collection:
+            result.append(self._pack(domain))
+
+        return result
+
     def loadDetail(self, armyUser, _id, user=None):
         def deepPack(block):
             current = self._pack(block['current'])

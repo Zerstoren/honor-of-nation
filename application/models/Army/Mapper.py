@@ -18,6 +18,22 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter)
 
+    def getByPositions(self, collection, detail=False):
+        """
+        :type collection: collection.MapCollection.Map_Collection
+        """
+        ids = [mapDomain.getId() for mapDomain in collection]
+
+        commonFilter = Common.Common_Filter()
+        commonFilter.addIn('location', ids)
+
+        if detail is False:
+            commonFilter.add('commander', None)
+
+        commonFilter.add('in_build', False)
+
+        return self._select(commonFilter)
+
     def getSubGenerals(self, generalDomain):
         commonFilter = Common.Common_Filter()
         commonFilter.add('commander', generalDomain.getId())

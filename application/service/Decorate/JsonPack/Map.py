@@ -27,8 +27,7 @@ class Decorate():
             models.Map.Common.TRANSFER_ALIAS_BUILD: domain.getBuild()
         }
 
-    def getByVisibleCollection(self, collection):
-        mapCollection = super(Decorate, self).getByVisibleCollection(collection)
+    def fromCollectionToList(self, mapCollection):
         result = {}
 
         for i in mapCollection:
@@ -38,3 +37,8 @@ class Decorate():
             result[i.getY()][i.getX()] = self._getJsonForMap(i)
 
         return result
+
+    def getByVisibleCollection(self, collection):
+        mapCollection = super(Decorate, self).getByVisibleCollection(collection)
+        return self.fromCollectionToList(mapCollection)
+
