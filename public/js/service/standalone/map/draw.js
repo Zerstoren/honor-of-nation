@@ -3,12 +3,14 @@ define('service/standalone/map/draw', [
 
     'service/standalone/map',
     'service/standalone/map/gameMapItems/drawObjects/resource',
-    'service/standalone/map/gameMapItems/drawObjects/town'
+    'service/standalone/map/gameMapItems/drawObjects/town',
+    'service/standalone/map/gameMapItems/drawObjects/army'
 ], function (
     userService,
     mapInstance,
     MapDrawObjectsResource,
-    MapDrawObjectsTown
+    MapDrawObjectsTown,
+    MapDrawObjectsArmy
 ) {
     var Draw = AbstractService.extend({
 
@@ -31,6 +33,7 @@ define('service/standalone/map/draw', [
             this.$mapDI = mapInstance;
             this.mapDrawObjectsTowns = new MapDrawObjectsTown();
             this.mapDrawObjectsResource = new MapDrawObjectsResource();
+            this.mapDrawObjectsArmy = new MapDrawObjectsArmy();
             this.$isInit = false;
         },
 
@@ -67,27 +70,24 @@ define('service/standalone/map/draw', [
             var self = this;
 
             this.$mapDI.setUpdateDataFnLayer(function (x, y) {
+                var location = mapInstance.help.fromPlaceToId(x, y);
                 if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
                     return ['no_map'];
                 }
 
                 var tmp, classList = [];
-                tmp = self.getLand(x, y);
-                if(!tmp) {
+                if(!(tmp = self.getLand(x, y, location))) {
                     return ['shadow'];
                 }
 
                 classList.push(tmp);
 
-                tmp = self.getDecoration(x, y);
-                if(tmp) {
+                if(tmp = self.getDecoration(x, y, location)) {
                     classList.push(tmp);
                 }
 
-                tmp = self.getBuild(x, y);
-                if(tmp) {
-                    classList.push(tmp);
-                }
+                self.getBuild(x, y, location);
+                self.getArmy(x, y, location);
 
                 return classList;
             });
@@ -139,6 +139,14 @@ define('service/standalone/map/draw', [
             }
         },
 
+        getArmy: function (x, y, mapId) {
+            if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
+                return;
+            }
+
+            return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
+        },
+
         mapMerge: function(map) {
             var x, y;
 
@@ -157,6 +165,10 @@ define('service/standalone/map/draw', [
             }
 
             this.$mapDI.update();
+        },
+
+        getInstanceArmy: function () {
+            return this.mapDrawObjectsArmy;
         }
     });
 

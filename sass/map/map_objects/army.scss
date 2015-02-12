@@ -1,5 +1,5 @@
 div.cont {
-    .town_container.focused .town_image {
+    .army_container.focused .town_image {
         border: 1px solid #efff23;
         border-radius: 5px;
         width: 112px;
@@ -7,31 +7,20 @@ div.cont {
         margin: -1px 0 0 -1px;
     }
 
-    .town_container {
+    .army_container {
         position: absolute;
         width: 114px;
         height: 96px;
 
-        .town_image {
+        .army_image {
             position: absolute;
-            z-index: 20;
+            z-index: 25;
+            background-image: url("/img/objects/city/castle.png");
             width: 114px;
             height: 96px;
         }
 
-        .town_type_0 {
-            background-image: url("/img/objects/city/village.png");
-        }
-
-        .town_type_1 {
-            background-image: url("/img/objects/city/town.png");
-        }
-
-        .town_type_2 {
-            background-image: url("/img/objects/city/castle.png");
-        }
-
-        .town_box {
+        .army_box {
             width: 140px;
             height: 40px;
 

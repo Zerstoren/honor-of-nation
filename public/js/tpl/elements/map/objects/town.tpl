@@ -1,4 +1,4 @@
-<div class="town_container" id="container_{{data._id}}">
+<div class="container town_container" id="container_{{data._id}}">
     <div class="town_image town_type_{{data.type}}"></div>
 
     <div class="town_box box_message user_state_0">
