@@ -12,13 +12,13 @@
         width: auto;
         height: auto;
         @include no-selected;
-        cursor: normal;
+        cursor: default;
 
         tr {
             overflow: hidden;
             white-space: nowrap;
             @include no-selected;
-            cursor: normal;
+            cursor: default;
 
             td {
                 width: 96px;
@@ -26,13 +26,13 @@
                 display: inline-block;
                 white-space: nowrap;
                 @include no-selected;
-                cursor: normal;
+                cursor: default;
 
                 > div {
                     position: absolute;
                     width: 96px;
                     height: 96px;
-                    cursor: normal;
+                    cursor: default;
                     @include no-selected;
                 }
 

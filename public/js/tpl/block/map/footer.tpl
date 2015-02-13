@@ -84,6 +84,9 @@
                 </div>
                 {{/this.footer.type}}
 
+                {{#this.footer.type === 'army'}}
+                {{/this.footer.type}}
+
             </div>
 
             <div class="right">

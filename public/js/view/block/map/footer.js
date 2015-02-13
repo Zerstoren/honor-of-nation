@@ -3,13 +3,15 @@ define('view/block/map/footer', [
     'model/dummy',
 
     'factory/town',
-    'factory/mapResources'
+    'factory/mapResources',
+    'factory/army'
 ], function(
     map,
     ModelDummy,
 
     factoryTown,
-    factoryMapResources
+    factoryMapResources,
+    factoryArmy
 ) {
     'use strict';
 
@@ -73,6 +75,9 @@ define('view/block/map/footer', [
                 case 'resource':
                     this.$focusOnResource(x, y, idContainer);
                     break;
+
+                case 'army':
+                    this.$focusOnArmy(x, y, idContainer);
             }
         },
 
@@ -100,7 +105,17 @@ define('view/block/map/footer', [
             }
 
             this.data.footer.set('resource', domain.attributes);
+            return true;
+        },
 
+        $focusOnArmy: function (x, y, idContainer) {
+            var domain = factoryArmy.getFromPool(idContainer);
+
+            if(domain === false) {
+                return false;
+            }
+
+            this.data.footer.set('army', domain.attributes);
             return true;
         }
     });
