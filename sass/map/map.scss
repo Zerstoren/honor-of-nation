@@ -29,7 +29,6 @@
                 cursor: default;
 
                 > div {
-                    position: absolute;
                     width: 96px;
                     height: 96px;
                     cursor: default;
@@ -38,33 +37,49 @@
 
                 // Ground
                 > div.level0 {
-                     z-index: 0;
+                    position: absolute;
+                     z-index: 1;
                 }
 
                 // Decor
                 > div.level1 {
+                    position: absolute;
                     z-index: 10;
                 }
 
                 // Shadow
                 > div.level2 {
+                    position: absolute;
                     z-index: 30;
                 }
 
                 > div.level3 {
+                    position: absolute;
                     z-index: 40;
                 }
 
                 > div.cont {
+                    .map-item {
+                        position: absolute;
+                        z-index: 45;
+                    }
+
                     .box_message {
+                        position: absolute;
                         z-index: 60;
                         border-radius: 5px;
                         padding: 4px;
                         box-shadow: 3px 3px 10px 1px #333;
-                        position: absolute;
                         margin-left: -20px;
-                        margin-top: 100px;
+                        margin-top: 80px;
                         opacity: 0.6;
+
+                        @for $i from 1 through 100 {
+                            &:nth-child(#{$i}) {
+                                margin-left: -20px + (5px * $i);
+                                margin-top: 80px + (5px * $i);
+                            }
+                        }
                     }
 
                     .box_message:hover {

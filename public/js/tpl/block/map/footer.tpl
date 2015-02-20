@@ -85,6 +85,7 @@
                 {{/this.footer.type}}
 
                 {{#this.footer.type === 'army'}}
+                {{this.footer.army.count}}
                 {{/this.footer.type}}
 
             </div>

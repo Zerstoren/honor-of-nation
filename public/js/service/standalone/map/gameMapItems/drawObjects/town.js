@@ -23,7 +23,6 @@ define('service/standalone/map/gameMapItems/drawObjects/town', [
 
         getTownObject: function(x, y, type) {
             var domain,
-                self = this,
                 posId = mapInstance.help.fromPlaceToId(x, y);
 
             domain = factoryTown.searchInPool('pos_id', posId)[0];
@@ -32,10 +31,11 @@ define('service/standalone/map/gameMapItems/drawObjects/town', [
                 domain = new ModelTown();
                 domain.set('pos_id', posId);
                 domain.mapLoad(function () {
-                    this.drawBuildObject(domain);
                     try {
                         factoryTown.pushToPool(domain);
                     } catch (e) {}
+                    this.drawBuildObject(domain);
+                    mapInstance.update();
                 }.bind(this));
             } else {
                 this.drawBuildObject(domain);

@@ -11,6 +11,7 @@ define('factory/army', [
 
             if (!(domain = this.getFromPool(data._id))) {
                 domain = new this.domain(data);
+                this.pushToPool(domain);
                 this.trigger('add', domain);
             }
 

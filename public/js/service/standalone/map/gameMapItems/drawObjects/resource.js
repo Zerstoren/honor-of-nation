@@ -26,10 +26,11 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
                 domain = new ModelMapResources();
                 domain.set('pos_id', posId);
                 domain.mapLoad(function () {
-                    this.drawResourceObject(domain);
                     try {
                         factoryMapResources.pushToPool(domain);
                     } catch(e) {}
+                    this.drawResourceObject(domain);
+                    mapInstance.update();
                 }.bind(this));
             } else {
                 this.drawResourceObject(domain);

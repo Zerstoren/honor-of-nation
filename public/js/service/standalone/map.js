@@ -31,13 +31,13 @@ define('service/standalone/map', [
         $onMouseMove: function (e) {
             var type = null,
                 idContainer,
-                container;
+                container = jQuery(e.target);
 
-            container = this.$GetPrimaryContainer(e.x, e.y);
+            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
 
-            if(container !== false) {
-                type = container[0].classList[0].replace('_container', '');
-                idContainer = container[0].id.split('_')[1];
+            if(container.length) {
+                type = container.attr('data-type');
+                idContainer = container.attr('data-id');
 
                 this.trigger('onMouseMoveObject', e.x, e.y, type, idContainer);
             } else {
@@ -46,11 +46,12 @@ define('service/standalone/map', [
         },
 
         $onMouseClick: function (e) {
-            var container, idContainer, type;
+            var idContainer, type, base,
+                container = jQuery(e.target);
 
-            container = this.$GetPrimaryContainer(e.x, e.y);
+            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
 
-            if(container !== false) {
+            if(container.length) {
                 if (this.$lastFocusedContainer) {
                     this.$lastFocusedContainer.removeClass('focused');
                     this.$lastFocusedContainer = null;
@@ -58,12 +59,13 @@ define('service/standalone/map', [
                     this.trigger('onMouseClickObject', null, null, null);
                 }
 
-                type = container[0].classList[0].replace('_container', '');
-                idContainer = container[0].id.split('_')[1];
+                type = container.attr('data-type');
+                idContainer = container.attr('data-id');
+                base = container.parents('.cont').find('.map-item[data-id="' + idContainer + '"]');
 
                 this.trigger('onMouseClickObject', e.x, e.y, type, idContainer);
-                this.$lastFocusedContainer = container;
-                container.addClass('focused');
+                this.$lastFocusedContainer = base;
+                base.addClass('focused');
             } else {
                 this.trigger('onMouseClickObject', null, null, null);
 
@@ -77,38 +79,16 @@ define('service/standalone/map', [
         $onMouseDoubleClick: function (e) {
             var type = null,
                 idContainer,
-                container;
+                container = jQuery(e.target);
 
-            container = this.$GetPrimaryContainer(e.x, e.y);
+            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
 
-            if(container !== false) {
-                type = container[0].classList[0].replace('_container', '');
-                idContainer = container[0].id.split('_')[1];
+            if(container.length) {
+                type = container.attr('data-type');
+                idContainer = container.attr('data-id');
 
                 this.trigger('onMouseDoubleClickObject', e.x, e.y, type, idContainer);
             }
-        },
-
-        $GetPrimaryContainer: function(x, y) {
-            var usedContainer = false,
-                cell = this.getDomCell(x, y),
-                items = cell.find('.cont > div');
-
-            if(items.length === 0) {
-                return false;
-            }
-
-            items.each(function(position, item) {
-                item = jQuery(item);
-
-                if(item.hasClass('unit_container') && !usedContainer) {
-                    usedContainer = item;
-                } else {
-                    usedContainer = item;
-                }
-            });
-
-            return usedContainer;
         }
     });
 

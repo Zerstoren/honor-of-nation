@@ -19,7 +19,8 @@ define('view/block/map/footer', [
         initialize: function (holder) {
             this.holder = holder;
             this.template = this.getTemplate('block/map/footer');
-            this.$lastFocusedContainer = null;
+            this.$lastFocusedType = null;
+            this.$lastFocusedId = null;
             this.data.footer = new ModelDummy({
                 x: '-',
                 y: '-',
@@ -46,7 +47,7 @@ define('view/block/map/footer', [
         },
 
         onFocusObject: function (x, y, type, idContainer) {
-            if (this.data.footer.get('type') === type || this.$lastFocusedContainer) {
+            if (this.data.footer.get('type') === type || this.$lastFocusedType) {
                 return;
             }
 
@@ -60,12 +61,17 @@ define('view/block/map/footer', [
                 case 'resource':
                     this.$focusOnResource(x, y, idContainer);
                     break;
+
+                case 'army':
+                    this.$focusOnArmy(x, y, idContainer);
+                    break;
             }
         },
 
         onMouseClickObject: function (x, y, type, idContainer) {
             this.data.footer.set('type', type);
-            this.$lastFocusedContainer = type;
+            this.$lastFocusedType = type;
+            this.$lastFocusedId = idContainer;
 
             switch(type) {
                 case 'town':
@@ -78,6 +84,7 @@ define('view/block/map/footer', [
 
                 case 'army':
                     this.$focusOnArmy(x, y, idContainer);
+                    break;
             }
         },
 
