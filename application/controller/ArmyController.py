@@ -22,7 +22,11 @@ class MainController(_AbstractArmy):
         transfer.send('/army/detail', result)
 
     def move(self, transfer, data):
-        pass
+        self._getParamsAclService().move(
+            data['armyId'],
+            (data['x'], data['y'], ),
+            transfer.getUser()
+        )
 
     def mode(self, transfer, data):
         pass

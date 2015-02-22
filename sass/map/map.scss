@@ -59,9 +59,19 @@
                 }
 
                 > div.cont {
+
+
                     .map-item {
                         position: absolute;
                         z-index: 45;
+                    }
+
+                    .move-to-flag {
+                        position: absolute;
+                        z-index: 50;
+                        background-image: url('/img/texture/path/marker.png');
+                        width: 92px;
+                        height: 92px;
                     }
 
                     .box_message {

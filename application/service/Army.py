@@ -51,7 +51,7 @@ class Service_Army(AbstractService.Service_Abstract):
         commander = Army_Factory.get(_id)
         return load(commander)
 
-    def move(self, general, path, user=None):
+    def move(self, general, mapCoordinate, user=None):
         pass
 
     def changeMoveType(self, general, move, user=None):

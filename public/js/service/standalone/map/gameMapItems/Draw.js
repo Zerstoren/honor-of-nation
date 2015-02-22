@@ -65,10 +65,27 @@ define('service/standalone/map/gameMapItems/Draw', [], function () {
             }
         },
 
-        getDomCell: function(x, y) {
+        getDomCell: function(x, y, level) {
             x -= this.positionX;
             y -= this.positionY;
-            return this.$area.find('#td-' + x + 'x' + y);
+
+            if (level === undefined) {
+                return this.$area.find('#td-' + x + 'x' + y);
+            } else {
+                var search;
+                switch(level) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        search = 'level' + level;
+                        break;
+                    case 4:
+                        search = 'cont';
+                        break;
+                }
+                return this.$area.find('#td-' + x + 'x' + y + ' > .' + search);
+            }
         },
 
         setUpdateDataFnLayer: function(fn) {

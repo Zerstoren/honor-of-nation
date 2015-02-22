@@ -14,8 +14,9 @@ class Decorate():
         self._checkAccess(armyUser, user)
         return super().loadDetail(armyUser, _id, user)
 
-    def move(self, general, path, user=None):
-        pass
+    def move(self, general, mapCoordinate, user=None):
+        self._checkAccess(general.getUser(), user)
+        return super().move(general, mapCoordinate, user)
 
     def changeMoveType(self, general, move, user=None):
         pass

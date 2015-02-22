@@ -31,8 +31,11 @@ class Decorate():
             user
         )
 
-    def move(self, general, path, user=None):
-        return super().move(general, path, user)
+    def move(self, general, mapCoordinate, user=None):
+        general = Army_Factory.get(general)
+        mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=path[0], y=path[1])
+
+        return super().move(general, mapCoordinate, user)
 
     def changeMoveType(self, general, mode, user=None):
         return super().changeMoveType(general, mode, user)

@@ -39,6 +39,14 @@ define('gateway/army', [
             return domain;
         },
 
+        move: function (armyId, x, y) {
+            this.socket.send('/army/move', {
+                'army_id': armyId,
+                'x': x,
+                'y': y
+            });
+        },
+
         merge: function (army, fn) {
             this.socket.send('/army/merge', {
                 'army_list': army

@@ -8,11 +8,11 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
         },
 
         activateDrag: function() {
-            this.$dragUserUsed = true;
+            this.$dragStarted = true;
         },
 
         deactivateDrag: function() {
-            this.$dragUserUsed = false;
+            this.$dragStarted = false;
         },
 
         $afterDraw: function() {
@@ -38,6 +38,10 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
                 self.mouseDoubleClick(ev);
             });
 
+            this.$area.mouseup(function (ev) {
+                self.mouseUp(ev);
+            });
+
             jQuery(document).mouseup(function(ev) {
                 self.mouseDragStop(ev);
             });
@@ -61,6 +65,10 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
             }
         },
 
+        mouseUp: function (ev) {
+            this.trigger('mouseUp', ev);
+        },
+
         mouseDoubleClick: function(ev) {
             var tmp = this.$getInfoForEvent(ev);
 
@@ -73,7 +81,7 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
             var tmp;
 
             if(this.$dragStarted === true) {
-                this.mouseDragMove(ev);
+                this.trigger('mouseDragMove', ev);
             } else {
                 tmp = this.$getInfoForEvent(ev);
 
@@ -94,10 +102,6 @@ define('service/standalone/map/gameMapItems/Mouse', [], function () {
                 this.trigger('mouseDragStop', ev);
                 this.$dragStarted = false;
             }
-        },
-
-        mouseDragMove: function(ev) {
-            this.trigger('mouseDragMove', ev);
         },
 
         $activateSelfControl: function() {
