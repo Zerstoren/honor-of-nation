@@ -4,6 +4,7 @@ import system.log
 
 import json
 import pickle
+import zlib
 
 
 class Respondent_Instance(system.connect.client.TCPWrapper):
@@ -12,7 +13,13 @@ class Respondent_Instance(system.connect.client.TCPWrapper):
             sendData = pickle.dumps({
                 'socketId': None,
                 'user': user,
-                'data': json.dumps(data)
+                'data': zlib.compress(
+                    bytes(
+                        json.dumps(data),
+                        'utf-8'
+                    ),
+                    5
+                )
             })
         except Exception as e:
             import traceback

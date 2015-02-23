@@ -11,6 +11,7 @@ import system.router
 import system.log
 
 import json
+import zlib
 
 import balancer.client.respondent
 
@@ -25,7 +26,7 @@ def handler(content, userId):
 
     data = False
     try:
-        data = json.loads(content)
+        data = json.loads(zlib.decompress(content).decode('utf-8'))
     except Exception:
         transfer.send('/error', {"text": 'Not valid json'})
 

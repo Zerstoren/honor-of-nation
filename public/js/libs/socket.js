@@ -1,7 +1,7 @@
 /**
  * Класс-абстракция над веб сокетами. Доступны только современные браузеры.
  */
-define('libs/socket', function() {
+define('libs/socket', ['libs/zlib'], function(zlib) {
     "use strict";
 
     var Socket = function(host, port) {
@@ -54,6 +54,7 @@ define('libs/socket', function() {
         }
 
         this.ws = new window.WebSocket('ws://' + this.host + ':' + this.port + '/');
+        this.ws.binaryType = "arraybuffer";
         this.ws.onopen = this.onOpen.bind(this);
         this.ws.onclose = this.onClose.bind(this);
         this.ws.onmessage = this.onMessage.bind(this);
@@ -83,9 +84,13 @@ define('libs/socket', function() {
 
         this.collectMessages = false;
 
-        this.ws.send(JSON.stringify({
-            collection: this.pool
-        }));
+        this.ws.send(
+            zlib.compress(
+                JSON.stringify({
+                    collection: this.pool
+                })
+            )
+        );
 
         this.pool = [];
     };
@@ -136,7 +141,11 @@ define('libs/socket', function() {
 
         if(this.nextMessageIsSingle) {
             this.nextMessageIsSingle = false;
-            this.ws.send(JSON.stringify(data));
+            this.ws.send(
+                zlib.compress(
+                    JSON.stringify(data)
+                )
+            );
         } else {
             this.pool.push(data);
         }
@@ -159,16 +168,18 @@ define('libs/socket', function() {
      * @return {void}
      */
     Socket.prototype.onMessage = function(data) {
-        if (data.data == 'dropdown') {
+        var msg = zlib.decompress(new Int8Array(data.data));
+
+        if (msg == 'dropdown') {
             this.trigger('dropdown');
             return;
-        } else if (data.data == 'startup') {
+        } else if (msg == 'startup') {
             this.trigger('startup');
             return;
         }
 
         var i,
-            message = JSON.parse(data.data);
+            message = JSON.parse(msg);
 
         if(message.collection) {
             for(i = 0; i < message.collection.length; i += 1) {

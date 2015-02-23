@@ -5,6 +5,8 @@ from tornado import websocket
 import balancer.server.userPool
 import balancer.server.surveyor
 
+import zlib
+
 import system.log
 import config
 
@@ -21,7 +23,7 @@ class ClientConnector():
         ClientPool.add(self)
 
         if balancer.server.surveyor.Surveyor.isReady() is False:
-            self.send('dropdown')
+            self.send(zlib.compress(b'dropdown', 5))
 
     def disconnect(self):
         self.socket = None
@@ -32,7 +34,7 @@ class ClientConnector():
         return self._id
 
     def send(self, data):
-        self.socket.write_message(data)
+        self.socket.write_message(data, binary=True)
 
     def getUser(self):
         return self.userId
@@ -60,11 +62,21 @@ class ClientPool_Instance():
 
     def sendDropDown(self):
         for i in self.clients:
-            self.clients[i].send('dropdown')
+            self.clients[i].send(
+                zlib.compress(
+                    b'dropdown',
+                    5
+                )
+            )
 
     def sendStartup(self):
         for i in self.clients:
-            self.clients[i].send('startup')
+            self.clients[i].send(
+                zlib.compress(
+                    b'startup',
+                    5
+                )
+            )
 
 
 ClientPool = ClientPool_Instance()

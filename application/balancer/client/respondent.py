@@ -2,6 +2,8 @@ import config
 import system.connect.client
 
 import pickle
+import json
+import zlib
 import system.log
 
 
@@ -18,17 +20,18 @@ class Respondent_Instance(system.connect.client.TCPWrapper):
         return {
             'connect': data['connect'],
             'user': userId,
-            'data': result
+            'data': zlib.compress(
+                bytes(
+                    json.dumps(result),
+                    'utf-8'
+                ),
+                5
+            )
         }
 
     def onMessage(self, connect, data):
         try:
             result = self.processMessage(data)
-
-            if config.isDevelopment():
-                import json
-                json.dumps(result)
-
         except Exception as e:
             import traceback
             system.log.critical(e)
@@ -37,7 +40,7 @@ class Respondent_Instance(system.connect.client.TCPWrapper):
 
         self.write(
             pickle.dumps(
-                result
+                result,
             )
         )
 

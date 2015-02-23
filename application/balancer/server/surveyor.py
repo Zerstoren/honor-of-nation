@@ -18,9 +18,8 @@ class Surveyor_Instance(system.connect.server.BalancerBroker):
 
     def onMessage(self, connector, data):
         toSend, socketId, userConnector = self._processData(data)
-
         userConnector.send(
-            json.dumps(toSend)
+            toSend
         )
 
     def _processData(self, data):
