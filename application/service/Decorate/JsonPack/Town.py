@@ -1,6 +1,6 @@
 
 class Decorate():
-    def _pack(self, domain):
+    def pack(self, domain):
         return {
             '_id' : str(domain.getId()),
             "type": domain.getType(),
@@ -11,15 +11,15 @@ class Decorate():
         }
 
     def getById(self, townId):
-        return self._pack(
+        return self.pack(
             super().getById(townId)
         )
 
     def loadByPosition(self, mapCoordinate):
-        return self._pack(
+        return self.pack(
             super().loadByPosition(mapCoordinate)
         )
 
     def save(self, townData):
         domain = super().save(townData)
-        return self._pack(domain)
+        return self.pack(domain)

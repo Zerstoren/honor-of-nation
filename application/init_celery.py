@@ -2,12 +2,12 @@ import sys
 import threading
 
 from celery import Celery
+from datetime import timedelta
 
 from tornado import ioloop
 
 import balancer.celery_sender.sender
 import config
-import system.log
 
 
 sys.argv = [sys.argv[0]]
@@ -18,6 +18,21 @@ app = Celery(
     backend=config.get('celery.backend') + config.get('database.mongodb.db')
 )
 
+app.conf.update(
+    CELERY_TIMEZONE='Europe/Kiev',
+    CELERY_ENABLE_UTC=True,
+    CELERYBEAT_SCHEDULE = {
+        'resources_update': {
+            'task': 'init_celery.resources_update',
+            'schedule': timedelta(minutes=int(config.get('resource_updates.celery')))
+        },
+
+        'population_up': {
+            'task': 'init_celery.population_up',
+            'schedule': timedelta(minutes=int(config.get('resource_updates.base')))
+        }
+    }
+)
 
 def message(message, user):
     balancer.celery_sender.sender.Respondent.writeMessage(
@@ -38,6 +53,20 @@ def army(message):
     import controller.ArmyQueueController
     celeryController = controller.ArmyQueueController.CeleryPrivateController()
     celeryController.armyCreated(message)
+
+
+@app.task(serializer='json', name='init_celery.resources_update')
+def resources_update(*args, **kwargs):
+    import controller.ResourceController
+    celeryController = controller.ResourceController.CeleryPrivateController()
+    celeryController.calculateResources()
+
+
+@app.task(serialize='json', name='init_celery.population_up')
+def population_up():
+    import controller.TownController
+    celeryController = controller.TownController.CeleryPrivateController()
+    celeryController.population_up()
 
 
 if __name__ == '__main__':
@@ -62,6 +91,6 @@ if __name__ == '__main__':
 
     try:
         threading.Thread(target=ioLoop).start()
-        app.start()
+        app.start(['celery','-A', 'init_celery', 'worker', '-B'])
     except KeyboardInterrupt:
         ioloop.IOLoop.instance().stop()

@@ -7,3 +7,4 @@ public/deploy/*/*
 public/css/style.css
 public/css/style.css.map
 libpeerconnection.log
+application/celerybrat-schedule

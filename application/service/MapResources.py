@@ -12,6 +12,9 @@ class Service_MapResources(AbstractService.Service_Abstract):
     def getResourceByPosition(self, mapCoordinate, user=None):
         return models.MapResources.Factory.MapResources_Factory.getDomainByPosition(mapCoordinate)
 
+    def getResourceByTown(self, town, user=None):
+        return models.MapResources.Factory.MapResources_Factory.getCollectionByTown(town)
+
     def saveResources(self, data):
         domain = models.MapResources.Factory.MapResources_Factory.getDomainFromData(data)
         domain.getMapper().save(domain)

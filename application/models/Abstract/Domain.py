@@ -35,6 +35,8 @@ class Abstract_Domain(object, metaclass=abc.ABCMeta):
             name = self.__convert(i)
             self.set(name, options[i])
 
+        return self
+
     def extract(self, force=False):
         if not self.hasId():
             return self

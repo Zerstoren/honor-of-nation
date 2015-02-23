@@ -3,6 +3,8 @@ import models.Resources.Mapper
 import models.Resources.Domain
 import models.Resources.Common
 
+from service.Town import Service_Town
+
 class Service_Resources(AbstractService.Service_Abstract):
     def getResources(self, userDomain, user=None):
         """
@@ -29,6 +31,38 @@ class Service_Resources(AbstractService.Service_Abstract):
 
         resourcesDomain.getMapper().save(resourcesDomain)
 
+    def updateResource(self, user, part):
+        userResourcesDomain = user.getResources()
+        rubins, wood, steel, stone, eat = (0, 0, 0, 0, 0)
+
+        for town in Service_Town().getUserTownsCollection(user):
+            rubinsR, woodR, steelR, stoneR, eatR = self._updateResources(town, part)
+
+            rubins += rubinsR
+            wood += woodR
+            steel += steelR
+            stone += stoneR
+            eat += eatR
+
+        userResourcesDomain.upResources({
+            models.Resources.Common.RUBINS: rubins,
+            models.Resources.Common.WOOD: wood,
+            models.Resources.Common.STONE: stone,
+            models.Resources.Common.STEEL: steel,
+            models.Resources.Common.EAT: eat
+        })
+        userResourcesDomain.getMapper().save(userResourcesDomain)
+
+    def _updateResources(self, town, part):
+        townResourcesDomain = town.getResourcesUp()
+
+        rubins = int((townResourcesDomain.getRubins() + townResourcesDomain.getTax()) / part)
+        wood = int(townResourcesDomain.getWood() / part)
+        steel = int(townResourcesDomain.getSteel() / part)
+        stone = int(townResourcesDomain.getStone() / part)
+        eat = int(townResourcesDomain.getEat() / part)
+
+        return (rubins, wood, steel, stone, eat, )
 
     def decorate(self, *args):
         """

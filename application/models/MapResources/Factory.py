@@ -2,6 +2,7 @@ import models.Abstract.Factory
 
 from . import Domain
 from . import Mapper
+import collection.MapResourcesCollection
 
 
 class MapResources_Factory_Main(models.Abstract.Factory.Abstract_Factory):
@@ -9,6 +10,13 @@ class MapResources_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         return self.getDomainFromData(
             Mapper.MapResources_Mapper.getResourceByPosition(mapCoordinate)
         )
+
+    def getCollectionByTown(self, town):
+        result = Mapper.MapResources_Mapper.getResourceByTown(town)
+        resourcesCollection = collection.MapResourcesCollection.MapResources_Collection()
+        resourcesCollection.setOptions(list(result))
+
+        return resourcesCollection
 
     def getDomainFromData(self, data):
         domain = Domain.MapResources_Domain()

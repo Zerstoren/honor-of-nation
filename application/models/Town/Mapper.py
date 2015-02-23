@@ -18,6 +18,15 @@ class Town_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter, commonLimit)
 
+    def getByUser(self, user):
+        commonFilter = Common.Common_Filter()
+        commonFilter.add('user', user.getId())
+
+        return self._select(commonFilter)
+
+    def getAll(self):
+        return self._select()
+
     def save(self, domain):
         """
         :type domain: models.Town.Domain.Town_Domain
@@ -47,7 +56,7 @@ class Town_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         if domain.hasId():
             self._update(
                 commonSet,
-                Common.Common_Filter({'_id', domain.getId()})
+                Common.Common_Filter({'_id': domain.getId()})
             )
         else:
             cursor = self._insert(commonSet)

@@ -45,7 +45,8 @@ class Process():
 
         args = [
             'python3',
-            '%s/init_celery.py' % os.getcwd()
+            '%s/init_celery.py' % os.getcwd(),
+            'worker'
         ]
 
         self._appendArgs(args)

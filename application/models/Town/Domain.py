@@ -8,6 +8,8 @@ import models.Map.Factory
 import models.User.Domain
 import models.User.Factory
 import models.TownBuilds.Factory
+import models.TownResources.Factory
+import models.TownBonus.Factory
 
 class Town_Domain(models.Abstract.Domain.Abstract_Domain):
     def getMap(self):
@@ -24,6 +26,12 @@ class Town_Domain(models.Abstract.Domain.Abstract_Domain):
         :rtype: models.TownBuilds.Domain.TownBuilds_Domain
         """
         return models.TownBuilds.Factory.TownBuilds_Factory.getByTown(self)
+
+    def getResourcesUp(self):
+        return models.TownResources.Factory.TownResources_Factory.get(self)
+
+    def getBonus(self):
+        return models.TownBonus.Factory.TownBonus_Factory.get(self)
 
     def getMapper(self):
         """

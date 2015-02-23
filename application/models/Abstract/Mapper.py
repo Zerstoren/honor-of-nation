@@ -7,7 +7,7 @@ import system.log
 
 
 class Abstract_Mapper(metaclass=abc.ABCMeta):
-    _table = 'towns_builds'
+    _table = ''
 
     def __init__(self):
         self._db = system.mongo.mongo

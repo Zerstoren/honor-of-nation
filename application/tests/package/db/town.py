@@ -3,6 +3,9 @@ import helpers.MapCoordinate
 import models.TownBuilds.Factory
 import models.TownBuilds.Mapper
 
+from service.TownBonus import Service_TownBonus
+from service.TownResources import Service_TownResources
+
 
 class Town(object):
     def addTown(self, x, y, user, population=None, typeTown=0, name=None):
@@ -22,6 +25,14 @@ class Town(object):
             models.TownBuilds.Mapper.TownBuilds_Mapper.getDefaultData()
         )
         buildsTownDomain.setTown(domain)
-
         buildsTownDomain.getMapper().save(buildsTownDomain)
+
+        serviceTownBonus = Service_TownBonus()
+        serviceTownBonusDomain = serviceTownBonus.onCreateTown(domain)
+        serviceTownBonus.recalculate(serviceTownBonusDomain)
+
+        serviceTownResources = Service_TownResources()
+        serviceTownResourcesDomain = serviceTownResources.onCreateTown(domain)
+        serviceTownResources.recalculate(serviceTownResourcesDomain)
+
         return domain

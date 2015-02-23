@@ -37,9 +37,8 @@ def decorate(fn):
         text += "execute in %s" % (time.time() - start)
 
         system.log.info(text)
+        print(text)
 
         return result
     return wrapper
 
-__builtins__['FN_TIMER'] = decorate
-__builtins__['TIMER'] = timer
