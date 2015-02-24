@@ -5,6 +5,9 @@ import helpers.MapCoordinate
 
 
 class AbstractTownController(object):
+    def _getTownService(self):
+        return Service_Town()
+
     def _getAclParamsJsonPackTown(self):
         return Service_Town().decorate(Service_Town.PARAMS_JSONPACK_ACL)
 
@@ -37,3 +40,22 @@ class ModelController(AbstractTownController):
         result['data']['user'] = self._getParamsAclJsonPackUser().getUserDomain(result['data']['user'])
 
         transfer.send('/model/town/get_pos_id', result)
+
+
+class DeliveryController(AbstractTownController):
+    def townUpdate(self, town):
+        town.getUser().getTransfer().forceSend('/delivery/townUpdate', {
+            'done': True,
+            'town': Service_Town().getDecorateClass(Service_Town.JSONPACK).pack(town)
+        })
+
+class CeleryPrivateController(AbstractTownController):
+
+    def population_up(self):
+        deliveryController = DeliveryController()
+
+        townService = self._getTownService()
+        towns = townService.getAllTownsCollection()
+        for town in towns:
+            if townService.upPopulation(town):
+                deliveryController.townUpdate(town)

@@ -3,6 +3,8 @@ import service.Abstract.AbstractService
 import models.TownBuilds.Factory
 import models.TownBuilds.Math
 
+import service.Town
+
 import time
 import copy
 
@@ -26,6 +28,8 @@ class Service_TownBuilds(service.Abstract.AbstractService.Service_Abstract):
 
         buildsDomain.set(buildInQueue['key'], buildInQueue['level'])
         buildsDomain.getMapper().save(buildsDomain)
+
+        service.Town.Service_Town().updateBonusAndResources(townDomain)
 
     def create(self, user, townDomain, buildKey, level):
         buildsDomain = townDomain.getBuilds()

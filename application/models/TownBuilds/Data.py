@@ -355,7 +355,9 @@ builds = {
         }],
         "bonus": {
             "armory_speed": 1,
-            "armory_price": -0.5
+            "armory_price": -0.5,
+            "weapon_speed": 1,
+            "weapon_price": -0.5
         }
     },
     "casern": {

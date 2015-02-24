@@ -18,6 +18,15 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonLimit.setOne()
         return self._select(commonFilter, commonLimit)
 
+    def getResourceByTown(self, town):
+        commonFilter = Common.Common_Filter()
+        commonFilter.add('town', town.getId())
+
+        return self._select(commonFilter)
+
+    def getAll(self):
+        return self._select()
+
     def save(self, domain):
         assert(domain.getType() in [
             models.Resources.Common.RUBINS,
@@ -38,8 +47,8 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet.add('user', domain.getUser().getId() if domain.getUser() else None)
         commonSet.add('town', domain.getTown().getId() if domain.getTown() else None)
         commonSet.add('amount', domain.getAmount())
-        commonSet.add('base_output', domain.getBaseOutput()),
-        commonSet.add('output', domain.getOutput()),
+        commonSet.add('base_output', domain.getBaseOutput())
+        commonSet.add('output', domain.getOutput())
 
         mapDomain.setBuild(models.Map.Common.BUILD_RESOURCES)
         mapDomain.getMapper().save(mapDomain)

@@ -2,12 +2,14 @@ import sys
 import threading
 
 from celery import Celery
+from datetime import timedelta
 
 from tornado import ioloop
 
 import balancer.celery_sender.sender
 import config
-import system.log
+
+import helpers.times
 
 
 sys.argv = [sys.argv[0]]
@@ -18,6 +20,26 @@ app = Celery(
     backend=config.get('celery.backend') + config.get('database.mongodb.db')
 )
 
+app.conf.update(
+    CELERY_TIMEZONE='Europe/Kiev',
+    CELERY_ENABLE_UTC=True,
+    CELERYBEAT_SCHEDULE = {
+        'resources_update': {
+            'task': 'init_celery.resources_update',
+            'schedule': timedelta(seconds=int(config.get('resource_updates.celery')))
+        },
+
+        'population_up': {
+            'task': 'init_celery.population_up',
+            'schedule': timedelta(seconds=int(config.get('resource_updates.base')))
+        },
+
+        'resources_down': {
+            'task': 'init_celery.resources_down',
+            'schedule': timedelta(seconds=int(config.get('resource_updates.base')))
+        }
+    }
+)
 
 def message(message, user):
     balancer.celery_sender.sender.Respondent.writeMessage(
@@ -39,6 +61,29 @@ def army(message):
     celeryController = controller.ArmyQueueController.CeleryPrivateController()
     celeryController.armyCreated(message)
 
+
+@app.task(serializer='json', name='init_celery.resources_update')
+@helpers.times.decorate
+def resources_update(*args, **kwargs):
+    import controller.ResourceController
+    celeryController = controller.ResourceController.CeleryPrivateController()
+    celeryController.calculateResources()
+
+
+@app.task(serialize='json', name='init_celery.population_up')
+@helpers.times.decorate
+def population_up():
+    import controller.TownController
+    celeryController = controller.TownController.CeleryPrivateController()
+    celeryController.population_up()
+
+
+@app.task(serialize='json', name='init_celery.resources_down')
+@helpers.times.decorate
+def resources_down():
+    import controller.MapResourcesController
+    celeryController = controller.MapResourcesController.CeleryPrivateController()
+    celeryController.resourceDown()
 
 if __name__ == '__main__':
     def ioLoop():
@@ -62,6 +107,6 @@ if __name__ == '__main__':
 
     try:
         threading.Thread(target=ioLoop).start()
-        app.start()
+        app.start(['celery','-A', 'init_celery', 'worker', '-B'])
     except KeyboardInterrupt:
         ioloop.IOLoop.instance().stop()

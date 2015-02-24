@@ -5,6 +5,9 @@ import controller.TownBuildsController
 
 from tests.package.db.town import Town
 
+import time
+
+
 class Backend_Controller_TownTest(
     Backend_Controller_Generic,
     Town
@@ -186,3 +189,35 @@ class Backend_Controller_TownTest(
             'async': None,
             'module': '/model/town/get_pos_id'
         })
+
+
+class Backend_Controller_TownCeleryTest(
+    Backend_Controller_Generic,
+    Town
+):
+    def setUp(self):
+        self.initCelery()
+        super().setUp()
+
+    def testTownPeopleUp(self):
+        self.fillTerrain(0, 0, 1, 1)
+        transfer = self._login()
+        user = transfer.getUser()
+
+        townDomain = self.addTown(0, 0, user, population=1, typeTown=self.TOWN_TYPE_CITY)
+        time.sleep(6)
+        townDomain.extract(True)
+
+        self.assertEqual(6, townDomain.getPopulation())
+
+    def testTownPeopleUpWithBuild(self):
+        self.fillTerrain(0, 0, 1, 1)
+        transfer = self._login()
+        user = transfer.getUser()
+
+        townDomain = self.addTown(0, 0, user, population=1, typeTown=self.TOWN_TYPE_CITY)
+        self.addTownBuild(townDomain, self.TOWN_BUILD_HOUSE, 50)
+        time.sleep(6)
+        townDomain.extract(True)
+
+        self.assertEqual(306, townDomain.getPopulation())

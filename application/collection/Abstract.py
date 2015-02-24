@@ -16,8 +16,8 @@ class AbstractCollection(list):
 
     def getById(self, itemId):
         for i in self:
-            if self[i].hasId() and self[i].getId() == itemId:
-                return self[i]
+            if i.hasId() and i.getId() == itemId:
+                return i
 
     def setOptions(self, data):
         if self.domain is None:

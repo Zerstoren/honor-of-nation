@@ -150,6 +150,11 @@ define('service/standalone/map/gameMapItems/Draw', [], function () {
             this.$afterDraw();
         },
 
+        removeCache: function (domain) {
+            domain.$$domCell = false;
+            domain.$$container = false;
+        },
+
         clear: function () {
             this.$area.detach();
         }

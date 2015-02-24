@@ -111,7 +111,7 @@ define('view/block/map/footer', [
                 return false;
             }
 
-            this.data.footer.set('resource', domain.attributes);
+            this.data.footer.set('resource', domain);
             return true;
         },
 
@@ -122,7 +122,7 @@ define('view/block/map/footer', [
                 return false;
             }
 
-            this.data.footer.set('army', domain.attributes);
+            this.data.footer.set('army', domain);
             return true;
         }
     });

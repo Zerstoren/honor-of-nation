@@ -3,6 +3,8 @@ import models.Abstract.Mapper
 from . import Common
 
 class TownBuilds_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
+    _table = 'towns_builds'
+
     def getByTownId(self, townId):
         filterQuery = Common.Common_Filter()
         filterQuery.add('town', townId)

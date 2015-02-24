@@ -41,10 +41,14 @@ class Generic(
 
     def tearDown(self):
         self.isSetup = False
-        self._testDatabaseValues()
-        self.fullCleanCache()
-        del self.fixture
-        self.core.destruct()
+        try:
+            self._testDatabaseValues()
+        except Exception as e:
+            raise e
+        finally:
+            self.fullCleanCache()
+            del self.fixture
+            self.core.destruct()
 
     def setUpDb(self, skipDb=False):
         self.fixture = tests.bootstrap.CreateBase.CreateBase()
