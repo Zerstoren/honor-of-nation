@@ -49,6 +49,9 @@ class Service_Town(service.Abstract.AbstractService.Service_Abstract):
     def getUserTownsCollection(self, user):
         return models.Town.Factory.Town_Factory.getByUser(user)
 
+    def getCollectionByTown(self, town):
+        return models.Town.Factory.Town_Factory.getCollectionByTown(town)
+
     def getAllTownsCollection(self):
         return models.Town.Factory.Town_Factory.getAll()
 

@@ -15,11 +15,21 @@ class Service_MapResources(AbstractService.Service_Abstract):
     def getResourceByTown(self, town, user=None):
         return models.MapResources.Factory.MapResources_Factory.getCollectionByTown(town)
 
+    def getAllResources(self):
+        return models.MapResources.Factory.MapResources_Factory.getAll()
+
     def saveResources(self, data):
         domain = models.MapResources.Factory.MapResources_Factory.getDomainFromData(data)
         domain.getMapper().save(domain)
 
         return True
+
+    def resourceDown(self, resource):
+        output = resource.getOutput()
+        amount = resource.getAmount()
+        resource.setAmount(amount - output)
+        resource.getMapper().save(resource)
+
 
     def _calculateOutput(self, baseOutput):
         return baseOutput

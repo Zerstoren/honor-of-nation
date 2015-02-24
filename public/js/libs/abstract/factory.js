@@ -55,6 +55,18 @@ define('libs/abstract/factory', [], function () {
             return domain;
         },
 
+        updateDomainFromData: function (data) {
+            var domain;
+
+            if (!(domain = this.getFromPool(data._id))) {
+                return false;
+            }
+
+            domain.set(data);
+
+            return domain;
+        },
+
         searchInPool: function (index, value) {
             var item, result = [];
 

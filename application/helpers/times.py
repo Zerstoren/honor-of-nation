@@ -34,7 +34,7 @@ def decorate(fn):
         if bool(kwards):
             text += " -> %d kwargs " % len(kwards)
 
-        text += "execute in %s" % (time.time() - start)
+        text += " execute in %s" % (time.time() - start)
 
         system.log.info(text)
         print(text)

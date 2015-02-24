@@ -24,6 +24,9 @@ class MapResources_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter)
 
+    def getAll(self):
+        return self._select()
+
     def save(self, domain):
         assert(domain.getType() in [
             models.Resources.Common.RUBINS,

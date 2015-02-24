@@ -9,6 +9,8 @@ from tornado import ioloop
 import balancer.celery_sender.sender
 import config
 
+import helpers.times
+
 
 sys.argv = [sys.argv[0]]
 
@@ -29,6 +31,11 @@ app.conf.update(
 
         'population_up': {
             'task': 'init_celery.population_up',
+            'schedule': timedelta(minutes=int(config.get('resource_updates.base')))
+        },
+
+        'resources_down': {
+            'task': 'init_celery.resources_down',
             'schedule': timedelta(minutes=int(config.get('resource_updates.base')))
         }
     }
@@ -56,6 +63,7 @@ def army(message):
 
 
 @app.task(serializer='json', name='init_celery.resources_update')
+@helpers.times.decorate
 def resources_update(*args, **kwargs):
     import controller.ResourceController
     celeryController = controller.ResourceController.CeleryPrivateController()
@@ -63,11 +71,19 @@ def resources_update(*args, **kwargs):
 
 
 @app.task(serialize='json', name='init_celery.population_up')
+@helpers.times.decorate
 def population_up():
     import controller.TownController
     celeryController = controller.TownController.CeleryPrivateController()
     celeryController.population_up()
 
+
+@app.task(serialize='json', name='init_celery.resources_down')
+@helpers.times.decorate
+def resources_down():
+    import controller.MapResourcesController
+    celeryController = controller.MapResourcesController.CeleryPrivateController()
+    celeryController.resourceDown()
 
 if __name__ == '__main__':
     def ioLoop():

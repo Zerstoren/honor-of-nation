@@ -18,6 +18,13 @@ class MapResources_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return resourcesCollection
 
+    def getAll(self):
+        result = Mapper.MapResources_Mapper.getAll()
+        resourcesCollection = collection.MapResourcesCollection.MapResources_Collection()
+        resourcesCollection.setOptions(result)
+
+        return resourcesCollection
+
     def getDomainFromData(self, data):
         domain = Domain.MapResources_Domain()
         domain.setOptions(data)

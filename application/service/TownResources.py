@@ -58,7 +58,10 @@ class Service_TownResources(AbstractService.Service_Abstract):
         output = 0
 
         for eat in eatCollection:
-            output += helpers.math.percent(eat.getBaseOutput(), townBonus.getEat() + 100)
+            resourceOutput = helpers.math.percent(eat.getBaseOutput(), townBonus.getEat() + 100)
+            output += resourceOutput
+            eat.setOutput(resourceOutput)
+            eat.getMapper().save(eat)
 
         return output
 
@@ -68,6 +71,8 @@ class Service_TownResources(AbstractService.Service_Abstract):
 
         for wood in woodCollection:
             output += wood.getBaseOutput()
+            wood.setOutput(wood.getBaseOutput())
+            wood.getMapper().save(wood)
 
         return output
 
@@ -82,7 +87,10 @@ class Service_TownResources(AbstractService.Service_Abstract):
             output = 0
 
             for mineralResource in collection:
-                output += helpers.math.percent(mineralResource.getBaseOutput(), mineralBonus + 100)
+                resourceOutput = helpers.math.percent(mineralResource.getBaseOutput(), mineralBonus + 100)
+                output += resourceOutput
+                mineralResource.setOutput(resourceOutput)
+                mineralResource.getMapper().save(mineralResource)
 
             result[mineral] = output
 
