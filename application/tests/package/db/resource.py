@@ -19,3 +19,5 @@ class Resource(object):
         domain.setBaseOutput(baseOutput if baseOutput is not None else self.getRandomInt(1000, 10000))
         domain.setOutput(domain.getBaseOutput())
         domain.getMapper().save(domain)
+
+        return domain

@@ -26,17 +26,17 @@ app.conf.update(
     CELERYBEAT_SCHEDULE = {
         'resources_update': {
             'task': 'init_celery.resources_update',
-            'schedule': timedelta(minutes=int(config.get('resource_updates.celery')))
+            'schedule': timedelta(seconds=int(config.get('resource_updates.celery')))
         },
 
         'population_up': {
             'task': 'init_celery.population_up',
-            'schedule': timedelta(minutes=int(config.get('resource_updates.base')))
+            'schedule': timedelta(seconds=int(config.get('resource_updates.base')))
         },
 
         'resources_down': {
             'task': 'init_celery.resources_down',
-            'schedule': timedelta(minutes=int(config.get('resource_updates.base')))
+            'schedule': timedelta(seconds=int(config.get('resource_updates.base')))
         }
     }
 )

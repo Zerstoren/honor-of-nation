@@ -48,8 +48,9 @@ class Backend_Generic(Generic):
 
         super().tearDown()
 
-    def initCelery(self):
+    def initCelery(self, debug=False):
         self._useCelery = True
+        self.celeryDebug = debug
 
     def getUserTransfer(self):
         raise Exception('Is not created')

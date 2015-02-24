@@ -14,6 +14,13 @@ class TownBonus_Domain(models.Abstract.Domain.Abstract_Domain):
         else:
             self.set('town', town)
 
+    def reset(self):
+        for key in self._domain_data:
+            if key == '_id' or key == 'town':
+                continue
+
+            self._domain_data[key] = 0
+
     def getMapper(self):
         """
         required method, for IDE static analyzer

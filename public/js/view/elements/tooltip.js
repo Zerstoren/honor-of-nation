@@ -33,7 +33,7 @@ define('view/elements/tooltip', [], function () {
         this.__tooltip = jQuery(e.target);
         this.__tooltip.tooltip({
             trigger: '',
-            title: this.__tooltip.data('hint'),
+            title: this.__tooltip.attr('data-hint'),
             placement: this.placement,
             container: this.container
         });

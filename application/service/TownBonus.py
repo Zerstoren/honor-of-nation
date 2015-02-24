@@ -33,6 +33,7 @@ class Service_TownBonus(AbstractService.Service_Abstract):
     def recalculate(self, domain):
         townDomain = domain.getTown()
         townBuilds = townDomain.getBuilds()
+        domain.reset()
 
         for buildKey in builds:
             buildLevel = townBuilds.get(buildKey)

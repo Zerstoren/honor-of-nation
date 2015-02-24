@@ -2,6 +2,12 @@ class AbstractDeclaration(object):
     TimeoutException = Exception
     NoSuchElementException = Exception
 
+    def getRandomInt(self, minimal=0, maximal=100, prefix=''):
+        pass
+
+    def getRandomName(self, prefix='', length=8):
+        pass
+
     def waitForElement(self, selector, by='css'):
         pass
 
