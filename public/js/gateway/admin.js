@@ -58,7 +58,6 @@ define('gateway/admin', [
                 y: y
             }, function (result) {
                 var domain = false;
-
                 if (result.resource) {
                     domain = mapResourceFactory.getDomainFromData(result.resource);
                 }

@@ -59,8 +59,7 @@ define('service/standalone/messages', [
                 return;
             }
 
-            var town = factoryTown.getDomainFromData(data.town);
-            town.set(data.town);
+            factoryTown.updateDomainFromData(data.town);
             mapInstance.update();
         },
 

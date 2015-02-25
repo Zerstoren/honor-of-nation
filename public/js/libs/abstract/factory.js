@@ -9,24 +9,16 @@ define('libs/abstract/factory', [], function () {
         domain: null,
 
         initialize: function () {
-
+            this.__pool = {};
         },
 
         getFromPool: function (id) {
-            if (this.__pool === null) {
-                this.__pool = {};
-            }
-
             return this.__pool[id];
         },
 
         pushToPool: function (domain) {
             if (!(domain instanceof this.domain)) {
                 throw new Error('Try add wrong domain instance');
-            }
-
-            if (this.__pool === null) {
-                this.__pool = {};
             }
 
             if (this.getFromPool(domain.get(this.index)) !== undefined) {
@@ -37,12 +29,8 @@ define('libs/abstract/factory', [], function () {
         },
 
         getDomainFromData: function (data) {
-            if (!data._id) {
+            if (!data || !data._id) {
                 return new this.domain(data);
-            }
-
-            if (this.__pool === null) {
-                this.__pool = {};
             }
 
             var domain = this.getFromPool(data._id);
@@ -51,6 +39,7 @@ define('libs/abstract/factory', [], function () {
                 domain = new this.domain(data);
                 this.pushToPool(domain);
             }
+            domain.set(data);
 
             return domain;
         },
@@ -59,7 +48,7 @@ define('libs/abstract/factory', [], function () {
             var domain;
 
             if (!(domain = this.getFromPool(data._id))) {
-                return false;
+                return null;
             }
 
             domain.set(data);

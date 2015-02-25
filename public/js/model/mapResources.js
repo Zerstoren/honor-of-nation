@@ -20,12 +20,12 @@ define('model/mapResources', [
             this.attributes.user = data ? factoryUser.getDomainFromData(data) : data;
         },
 
-        getUserLogin: function () {
-
-            alert(1);
-            return this.get('user').get('login');
-        },
-
+        //getUserLogin: function () {
+        //
+        //    alert(1);
+        //    return this.get('user').get('login');
+        //}
+        //
         mapLoad: function (success) {
             this.sync('get', {
                 data: {
