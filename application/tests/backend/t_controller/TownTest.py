@@ -205,7 +205,9 @@ class Backend_Controller_TownCeleryTest(
         user = transfer.getUser()
 
         townDomain = self.addTown(0, 0, user, population=1, typeTown=self.TOWN_TYPE_CITY)
-        time.sleep(6)
+
+        controller.TownController.CeleryPrivateController().population_up()
+
         townDomain.extract(True)
 
         self.assertEqual(6, townDomain.getPopulation())
@@ -217,7 +219,9 @@ class Backend_Controller_TownCeleryTest(
 
         townDomain = self.addTown(0, 0, user, population=1, typeTown=self.TOWN_TYPE_CITY)
         self.addTownBuild(townDomain, self.TOWN_BUILD_HOUSE, 50)
-        time.sleep(6)
+
+        controller.TownController.CeleryPrivateController().population_up()
+
         townDomain.extract(True)
 
         self.assertEqual(306, townDomain.getPopulation())

@@ -78,7 +78,7 @@ class Backend_Controller_MapCeleryResources(
     def testResourcesDown(self):
         self.addTownBuild(self.town, self.TOWN_BUILD_FARM, 50)
 
-        time.sleep(6)
+        controller.MapResourcesController.CeleryPrivateController().resourceDown()
 
         self.rubins.extract(True)
         self.assertEqual(5000, self.rubins.getAmount())

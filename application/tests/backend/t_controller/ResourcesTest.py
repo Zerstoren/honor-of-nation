@@ -3,7 +3,7 @@ from tests.backend.t_controller.generic import Backend_Controller_Generic
 from tests.package.db.town import Town
 from tests.package.db.resource import Resource
 
-import tests.rerun
+from controller.ResourceController import CeleryPrivateController
 
 import service.TownBuilds
 
@@ -47,12 +47,11 @@ class Backend_Controller_MapTest(
         self.resources.setEat(0)
         self.resources.getMapper().save(self.resources)
 
-    @tests.rerun.retry(5)
     def testResourcesUp(self):
         self.addTownBuild(self.town, self.TOWN_BUILD_FARM, 50) # x1.5
         self.addTownBuild(self.town, self.TOWN_BUILD_MINE, 50) # x2
 
-        time.sleep(3)
+        CeleryPrivateController().calculateResources()
 
         self.resources.extract(True)
 
