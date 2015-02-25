@@ -6,6 +6,7 @@ import exceptions.httpCodes
 
 from tests.package.db.resource import Resource
 from tests.package.db.town import Town
+import tests.rerun
 
 import time
 
@@ -73,7 +74,7 @@ class Backend_Controller_MapCeleryResources(
         self.stone = self.addResource(1, 0, self.TYPE_RESOURCE_STONE, user=self.user, town=self.town, amount=10000, baseOutput=5000)
         self.eat = self.addResource(1, 1, self.TYPE_RESOURCE_EAT, user=self.user, town=self.town, amount=10000, baseOutput=5000)
 
-
+    @tests.rerun.retry()
     def testResourcesDown(self):
         self.addTownBuild(self.town, self.TOWN_BUILD_FARM, 50)
 

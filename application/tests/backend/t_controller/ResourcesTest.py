@@ -47,7 +47,7 @@ class Backend_Controller_MapTest(
         self.resources.setEat(0)
         self.resources.getMapper().save(self.resources)
 
-    @tests.rerun.retry()
+    @tests.rerun.retry(5)
     def testResourcesUp(self):
         self.addTownBuild(self.town, self.TOWN_BUILD_FARM, 50) # x1.5
         self.addTownBuild(self.town, self.TOWN_BUILD_MINE, 50) # x2
