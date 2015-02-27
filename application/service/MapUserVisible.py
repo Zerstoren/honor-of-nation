@@ -1,6 +1,7 @@
 import service.Abstract.AbstractService
 
 import service.Map
+
 import models.MapUserVisible.Mapper
 import models.MapUserVisible.Factory
 

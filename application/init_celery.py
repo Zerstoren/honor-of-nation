@@ -62,6 +62,13 @@ def army(message):
     celeryController.armyCreated(message)
 
 
+@app.task(serialize='json', name='init_celery.army_move')
+def army_move(message):
+    import controller.ArmyController
+    celeryController = controller.ArmyController.CeleryPrivateController()
+    celeryController.updateMove(message)
+
+
 @app.task(serializer='json', name='init_celery.resources_update')
 @helpers.times.decorate
 def resources_update(*args, **kwargs):
@@ -107,6 +114,6 @@ if __name__ == '__main__':
 
     try:
         threading.Thread(target=ioLoop).start()
-        app.start(['celery','-A', 'init_celery', 'worker', '-B'])
+        app.start(['celery','-A', 'init_celery', 'worker', '-B', '--schedule=/tmp/celery-sheduler'])
     except KeyboardInterrupt:
         ioloop.IOLoop.instance().stop()

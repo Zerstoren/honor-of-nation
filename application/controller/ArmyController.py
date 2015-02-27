@@ -1,4 +1,5 @@
 from service.Army import Service_Army
+from service.MapUserVisible import Service_MapUserVisible
 
 
 class _AbstractArmy(object):
@@ -23,8 +24,8 @@ class MainController(_AbstractArmy):
 
     def move(self, transfer, data):
         self._getParamsAclService().move(
-            data['armyId'],
-            (data['x'], data['y'], ),
+            data['army_id'],
+            data['path'],
             transfer.getUser()
         )
 
@@ -143,9 +144,19 @@ class CollectionController(_AbstractArmy):
         })
 
 
+class CeleryPrivateController(_AbstractArmy):
+    def updateMove(self, message):
+        #{'general': '54f080c7608fb34ac60f1326', 'complete_after': 5, 'power': 8, 'start_at': 1425047751}
+        self._getParamsArmyService().updatePathMove(message['general'])
+
+
 class DeliveryController(_AbstractArmy):
     def updateUnitsOnMap(self, user, unitsList):
         user.getTransfer().forceSend('/delivery/unitsUpdateOnMap', {
             'done': True,
             'units': unitsList
         })
+
+    def moveUnit(self, general):
+        posId = general.getLocation()
+        Service_MapUserVisible()

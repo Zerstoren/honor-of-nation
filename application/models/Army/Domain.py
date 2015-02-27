@@ -68,6 +68,12 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
     def getMap(self):
         return models.Map.Factory.Map_Factory.getDomainById(self.get('location'))
 
+    def setMovePath(self, value):
+        if value is None:
+            value = []
+
+        self.set('move_path', value)
+
     def getMapper(self):
         """
         required method, for IDE static analyzer

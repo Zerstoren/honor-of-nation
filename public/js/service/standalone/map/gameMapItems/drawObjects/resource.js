@@ -46,9 +46,11 @@ define('service/standalone/map/gameMapItems/drawObjects/resource', [
             }
 
             if(!domain.$$domCell) {
-                domain.$$container = template('elements/map/objects/resource', {
-                    data: domain.toJSON()
-                });
+                domain.$$container = jQuery(
+                    template('elements/map/objects/resource', {
+                        data: domain.toJSON()
+                    })
+                );
             }
 
             if(domCell) {
