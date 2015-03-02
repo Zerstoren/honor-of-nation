@@ -265,6 +265,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
             }
         )
 
+    @tests.rerun.retry()
     def testMove(self):
         self.unitGeneral = self.createEquipmentUnit(
             self.user,

@@ -49,6 +49,7 @@ def message(message, user):
 
 
 @app.task(serializer='json', name='init_celery.builds')
+@helpers.times.decorate
 def builds(message):
     import controller.TownBuildsController
     celeryController = controller.TownBuildsController.CeleryPrivateController()
@@ -56,6 +57,7 @@ def builds(message):
 
 
 @app.task(serializer='json', name='init_celery.army')
+@helpers.times.decorate
 def army(message):
     import controller.ArmyQueueController
     celeryController = controller.ArmyQueueController.CeleryPrivateController()
@@ -63,6 +65,7 @@ def army(message):
 
 
 @app.task(serialize='json', name='init_celery.army_move')
+@helpers.times.decorate
 def army_move(message):
     import controller.ArmyController
     celeryController = controller.ArmyController.CeleryPrivateController()

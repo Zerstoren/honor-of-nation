@@ -2,7 +2,7 @@ define('service/standalone/math', [
     'system/config'
 ], function (config) {
     var math,
-        Mathematic = AbstractService.extend({
+    Mathematic = AbstractService.extend({
         percent: function (value, percent) {
             return parseInt(value / 100 * percent, 10);
         },
@@ -33,6 +33,18 @@ define('service/standalone/math', [
                 steel: parseInt(this.rate(price.steel) * drop, 10),
                 time: parseInt(this.rate(price.time) * drop, 10)
             };
+        },
+
+        fromPositionToId: function(x, y) {
+            return parseInt((y * parseInt(2000)) + x);
+        },
+
+        fromIdToPosition: function(posId) {
+            var x, y, sizeMap = 2000;
+
+            x = parseInt(posId % sizeMap, 10);
+            y = parseInt((posId - x) / sizeMap, 10);
+            return {x:x, y:y};
         }
     });
 

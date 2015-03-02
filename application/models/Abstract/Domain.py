@@ -3,10 +3,13 @@ import copy
 import re
 
 class Abstract_Domain(object, metaclass=abc.ABCMeta):
-    def __init__(self, loaded=False):
+    def __init__(self, loaded=False, data=False):
         self._isLoaded = False
         self._domain_data = {}
         self._loaded = loaded
+
+        if data is not False:
+            self.setOptions(data)
 
     def __convert(self, name):
         return re.sub('(?!^)([A-Z]+)', r'_\1',name).lower()

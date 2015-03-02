@@ -1,5 +1,11 @@
+from helpers.MapCoordinate import MapCoordinate
+
 
 class Decorate():
+    def getUsersWhoSeePosition(self, posId):
+        mapCoordinate = MapCoordinate(posId=posId)
+        return super().getUsersWhoSeePosition(mapCoordinate)
+
     def getByChunks(self, user, chunks):
         return super().getByChunks(
             user,

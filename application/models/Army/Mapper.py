@@ -60,6 +60,7 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet.add('location', unit.getMap().getPosition().getPosId())
         commonSet.add('in_build', unit.getInBuild())
         commonSet.add('power', unit.getPower())
+        commonSet.add('last_power_update', unit.getLastPowerUpdate())
         commonSet.add('mode', unit.getMode())
         commonSet.add('move_path', unit.getMovePath())
         commonSet.add('formation', unit.getFormation())

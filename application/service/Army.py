@@ -273,6 +273,7 @@ class Service_Army(AbstractService.Service_Abstract):
         domain.setFormation(None)
         domain.setSuite(None)
         domain.setIsGeneral(unit.getType() == Common.TYPE_GENERAL)
+        domain.setLastPowerUpdate(int(time.time()))
 
         domain.getMapper().save(domain)
         return domain
@@ -299,6 +300,10 @@ class Service_Army(AbstractService.Service_Abstract):
 
             return True
 
+        if len(path) == 0:
+            general.setMovePath([])
+            general.getMapper().save(general)
+
         return False
 
     def updatePathMove(self, general):
@@ -308,7 +313,8 @@ class Service_Army(AbstractService.Service_Abstract):
         self._moveUnitPosition(general)
 
         path = general.getMovePath()
-        if 'code' in path[0]:
+
+        if len(path) == 0 or 'code' in path[0]:
             return
 
         mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
@@ -344,7 +350,7 @@ class Service_Army(AbstractService.Service_Abstract):
 
         queueMessage = {
             'general': str(general.getId()),
-            'power': powerMove,
+            'power': Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()],
             'complete_after': waitForMove,
             'start_at': int(time.time())
         }

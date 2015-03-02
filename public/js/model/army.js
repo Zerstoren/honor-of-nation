@@ -1,4 +1,8 @@
-define('model/army', [], function () {
+define('model/army', [
+    'service/standalone/math'
+], function (
+    math
+) {
     return AbstractModel.extend({
         model_url: 'army',
 
@@ -7,6 +11,16 @@ define('model/army', [], function () {
                 parentArmy = null;
 
             return this._deepSearch(this, _id);
+        },
+
+        getX: function () {
+            var location = this.get('location');
+            return math.fromIdToPosition(location).x;
+        },
+
+        getY: function () {
+            var location = this.get('location');
+            return math.fromIdToPosition(location).y;
         },
 
         _deepSearch: function (model, _id) {

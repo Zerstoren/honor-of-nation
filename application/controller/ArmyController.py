@@ -146,7 +146,6 @@ class CollectionController(_AbstractArmy):
 
 class CeleryPrivateController(_AbstractArmy):
     def updateMove(self, message):
-        #{'general': '54f080c7608fb34ac60f1326', 'complete_after': 5, 'power': 8, 'start_at': 1425047751}
         self._getParamsArmyService().updatePathMove(message['general'])
 
 
@@ -159,4 +158,11 @@ class DeliveryController(_AbstractArmy):
 
     def moveUnit(self, general):
         posId = general.getLocation()
-        Service_MapUserVisible()
+        usersCollection = Service_MapUserVisible().decorate(Service_MapUserVisible.PARAMS).getUsersWhoSeePosition(posId)
+        armyPack = Service_Army().getDecorateClass(Service_Army.JSONPACK).pack(general)
+
+        for user in usersCollection:
+            user.getTransfer().forceSend('/delivery/moveUnit', {
+                'done': True,
+                'general': armyPack
+            })

@@ -39,11 +39,10 @@ define('gateway/army', [
             return domain;
         },
 
-        move: function (armyId, x, y) {
+        move: function (armyId, path) {
             this.socket.send('/army/move', {
                 'army_id': armyId,
-                'x': x,
-                'y': y
+                'path': path
             });
         },
 

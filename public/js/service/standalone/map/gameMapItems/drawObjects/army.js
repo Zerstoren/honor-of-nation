@@ -24,6 +24,18 @@ define('service/standalone/map/gameMapItems/drawObjects/army', [
             this.armyMap[domain.get('location')].push(domain);
         },
 
+        updateArmyPosition: function (oldLocation, general) {
+            var indexPosition = this.armyMap[oldLocation].indexOf(general),
+                location = general.get('location');
+
+            this.armyMap[oldLocation].splice(indexPosition, 1);
+            if (!this.armyMap[location]) {
+                this.armyMap[location] = [];
+            }
+
+            this.armyMap[location].push(general);
+        },
+
         getArmyObject: function(x, y, armyLocation) {
             var domain,
                 army = this.armyMap[armyLocation],

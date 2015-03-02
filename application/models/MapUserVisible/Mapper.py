@@ -14,6 +14,12 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(queryFilter, limit)
 
+    def getUsersByPosition(self, mapCoordinate):
+        queryFilter = Common.Common_Filter()
+        queryFilter.add('pos_id', mapCoordinate.getPosId())
+
+        return self._select(queryFilter)
+
     def getByIds(self, user, ids):
         queryFilter = Common.Common_Filter()
         queryFilter.addIn('_id', ids)

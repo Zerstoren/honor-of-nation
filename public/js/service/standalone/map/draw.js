@@ -66,6 +66,10 @@ define('service/standalone/map/draw', [
             return true;
         },
 
+        updateArmyPosition: function (oldLocation, general) {
+            this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
+        },
+
         setUpdateDataFnLayer: function() {
             var self = this;
 

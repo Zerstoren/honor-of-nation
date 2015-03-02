@@ -44,6 +44,9 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
             models.MapUserVisible.Mapper.MapUserVisible_Mapper.getByIds(user, ids)
         )
 
+    def getUsersWhoSeePosition(self, mapCoordinate):
+        return models.MapUserVisible.Factory.MapUserVisible_Factory.getUsersByPosition(mapCoordinate)
+
     def decorate(self, *args):
         """
         :rtype: Service_MapUserVisible
