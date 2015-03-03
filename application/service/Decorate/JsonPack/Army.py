@@ -16,6 +16,9 @@ class Decorate():
             'suite': str(domain.getSuite().getId()) if domain.getSuite() else None,
             'commander': str(domain.getCommander().getId()) if domain.getCommander() else None,
             'count': domain.getCount(),
+            'power': domain.getPower(),
+            'last_power_update': domain.getLastPowerUpdate(),
+            'move_path': domain.getMovePath(),
             'location': int(domain.getMap().getId())
         }
 

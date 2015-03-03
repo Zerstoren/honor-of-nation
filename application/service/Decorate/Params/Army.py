@@ -38,12 +38,13 @@ class Decorate():
         mapPath = []
         for coordinate in path:
             try:
-                x, y = coordinate
+                x, y, direction = coordinate
             except ValueError:
                 raise WrongArgumentType()
 
             mapPath.append({
-                'pos_id': helpers.MapCoordinate.MapCoordinate(x=x, y=y).getPosId()
+                'pos_id': helpers.MapCoordinate.MapCoordinate(x=x, y=y).getPosId(),
+                'direction': direction
             })
 
         return super().move(general, mapPath, user)

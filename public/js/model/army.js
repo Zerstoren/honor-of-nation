@@ -1,7 +1,7 @@
 define('model/army', [
-    'service/standalone/math'
+    'service/standalone/map'
 ], function (
-    math
+    mapInstance
 ) {
     return AbstractModel.extend({
         model_url: 'army',
@@ -15,12 +15,12 @@ define('model/army', [
 
         getX: function () {
             var location = this.get('location');
-            return math.fromIdToPosition(location).x;
+            return mapInstance.help.fromIdToPlace(location).x;
         },
 
         getY: function () {
             var location = this.get('location');
-            return math.fromIdToPosition(location).y;
+            return mapInstance.help.fromIdToPlace(location).y;
         },
 
         _deepSearch: function (model, _id) {

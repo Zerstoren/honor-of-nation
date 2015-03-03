@@ -41,7 +41,6 @@ define('service/map/main', [
             estar = new EasyStar.js();
 
             if (prevX > x) {
-
                 fromX = prevX - x;
                 toX = 0;
             } else {
@@ -61,6 +60,10 @@ define('service/map/main', [
             estar.setGrid(grid.get());
             estar.setAcceptableTiles([0]);
             estar.findPath(fromX, fromY, toX, toY, function (pathCalculate) {
+                var pathItem, direction,
+                    prevXPosition = fromX,
+                    prevYPosition = fromY;
+
                 if (pathCalculate === null) {
                     return;
                 }
@@ -70,10 +73,23 @@ define('service/map/main', [
                     if (i === 0) {
                         continue;
                     }
+                    pathItem = pathCalculate[i];
+
+                    switch((prevXPosition - pathItem.x) + "x" + (prevYPosition - pathItem.y)) {
+                        case "0x1": direction = 't'; break;
+                        case "1x1": direction = 'tr'; break;
+                        case "1x0": direction = 'r'; break;
+                        case "1x-1": direction = 'br'; break;
+                        case "0x-1": direction = 'b'; break;
+                        case "-1x-1": direction = 'bl'; break;
+                        case "-1x0": direction = 'l'; break;
+                        case "-1x1": direction = 'tl'; break;
+                    }
 
                     path.push([
-                        pathCalculate[i].x + (prevX > x ? x : prevX),
-                        pathCalculate[i].y + (prevY > y ? y : prevY)
+                        pathItem.x + (prevX > x ? x : prevX),
+                        pathItem.y + (prevY > y ? y : prevY),
+                        direction
                     ]);
                 }
             });

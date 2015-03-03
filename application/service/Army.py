@@ -318,6 +318,12 @@ class Service_Army(AbstractService.Service_Abstract):
             return
 
         mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
+        armyPosition = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
+
+        # if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
+        #     raise Exception()
+
+
         waitForMove = int(config.get('army.infantry.base_wait'))
         powerPerSeconds = float(config.get('army.infantry.power_restore'))
         powerMove = Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()] - round(powerPerSeconds * int(waitForMove))

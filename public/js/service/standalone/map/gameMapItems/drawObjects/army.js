@@ -2,7 +2,8 @@ define('service/standalone/map/gameMapItems/drawObjects/army', [
     'system/template',
     'factory/army',
     'model/army',
-    'service/standalone/map'
+    'service/standalone/map',
+    'service/standalone/math'
 ], function(
     template,
     factoryArmy,
@@ -57,9 +58,24 @@ define('service/standalone/map/gameMapItems/drawObjects/army', [
                     domain.$$domCell = domCell;
                     domCell.find('.cont').append(domain.$$container);
                 }
+
+                this.getArmyPathWay(domain);
             }
 
             return true;
+        },
+
+        getArmyPathWay: function (domain) {
+            var i, position, domCell,
+                path = domain.get('move_path');
+
+            for (i = 0; i < path.length; i++) {
+                position = mapInstance.help.fromIdToPlace(path['pos_id']);
+                domCell = mapInstance.getDomCell(position[0], position[1]);
+                domCell.find('.cont').append('<div class="unit_move_path ' + path['direction'] + '"></div>');
+
+                console.log(path);
+            }
         }
     });
 });
