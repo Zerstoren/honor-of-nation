@@ -49,8 +49,8 @@ define('service/standalone/map/gameMapItems/Draw', [], function () {
                     position[0] = parseInt(position[0], 10) + this.positionX;
                     position[1] = parseInt(position[1], 10) + this.positionY;
 
-                    if(td.childNodes[4].innerHTML) {
-                        td.childNodes[4].innerHTML = '';
+                    while (td.childNodes[4].firstChild) {
+                        td.childNodes[4].removeChild(td.childNodes[4].firstChild);
                     }
 
                     drawData = this.$updateDataFnLayer(position[0], position[1]);

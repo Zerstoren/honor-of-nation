@@ -287,87 +287,95 @@ class Service_Army(AbstractService.Service_Abstract):
         general.setMovePath(mapPath)
         self._updatePathMove(general)
 
+        import controller.ArmyController
+        controller.ArmyController.DeliveryController().moveOneUnit(general)
+
     def _moveUnitPosition(self, general):
         path = general.getMovePath()
+        result = False
+
         if len(path) and 'code' in path[0] and path[0]['start_at'] + path[0]['complete_after'] >= int(time.time()):
             pathItem = path.pop(0)
             general.setPower(general.getPower() - pathItem['power'])
             general.setLocation(pathItem['pos_id'])
             general.setMovePath(path)
 
-            import controller.ArmyController
-            controller.ArmyController.DeliveryController().moveUnit(general)
-
-            return True
+            result = True
 
         if len(path) == 0:
             general.setMovePath([])
             general.getMapper().save(general)
 
-        return False
+            result = True
+
+        return result
 
     def updatePathMove(self, general):
         return self._updatePathMove(general)
 
     def _updatePathMove(self, general):
-        self._moveUnitPosition(general)
+        moved = self._moveUnitPosition(general)
 
         path = general.getMovePath()
 
-        if len(path) == 0 or 'code' in path[0]:
-            return
+        if len(path) != 0 and 'code' not in path[0]:
+            mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
+            armyPosition = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
 
-        mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
-        armyPosition = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
-
-        # if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
-        #     raise Exception()
+            # if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
+            #     raise Exception()
 
 
-        waitForMove = int(config.get('army.infantry.base_wait'))
-        powerPerSeconds = float(config.get('army.infantry.power_restore'))
-        powerMove = Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()] - round(powerPerSeconds * int(waitForMove))
-        armyPower = general.getPower()
+            waitForMove = int(config.get('army.infantry.base_wait'))
+            powerPerSeconds = float(config.get('army.infantry.power_restore'))
+            powerMove = Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()] - round(powerPerSeconds * int(waitForMove))
+            armyPower = general.getPower()
 
-        if general.getMode() == Army_Common.MODE_VERY_FAST:
-            if powerMove > armyPower: # Restore all needed power to move
-                waitForMove += round((powerMove - armyPower) / powerPerSeconds)
-            else: # Do nothing, all info already calculated
-                pass
+            if general.getMode() == Army_Common.MODE_VERY_FAST:
+                if powerMove > armyPower: # Restore all needed power to move
+                    waitForMove += round((powerMove - armyPower) / powerPerSeconds)
+                else: # Do nothing, all info already calculated
+                    pass
 
-        elif general.getMode() == Army_Common.MODE_FAST:
-            if powerMove >= 20 and powerMove <= armyPower:
-                waitForMove += round((powerMove - 20) / powerPerSeconds)
-            elif powerMove <= armyPower and powerMove <= 20:
-                pass # Do nothing, all info already calculated
-            elif powerMove > armyPower: # Restore all needed power to move
-                waitForMove += round((powerMove - armyPower) / powerPerSeconds)
+            elif general.getMode() == Army_Common.MODE_FAST:
+                if powerMove >= 20 and powerMove <= armyPower:
+                    waitForMove += round((powerMove - 20) / powerPerSeconds)
+                elif powerMove <= armyPower and powerMove <= 20:
+                    pass # Do nothing, all info already calculated
+                elif powerMove > armyPower: # Restore all needed power to move
+                    waitForMove += round((powerMove - armyPower) / powerPerSeconds)
 
-        elif general.getMode() == Army_Common.MODE_NORMAL:
-            if powerMove >= 10 and powerMove <= armyPower:
-                waitForMove += round((powerMove - 10) / powerPerSeconds)
-            elif powerMove <= armyPower and powerMove <= 10:
-                pass # Do nothing, all info already calculated
-            elif powerMove > armyPower: # Restore all needed power to move
-                waitForMove += round((powerMove - armyPower) / powerPerSeconds)
+            elif general.getMode() == Army_Common.MODE_NORMAL:
+                if powerMove >= 10 and powerMove <= armyPower:
+                    waitForMove += round((powerMove - 10) / powerPerSeconds)
+                elif powerMove <= armyPower and powerMove <= 10:
+                    pass # Do nothing, all info already calculated
+                elif powerMove > armyPower: # Restore all needed power to move
+                    waitForMove += round((powerMove - armyPower) / powerPerSeconds)
 
-        elif general.getMode() == Army_Common.MODE_SLOW:
-            waitForMove += round(int(100 - (armyPower - powerMove)) / powerPerSeconds)
+            elif general.getMode() == Army_Common.MODE_SLOW:
+                waitForMove += round(int(100 - (armyPower - powerMove)) / powerPerSeconds)
 
-        queueMessage = {
-            'general': str(general.getId()),
-            'power': Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()],
-            'complete_after': waitForMove,
-            'start_at': int(time.time())
-        }
+            queueMessage = {
+                'general': str(general.getId()),
+                'power': Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()],
+                'complete_after': waitForMove,
+                'start_at': int(time.time())
+            }
 
-        path[0]['code'] = str(init_celery.army_move.apply_async((queueMessage, ), countdown=queueMessage['complete_after']))
-        path[0]['power'] = queueMessage['power']
-        path[0]['start_at'] = queueMessage['start_at']
-        path[0]['complete_after'] = queueMessage['complete_after']
+            path[0]['code'] = str(init_celery.army_move.apply_async((queueMessage, ), countdown=queueMessage['complete_after']))
+            path[0]['power'] = queueMessage['power']
+            path[0]['start_at'] = queueMessage['start_at']
+            path[0]['complete_after'] = queueMessage['complete_after']
 
-        general.setMovePath(path)
+            general.setMovePath(path)
+
         general.getMapper().save(general)
+
+        if moved:
+            import controller.ArmyController
+            controller.ArmyController.DeliveryController().moveUnit(general)
+
 
 
     def decorate(self, *args):

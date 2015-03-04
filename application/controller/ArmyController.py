@@ -156,6 +156,14 @@ class DeliveryController(_AbstractArmy):
             'units': unitsList
         })
 
+    def moveOneUnit(self, general):
+        user = general.getUser()
+
+        user.getTransfer().forceSend('/delivery/moveUnit', {
+            'done': True,
+            'general': Service_Army().getDecorateClass(Service_Army.JSONPACK).pack(general)
+        })
+
     def moveUnit(self, general):
         posId = general.getLocation()
         usersCollection = Service_MapUserVisible().decorate(Service_MapUserVisible.PARAMS).getUsersWhoSeePosition(posId)

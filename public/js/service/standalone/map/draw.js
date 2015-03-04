@@ -145,7 +145,7 @@ define('service/standalone/map/draw', [
 
         getArmy: function (x, y, mapId) {
             if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-                return;
+                return false;
             }
 
             return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);

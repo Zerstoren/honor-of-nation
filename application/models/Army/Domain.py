@@ -45,9 +45,9 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
         currentTime = int(time.time())
 
         if lastUpdate != currentTime:
-            restoredPower = (currentTime - lastUpdate) / int(config.get('army.infantry.power_restore'))
+            restoredPower = round((currentTime - lastUpdate) / float(config.get('army.infantry.power_restore')))
 
-            if power + restoredPower <= 100:
+            if power + restoredPower <= 100 and self.getInBuild() == False:
                 self.set('power', power + restoredPower)
             elif power + restoredPower >= 100 and self.getInBuild() == False:
                 self.set('power', 100)

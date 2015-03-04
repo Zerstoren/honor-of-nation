@@ -1,4 +1,6 @@
 define('view/block/map/footer', [
+    'system/interval',
+    'system/config',
     'service/standalone/map',
     'model/dummy',
 
@@ -6,6 +8,8 @@ define('view/block/map/footer', [
     'factory/mapResources',
     'factory/army'
 ], function(
+    systemInterval,
+    systemConfig,
     map,
     ModelDummy,
 
@@ -26,7 +30,8 @@ define('view/block/map/footer', [
                 y: '-',
                 type: null,
                 town: null,
-                resource: null
+                resource: null,
+                army_path: null
             });
 
             this.initRactive();
@@ -64,6 +69,13 @@ define('view/block/map/footer', [
 
                 case 'army':
                     this.$focusOnArmy(x, y, idContainer);
+                    break;
+                default:
+                    if (this.data.footer.get('army_path')) {
+                        systemInterval.off(systemInterval.EVERY_1_SEC, this._onSecTick, this);
+                        this.data.footer.set('army_path', null);
+                    }
+
                     break;
             }
         },
@@ -116,14 +128,41 @@ define('view/block/map/footer', [
         },
 
         $focusOnArmy: function (x, y, idContainer) {
-            var domain = factoryArmy.getFromPool(idContainer);
+            var armyPath = null,
+                pathItem,
+                domain = factoryArmy.getFromPool(idContainer);
 
             if(domain === false) {
                 return false;
             }
 
+            if (domain.get('move_path')[0]) {
+                pathItem = domain.get('move_path')[0];
+                systemInterval.on(systemInterval.EVERY_1_SEC, this._onSecTick, this);
+
+                armyPath = {
+                    position: '0x0',
+                    timeToComplete: pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at)
+                };
+            }
+
             this.data.footer.set('army', domain);
+            this.data.footer.set('army_path', armyPath);
             return true;
+        },
+
+        _onSecTick: function () {
+            var domain = this.data.footer.get('army'),
+                pathItem = domain.get('move_path')[0],
+                armyPath = this.data.footer.get('army_path');
+
+            if (!pathItem) {
+                systemInterval.off(systemInterval.EVERY_1_SEC, this._onSecTick, this);
+            }
+
+            armyPath.timeToComplete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);
+            this.data.footer.set('army_path', armyPath);
+            this.ractive.update();
         }
     });
 });

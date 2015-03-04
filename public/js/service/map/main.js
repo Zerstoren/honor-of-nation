@@ -77,14 +77,21 @@ define('service/map/main', [
 
                     switch((prevXPosition - pathItem.x) + "x" + (prevYPosition - pathItem.y)) {
                         case "0x1": direction = 't'; break;
-                        case "1x1": direction = 'tr'; break;
-                        case "1x0": direction = 'r'; break;
-                        case "1x-1": direction = 'br'; break;
+                        case "1x1": direction = 'tl'; break;
+                        case "1x0": direction = 'l'; break;
+                        case "1x-1": direction = 'bl'; break;
                         case "0x-1": direction = 'b'; break;
-                        case "-1x-1": direction = 'bl'; break;
-                        case "-1x0": direction = 'l'; break;
-                        case "-1x1": direction = 'tl'; break;
+                        case "-1x-1": direction = 'br'; break;
+                        case "-1x0": direction = 'r'; break;
+                        case "-1x1": direction = 'tr'; break;
                     }
+
+                    if (pathCalculate.length - 1 === i) {
+                        direction = 'c';
+                    }
+
+                    prevXPosition = pathItem.x;
+                    prevYPosition = pathItem.y;
 
                     path.push([
                         pathItem.x + (prevX > x ? x : prevX),

@@ -85,7 +85,12 @@
                 {{/this.footer.type}}
 
                 {{#this.footer.type === 'army'}}
-                {{this.footer.army.count}}
+                {{this.footer.army.count}}<br /><br />
+
+                {{#this.footer.army_path !== null}}
+                    {{formatters.fromIntToTime(this.footer.army_path.timeToComplete)}}
+                {{/this.footer.army_path !== null}}
+
                 {{/this.footer.type}}
 
             </div>
