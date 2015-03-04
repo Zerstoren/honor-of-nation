@@ -46,6 +46,13 @@ define('gateway/army', [
             });
         },
 
+        changeModeMove: function (army, mode) {
+            this.socket.send('/army/mode', {
+                'army_id': army.get('_id'),
+                'mode': mode
+            });
+        },
+
         merge: function (army, fn) {
             this.socket.send('/army/merge', {
                 'army_list': army

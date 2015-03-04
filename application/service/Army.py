@@ -61,7 +61,8 @@ class Service_Army(AbstractService.Service_Abstract):
         return load(commander)
 
     def changeMoveType(self, general, move, user=None):
-        pass
+        general.setMode(move)
+        general.getMapper().save(general)
 
     def addSuite(self, generalArmy, solidersArmy, user=None):
         if generalArmy.getUnit().getType() != Common.TYPE_GENERAL:

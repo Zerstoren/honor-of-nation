@@ -30,7 +30,11 @@ class MainController(_AbstractArmy):
         )
 
     def mode(self, transfer, data):
-        pass
+        self._getParamsAclService().changeMoveType(
+            data['army_id'],
+            data['mode'],
+            transfer.getUser()
+        )
 
     def moveInBuild(self, transfer, data):
         self._getParamsAclService().moveInBuild(

@@ -31,7 +31,8 @@ define('view/block/map/footer', [
                 type: null,
                 town: null,
                 resource: null,
-                army_path: null
+                time_to_complete: null,
+                army_power: null
             });
 
             this.initRactive();
@@ -71,10 +72,7 @@ define('view/block/map/footer', [
                     this.$focusOnArmy(x, y, idContainer);
                     break;
                 default:
-                    if (this.data.footer.get('army_path')) {
-                        systemInterval.off(systemInterval.EVERY_1_SEC, this._onSecTick, this);
-                        this.data.footer.set('army_path', null);
-                    }
+                    this.$removeFocusArmy();
 
                     break;
             }
@@ -128,8 +126,8 @@ define('view/block/map/footer', [
         },
 
         $focusOnArmy: function (x, y, idContainer) {
-            var armyPath = null,
-                pathItem,
+            var timeToComplete = null,
+                pathItem, power,
                 domain = factoryArmy.getFromPool(idContainer);
 
             if(domain === false) {
@@ -138,33 +136,59 @@ define('view/block/map/footer', [
 
             if (domain.get('move_path')[0]) {
                 pathItem = domain.get('move_path')[0];
-                systemInterval.on(systemInterval.EVERY_1_SEC, this._onSecTick, this);
+                timeToComplete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);
+            }
 
-                armyPath = {
-                    position: '0x0',
-                    timeToComplete: pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at)
-                };
+            this.$el.find('.army_mode .mode').off('click.mode');
+            this.$el.find('.army_mode .mode').on("click.mode", function (ev) {
+                var mode = jQuery(ev.target).attr('data-mode');
+                this.trigger('change_mode', domain, mode);
+            }.bind(this));
+
+            power = domain.get('power') + (
+                (systemConfig.getTime() - domain.get('last_power_update')) * systemConfig.getPowerRestore()
+            );
+
+            if (power >= 100 && domain.get('power') <= 101) {
+                power = 100;
             }
 
             this.data.footer.set('army', domain);
-            this.data.footer.set('army_path', armyPath);
+            this.data.footer.set('time_to_complete', timeToComplete);
+            this.data.footer.set('army_power', power);
+            systemInterval.on(systemInterval.EVERY_1_SEC, this._onSecTick, this);
             return true;
         },
 
-        _onSecTick: function () {
-            var domain = this.data.footer.get('army'),
-                pathItem = domain.get('move_path')[0],
-                armyPath = this.data.footer.get('army_path');
-
-            if (!pathItem) {
+        $removeFocusArmy: function () {
+            if (this.data.footer.get('time_to_complete')) {
                 systemInterval.off(systemInterval.EVERY_1_SEC, this._onSecTick, this);
-                this.data.footer.set('army_path', null);
-                return;
+                this.data.footer.set('time_to_complete', null);
             }
 
-            armyPath.timeToComplete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);
-            this.data.footer.set('army_path', armyPath);
-            this.ractive.update();
+            this.$el.find('.army_mode .mode').off('click.mode');
+        },
+
+        _onSecTick: function () {
+            var power,
+                domain = this.data.footer.get('army'),
+                pathItem = domain.get('move_path')[0],
+                time_to_complete = this.data.footer.get('time_to_complete');
+
+            if (time_to_complete && pathItem) {
+                time_to_complete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);
+                this.data.footer.set('time_to_complete', time_to_complete);
+            }
+
+            power = domain.get('power') + (
+                (systemConfig.getTime() - domain.get('last_power_update')) * systemConfig.getPowerRestore()
+            );
+
+            if (power >= 100 && domain.get('power') <= 101) {
+                power = 100;
+            }
+
+            this.data.footer.set('army_power', power);
         }
     });
 });

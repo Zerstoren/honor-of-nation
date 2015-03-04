@@ -19,6 +19,7 @@ class Decorate():
             'power': domain.getPower(),
             'last_power_update': domain.getLastPowerUpdate(),
             'move_path': domain.getMovePath(),
+            'mode': domain.getMode(),
             'location': int(domain.getMap().getId())
         }
 

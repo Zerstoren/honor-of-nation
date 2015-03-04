@@ -1,6 +1,7 @@
 define('service/map/main', [
     'libs/easypath',
     'factory/army',
+    'system/preStart',
     'service/standalone/map',
     'service/standalone/map/draw',
 
@@ -10,6 +11,7 @@ define('service/map/main', [
 ], function (
     EasyStar,
     factoryArmy,
+    systemPreStart,
     mapInstance,
     mapDrawInstance,
 
@@ -22,6 +24,7 @@ define('service/map/main', [
             factoryArmy.on('add', this.onAddArmy, this);
             this.viewUnitsManipulate = new ViewMapUnitsManipulate();
             this.viewUnitsManipulate.on('moveArmy', this.onMoveArmy, this);
+            systemPreStart.map.footer.on('change_mode', this.onChangeModeMove, this);
         },
 
         onAddArmy: function (domain) {
@@ -105,6 +108,11 @@ define('service/map/main', [
             if (path.length) {
                 gatewayArmy.move(armyId, path);
             }
+        },
+
+        onChangeModeMove: function (domain, mode) {
+            gatewayArmy.changeModeMove(domain, mode);
+            domain.set('mode', mode);
         }
     });
 });

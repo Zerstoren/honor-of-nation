@@ -96,12 +96,18 @@
                 {{#this.footer.type === 'army'}}
                 <div class="army">
                     <div class="army_size">Размер армии: {{this.footer.army.count}}</div>
-                    <div class="army_mode">1 2 3 4</div>
-                    {{#this.footer.army_path !== null}}
-                    <div class="army_move">
-                        движение через: {{formatters.fromIntToTime(this.footer.army_path.timeToComplete)}}
+                    <div class="army_power">Запас сил: {{this.footer.army_power}}</div>
+                    <div class="army_mode">
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 1}} active{{/this.footer.army.mode}}" data-mode="1">I</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 2}} active{{/this.footer.army.mode}}" data-mode="2">II</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 3}} active{{/this.footer.army.mode}}" data-mode="3">III</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 4}} active{{/this.footer.army.mode}}" data-mode="4">IV</button>
                     </div>
-                    {{/this.footer.army_path !== null}}
+                    {{#this.footer.time_to_complete}}
+                    <div class="army_move">
+                        движение через: {{formatters.fromIntToTime(this.footer.time_to_complete)}}
+                    </div>
+                    {{/this.footer.time_to_complete}}
                 </div>
                 {{/this.footer.type}}
             </div>

@@ -54,6 +54,10 @@ define('system/config', [
         return $$config.equipment_unit;
     };
 
+    Config.prototype.getPowerRestore = function () {
+        return $$config.power_restore;
+    };
+
     Config.prototype.$reload();
 
     return new Config();

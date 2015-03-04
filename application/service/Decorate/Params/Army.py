@@ -9,6 +9,8 @@ from helpers.mongo import objectId
 
 from exceptions.args import WrongArgumentType
 
+import exceptions.args
+
 
 class Decorate():
     def create(self, unit, town, count, user=None):
@@ -53,8 +55,14 @@ class Decorate():
         general = Army_Factory.get(general)
         return super().updatePathMove(general)
 
-    def changeMoveType(self, general, mode, user=None):
-        return super().changeMoveType(general, mode, user)
+    def changeMoveType(self, general, move, user=None):
+        generalDomain = Army_Factory.get(general)
+        move = int(move)
+
+        if move not in [1,2,3,4]:
+            raise exceptions.args.EnumError("Wrong move mode")
+
+        return super().changeMoveType(generalDomain, move, user)
 
     def addSuite(self, generalArmy, solidersArmy, user=None):
         generalDomain = Army_Factory.get(generalArmy)
