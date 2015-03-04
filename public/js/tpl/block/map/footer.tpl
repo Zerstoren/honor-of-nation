@@ -85,19 +85,25 @@
                 {{/this.footer.type}}
 
                 {{#this.footer.type === 'army'}}
-                {{this.footer.army.count}}<br /><br />
-
-                {{#this.footer.army_path !== null}}
-                    {{formatters.fromIntToTime(this.footer.army_path.timeToComplete)}}
-                {{/this.footer.army_path !== null}}
-
+                <div class="army">
+                    <img src="" />
+                </div>
                 {{/this.footer.type}}
 
             </div>
 
             <div class="right">
-                <div class="buttons">
+                {{#this.footer.type === 'army'}}
+                <div class="army">
+                    <div class="army_size">Размер армии: {{this.footer.army.count}}</div>
+                    <div class="army_mode">1 2 3 4</div>
+                    {{#this.footer.army_path !== null}}
+                    <div class="army_move">
+                        движение через: {{formatters.fromIntToTime(this.footer.army_path.timeToComplete)}}
+                    </div>
+                    {{/this.footer.army_path !== null}}
                 </div>
+                {{/this.footer.type}}
             </div>
 
             <div class="center">

@@ -158,6 +158,8 @@ define('view/block/map/footer', [
 
             if (!pathItem) {
                 systemInterval.off(systemInterval.EVERY_1_SEC, this._onSecTick, this);
+                this.data.footer.set('army_path', null);
+                return;
             }
 
             armyPath.timeToComplete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);

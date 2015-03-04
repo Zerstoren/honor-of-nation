@@ -294,7 +294,7 @@ class Service_Army(AbstractService.Service_Abstract):
         path = general.getMovePath()
         result = False
 
-        if len(path) and 'code' in path[0] and path[0]['start_at'] + path[0]['complete_after'] >= int(time.time()):
+        if len(path) and 'code' in path[0] and path[0]['start_at'] + path[0]['complete_after'] <= int(time.time()):
             pathItem = path.pop(0)
             general.setPower(general.getPower() - pathItem['power'])
             general.setLocation(pathItem['pos_id'])
