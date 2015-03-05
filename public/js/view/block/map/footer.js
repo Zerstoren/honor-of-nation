@@ -4,6 +4,8 @@ define('view/block/map/footer', [
     'service/standalone/map',
     'model/dummy',
 
+    'view/elements/tooltip',
+
     'factory/town',
     'factory/mapResources',
     'factory/army'
@@ -12,6 +14,8 @@ define('view/block/map/footer', [
     systemConfig,
     map,
     ModelDummy,
+
+    ViewElementsTooltip,
 
     factoryTown,
     factoryMapResources,
@@ -34,8 +38,14 @@ define('view/block/map/footer', [
                 time_to_complete: null,
                 army_power: null
             });
-
+            this.tooltipManager = new ViewElementsTooltip(this, '*[data-hint]', {
+                placement: 'top'
+            });
             this.initRactive();
+        },
+
+        events: {
+
         },
 
         render: function () {
