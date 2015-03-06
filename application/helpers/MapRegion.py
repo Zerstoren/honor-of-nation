@@ -1,5 +1,4 @@
 import exceptions.args
-from models.Map.Domain import Map_Domain
 
 from helpers.MapCoordinate import MapCoordinate
 
@@ -31,6 +30,7 @@ class MapRegion(object):
         return self.toY
 
     def getCollection(self):
+        from models.Map.Domain import Map_Domain
         from collection import MapCollection
         mapCollection = MapCollection.Map_Collection()
 
