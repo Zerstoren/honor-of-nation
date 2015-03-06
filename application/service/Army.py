@@ -9,7 +9,6 @@ from models.Army import Common as Army_Common
 
 from service.Town import Service_Town
 from service.Map import Service_Map
-from service.MapUserVisible import Service_MapUserVisible
 
 import exceptions.army
 import helpers.MapCoordinate
@@ -308,6 +307,7 @@ class Service_Army(AbstractService.Service_Abstract):
             general.setLocation(pathItem['pos_id'])
             general.setMovePath(path)
 
+            from service.MapUserVisible import Service_MapUserVisible
             Service_MapUserVisible().openAroundPlace(
                 general.getUser(),
                 helpers.MapCoordinate.MapCoordinate(posId=general.getLocation()),
