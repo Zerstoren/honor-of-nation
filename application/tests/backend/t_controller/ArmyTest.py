@@ -84,7 +84,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
                 'in_build': True,
                 'is_general': False,
                 'mode': 1,
-                'move_path': {},
+                'move_path': [],
                 'power': 100,
                 'suite': None
             }
