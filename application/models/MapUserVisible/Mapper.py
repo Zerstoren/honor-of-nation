@@ -27,16 +27,22 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(queryFilter)
 
+    def getByPosIds(self, user, ids):
+        queryFilter = Common.Common_Filter()
+        queryFilter.addIn('pos_id', ids)
+        queryFilter.add('user_id', user.getId())
+
+        return self._select(queryFilter)
+
     def insertCollection(self, user, region):
         """
         :type user: models.User.Domain.User_Domain
         :type region: collection.MapCollection.Map_Collection
         """
         ids = [i.getId() for i in region]
-        visibleIds = [i.getId() for i in self.getByIds(user, ids)]
+        visibleIds = [i['pos_id'] for i in self.getByPosIds(user, ids)]
 
         self.bulkStart()
-
         for i in region:
             if i.getId() in visibleIds:
                 continue

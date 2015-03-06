@@ -20,6 +20,9 @@ import time
 
 
 class Service_Army(AbstractService.Service_Abstract):
+    NORMAL_MOVE_MINIMAL_POWER = 10
+    FAST_MOVE_MINIMAL_POWER = 20
+
     def create(self, unit, town, count, user=None):
         return self._create(unit, town, count)
 
@@ -333,43 +336,46 @@ class Service_Army(AbstractService.Service_Abstract):
             mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
             armyPosition = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
 
-            # if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
-            #     raise Exception()
+            if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
+                raise Exception()
 
 
             waitForMove = int(config.get('army.infantry.base_wait'))
             powerPerSeconds = float(config.get('army.infantry.power_restore'))
-            powerMove = Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()] - round(powerPerSeconds * int(waitForMove))
+            powerMove = Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()]
+            powerRestoreAtWait = round(powerPerSeconds * int(waitForMove))
             armyPower = general.getPower()
 
             if general.getMode() == Army_Common.MODE_VERY_FAST:
-                if powerMove > armyPower: # Restore all needed power to move
-                    waitForMove += round((powerMove - armyPower) / powerPerSeconds)
+                if powerMove > (armyPower + powerRestoreAtWait): # Restore all needed power to move
+                    waitForMove += round((powerMove - (armyPower + powerRestoreAtWait)) / powerPerSeconds)
                 else: # Do nothing, all info already calculated
                     pass
 
             elif general.getMode() == Army_Common.MODE_FAST:
-                if powerMove >= 20 and powerMove <= armyPower:
-                    waitForMove += round((powerMove - 20) / powerPerSeconds)
-                elif powerMove <= armyPower and powerMove <= 20:
+                if powerMove >= self.FAST_MOVE_MINIMAL_POWER and powerMove <= armyPower:
+                    waitForMove += round((powerMove - self.FAST_MOVE_MINIMAL_POWER) / powerPerSeconds)
+                elif powerMove <= armyPower and powerMove <= self.FAST_MOVE_MINIMAL_POWER:
                     pass # Do nothing, all info already calculated
                 elif powerMove > armyPower: # Restore all needed power to move
                     waitForMove += round((powerMove - armyPower) / powerPerSeconds)
 
             elif general.getMode() == Army_Common.MODE_NORMAL:
-                if powerMove >= 10 and powerMove <= armyPower:
-                    waitForMove += round((powerMove - 10) / powerPerSeconds)
-                elif powerMove <= armyPower and powerMove <= 10:
+                if powerMove >= self.NORMAL_MOVE_MINIMAL_POWER and powerMove <= (armyPower + powerRestoreAtWait):
+                    waitForMove += round((powerMove - self.NORMAL_MOVE_MINIMAL_POWER) / powerPerSeconds)
+                elif powerMove <= (armyPower + powerRestoreAtWait) and powerMove <= self.NORMAL_MOVE_MINIMAL_POWER:
                     pass # Do nothing, all info already calculated
-                elif powerMove > armyPower: # Restore all needed power to move
-                    waitForMove += round((powerMove - armyPower) / powerPerSeconds)
+                elif powerMove > (armyPower + powerRestoreAtWait): # Restore all needed power to move
+                    waitForMove += round((powerMove - (armyPower + powerRestoreAtWait)) / powerPerSeconds)
 
             elif general.getMode() == Army_Common.MODE_SLOW:
-                waitForMove += round(int(100 - (armyPower - powerMove)) / powerPerSeconds)
+                result = round(int(100 - (armyPower + powerRestoreAtWait)) / powerPerSeconds)
+                if result > 0:
+                    waitForMove += result
 
             queueMessage = {
                 'general': str(general.getId()),
-                'power': Map_Data.MOVE['infantry']['byroad'][mapCoordinate.getLand()],
+                'power': powerMove,
                 'complete_after': waitForMove,
                 'start_at': int(time.time())
             }

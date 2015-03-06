@@ -83,7 +83,6 @@ define('view/block/map/footer', [
                     break;
                 default:
                     this.$removeFocusArmy();
-
                     break;
             }
         },
@@ -103,6 +102,7 @@ define('view/block/map/footer', [
                     break;
 
                 case 'army':
+                    this.$removeFocusArmy();
                     this.$focusOnArmy(x, y, idContainer);
                     break;
             }
@@ -185,9 +185,11 @@ define('view/block/map/footer', [
                 pathItem = domain.get('move_path')[0],
                 time_to_complete = this.data.footer.get('time_to_complete');
 
-            if (time_to_complete && pathItem) {
+            if (pathItem) {
                 time_to_complete = pathItem.complete_after - (systemConfig.getTime() - pathItem.start_at);
                 this.data.footer.set('time_to_complete', time_to_complete);
+            } else {
+                this.data.footer.set('time_to_complete', null);
             }
 
             power = domain.get('power') + (
