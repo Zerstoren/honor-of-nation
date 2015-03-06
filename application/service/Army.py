@@ -336,7 +336,8 @@ class Service_Army(AbstractService.Service_Abstract):
             mapCoordinate = Service_Map().getByPosition(helpers.MapCoordinate.MapCoordinate(posId=path[0]['pos_id']))
             armyPosition = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
 
-            if -1 < mapCoordinate.getX() - armyPosition.getX() < 1 or -1 < mapCoordinate.getY() - armyPosition.getY() < 1:
+            if not (-1 <= (mapCoordinate.getX() - armyPosition.getX()) <= 1 or
+                -1 <= (mapCoordinate.getY() - armyPosition.getY()) <= 1):
                 raise Exception()
 
 
