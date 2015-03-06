@@ -5,8 +5,6 @@ import service.Map
 import models.MapUserVisible.Mapper
 import models.MapUserVisible.Factory
 
-from helpers.MapRegion import MapRegion
-
 
 class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
 
@@ -34,6 +32,8 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
             return False
 
     def openAroundPlace(self, user, mapCoordinate, aroundSize):
+        from helpers.MapRegion import MapRegion
+
         startFromX = mapCoordinate.getX() - aroundSize
         startFromY = mapCoordinate.getY() - aroundSize
         completeToX = mapCoordinate.getX() + aroundSize
