@@ -9,6 +9,7 @@ from models.Army import Common as Army_Common
 
 from service.Town import Service_Town
 from service.Map import Service_Map
+from service.MapUserVisible import Service_MapUserVisible
 
 import exceptions.army
 import helpers.MapCoordinate
@@ -30,6 +31,9 @@ class Service_Army(AbstractService.Service_Abstract):
         :type collection: collection.MapCollection.Map_Collection
         """
         return Army_Factory.loadByMapCollection(collection)
+
+    def loadByMapCollectionWithoutUser(self, user, collection):
+        return Army_Factory.loadByMapCollectionWithoutUser(user, collection)
 
     def load(self, armyUser, position, config=None, user=None):
         if config is None:
@@ -300,6 +304,12 @@ class Service_Army(AbstractService.Service_Abstract):
             general.setPower(general.getPower() - pathItem['power'])
             general.setLocation(pathItem['pos_id'])
             general.setMovePath(path)
+
+            Service_MapUserVisible().openAroundPlace(
+                general.getUser(),
+                helpers.MapCoordinate.MapCoordinate(posId=general.getLocation()),
+                2
+            )
 
             result = True
 

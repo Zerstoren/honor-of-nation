@@ -32,3 +32,20 @@ class MainController(AbstractMapController):
         })
 
         controller.ArmyController.DeliveryController().updateUnitsOnMap(transfer.getUser(), units)
+
+
+class DeliveryController(AbstractMapController):
+    def openRegion(self, user, mapCollection):
+        serviceJsonpackMap = Service_Map().getDecorateClass(Service_Map.JSONPACK)
+        result = serviceJsonpackMap.fromCollectionToList(mapCollection)
+        units = Service_Army().decorate(Service_Army.JSONPACK).loadByMapCollectionWithoutUser(user, mapCollection)
+
+        user.getTransfer().forceSend('/map/show', {
+            'done': True,
+            'result': {
+                'data': result
+            }
+        })
+
+        if (len(units)):
+            controller.ArmyController.DeliveryController().updateUnitsOnMap(user, units)

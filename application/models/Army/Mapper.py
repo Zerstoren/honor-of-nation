@@ -34,6 +34,16 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(commonFilter)
 
+    def getByMapCollectionWithoutUser(self, user, collection):
+        ids = [mapDomain.getId() for mapDomain in collection]
+
+        commonFilter = Common.Common_Filter()
+        commonFilter.addIn('location', ids)
+        commonFilter.add('in_build', False)
+        commonFilter.addNot('user', user.getId())
+
+        return self._select(commonFilter)
+
     def getSubGenerals(self, generalDomain):
         commonFilter = Common.Common_Filter()
         commonFilter.add('commander', generalDomain.getId())

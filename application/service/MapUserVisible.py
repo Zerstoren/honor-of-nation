@@ -5,6 +5,8 @@ import service.Map
 import models.MapUserVisible.Mapper
 import models.MapUserVisible.Factory
 
+from helpers.MapRegion import MapRegion
+
 
 class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
 
@@ -30,6 +32,19 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
             return True
         except:
             return False
+
+    def openAroundPlace(self, user, mapCoordinate, aroundSize):
+        startFromX = mapCoordinate.getX() - aroundSize
+        startFromY = mapCoordinate.getY() - aroundSize
+        completeToX = mapCoordinate.getX() + aroundSize
+        completeToY = mapCoordinate.getY() + aroundSize
+
+        region = MapRegion(startFromX, completeToX, startFromY, completeToY)
+        mapCollection = region.getCollection()
+        self.openRegion(user, mapCollection)
+
+        import controller.MapController
+        controller.MapController.DeliveryController().openRegion(user, mapCollection)
 
     def getByChunks(self, user, chunks):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(

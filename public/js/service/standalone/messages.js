@@ -26,6 +26,7 @@ define('service/standalone/messages', [
             systemSocket.on('message:/delivery/townUpdate', this.onTownUpdate, this);
             systemSocket.on('message:/delivery/mapResourcesUpdate', this.onMapResourceUpdate, this);
             systemSocket.on('message:/delivery/moveUnit', this.onMoveUnit, this);
+            systemSocket.on('message:/map/show', this.onMapShow, this);
         },
 
         onResourcesUpdate: function (msg) {
@@ -83,6 +84,11 @@ define('service/standalone/messages', [
 
             factoryArmy.updateDomainFromData(data.general);
             mapDraw.updateArmyPosition(location, general);
+            mapInstance.update();
+        },
+
+        onMapShow: function (data) {
+            mapDraw.mapMerge(data.result.data);
             mapInstance.update();
         }
     });

@@ -32,9 +32,15 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         :type user: models.User.Domain.User_Domain
         :type region: collection.MapCollection.Map_Collection
         """
+        ids = [i.getId() for i in region]
+        visibleIds = [i.getId() for i in self.getByIds(user, ids)]
+
         self.bulkStart()
 
         for i in region:
+            if i.getId() in visibleIds:
+                continue
+
             commonSet = Common.Common_Set()
             commonSet.add('pos_id', i.getId())
             commonSet.add('chunk', i.getChunk())
