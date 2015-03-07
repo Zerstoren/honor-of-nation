@@ -166,7 +166,7 @@ class Backend_Controller_TownTest(
         townDomain = self.addTown(0, 0, user, population=13000, typeTown=1, name='Systemd')
 
         controller.get(transfer, {
-            'id': str(townDomain.getId())
+            '_id': str(townDomain.getId())
         })
 
         self.assertEqual(transfer.getLastMessage(), {
