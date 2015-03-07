@@ -71,6 +71,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
         testData = armyDomain._domain_data
         del testData['_id']
+        del testData['last_power_update']
 
         self.assertEqual(
             testData,
@@ -243,6 +244,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
         townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
         result = townUnits[0].toDict()
         del result['_id']
+        del result['last_power_update']
 
         self.assertTrue(self.transfer.getLastMessage()['message']['done'])
         self.assertEqual(len(queue), 1)
@@ -259,7 +261,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
                 'in_build': True,
                 'mode': 1,
                 'is_general': False,
-                'move_path': {},
+                'move_path': [],
                 'power': 100,
                 'suite': None
             }
@@ -267,6 +269,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
 
     @tests.rerun.retry()
     def testMove(self):
+        self.terrain = self.fillTerrain(0, 0, 10, 10)
         self.unitGeneral = self.createEquipmentUnit(
             self.user,
             uType='general',
@@ -284,18 +287,19 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
         general = self.createArmy(self.town, self.unitGeneral, count=100)
         self.setArmySoliderToGeneral(solider, general)
         self.setArmyLeaveTown(general)
+        general.setMode(4)
+        general.getMapper().save(general)
 
         self._getArmyController().move(
             self.transfer,
             {
                 'army_id': str(general.getId()),
-                'path': [[1,1], [2,2]]
+                'path': [[1,1, 'r'], [2,2, 'r']]
             }
         )
 
-
         self.assertEqual(general.getLocation(), 0)
-        time.sleep(6)
+        time.sleep(3)
         general.extract(True)
         self.assertEqual(general.getLocation(), 2001)
 

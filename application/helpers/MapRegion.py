@@ -33,16 +33,14 @@ class MapRegion(object):
         from models.Map.Domain import Map_Domain
         from collection import MapCollection
         mapCollection = MapCollection.Map_Collection()
-
-        for y in range(self.fromY, self.toY + 1):
-            for x in range(self.fromX, self.toX + 1):
+        for y in range(self.fromY, self.toY):
+            for x in range(self.fromX, self.toX):
                 mapCoordinate = MapCoordinate(x=x, y=y)
                 domain = Map_Domain()
                 domain.setId(mapCoordinate.getPosId())
 
                 mapCollection.append(domain)
 
-        mapCollection.extract()
         return mapCollection
 
     def toObject(self):

@@ -39,6 +39,11 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         completeToX = mapCoordinate.getX() + aroundSize
         completeToY = mapCoordinate.getY() + aroundSize
 
+        if startFromX < 0: startFromX = 0
+        if startFromY < 0: startFromY = 0
+        if completeToX > 1999: completeToX = 1999
+        if completeToY > 1999: completeToY = 1999
+
         region = MapRegion(startFromX, completeToX, startFromY, completeToY)
         mapCollection = region.getCollection()
         self.openRegion(user, mapCollection)
