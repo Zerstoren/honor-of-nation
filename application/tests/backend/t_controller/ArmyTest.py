@@ -176,7 +176,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
 class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
     def setUp(self):
-        self.initCelery(True)
+        self.initCelery()
         super().setUp()
         self.transfer = self._login()
         self.terrain = self.fillTerrain(0, 0, 2, 2)
