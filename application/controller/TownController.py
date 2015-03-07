@@ -25,7 +25,7 @@ class ModelController(AbstractTownController):
     def get(self, transfer, data):
         result = {}
         result['done'] = True
-        result['data'] = self._getParamsAclJsonPackTown().getById(data['id'])
+        result['data'] = self._getParamsAclJsonPackTown().getById(data['_id'])
         result['data']['user'] = self._getParamsAclJsonPackUser().getUserDomain(result['data']['user'])
 
         transfer.send('/model/town/get_pos_id', result)
