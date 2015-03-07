@@ -269,7 +269,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
 
     @tests.rerun.retry()
     def testMove(self):
-        self.terrain = self.fillTerrain(0, 0, 2, 2)
+        self.terrain = self.fillTerrain(0, 0, 6, 6)
         self.unitGeneral = self.createEquipmentUnit(
             self.user,
             uType='general',
