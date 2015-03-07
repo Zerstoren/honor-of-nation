@@ -32,6 +32,7 @@ class MapRegion(object):
     def getCollection(self):
         from models.Map.Domain import Map_Domain
         from collection import MapCollection
+
         mapCollection = MapCollection.Map_Collection()
         for y in range(self.fromY, self.toY):
             for x in range(self.fromX, self.toX):
@@ -41,6 +42,7 @@ class MapRegion(object):
 
                 mapCollection.append(domain)
 
+        mapCollection.extract()
         return mapCollection
 
     def toObject(self):

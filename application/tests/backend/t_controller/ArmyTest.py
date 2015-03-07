@@ -269,7 +269,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
 
     @tests.rerun.retry()
     def testMove(self):
-        self.terrain = self.fillTerrain(0, 0, 10, 10)
+        self.terrain = self.fillTerrain(0, 0, 2, 2)
         self.unitGeneral = self.createEquipmentUnit(
             self.user,
             uType='general',
@@ -299,7 +299,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
         )
 
         self.assertEqual(general.getLocation(), 0)
-        time.sleep(3)
+        time.sleep(2)
         general.extract(True)
         self.assertEqual(general.getLocation(), 2001)
 
@@ -603,19 +603,20 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
             self.transfer,
             {
                 'army_id': str(general.getId()),
-                'path': [[1,1], [2,2]]
+                'path': [[1,1, 'r'], [2,2, 'r']]
             }
         )
 
         general.extract(True)
-        testedDict = general.getMovePath()
+        testedDict = general.getMovePath()[0]
         del testedDict['code']
         del testedDict['start_at']
         self.assertDictEqual(
             testedDict,
             {
                 'pos_id': 2001,
-                'complete_after': 5,
-                'power': 8
+                'complete_after': 1,
+                'power': 10,
+                'direction': 'r'
             }
         )
