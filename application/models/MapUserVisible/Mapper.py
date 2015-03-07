@@ -14,9 +14,22 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
         return self._select(queryFilter, limit)
 
+    def getUsersByPosition(self, mapCoordinate):
+        queryFilter = Common.Common_Filter()
+        queryFilter.add('pos_id', mapCoordinate.getPosId())
+
+        return self._select(queryFilter)
+
     def getByIds(self, user, ids):
         queryFilter = Common.Common_Filter()
         queryFilter.addIn('_id', ids)
+        queryFilter.add('user_id', user.getId())
+
+        return self._select(queryFilter)
+
+    def getByPosIds(self, user, ids):
+        queryFilter = Common.Common_Filter()
+        queryFilter.addIn('pos_id', ids)
         queryFilter.add('user_id', user.getId())
 
         return self._select(queryFilter)
@@ -26,9 +39,14 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         :type user: models.User.Domain.User_Domain
         :type region: collection.MapCollection.Map_Collection
         """
-        self.bulkStart()
+        ids = [i.getId() for i in region]
+        visibleIds = [i['pos_id'] for i in self.getByPosIds(user, ids)]
 
+        self.bulkStart()
         for i in region:
+            if i.getId() in visibleIds:
+                continue
+
             commonSet = Common.Common_Set()
             commonSet.add('pos_id', i.getId())
             commonSet.add('chunk', i.getChunk())

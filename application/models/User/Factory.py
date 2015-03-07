@@ -1,7 +1,7 @@
 import models.Abstract.Factory
 import models.User.Domain
 import models.User.Mapper
-from collection import UserCollection
+
 
 class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
@@ -16,6 +16,7 @@ class User_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         return domain
 
     def getCollectionFromDataNoCache(self, data):
+        from collection import UserCollection
         collection = UserCollection.User_Collection()
 
         for i in data:

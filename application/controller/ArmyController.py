@@ -1,4 +1,5 @@
 from service.Army import Service_Army
+from service.MapUserVisible import Service_MapUserVisible
 
 
 class _AbstractArmy(object):
@@ -23,13 +24,17 @@ class MainController(_AbstractArmy):
 
     def move(self, transfer, data):
         self._getParamsAclService().move(
-            data['armyId'],
-            (data['x'], data['y'], ),
+            data['army_id'],
+            data['path'],
             transfer.getUser()
         )
 
     def mode(self, transfer, data):
-        pass
+        self._getParamsAclService().changeMoveType(
+            data['army_id'],
+            data['mode'],
+            transfer.getUser()
+        )
 
     def moveInBuild(self, transfer, data):
         self._getParamsAclService().moveInBuild(
@@ -143,9 +148,33 @@ class CollectionController(_AbstractArmy):
         })
 
 
+class CeleryPrivateController(_AbstractArmy):
+    def updateMove(self, message):
+        self._getParamsArmyService().updatePathMove(message['general'])
+
+
 class DeliveryController(_AbstractArmy):
     def updateUnitsOnMap(self, user, unitsList):
         user.getTransfer().forceSend('/delivery/unitsUpdateOnMap', {
             'done': True,
             'units': unitsList
         })
+
+    def moveOneUnit(self, general):
+        user = general.getUser()
+
+        user.getTransfer().forceSend('/delivery/moveUnit', {
+            'done': True,
+            'general': Service_Army().getDecorateClass(Service_Army.JSONPACK).pack(general)
+        })
+
+    def moveUnit(self, general):
+        posId = general.getLocation()
+        usersCollection = Service_MapUserVisible().decorate(Service_MapUserVisible.PARAMS).getUsersWhoSeePosition(posId)
+        armyPack = Service_Army().getDecorateClass(Service_Army.JSONPACK).pack(general)
+
+        for user in usersCollection:
+            user.getTransfer().forceSend('/delivery/moveUnit', {
+                'done': True,
+                'general': armyPack
+            })

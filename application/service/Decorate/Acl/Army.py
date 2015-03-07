@@ -19,7 +19,8 @@ class Decorate():
         return super().move(general, mapCoordinate, user)
 
     def changeMoveType(self, general, move, user=None):
-        pass
+        self._checkAccess(general.getUser(), user)
+        return super().changeMoveType(general, move, user)
 
     def merge(self, armyCollection, user=None):
         for i in armyCollection:

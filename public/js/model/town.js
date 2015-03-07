@@ -7,7 +7,7 @@ define('model/town', [
         getById: function (success) {
             this.sync('get', {
                 data: {
-                    'id': this.get('_id')
+                    '_id': this.get('_id')
                 },
                 success: function (town) {
                     this.set(town);

@@ -39,11 +39,17 @@ define('gateway/army', [
             return domain;
         },
 
-        move: function (armyId, x, y) {
+        move: function (armyId, path) {
             this.socket.send('/army/move', {
                 'army_id': armyId,
-                'x': x,
-                'y': y
+                'path': path
+            });
+        },
+
+        changeModeMove: function (army, mode) {
+            this.socket.send('/army/mode', {
+                'army_id': army.get('_id'),
+                'mode': mode
             });
         },
 

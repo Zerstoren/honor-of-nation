@@ -29,4 +29,51 @@ div.cont {
             text-align: center;
         }
     }
+
+    .unit_move_path {
+        background-image: url("/img/texture/path/path.png");
+        position: absolute;
+        z-index: 42;
+        margin: 14px 0 0 14px;
+        width: 64px;
+        height: 64px;
+
+        &.t {
+            background-position: 0px 572px;
+        }
+
+        &.tr {
+            background-position: 0 508px;
+            margin: 48px 0 0 14px;
+        }
+
+        &.r {
+            background-position: 0 446px;
+        }
+
+        &.br {
+            background-position: 0 382px;
+        }
+
+        &.b {
+            background-position: 0 320px;
+        }
+
+        &.bl {
+            background-position: 0 256px;
+        }
+
+        &.l {
+            background-position: 0 192px;
+        }
+
+        &.tl {
+            background-position: 0 128px;
+            margin: 48px 0 0 14px;
+        }
+
+        &.c {
+            background-position: 0 64px;
+        }
+    }
 }

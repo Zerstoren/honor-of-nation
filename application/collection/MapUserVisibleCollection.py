@@ -1,8 +1,10 @@
 from . import Abstract
 
 import service.Map
+from models.MapUserVisible.Domain import MapUserVisible_Domain
 
 class MapUserVisible_Collection(Abstract.AbstractCollection):
+    domain = MapUserVisible_Domain
     def getMap(self):
         result = []
 

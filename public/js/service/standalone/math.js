@@ -2,7 +2,7 @@ define('service/standalone/math', [
     'system/config'
 ], function (config) {
     var math,
-        Mathematic = AbstractService.extend({
+    Mathematic = AbstractService.extend({
         percent: function (value, percent) {
             return parseInt(value / 100 * percent, 10);
         },

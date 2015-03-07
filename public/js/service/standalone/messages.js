@@ -1,6 +1,7 @@
 define('service/standalone/messages', [
     'system/socket',
     'service/standalone/map',
+    'service/standalone/map/draw',
 
     'service/standalone/user',
     'factory/town',
@@ -9,6 +10,7 @@ define('service/standalone/messages', [
 ], function (
     systemSocket,
     mapInstance,
+    mapDraw,
 
     serviceStandaloneUser,
     factoryTown,
@@ -22,7 +24,9 @@ define('service/standalone/messages', [
             systemSocket.on('message:/delivery/unitsUpdate', this.onUnitsUpdate, this);
             systemSocket.on('message:/delivery/unitsUpdateOnMap', this.onUnitsUpdateOnMap, this);
             systemSocket.on('message:/delivery/townUpdate', this.onTownUpdate, this);
-            systemSocket.on('message:/delivery/mapResourcesUpdate', this.onMapResourceUpdate, this)
+            systemSocket.on('message:/delivery/mapResourcesUpdate', this.onMapResourceUpdate, this);
+            systemSocket.on('message:/delivery/moveUnit', this.onMoveUnit, this);
+            systemSocket.on('message:/map/show', this.onMapShow, this);
         },
 
         onResourcesUpdate: function (msg) {
@@ -72,6 +76,20 @@ define('service/standalone/messages', [
                 factoryMapResources.updateDomainFromData(resource);
                 mapInstance.update();
             });
+        },
+
+        onMoveUnit: function (data) {
+            var general = factoryArmy.getDomainFromData(data.general),
+                location = general.get('location');
+
+            factoryArmy.updateDomainFromData(data.general);
+            mapDraw.updateArmyPosition(location, general);
+            mapInstance.update();
+        },
+
+        onMapShow: function (data) {
+            mapDraw.mapMerge(data.result.data);
+            mapInstance.update();
         }
     });
 

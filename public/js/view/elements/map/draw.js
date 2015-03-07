@@ -66,43 +66,6 @@ define('view/elements/map/draw', [], function () {
             );
         },
 
-        update: function() {
-            var y, x, yLength, xLength, tr, td, position, drawData,
-                table = this.$area.get(0);
-
-            if(window.console.time) {
-                window.console.time('update');
-            }
-
-            this.trigger('onUpdate');
-
-            yLength = table.childNodes.length;
-            for(y = 0; y < yLength; y += 1) {
-                tr = table.childNodes[y];
-                xLength = tr.childNodes.length;
-
-                for(x = 0; x < xLength; x += 1) {
-                    td = tr.childNodes[x];
-                    position = td.getAttribute('data-position').split('x');
-                    position[0] = parseInt(position[0], 10) + this.positionX;
-                    position[1] = parseInt(position[1], 10) + this.positionY;
-
-                    if(td.childNodes[4].innerHTML) {
-                        td.childNodes[4].innerHTML = '';
-                    }
-
-                    drawData = this.$updateDataFnLayer(position[0], position[1]);
-                    td.className = drawData.join(" ");
-                }
-            }
-
-            this.trigger('postUpdate');
-
-            if(window.console.timeEnd) {
-                window.console.timeEnd('update');
-            }
-        },
-
         getDomCell: function(x, y) {
             x -= this.positionX;
             y -= this.positionY;
@@ -113,7 +76,6 @@ define('view/elements/map/draw', [], function () {
             if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
                 return ['no_map'];
             }
-//            console.log(x, y);
 
             var tmp, classList = [];
             tmp = this.$getLand(x, y);

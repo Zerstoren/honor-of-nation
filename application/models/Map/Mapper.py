@@ -76,10 +76,7 @@ class Map_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         return result
 
     def getByIds(self, ids):
-        result = super().getById(ids)
-        for i in result:
-            result[i]['map_status'] = 1
-
-        return result
+        result = super().getByIds(ids)
+        return list(result)
 
 Map_Mapper = Map_Mapper_Main()

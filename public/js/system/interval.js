@@ -3,7 +3,7 @@ define('system/interval', [], function () {
     var result = AbstractService.extend({
         nums: {},
         events: {},
-        EVERY_1_SEC: 24,
+        EVERY_1_SEC: 60,
 
         initialize: function () {
             var self = this,
@@ -32,12 +32,12 @@ define('system/interval', [], function () {
 
         on: function (string, fn, context) {
             this.nums[string] += 1;
-            AbstractService.prototype.on(string, fn, context);
+            AbstractService.prototype.on.apply(this, [string, fn, context]);
         },
 
-        un: function (string, fn, context) {
+        off: function (string, fn, context) {
             this.nums[string] -= 1;
-            AbstractService.prototype.un(string, fn, context);
+            AbstractService.prototype.off.apply(this, [string, fn, context]);
         }
     });
 

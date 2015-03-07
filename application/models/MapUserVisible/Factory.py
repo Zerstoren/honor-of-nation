@@ -3,6 +3,8 @@ import models.Abstract.Factory
 from . import Domain
 from . import Mapper
 
+from collection.UserCollection import User_Collection
+
 import collection.MapUserVisibleCollection
 
 class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
@@ -15,6 +17,14 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         return self.getDomainFromData(
             Mapper.MapUserVisible_Mapper.getByPosition(mapDomain.getPosition(), userDomain)
         )
+
+    def getUsersByPosition(self, mapCoordinate):
+        positionList = Mapper.MapUserVisible_Mapper.getUsersByPosition(mapCoordinate)
+        usersList = [i['user_id'] for i in positionList]
+        userCollection = User_Collection()
+        userCollection.fillFromIdsList(usersList)
+
+        return userCollection
 
     def getCollectionCellsByUsers(self, user, chunksList):
         """

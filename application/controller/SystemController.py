@@ -24,6 +24,8 @@ class MainController():
                 'map_size': int(config.get('map.size')),
                 'chunk_size': int(config.get('map.chunk')),
 
+                'power_restore': int(config.get('army.infantry.power_restore')),
+
                 'equipment_weapon': models.Equipment.Weapon.Data.const.export(),
                 'equipment_armor': models.Equipment.Armor.Data.const.export(),
                 'equipment_unit': models.Equipment.Units.Data.const.export()

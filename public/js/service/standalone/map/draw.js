@@ -66,6 +66,10 @@ define('service/standalone/map/draw', [
             return true;
         },
 
+        updateArmyPosition: function (oldLocation, general) {
+            this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
+        },
+
         setUpdateDataFnLayer: function() {
             var self = this;
 
@@ -141,7 +145,7 @@ define('service/standalone/map/draw', [
 
         getArmy: function (x, y, mapId) {
             if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-                return;
+                return false;
             }
 
             return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);

@@ -85,14 +85,35 @@
                 {{/this.footer.type}}
 
                 {{#this.footer.type === 'army'}}
-                {{this.footer.army.count}}
+                <div class="army">
+                    <img src="" />
+                </div>
                 {{/this.footer.type}}
 
             </div>
 
             <div class="right">
-                <div class="buttons">
+                {{#this.footer.type === 'army'}}
+                <div class="army">
+                    <div class="army_size">Размер армии: {{this.footer.army.count}}</div>
+                    <div class="army_power">Запас сил: {{this.footer.army_power}}</div>
+                    <div class="army_mode">
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 1}} active{{/this.footer.army.mode}}" data-mode="1"
+                                data-hint="Медленное движение">I</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 2}} active{{/this.footer.army.mode}}" data-mode="2"
+                                data-hint="Нормальная скорость движения">II</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 3}} active{{/this.footer.army.mode}}" data-mode="3"
+                                data-hint="Быстрое движение">III</button>
+                        <button class="btn btn-default mode{{#this.footer.army.mode == 4}} active{{/this.footer.army.mode}}" data-mode="4"
+                                data-hint="Очень быстрое движение">IV</button>
+                    </div>
+                    {{#this.footer.time_to_complete}}
+                    <div class="army_move">
+                        движение через: {{formatters.fromIntToTime(this.footer.time_to_complete)}}
+                    </div>
+                    {{/this.footer.time_to_complete}}
                 </div>
+                {{/this.footer.type}}
             </div>
 
             <div class="center">

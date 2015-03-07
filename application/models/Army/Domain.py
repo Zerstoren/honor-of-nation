@@ -7,7 +7,8 @@ import models.User.Factory
 from models.Equipment.Units.Domain import Equipment_Units_Domain
 import models.Equipment.Units.Factory
 
-import helpers.MapCoordinate
+import time
+import config
 
 import models.Map.Factory
 
@@ -38,6 +39,28 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
         else:
             self.set('commander', commander)
 
+    def getPower(self):
+        power = self.get('power')
+        lastUpdate = self.getLastPowerUpdate()
+        currentTime = int(time.time())
+
+        if lastUpdate != currentTime:
+            restoredPower = round((currentTime - lastUpdate) / float(config.get('army.infantry.power_restore')))
+
+            if power + restoredPower <= 100 and self.getInBuild() == False:
+                self.set('power', power + restoredPower)
+            elif power + restoredPower >= 100 and self.getInBuild() == False:
+                self.set('power', 100)
+            elif power + restoredPower <= 150 and self.getInBuild():
+                self.set('power', power + restoredPower)
+            elif power + restoredPower >= 150 and self.getInBuild():
+                self.set('power', power + restoredPower)
+
+            self.setLastPowerUpdate(currentTime)
+            self.getMapper().save(self)
+
+        return self.get('power')
+
     def getCommander(self):
         from . import Factory
         commanderId = self.get('commander')
@@ -67,6 +90,12 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
 
     def getMap(self):
         return models.Map.Factory.Map_Factory.getDomainById(self.get('location'))
+
+    def setMovePath(self, value):
+        if value is None:
+            value = []
+
+        self.set('move_path', value)
 
     def getMapper(self):
         """

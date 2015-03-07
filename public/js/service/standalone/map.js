@@ -66,7 +66,7 @@ define('service/standalone/map', [
                 this.trigger('onMouseClickObject', e.x, e.y, type, idContainer);
                 this.$lastFocusedContainer = base;
                 base.addClass('focused');
-            } else {
+            } else if (!this.$dragStarted) {
                 this.trigger('onMouseClickObject', null, null, null);
 
                 if (this.$lastFocusedContainer) {

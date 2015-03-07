@@ -1,7 +1,7 @@
 from service.Equipment.Units import Service_Equipment_Units
 
 class Decorate():
-    def _pack(self, domain):
+    def pack(self, domain):
         """
         :param domain: models.Army.Domain.Army_Domain
         :return:
@@ -16,6 +16,10 @@ class Decorate():
             'suite': str(domain.getSuite().getId()) if domain.getSuite() else None,
             'commander': str(domain.getCommander().getId()) if domain.getCommander() else None,
             'count': domain.getCount(),
+            'power': domain.getPower(),
+            'last_power_update': domain.getLastPowerUpdate(),
+            'move_path': domain.getMovePath(),
+            'mode': domain.getMode(),
             'location': int(domain.getMap().getId())
         }
 
@@ -24,7 +28,7 @@ class Decorate():
         result = []
 
         for i in collection:
-            result.append(self._pack(i))
+            result.append(self.pack(i))
 
         return result
 
@@ -33,14 +37,14 @@ class Decorate():
         result = []
 
         for domain in collection:
-            result.append(self._pack(domain))
+            result.append(self.pack(domain))
 
         return result
 
     def loadDetail(self, armyUser, _id, user=None):
         def deepPack(block):
-            current = self._pack(block['current'])
-            suite = self._pack(block['suite']) if block['suite'] else None
+            current = self.pack(block['current'])
+            suite = self.pack(block['suite']) if block['suite'] else None
             sub_army = []
 
             if block['sub_army']:

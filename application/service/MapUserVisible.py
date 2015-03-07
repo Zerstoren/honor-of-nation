@@ -1,6 +1,7 @@
 import service.Abstract.AbstractService
 
 import service.Map
+
 import models.MapUserVisible.Mapper
 import models.MapUserVisible.Factory
 
@@ -30,6 +31,26 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         except:
             return False
 
+    def openAroundPlace(self, user, mapCoordinate, aroundSize):
+        from helpers.MapRegion import MapRegion
+
+        startFromX = mapCoordinate.getX() - aroundSize
+        startFromY = mapCoordinate.getY() - aroundSize
+        completeToX = mapCoordinate.getX() + aroundSize
+        completeToY = mapCoordinate.getY() + aroundSize
+
+        if startFromX < 0: startFromX = 0
+        if startFromY < 0: startFromY = 0
+        if completeToX > 1999: completeToX = 1999
+        if completeToY > 1999: completeToY = 1999
+
+        region = MapRegion(startFromX, completeToX, startFromY, completeToY)
+        mapCollection = region.getCollection()
+        self.openRegion(user, mapCollection)
+
+        import controller.MapController
+        controller.MapController.DeliveryController().openRegion(user, mapCollection)
+
     def getByChunks(self, user, chunks):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
             models.MapUserVisible.Mapper.MapUserVisible_Mapper.getCellsByUsersAndChunks(user, chunks)
@@ -42,6 +63,9 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
             models.MapUserVisible.Mapper.MapUserVisible_Mapper.getByIds(user, ids)
         )
+
+    def getUsersWhoSeePosition(self, mapCoordinate):
+        return models.MapUserVisible.Factory.MapUserVisible_Factory.getUsersByPosition(mapCoordinate)
 
     def decorate(self, *args):
         """

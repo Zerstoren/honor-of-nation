@@ -52,13 +52,5 @@ define('view/map/unitsManipulate', [
 
             this.unitMove = false;
         }
-//
-//        drawPath: function () {
-//
-//        },
-//
-//        _renderPath: function () {
-//
-//        }
     });
 });

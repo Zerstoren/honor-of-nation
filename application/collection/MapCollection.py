@@ -2,7 +2,9 @@ from . import Abstract
 
 import service.MapUserVisible
 
+
 class Map_Collection(Abstract.AbstractCollection):
+
     def getMapVisible(self, user):
         result = []
 

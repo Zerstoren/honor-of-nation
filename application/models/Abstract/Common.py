@@ -66,6 +66,11 @@ class Common_Filter(dict):
             '$in': values
         }
 
+    def addNot(self, option, value):
+        self[option] = {
+            '$ne': value
+        }
+
     def setId(self, recordId):
         self.add('_id', system.mongo.mongo.id(recordId))
         return self

@@ -7,6 +7,10 @@ from models.Army.Factory import Army_Factory
 
 from helpers.mongo import objectId
 
+from exceptions.args import WrongArgumentType
+
+import exceptions.args
+
 
 class Decorate():
     def create(self, unit, town, count, user=None):
@@ -31,14 +35,34 @@ class Decorate():
             user
         )
 
-    def move(self, general, mapCoordinate, user=None):
+    def move(self, general, path, user=None):
         general = Army_Factory.get(general)
-        mapCoordinate = helpers.MapCoordinate.MapCoordinate(x=path[0], y=path[1])
+        mapPath = []
+        for coordinate in path:
+            try:
+                x, y, direction = coordinate
+            except ValueError:
+                raise WrongArgumentType()
 
-        return super().move(general, mapCoordinate, user)
+            mapPath.append({
+                'pos_id': helpers.MapCoordinate.MapCoordinate(x=x, y=y).getPosId(),
+                'direction': direction
+            })
 
-    def changeMoveType(self, general, mode, user=None):
-        return super().changeMoveType(general, mode, user)
+        return super().move(general, mapPath, user)
+
+    def updatePathMove(self, general):
+        general = Army_Factory.get(general)
+        return super().updatePathMove(general)
+
+    def changeMoveType(self, general, move, user=None):
+        generalDomain = Army_Factory.get(general)
+        move = int(move)
+
+        if move not in [1,2,3,4]:
+            raise exceptions.args.EnumError("Wrong move mode")
+
+        return super().changeMoveType(generalDomain, move, user)
 
     def addSuite(self, generalArmy, solidersArmy, user=None):
         generalDomain = Army_Factory.get(generalArmy)

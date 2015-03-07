@@ -14,7 +14,7 @@ class Army(object):
             count
         )
 
-    def createQueue(
+    def createArmyQueue(
         self,
         town,
         unit,
@@ -26,3 +26,11 @@ class Army(object):
             count,
             town.getUser()
         )
+
+    def setArmySoliderToGeneral(self, solider, general):
+        solider.setCommander(general)
+        solider.getMapper().save(solider)
+
+    def setArmyLeaveTown(self, general):
+        general.setInBuild(False)
+        general.getMapper().save(general)

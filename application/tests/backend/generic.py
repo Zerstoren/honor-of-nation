@@ -49,6 +49,11 @@ class Backend_Generic(Generic):
         super().tearDown()
 
     def initCelery(self, debug=False):
+        try:
+            os.remove('/tmp/celery-sheduler')
+        except FileNotFoundError:
+            pass
+
         self._useCelery = True
         self.celeryDebug = debug
 

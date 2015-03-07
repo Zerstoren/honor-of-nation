@@ -1,4 +1,4 @@
-
+import models.Abstract.Domain
 
 class AbstractCollection(list):
     domain = None
@@ -24,11 +24,18 @@ class AbstractCollection(list):
             raise Exception("Domain not setup")
 
         for i in data:
-            domain = self.domain()
-            domain.setOptions(i)
+            domain = self.domain(data=i)
             self.append(domain)
 
         return self
+
+    def fillFromIdsList(self, ids):
+        if self.domain is None:
+            raise Exception("Domain not setup")
+
+        self.clear()
+        for i in range(len(ids)):
+            self.append(self.domain(data={'_id': ids[i]}))
 
     def extract(self, force=False):
         if len(self) == 0:

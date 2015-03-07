@@ -1,5 +1,7 @@
 import exceptions.args
 
+from helpers.MapCoordinate import MapCoordinate
+
 class MapRegion(object):
     def __init__(self, fromX, toX, fromY, toY):
         self.fromX = int(fromX)
@@ -26,6 +28,22 @@ class MapRegion(object):
 
     def getToY(self):
         return self.toY
+
+    def getCollection(self):
+        from models.Map.Domain import Map_Domain
+        from collection import MapCollection
+
+        mapCollection = MapCollection.Map_Collection()
+        for y in range(self.fromY, self.toY):
+            for x in range(self.fromX, self.toX):
+                mapCoordinate = MapCoordinate(x=x, y=y)
+                domain = Map_Domain()
+                domain.setId(mapCoordinate.getPosId())
+
+                mapCollection.append(domain)
+
+        mapCollection.extract()
+        return mapCollection
 
     def toObject(self):
         return {

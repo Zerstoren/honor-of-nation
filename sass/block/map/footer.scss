@@ -35,7 +35,7 @@
             }
 
             .center {
-                padding: 20px 640px 20px 200px;
+                padding: 20px 640px 20px 140px;
 
                 .unit {
                     height: 70px;
@@ -60,7 +60,7 @@
             .right {
                 position: absolute;
                 right: 200px;
-                width: 200px;
+                width: 260px;
                 padding: 20px;
 
                 div.buttons {
@@ -68,6 +68,16 @@
                     margin-left: 10px;
                     button {
                         margin: 4px;
+                    }
+                }
+
+                .army {
+                    .army_mode {
+                        .mode {
+                            width: 24px;
+                            height: 20px;
+                            padding: 0;
+                        }
                     }
                 }
             }

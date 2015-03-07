@@ -42,7 +42,6 @@ class _Abstract_Controller(
 
 class Backend_Controller_ArmyTest(_Abstract_Controller):
     def setUp(self):
-        self.initCelery()
         super().setUp()
         self.transfer = self._login()
         self.terrain = self.fillTerrain(0, 0, 1, 1)
@@ -72,6 +71,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
         testData = armyDomain._domain_data
         del testData['_id']
+        del testData['last_power_update']
 
         self.assertEqual(
             testData,
@@ -85,7 +85,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
                 'in_build': True,
                 'is_general': False,
                 'mode': 1,
-                'move_path': {},
+                'move_path': [],
                 'power': 100,
                 'suite': None
             }
@@ -110,47 +110,6 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
         result = self.transfer.getLastMessage()['message']
         self.assertTrue(result['done'])
         self.assertEqual(2, len(result['data']))
-
-    @tests.rerun.retry()
-    def testCreateArmy(self):
-        armyController = self._getArmyQueueController()
-        armyController.create(
-            self.transfer,
-            {
-                'town': str(self.town.getId()),
-                'unit': str(self.unit.getId()),
-                'count': 1
-            }
-        )
-
-        queue = service.ArmyQueue.Service_ArmyQueue().getQueue(self.town)
-
-        time.sleep(3)
-
-        townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
-        result = townUnits[0].toDict()
-        del result['_id']
-
-        self.assertTrue(self.transfer.getLastMessage()['message']['done'])
-        self.assertEqual(len(queue), 1)
-        self.assertTrue(bool(queue[0].getQueueCode()))
-        self.assertDictEqual(
-            result,
-            {
-                'user': self.user.getId(),
-                'unit': self.unit.getId(),
-                'location': self.town.getMap().getPosition().getPosId(),
-                'count': 1,
-                'commander': None,
-                'formation': None,
-                'in_build': True,
-                'mode': 1,
-                'is_general': False,
-                'move_path': {},
-                'power': 100,
-                'suite': None
-            }
-        )
 
     def testRemoveArmyFromQueue(self):
         armyController = self._getArmyQueueController()
@@ -195,6 +154,48 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
         )
         self.assertDictEqual(firstFixResources, thirdFixResources)
 
+    def testGetQueue(self):
+        self.createArmyQueue(self.town, self.unit, count=10)
+        self.createArmyQueue(self.town, self.unit, count=25)
+
+        armyController = self._getArmyQueueCollectionController()
+        armyController.load(
+            self.transfer,
+            {
+                'town': str(self.town.getId())
+            }
+        )
+
+        result = self.transfer.getLastMessage()['message']['data']
+
+        self.assertEqual(len(result), 2)
+
+        self.assertEqual(result[0]['count'], 10)
+        self.assertEqual(result[1]['count'], 25)
+
+
+class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
+    def setUp(self):
+        self.initCelery()
+        super().setUp()
+        self.transfer = self._login()
+        self.terrain = self.fillTerrain(0, 0, 2, 2)
+        self.user = self.transfer.getUser()
+        self.town = self.addTown(0, 0, self.user, 1)
+
+        self.armor = self.createEquipmentArmor(self.user, health=0, agility=0, absorption=0)
+        self.weapon = self.createEquipmentWeapon(self.user, damage=0, speed=0, critical_chance=0, critical_damage=0)
+        self.unit = self.createEquipmentUnit(
+            self.user,
+            health=0,
+            agility=0,
+            absorption=0,
+            stamina=0,
+            strength=0,
+            armor=self.armor,
+            weapon=self.weapon
+        )
+
     @tests.rerun.retry(retry=10)
     def testRemoveArmyFromQueuePartial(self):
         self._getArmyQueueController().create(
@@ -224,24 +225,83 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
         self.assertEqual(armyDomain.getCount(), 1)
 
-    def testGetQueue(self):
-        self.createQueue(self.town, self.unit, count=10)
-        self.createQueue(self.town, self.unit, count=25)
-
-        armyController = self._getArmyQueueCollectionController()
-        armyController.load(
+    @tests.rerun.retry()
+    def testCreateArmy(self):
+        armyController = self._getArmyQueueController()
+        armyController.create(
             self.transfer,
             {
-                'town': str(self.town.getId())
+                'town': str(self.town.getId()),
+                'unit': str(self.unit.getId()),
+                'count': 1
             }
         )
 
-        result = self.transfer.getLastMessage()['message']['data']
+        queue = service.ArmyQueue.Service_ArmyQueue().getQueue(self.town)
 
-        self.assertEqual(len(result), 2)
+        time.sleep(3)
 
-        self.assertEqual(result[0]['count'], 10)
-        self.assertEqual(result[1]['count'], 25)
+        townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
+        result = townUnits[0].toDict()
+        del result['_id']
+        del result['last_power_update']
+
+        self.assertTrue(self.transfer.getLastMessage()['message']['done'])
+        self.assertEqual(len(queue), 1)
+        self.assertTrue(bool(queue[0].getQueueCode()))
+        self.assertDictEqual(
+            result,
+            {
+                'user': self.user.getId(),
+                'unit': self.unit.getId(),
+                'location': self.town.getMap().getPosition().getPosId(),
+                'count': 1,
+                'commander': None,
+                'formation': None,
+                'in_build': True,
+                'mode': 1,
+                'is_general': False,
+                'move_path': [],
+                'power': 100,
+                'suite': None
+            }
+        )
+
+    @tests.rerun.retry()
+    def testMove(self):
+        self.terrain = self.fillTerrain(0, 0, 6, 6)
+        self.unitGeneral = self.createEquipmentUnit(
+            self.user,
+            uType='general',
+            troopSize=50000,
+            health=0,
+            agility=0,
+            absorption=0,
+            stamina=0,
+            strength=0,
+            armor=self.armor,
+            weapon=self.weapon
+        )
+
+        solider = self.createArmy(self.town, self.unit, count=100)
+        general = self.createArmy(self.town, self.unitGeneral, count=100)
+        self.setArmySoliderToGeneral(solider, general)
+        self.setArmyLeaveTown(general)
+        general.setMode(4)
+        general.getMapper().save(general)
+
+        self._getArmyController().move(
+            self.transfer,
+            {
+                'army_id': str(general.getId()),
+                'path': [[1,1, 'r']]
+            }
+        )
+
+        self.assertEqual(general.getLocation(), 0)
+        time.sleep(5)
+        general.extract(True)
+        self.assertEqual(general.getLocation(), 2001)
 
 
 class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
@@ -249,7 +309,7 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
         super().setUp()
         self.transfer = self._login()
         self.user = self.transfer.getUser()
-        self.terrain = self.fillTerrain(0, 0, 1, 1)
+        self.terrain = self.fillTerrain(0, 0, 2, 2)
         self.town = self.addTown(0, 0, self.user, 1)
 
         self.armor = self.createEquipmentArmor(self.user, health=0, agility=0, absorption=0)
@@ -394,7 +454,6 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
         for domain in armyCollection:
             self.assertEqual(domain.getCount(), 50)
 
-
     def testAddSolidersToGeneral(self):
         army = self.createArmy(self.town, self.unit, count=100)
         army2 = self.createArmy(self.town, self.unit, count=200)
@@ -533,3 +592,31 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
             self.fail("Army not deleted")
         except exceptions.database.Database:
             pass
+
+    def testMove(self):
+        solider = self.createArmy(self.town, self.unit, count=100)
+        general = self.createArmy(self.town, self.unitGeneral, count=100)
+        self.setArmySoliderToGeneral(solider, general)
+        self.setArmyLeaveTown(general)
+
+        self._getArmyController().move(
+            self.transfer,
+            {
+                'army_id': str(general.getId()),
+                'path': [[1,1, 'r'], [2,2, 'r']]
+            }
+        )
+
+        general.extract(True)
+        testedDict = general.getMovePath()[0]
+        del testedDict['code']
+        del testedDict['start_at']
+        self.assertDictEqual(
+            testedDict,
+            {
+                'pos_id': 2001,
+                'complete_after': 1,
+                'power': 10,
+                'direction': 'r'
+            }
+        )
