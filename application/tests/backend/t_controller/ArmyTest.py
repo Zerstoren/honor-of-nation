@@ -176,7 +176,7 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
 
 class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
     def setUp(self):
-        self.initCelery()
+        self.initCelery(True)
         super().setUp()
         self.transfer = self._login()
         self.terrain = self.fillTerrain(0, 0, 2, 2)
@@ -196,76 +196,76 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
             weapon=self.weapon
         )
 
-    @tests.rerun.retry(retry=10)
-    def testRemoveArmyFromQueuePartial(self):
-        self._getArmyQueueController().create(
-            self.transfer,
-            {
-                'town': str(self.town.getId()),
-                'unit': str(self.unit.getId()),
-                'count': 5
-            }
-        )
-
-        time.sleep(1)
-
-        queueDomain = self._getArmyQueueService().getQueue(self.town)[0]
-        self._getArmyQueueController().remove(
-            self.transfer,
-            {
-                'town': str(self.town.getId()),
-                'queue_id': str(queueDomain.getId())
-            }
-        )
-
-        armyDomain = service.Army.Service_Army().load(
-            self.user,
-            self.town.getMap().getPosition()
-        )[0]
-
-        self.assertEqual(armyDomain.getCount(), 1)
-
-    @tests.rerun.retry()
-    def testCreateArmy(self):
-        armyController = self._getArmyQueueController()
-        armyController.create(
-            self.transfer,
-            {
-                'town': str(self.town.getId()),
-                'unit': str(self.unit.getId()),
-                'count': 1
-            }
-        )
-
-        queue = service.ArmyQueue.Service_ArmyQueue().getQueue(self.town)
-
-        time.sleep(3)
-
-        townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
-        result = townUnits[0].toDict()
-        del result['_id']
-        del result['last_power_update']
-
-        self.assertTrue(self.transfer.getLastMessage()['message']['done'])
-        self.assertEqual(len(queue), 1)
-        self.assertTrue(bool(queue[0].getQueueCode()))
-        self.assertDictEqual(
-            result,
-            {
-                'user': self.user.getId(),
-                'unit': self.unit.getId(),
-                'location': self.town.getMap().getPosition().getPosId(),
-                'count': 1,
-                'commander': None,
-                'formation': None,
-                'in_build': True,
-                'mode': 1,
-                'is_general': False,
-                'move_path': [],
-                'power': 100,
-                'suite': None
-            }
-        )
+    # @tests.rerun.retry(retry=10)
+    # def testRemoveArmyFromQueuePartial(self):
+    #     self._getArmyQueueController().create(
+    #         self.transfer,
+    #         {
+    #             'town': str(self.town.getId()),
+    #             'unit': str(self.unit.getId()),
+    #             'count': 5
+    #         }
+    #     )
+    #
+    #     time.sleep(1)
+    #
+    #     queueDomain = self._getArmyQueueService().getQueue(self.town)[0]
+    #     self._getArmyQueueController().remove(
+    #         self.transfer,
+    #         {
+    #             'town': str(self.town.getId()),
+    #             'queue_id': str(queueDomain.getId())
+    #         }
+    #     )
+    #
+    #     armyDomain = service.Army.Service_Army().load(
+    #         self.user,
+    #         self.town.getMap().getPosition()
+    #     )[0]
+    #
+    #     self.assertEqual(armyDomain.getCount(), 1)
+    #
+    # @tests.rerun.retry()
+    # def testCreateArmy(self):
+    #     armyController = self._getArmyQueueController()
+    #     armyController.create(
+    #         self.transfer,
+    #         {
+    #             'town': str(self.town.getId()),
+    #             'unit': str(self.unit.getId()),
+    #             'count': 1
+    #         }
+    #     )
+    #
+    #     queue = service.ArmyQueue.Service_ArmyQueue().getQueue(self.town)
+    #
+    #     time.sleep(3)
+    #
+    #     townUnits = self._getArmyService().load(self.user, self.town.getMap().getPosition())
+    #     result = townUnits[0].toDict()
+    #     del result['_id']
+    #     del result['last_power_update']
+    #
+    #     self.assertTrue(self.transfer.getLastMessage()['message']['done'])
+    #     self.assertEqual(len(queue), 1)
+    #     self.assertTrue(bool(queue[0].getQueueCode()))
+    #     self.assertDictEqual(
+    #         result,
+    #         {
+    #             'user': self.user.getId(),
+    #             'unit': self.unit.getId(),
+    #             'location': self.town.getMap().getPosition().getPosId(),
+    #             'count': 1,
+    #             'commander': None,
+    #             'formation': None,
+    #             'in_build': True,
+    #             'mode': 1,
+    #             'is_general': False,
+    #             'move_path': [],
+    #             'power': 100,
+    #             'suite': None
+    #         }
+    #     )
 
     @tests.rerun.retry()
     def testMove(self):
@@ -299,7 +299,7 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
         )
 
         self.assertEqual(general.getLocation(), 0)
-        time.sleep(2)
+        time.sleep(5)
         general.extract(True)
         self.assertEqual(general.getLocation(), 2001)
 
