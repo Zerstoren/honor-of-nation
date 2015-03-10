@@ -1,7 +1,8 @@
 from tests.selenium.Equipment.generic import Selenium_Equipment_Generic
+from tests.selenium.generic import Selenium_Generic
 import tests.rerun
 
-class Selenium_Equipment_UnitTest(Selenium_Equipment_Generic):
+class Selenium_Equipment_UnitTest(Selenium_Generic):
     def setUp(self):
         super().setUp()
         # self.weapon = self.createEquipmentWeapon(self.user)
