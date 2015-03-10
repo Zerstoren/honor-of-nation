@@ -25,15 +25,14 @@ class Backend_Generic(Generic):
         else:
             path = sys.path[0]
 
-
         if self._useCelery:
             imp.reload(init_celery)
-
+            pythonPath = os.getcwd() + '/' + (os.getenv('PYTHONPATH') if os.getenv('PYTHONPATH') else '')
             self._managedProcessCelery = subprocess.Popen(
                 [
                     'python3',
                     '-B',
-                    'init_celery.py',
+                    '%sinit_celery.py' % pythonPath,
                     '--type=%s' % config.configType,
                     '--database=%s' % self.core.database_name
                 ],
