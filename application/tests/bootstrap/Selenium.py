@@ -22,22 +22,22 @@ class SeleniumFacade(object):
             )
 
         elif config.get('testing.browser') == 'Firefox':
-            firefoxConfig = {
-                'loggingPrefs': {
-                    'browser':'ALL'
-                }
-            }
-            firefoxProfile = webdriver.FirefoxProfile()
-            firefoxProfile.set_preference("browser.cache.disk.capacity", 0)
-            firefoxProfile.set_preference("browser.cache.disk.smart_size.first_run", False)
-            firefoxProfile.set_preference("browser.cache.disk.smart_size.use_old_max", False)
-            firefoxProfile.set_preference("browser.cache.disk.smart_size_cached_value", 0)
-            firefoxProfile.set_preference("browser.cache.disk.enable", False)
-            firefoxProfile.set_preference("browser.cache.memory.enable", False)
-            firefoxProfile.set_preference("browser.cache.offline.enable", False)
-            firefoxProfile.set_preference("network.http.use-cache", False)
+            # firefoxConfig = {
+            #     'loggingPrefs': {
+            #         'browser':'ALL'
+            #     }
+            # }
+            # firefoxProfile = webdriver.FirefoxProfile()
+            # firefoxProfile.set_preference("browser.cache.disk.capacity", 0)
+            # firefoxProfile.set_preference("browser.cache.disk.smart_size.first_run", False)
+            # firefoxProfile.set_preference("browser.cache.disk.smart_size.use_old_max", False)
+            # firefoxProfile.set_preference("browser.cache.disk.smart_size_cached_value", 0)
+            # firefoxProfile.set_preference("browser.cache.disk.enable", False)
+            # firefoxProfile.set_preference("browser.cache.memory.enable", False)
+            # firefoxProfile.set_preference("browser.cache.offline.enable", False)
+            # firefoxProfile.set_preference("network.http.use-cache", False)
 
-            self.driver = webdriver.Firefox(capabilities=firefoxConfig, firefox_profile=firefoxProfile)
+            self.driver = webdriver.Firefox()
 
         else:
             raise Exception('Selenium browser is not selected')
