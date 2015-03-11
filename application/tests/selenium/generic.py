@@ -56,6 +56,21 @@ class Selenium_Generic(Generic):
     TimeoutException = TimeoutException
     NoSuchElementException = NoSuchElementException
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.createWindow('main')
+        self.useWindow('main')
+        print("OPEN BROWSER")
+
+    def __del__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.closeWindow('ALL')
+        try:
+            os.system('pkill -f firefox')
+        except Exception as e:
+            print(e)
+        print("CLOSE BROWSER")
+
     def setUp(self):
         self.showBrowserLogs = False
         self._port = random.randint(10000, 65000)
@@ -88,8 +103,8 @@ class Selenium_Generic(Generic):
         self.driver = None
         self.driversDict = {}
 
-        self.createWindow('main')
-        self.useWindow('main')
+        # self.createWindow('main')
+        # self.useWindow('main')
 
     def tearDown(self):
         if self.showBrowserLogs:
@@ -97,11 +112,11 @@ class Selenium_Generic(Generic):
             self.print(result)
 
         if self.core.remove_core:
-            self.closeWindow('ALL')
-            try:
-                os.system('pkill -f firefox')
-            except Exception as e:
-                print(e)
+            # self.closeWindow('ALL')
+            # try:
+            #     os.system('pkill -f firefox')
+            # except Exception as e:
+            #     print(e)
 
             self.managedProcess.send_signal(signal.SIGINT)
             self.managedProcess = None
