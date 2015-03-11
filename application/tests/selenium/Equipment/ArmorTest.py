@@ -63,6 +63,7 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry()
     def testAddArmorCheckValues(self):
+        self.showBrowserLogs = True
         self._openArmor()
         self.getAddButton().click()
 

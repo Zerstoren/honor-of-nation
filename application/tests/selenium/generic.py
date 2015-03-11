@@ -87,7 +87,7 @@ class Selenium_Generic(Generic):
            stdout=f
         )
 
-        if bool(config.get('system.pycharm')) == 'True':
+        if config.get('system.pycharm') == 'True':
             self.createWindow('main')
             self.updateWindowSetting('main')
             self.useWindow('main')
@@ -101,7 +101,7 @@ class Selenium_Generic(Generic):
             self.print(result)
 
         if self.core.remove_core:
-            if bool(config.get('system.pycharm')) == 'True':
+            if config.get('system.pycharm') == 'True':
                 self.closeWindow('ALL')
 
             self.managedProcess.send_signal(signal.SIGINT)
