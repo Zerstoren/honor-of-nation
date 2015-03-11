@@ -15,6 +15,7 @@ import selenium.webdriver.support.ui as WebDriverUI
 from tests.bootstrap.Selenium import SeleniumFacade
 
 import time
+import os
 import os.path
 import subprocess
 import signal
@@ -97,8 +98,12 @@ class Selenium_Generic(Generic):
 
         if self.core.remove_core:
             self.closeWindow('ALL')
-            self.managedProcess.send_signal(signal.SIGINT)
+            try:
+                os.system('pkill -f firefox')
+            except Exception as e:
+                print(e)
 
+            self.managedProcess.send_signal(signal.SIGINT)
             self.managedProcess = None
 
         super().tearDown()
