@@ -6,14 +6,14 @@ define('system/errorHandler', [
         consoleLog: window.consoleLog,
         init: function () {
             window.onerror = this.onError.bind(this);
-            //this.initConsole();
+            this.initConsole();
         },
 
         initConsole: function () {
             var self = this, consoleDump = console.log;
             console.log = function () {
                 var args = Array.prototype.slice.call(arguments);
-                self.consoleLog.push(args);
+                window.consoleLog.push(args);
             };
         },
 
