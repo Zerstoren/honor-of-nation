@@ -6,6 +6,7 @@ import importlib
 from . import core
 
 from tests.bootstrap.Selenium import SeleniumFacadeInstance
+import config
 
 testLoader = unittest.TestLoader()
 
@@ -48,9 +49,13 @@ def import_files(path):
 
     testSuite = unittest.TestSuite(suites)
 
-    SeleniumFacadeInstance.createWindow('main')
+    if config.get('system.ignore_selenium') == 'False':
+        SeleniumFacadeInstance.createWindow('main')
+
     result = unittest.TextTestRunner().run(testSuite)
-    SeleniumFacadeInstance.closeWindow('main')
+
+    if config.get('system.ignore_selenium') == 'False':
+        SeleniumFacadeInstance.closeWindow('main')
 
     sys.exit(len(result.errors) + len(result.failures))
 

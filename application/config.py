@@ -28,6 +28,7 @@ _arguments.add_option("-j", "--pycharm", help="Is flag using for pycharm unit te
 _arguments.add_option("-f", "--balancer_full", help="Set flag for start sub system celery and backend", default=None)
 _arguments.add_option("-w", "--balancer_back_workers", help="How many workers need start", default=None)
 _arguments.add_option("-b", "--balancer_port", help="set balancer client and server ports", default=None)
+_arguments.add_option("-i", "--ignore_selenium", help="ignore selenium test", default=None)
 
 
 (options, args) = _arguments.parse_args()
@@ -64,6 +65,7 @@ if options.type:
 if options.pycharm:
     _config['default']['system.pycharm'] = str(options.pycharm is not None)
 
+_config['default']['system.ignore_selenium'] = str(options.ignore_selenium is not None)
 
 def getRoutes():
     _config = configparser.ConfigParser()
