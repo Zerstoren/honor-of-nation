@@ -73,7 +73,6 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
 
     @tests.rerun.retry(1)
     def testAddWeaponCheckValues(self):
-        self.showBrowserLogs = True
         self._openWeapon()
         self.getAddButton().click()
 

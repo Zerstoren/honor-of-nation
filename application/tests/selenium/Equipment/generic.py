@@ -42,10 +42,17 @@ class Selenium_Equipment_Generic(
     def getField(self, name):
         return self.byCssSelector('.dev-wrapper .develop .field_%s' % name)
 
+    counter = 0
     def setFieldValue(self, name, value):
         field = self.getField(name)
+        self.counter += 1
+        self.saveScreenshot('t-' + str(self.counter))
         field.clear()
+        self.counter += 1
+        self.saveScreenshot('t-' + str(self.counter))
         field.send_keys(value)
+        self.counter += 1
+        self.saveScreenshot('t-' + str(self.counter))
 
     def getFilterButton(self, name):
         return self.byCssSelector('.select-equipment-type .%s' % name)
