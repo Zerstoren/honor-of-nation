@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By as WebDriverCommonBy
 import selenium.webdriver.support.expected_conditions as WebDriverExpectedCondition
 import selenium.webdriver.support.ui as WebDriverUI
 
-from tests.bootstrap.Selenium import SeleniumFacade
+from tests.bootstrap.Selenium import SeleniumFacadeInstance
 
 import time
 import os
@@ -53,23 +53,10 @@ class Selenium_Generic(Generic):
     keys = Keys
     managedProcess = None
 
+    seleniumFacade = SeleniumFacadeInstance
+
     TimeoutException = TimeoutException
     NoSuchElementException = NoSuchElementException
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.createWindow('main')
-        self.useWindow('main')
-        print("OPEN BROWSER")
-
-    def __del__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.closeWindow('ALL')
-        try:
-            os.system('pkill -f firefox')
-        except Exception as e:
-            print(e)
-        print("CLOSE BROWSER")
 
     def setUp(self):
         self.showBrowserLogs = False
@@ -100,11 +87,13 @@ class Selenium_Generic(Generic):
            stdout=f
         )
 
-        self.driver = None
-        self.driversDict = {}
-
-        # self.createWindow('main')
-        # self.useWindow('main')
+        if bool(config.get('system.pycharm')) == 'True':
+            self.createWindow('main')
+            self.updateWindowSetting('main')
+            self.useWindow('main')
+        else:
+            self.updateWindowSetting('main')
+            self.useWindow('main')
 
     def tearDown(self):
         if self.showBrowserLogs:
@@ -112,17 +101,16 @@ class Selenium_Generic(Generic):
             self.print(result)
 
         if self.core.remove_core:
-            # self.closeWindow('ALL')
-            # try:
-            #     os.system('pkill -f firefox')
-            # except Exception as e:
-            #     print(e)
+            if bool(config.get('system.pycharm')) == 'True':
+                self.closeWindow('ALL')
 
             self.managedProcess.send_signal(signal.SIGINT)
             self.managedProcess = None
 
-        super().tearDown()
-        self.sleep(2)
+        self.isSetup = False
+        self.fullCleanCache()
+        del self.fixture
+        self.core.destruct()
 
     def byCssSelector(self, cssSelector):
         return self.driver.byCss(cssSelector)
@@ -218,28 +206,23 @@ class Selenium_Generic(Generic):
         return self.driver.execute_script(script, [])
 
     def createWindow(self, name):
-        createDriver = SeleniumFacade()
+        self.seleniumFacade.createWindow(name)
 
-        createDriver.driver.set_window_size(1366, 1000)
-        createDriver.driver.get('http://' + config.get('server.domain') + '/css/style.css')
-        createDriver.driver.execute_script("window.localStorage.port = '%s'" % self._port, [])
-
-        self.driversDict[name] = createDriver
+    def updateWindowSetting(self, name):
+        self.seleniumFacade.updateWindowSetting(name, self._port)
 
     def useWindow(self, name):
-        if name not in self.driversDict:
-            raise Exception('Driver %s not created' % name)
-
-        self.driver = self.driversDict[name].driver
+        self.driver = self.seleniumFacade.getWindow(name)
 
     def closeWindow(self, name):
         if name == 'ALL':
-            for (key, value) in list(self.driversDict.items()):
-                self.closeWindow(key)
+            self.driver = None
+        else:
+            currentDriver = self.seleniumFacade.getWindow(name)
+            if currentDriver == self.driver:
+                self.driver = None
 
-        elif name in self.driversDict:
-            self.driversDict[name].driver.quit()
-            del self.driversDict[name]
+        self.seleniumFacade.closeWindow(name)
 
     def getChainAction(self):
         return WebDriverActionChain(self.driver)
