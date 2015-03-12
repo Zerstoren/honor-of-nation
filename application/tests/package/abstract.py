@@ -1,6 +1,9 @@
+from selenium.webdriver.common.keys import Keys
+
 class AbstractDeclaration(object):
     TimeoutException = Exception
     NoSuchElementException = Exception
+    keys = Keys
 
     def sleep(self, n):
         pass
