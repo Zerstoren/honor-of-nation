@@ -9,11 +9,28 @@ class Dom(abstract.AbstractDeclaration):
 
     def value(self, element, value):
         element.clear()
-        self.sleep(0.6)
-        res1 = element.get_attribute('value')
-        # assert element.get_attribute('value') == "" or element.get_attribute('value') == "0"
+        counter = 0
+        while True:
+            if counter == 100:
+                raise Exception("Something is wrong with clear values")
+            try:
+                assert element.get_attribute('value') == "" or element.get_attribute('value') == "0"
+                break
+            except AssertionError:
+                counter += 1
+                self.sleep(0.2)
+
+
         element.send_keys(str(value))
-        res2 = element.get_attribute('value')
-        print(res1, res2, value)
-        # print(element.get_attribute('value'))
-        # assert element.get_attribute('value') == str(value)
+        counter = 0
+        while True:
+            if counter == 100:
+                raise Exception("Something is wrong with set values")
+            try:
+                assert element.get_attribute('value') == str(value)
+                break
+            except AssertionError:
+                counter += 1
+                self.sleep(0.2)
+
+
