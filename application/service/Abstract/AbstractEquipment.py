@@ -28,4 +28,9 @@ class AbstractEquipment(AbstractService.Service_Abstract):
             return 0
 
         middleLevel = ((lvl + 1) * (float(lvl) / 2) / lvl / 1.000)
-        return (cost * math.exp(middleLevel / 1000.0 * mod)) * round(lvl, 5)
+        expValue = middleLevel / 1000.0 * mod
+
+        if expValue > 35:
+            expValue = 35
+
+        return (cost * math.exp(expValue)) * round(lvl, 5)
