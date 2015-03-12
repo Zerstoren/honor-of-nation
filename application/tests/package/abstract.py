@@ -34,3 +34,6 @@ class AbstractDeclaration(object):
 
     def goAppUrl(self, path):
         pass
+
+    def executeCommand(self, script, *args):
+        pass

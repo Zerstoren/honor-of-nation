@@ -202,8 +202,8 @@ class Selenium_Generic(Generic):
         # TODO Change for native driver method
         return self.executeCommand('return location.pathname')
 
-    def executeCommand(self, script):
-        return self.driver.execute_script(script, [])
+    def executeCommand(self, script, *args):
+        return self.driver.execute_script(script, args)
 
     def createWindow(self, name):
         self.seleniumFacade.createWindow(name)

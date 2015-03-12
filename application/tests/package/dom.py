@@ -8,17 +8,18 @@ class Dom(abstract.AbstractDeclaration):
         element.byXPath('//option[@value="' + optionValue + '"]').click()
 
     def value(self, element, value):
-        chain = self.getChainAction()
-        chain.click(element)
-        chain.key_down(self.keys.LEFT_SHIFT)
-        chain.key_down(self.keys.HOME)
-        chain.key_up(self.keys.HOME)
-        chain.key_down(self.keys.BACKSPACE)
-        chain.key_up(self.keys.BACKSPACE)
-        chain.key_up(self.keys.LEFT_SHIFT)
-        chain.perform()
-
-        element.send_keys(str(value))
+        self.executeCommand('arguments[0].setAttribute("value",arguments[1]);', element, value)
+        # chain = self.getChainAction()
+        # chain.click(element)
+        # chain.key_down(self.keys.LEFT_SHIFT)
+        # chain.key_down(self.keys.HOME)
+        # chain.key_up(self.keys.HOME)
+        # chain.key_down(self.keys.BACKSPACE)
+        # chain.key_up(self.keys.BACKSPACE)
+        # chain.key_up(self.keys.LEFT_SHIFT)
+        # chain.perform()
+        #
+        # element.send_keys(str(value))
         # counter = 0
         # while True:
         #     if counter == 100:
