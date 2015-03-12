@@ -203,7 +203,7 @@ class Selenium_Generic(Generic):
         return self.executeCommand('return location.pathname')
 
     def executeCommand(self, script, *args):
-        return self.driver.execute_script(script, args)
+        return self.driver.execute_script(script, *args)
 
     def createWindow(self, name):
         self.seleniumFacade.createWindow(name)

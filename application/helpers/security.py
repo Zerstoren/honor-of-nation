@@ -50,7 +50,3 @@ def deleteOtherKeys(obj, insKeys):
         del obj[x]
 
     return obj
-
-def kill(pid):
-    import os
-    os.kill(pid, -9)
