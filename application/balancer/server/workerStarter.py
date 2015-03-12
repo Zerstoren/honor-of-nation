@@ -78,5 +78,6 @@ class Process():
             i.terminate()
 
         if self.celery:
-            os.killpg(self.celery.pid, signal.SIGKILL)
+            import helpers.security
+            helpers.security.kill(self.celery.pid)
 

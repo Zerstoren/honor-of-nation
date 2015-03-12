@@ -44,7 +44,8 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            os.killpg(self._managedProcessCelery.pid, signal.SIGKILL)
+            import helpers.security
+            helpers.security.kill(self.celery.pid)
 
         super().tearDown()
 
