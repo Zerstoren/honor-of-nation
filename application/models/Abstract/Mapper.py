@@ -25,7 +25,6 @@ class Abstract_Mapper(metaclass=abc.ABCMeta):
         if limit.isOneRecord():
             action = self._getCollection().find_one(where)
             if action is None:
-                system.log.info('Data not found in collection %s by query %s' % (self._table, str(where)))
                 raise exceptions.database.NotFound('Data not found by ' + str(where))
 
             return action
