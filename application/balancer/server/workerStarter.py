@@ -78,5 +78,5 @@ class Process():
             i.terminate()
 
         if self.celery:
-            os.kill(self.celery.pid, signal.SIGKILL)
+            os.killpg(self.celery.pid, signal.SIGKILL)
 
