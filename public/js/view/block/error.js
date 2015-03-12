@@ -30,7 +30,13 @@ define('view/block/error', [
         },
 
         showSuccessBox: function (message) {
-            alertify.success(message);
+            var time = 0;
+
+            if (window.env !== 'develop') {
+                time = 5000;
+            }
+
+            alertify.success(message, time);
         },
 
         _connectionIsNotEstablished: function () {
