@@ -44,6 +44,7 @@ class Selenium_Equipment_Generic(
 
     def setFieldValue(self, name, value):
         self.getField(name).clear()
+        self.sleep(0.1)
         self.getField(name).send_keys(value)
 
     def getFilterButton(self, name):
