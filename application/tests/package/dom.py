@@ -11,8 +11,10 @@ class Dom(abstract.AbstractDeclaration):
         element.clear()
         counter = 0
         while True:
-            if counter == 100:
-                raise Exception("Something is wrong with clear values")
+            if counter == 200:
+                raise Exception("Something is wrong with clear values expected '' but have '%s'" % (
+                    element.get_attribute('value')
+                ))
             try:
                 assert element.get_attribute('value') == "" or element.get_attribute('value') == "0"
                 break
@@ -25,7 +27,9 @@ class Dom(abstract.AbstractDeclaration):
         counter = 0
         while True:
             if counter == 100:
-                raise Exception("Something is wrong with set values")
+                raise Exception("Something is wrong with set values. Expected '%s' but have '%s'" % (
+                    str(value), element.get_attribute('value')
+                ))
             try:
                 assert element.get_attribute('value') == str(value)
                 break
