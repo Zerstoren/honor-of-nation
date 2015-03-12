@@ -382,7 +382,7 @@ class Backend_Controller_TownBuildsTest(
             0
         )
 
-    @tests.rerun.retry()
+    @tests.rerun.retry(8)
     def testWaitCancelAfterTime(self):
         buildsDomain = self.town.getBuilds()
         self.controller.createBuild(self.transfer, {
