@@ -67,15 +67,21 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
         self.getAddButton().click()
 
         self.setFieldValue('health', 100)
+        self.sleep(0.3)
         self.setFieldValue('agility', 100)
+        self.sleep(0.3)
         self.setFieldValue('absorption', 100)
+        self.sleep(0.3)
 
         self.selectOptionValue(
             self.getField('shield'),
             'steel'
         )
+        self.sleep(0.3)
         self.setFieldValue('shield_durability', 5000)
+        self.sleep(0.3)
         self.setFieldValue('shield_blocking', 50)
+        self.sleep(0.3)
 
         self.sleep(3)
         self.save()
