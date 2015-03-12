@@ -80,7 +80,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
         self.setFieldValue('speed', 100)
         self.setFieldValue('critical_damage', 3)
         self.setFieldValue('critical_chance', 10)
-
+        self.sleep(3)
         self.save()
         self.operationIsSuccess()
 

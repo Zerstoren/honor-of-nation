@@ -77,7 +77,7 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
         self.setFieldValue('shield_durability', 5000)
         self.setFieldValue('shield_blocking', 50)
 
-        self.saveScreenshot('test')
+        self.sleep(3)
         self.save()
         self.operationIsSuccess()
 
