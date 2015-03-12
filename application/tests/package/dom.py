@@ -9,5 +9,5 @@ class Dom(abstract.AbstractDeclaration):
 
     def value(self, element, value):
         element.clear()
-        self.sleep(0.3)
+        self.sleep(0.6)
         element.send_keys(str(value))
