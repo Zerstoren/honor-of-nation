@@ -55,7 +55,8 @@ class Process():
         self.celery = subprocess.Popen(
             args,
             stdout=sys.stdout if debug else subprocess.PIPE,
-            stderr=sys.stderr if debug else subprocess.PIPE
+            stderr=sys.stderr if debug else subprocess.PIPE,
+            preexec_fn=os.setsid
         )
         system.log.info('New celery instance is started, PID: %i' % int(self.celery.pid))
 
@@ -78,6 +79,5 @@ class Process():
             i.terminate()
 
         if self.celery:
-            import helpers.security
-            helpers.security.kill(self.celery.pid)
+            os.killpg(self.celery.pid, signal.SIGKILL)
 

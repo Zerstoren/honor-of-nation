@@ -39,13 +39,13 @@ class Backend_Generic(Generic):
                 ],
                 cwd=str(os.path.dirname(os.path.realpath(__file__))) + '/../../',
                 stdout=sys.stdout if self.celeryDebug else subprocess.PIPE,
-                stderr=sys.stderr if self.celeryDebug else subprocess.PIPE
+                stderr=sys.stderr if self.celeryDebug else subprocess.PIPE,
+                preexec_fn=os.setsid
             )
 
     def tearDown(self):
         if self._useCelery:
-            import helpers.security
-            helpers.security.kill(self.celery.pid)
+            os.killpg(self._managedProcessCelery.pid, signal.SIGKILL)
 
         super().tearDown()
 
