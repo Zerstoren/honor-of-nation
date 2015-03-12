@@ -31,4 +31,4 @@ class Selenium_Town_Generic(generic.Selenium_Generic):
         unit.byCss('.count_to_create').send_keys(str(count))
         unit.byCss('.create').click()
 
-        self.waitForElement('.buildInProgress .name')
+        self.waitForElement('.unit-item')
