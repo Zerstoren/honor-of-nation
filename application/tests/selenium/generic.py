@@ -25,7 +25,7 @@ import system.log
 
 import logging
 selenium_logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
-selenium_logger.setLevel(logging.DEBUG)
+selenium_logger.setLevel(logging.ERROR)
 
 # Create alias for most popular actions
 webdriver.remote.webelement.WebElement.byCss = webdriver.remote.webelement.WebElement.find_element_by_css_selector
