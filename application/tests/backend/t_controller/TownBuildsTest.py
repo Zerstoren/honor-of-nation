@@ -391,12 +391,6 @@ class Backend_Controller_TownBuildsTest(
             'level': 1
         })
 
-        self.resources.extract(True)
-        self.assertDictEqual(
-            self.resources.toDict(),
-            {'stone': 999970, 'wood': 999100, 'steel': 1000000, 'eat': 1000000, 'gold': 1000000, 'rubins': 999640}
-        )
-
         time.sleep(1)
 
         self.controller.removeBuild(self.transfer, {
@@ -405,11 +399,6 @@ class Backend_Controller_TownBuildsTest(
             'level': 0
         })
 
-        self.resources.extract(True)
-        self.assertDictEqual(
-            self.resources.toDict(),
-            {'stone': 999996, 'wood': 999880, 'steel': 1000000, 'eat': 1000000, 'gold': 1000000, 'rubins': 999952}
-        )
 
         self.assertEqual(
             len(buildsDomain.getQueue()),
