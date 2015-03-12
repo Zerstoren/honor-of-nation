@@ -2,6 +2,9 @@ class AbstractDeclaration(object):
     TimeoutException = Exception
     NoSuchElementException = Exception
 
+    def sleep(self, n):
+        pass
+
     def getRandomInt(self, minimal=0, maximal=100, prefix=''):
         pass
 

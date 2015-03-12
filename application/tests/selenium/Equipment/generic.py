@@ -2,8 +2,8 @@ from tests.selenium.generic import Selenium_Generic
 
 from tests.package.interface import Interface
 from tests.package.asserts import Asserts
-from tests.package.db.equipment import Equipment
 from tests.package.dom import Dom
+from tests.package.db.equipment import Equipment
 from tests.package.db.town import Town
 
 class Selenium_Equipment_Generic(
@@ -43,9 +43,10 @@ class Selenium_Equipment_Generic(
         return self.byCssSelector('.dev-wrapper .develop .field_%s' % name)
 
     def setFieldValue(self, name, value):
-        self.getField(name).clear()
-        self.sleep(0.1)
-        self.getField(name).send_keys(value)
+        self.value(
+            self.getField(name),
+            value
+        )
 
     def getFilterButton(self, name):
         return self.byCssSelector('.select-equipment-type .%s' % name)
