@@ -397,7 +397,7 @@ class Backend_Controller_TownBuildsTest(
             {'stone': 999970, 'wood': 999100, 'steel': 1000000, 'eat': 1000000, 'gold': 1000000, 'rubins': 999640}
         )
 
-        time.sleep(1.5)
+        time.sleep(1)
 
         self.controller.removeBuild(self.transfer, {
             'town': str(self.town.getId()),
