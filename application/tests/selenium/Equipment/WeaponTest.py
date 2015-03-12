@@ -71,7 +71,7 @@ class Selenium_Equipment_WeaponTest(Selenium_Equipment_Generic):
             1
         )
 
-    @tests.rerun.retry(1)
+    @tests.rerun.retry()
     def testAddWeaponCheckValues(self):
         self._openWeapon()
         self.getAddButton().click()

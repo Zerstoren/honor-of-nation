@@ -61,7 +61,7 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
             1
         )
 
-    @tests.rerun.retry(1)
+    @tests.rerun.retry()
     def testAddArmorCheckValues(self):
         self._openArmor()
         self.getAddButton().click()
