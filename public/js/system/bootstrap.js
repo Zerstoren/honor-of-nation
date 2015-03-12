@@ -1,6 +1,6 @@
 requirejs.config({
     baseUrl: '/js/',
-
+    waitSeconds: 30,
     paths: {
         app: '/js/'
     }

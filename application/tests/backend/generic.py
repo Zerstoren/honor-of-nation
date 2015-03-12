@@ -9,6 +9,7 @@ import init_celery
 
 import os
 import imp
+import signal
 
 
 class Backend_Generic(Generic):
@@ -43,7 +44,7 @@ class Backend_Generic(Generic):
 
     def tearDown(self):
         if self._useCelery:
-            self._managedProcessCelery.kill()
+            os.kill(self._managedProcessCelery.pid, signal.SIGKILL)
 
         super().tearDown()
 

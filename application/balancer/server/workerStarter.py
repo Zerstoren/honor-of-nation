@@ -3,6 +3,7 @@ import sys
 import config
 
 import os
+import signal
 
 import system.log
 
@@ -77,5 +78,5 @@ class Process():
             i.terminate()
 
         if self.celery:
-            self.celery.kill()
+            os.kill(self.celery.pid, signal.SIGKILL)
 
