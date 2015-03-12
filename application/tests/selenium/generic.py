@@ -228,7 +228,7 @@ class Selenium_Generic(Generic):
         return WebDriverActionChain(self.driver)
 
     def saveScreenshot(self, name):
-        self.seleniumFacade.getWindow('main').get_screenshot_as_file('/tmp/' + name)
+        self.seleniumFacade.getWindow('main').get_screenshot_as_file('/tmp/' + name + '.png')
 
     def login(self, userDomain=None):
         if userDomain:

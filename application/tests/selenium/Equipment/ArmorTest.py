@@ -79,6 +79,7 @@ class Selenium_Equipment_ArmorTest(Selenium_Equipment_Generic):
 
         self.save()
         self.operationIsSuccess()
+        self.saveScreenshot('test')
 
         armorCollection = self.getArmorByUser(self.user)
         armorDomain = armorCollection[0]
