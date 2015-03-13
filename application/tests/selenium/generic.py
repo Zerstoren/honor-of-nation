@@ -58,6 +58,9 @@ class Selenium_Generic(Generic):
     TimeoutException = TimeoutException
     NoSuchElementException = NoSuchElementException
 
+    BY_CSS = 'css'
+    BY_XPATH = 'xpath'
+
     def setUp(self):
         self.showBrowserLogs = False
         self._port = random.randint(10000, 65000)

@@ -28,7 +28,7 @@
             <img src="test.png">
             {{>unitPopupDetail}}
 
-            <div class="popover">
+            <div class="popover unit-detail">
                 {{>unitPopoverDetail}}
             </div>
         </li>

@@ -31,6 +31,10 @@ class Army(object):
         solider.setCommander(general)
         solider.getMapper().save(solider)
 
+    def setArmySuiteToGeneral(self, solider, general):
+        general.setSuite(solider)
+        general.getMapper().save(general)
+
     def setArmyLeaveTown(self, general):
         general.setInBuild(False)
         general.getMapper().save(general)

@@ -3,7 +3,6 @@ from tests.selenium.Town import generic
 import tests.rerun
 
 from tests.package.interface import Interface
-from tests.package.dom import Dom
 from tests.package.db.town import Town
 from tests.package.db.army import Army
 from tests.package.db.equipment import Equipment
@@ -12,7 +11,6 @@ from service.Army import Service_Army
 
 class Selenium_Town_ArmyManipulateTest(
     generic.Selenium_Town_Generic,
-    Dom,
     Town,
     Army,
     Equipment,
@@ -70,6 +68,23 @@ class Selenium_Town_ArmyManipulateTest(
         self.openTown(self.town)
         self.waitForElement('.listUnits .units li')
 
+    def _combinateArmy(self):
+        self.setArmySoliderToGeneral(self.solider_1, self.general_1)
+        self.setArmySuiteToGeneral(self.solider_2, self.general_1)
+
+        self.setArmySoliderToGeneral(self.solider_3, self.general_2)
+        self.setArmySuiteToGeneral(self.solider_4, self.general_2)
+
+        self.setArmySoliderToGeneral(self.solider_5, self.general_3)
+        self.setArmySuiteToGeneral(self.solider_6, self.general_3)
+
+        self.setArmySoliderToGeneral(self.solider_7, self.general_4)
+        self.setArmySuiteToGeneral(self.solider_8, self.general_4)
+
+        self.setArmySoliderToGeneral(self.general_2, self.general_1)
+        self.setArmySoliderToGeneral(self.general_3, self.general_1)
+        self.setArmySoliderToGeneral(self.general_4, self.general_1)
+
     @tests.rerun.retry()
     def testMergeUnits(self):
         self._selectArmyInList(self.solider_1)
@@ -88,6 +103,7 @@ class Selenium_Town_ArmyManipulateTest(
         self._selectArmyInList(self.general_1)
         self._isArmyActionDisabled('merge')
 
+    @tests.rerun.retry()
     def testSplitUnits(self):
         self._selectArmyInList(self.solider_1)
         self._armyAction('split')
@@ -143,6 +159,7 @@ class Selenium_Town_ArmyManipulateTest(
             self.solider_1.getId()
         )
 
+    @tests.rerun.retry()
     def testRemoveUnit(self):
         self._selectArmyInList(self.general_1)
         self._armyAction('dissolution')
@@ -151,3 +168,134 @@ class Selenium_Town_ArmyManipulateTest(
         self.waitForSocket()
 
         self._armyNotInList(self.general_1)
+
+    @tests.rerun.retry()
+    def testMergeGenerals(self):
+        self.dragNDrop(
+            self._getArmyInList(self.general_2),
+            self._getArmyInList(self.general_1)
+        )
+        self.waitForSocket()
+        self._armyNotInList(self.general_2)
+
+        unitDetail = Service_Army().loadDetail(self.user, self.general_1.getId())
+        self.assertEqual(len(unitDetail['sub_army']), 1)
+        self.assertEqual(unitDetail['sub_army'][0]['current'].getId(), self.general_2.getId())
+
+    @tests.rerun.retry()
+    def testDetailLoadIsSuccess(self):
+        self._combinateArmy()
+        self._openCommanderDetail(self.general_1)
+
+        self._armyNotShowInDetail(self.solider_3)
+
+        self._getArmyInDetail(self.general_2).click()
+        self._getArmyInDetail(self.solider_3)
+        self._getArmyInDetail(self.solider_4)
+
+        self._getArmyInDetail(self.general_3).click()
+        self._getArmyInDetail(self.solider_5)
+        self._getArmyInDetail(self.solider_6)
+
+        self._getArmyInDetail(self.general_4).click()
+        self._getArmyInDetail(self.solider_7)
+        self._getArmyInDetail(self.solider_8)
+
+    @tests.rerun.retry()
+    def testMoveSuiteToBufferAndBack(self):
+        self._combinateArmy()
+        self._openCommanderDetail(self.general_1)
+
+        self.assertEqual(self.general_1.getSuite().getId(), self.solider_2.getId())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_2),
+            self._getBuffer()
+        )
+        self.waitForSocket()
+        self.general_1.extract(True)
+        self.assertEqual(self.general_1.getSuite(), None)
+        self._getArmyInDetail(self.solider_2, self._getBuffer())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_2),
+            self._getMiddleSuite()
+        )
+        self.waitForSocket()
+        self.general_1.extract(True)
+        self.assertEqual(self.general_1.getSuite().getId(), self.solider_2.getId())
+
+    @tests.rerun.retry()
+    def testMoveBottomSuiteToBufferAndBack(self):
+        self._combinateArmy()
+        self._openCommanderDetail(self.general_1)
+        self._getArmyInDetail(self.general_2).click()
+
+        self.assertEqual(self.general_2.getSuite().getId(), self.solider_4.getId())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_4),
+            self._getBuffer()
+        )
+        self.waitForSocket()
+        self.general_2.extract(True)
+        self.assertEqual(self.general_2.getSuite(), None)
+        self._getArmyInDetail(self.solider_4, self._getBuffer())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_4),
+            self._getBottomSuite()
+        )
+        self.waitForSocket()
+        self.general_2.extract(True)
+        self.assertEqual(self.general_2.getSuite().getId(), self.solider_4.getId())
+
+    @tests.rerun.retry()
+    def testMoveMiddleUnitsListToBufferAndBack(self):
+        self._combinateArmy()
+        self._openCommanderDetail(self.general_1)
+
+        self.assertEqual(self.general_2.getCommander().getId(), self.general_1.getId())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.general_2),
+            self._getBuffer()
+        )
+        self.waitForSocket()
+        self.general_2.extract(True)
+        self.assertEqual(self.general_2.getCommander(), None)
+        self._getArmyInDetail(self.general_2, self._getBuffer())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.general_2),
+            self._getMiddleUnitsList()
+        )
+        self.waitForSocket()
+        self.general_2.extract(True)
+        self.assertEqual(self.general_2.getCommander().getId(), self.general_1.getId())
+
+    @tests.rerun.retry()
+    def testMoveBottomUnitListToBufferAndBack(self):
+        self._combinateArmy()
+        self._openCommanderDetail(self.general_1)
+        self._getArmyInDetail(self.general_2).click()
+
+        self.assertEqual(self.solider_3.getCommander().getId(), self.general_2.getId())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_3),
+            self._getBuffer()
+        )
+        self.waitForSocket()
+        self.solider_3.extract(True)
+        self.assertEqual(self.solider_3.getCommander(), None)
+        self._getArmyInDetail(self.solider_3, self._getBuffer())
+
+        self.dragNDrop(
+            self._getArmyInDetail(self.solider_3),
+            self._getBottomUnitsList()
+        )
+        self.waitForSocket()
+        self.solider_3.extract(True)
+        self.assertEqual(self.solider_3.getCommander().getId(), self.general_2.getId())
+        self._getArmyInDetail(self.solider_3, self._getBottomUnitsList())

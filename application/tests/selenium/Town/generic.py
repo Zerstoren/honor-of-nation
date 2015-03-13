@@ -1,9 +1,11 @@
 from tests.selenium import generic
 from tests.package.asserts import Asserts
+from tests.package.dom import Dom
 
 
 class Selenium_Town_Generic(
     generic.Selenium_Generic,
+    Dom,
     Asserts
 ):
     # BUILDS
@@ -37,9 +39,11 @@ class Selenium_Town_Generic(
 
         self.waitForElement('.unit-item')
 
+    def _getArmyInList(self, armyDomain):
+        return self.byCssSelector('.listUnits .units li[data-id="%s"] img' % str(armyDomain.getId()))
+
     def _selectArmyInList(self, armyDomain):
-        item = self.byCssSelector('.listUnits .units li[data-id="%s"] img' % str(armyDomain.getId()))
-        item.click()
+        self._getArmyInList(armyDomain).click()
 
     def _armyNotInList(self, armyDomain):
         self.waitForElementHide('.listUnits .units li[data-id="%s"]' % str(armyDomain.getId()))
@@ -49,3 +53,33 @@ class Selenium_Town_Generic(
 
     def _isArmyActionDisabled(self, action):
         self.byCssSelector('.listUnits .actions li.%s.disabled' % action)
+
+    def _openCommanderDetail(self, armyDomain):
+        self.rightClick(self._getArmyInList(armyDomain))
+        self.waitForElementHide('.waiting')
+
+    def _getArmyInDetail(self, armyDomain, atElement=None):
+        query = '*[data-id="%s"] img' % str(armyDomain.getId())
+
+        if atElement:
+            return atElement.byCss(query)
+        else:
+            return self.byCssSelector('.popover.unit-detail ' + query)
+
+    def _armyNotShowInDetail(self, armyDomain):
+        self.assertElementNotExist('.popover.unit-detail *[data-id="%s"]' % str(armyDomain.getId()))
+
+    def _getBuffer(self):
+        return self.byCssSelector('.popover.unit-detail .buffer ul')
+
+    def _getMiddleSuite(self):
+        return self.byCssSelector('.popover.unit-detail .suite-target-middleware')
+
+    def _getBottomSuite(self):
+        return self.byCssSelector('.popover.unit-detail .suite-target-downware')
+
+    def _getMiddleUnitsList(self):
+        return self.byCssSelector('.popover.unit-detail .commander-units-list')
+
+    def _getBottomUnitsList(self):
+        return self.byCssSelector('.popover.unit-detail .general-units-list')
