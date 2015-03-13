@@ -8,7 +8,7 @@ from tests.package.db.equipment import Equipment
 
 from service.Army import Service_Army
 
-class Selenium_Town_ArmyManipulate(
+class Selenium_Town_ArmyManipulateTest(
     generic.Selenium_Town_Generic,
     Dom,
     Town,
