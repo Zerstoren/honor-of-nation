@@ -38,7 +38,7 @@ class Selenium_Town_Generic(
         self.waitForElement('.unit-item')
 
     def _selectArmyInList(self, armyDomain):
-        item = self.byCssSelector('.listUnits .units li[data-id="%s"]' % str(armyDomain.getId()))
+        item = self.byCssSelector('.listUnits .units li[data-id="%s"] img' % str(armyDomain.getId()))
         item.click()
 
     def _armyNotInList(self, armyDomain):
