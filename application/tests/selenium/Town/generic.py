@@ -1,7 +1,11 @@
 from tests.selenium import generic
+from tests.package.asserts import Asserts
 
 
-class Selenium_Town_Generic(generic.Selenium_Generic):
+class Selenium_Town_Generic(
+    generic.Selenium_Generic,
+    Asserts
+):
     # BUILDS
     def _getBuildElement(self, key):
         return self.byCssSelector('#' + key + ' .name img')
@@ -32,3 +36,16 @@ class Selenium_Town_Generic(generic.Selenium_Generic):
         unit.byCss('.create').click()
 
         self.waitForElement('.unit-item')
+
+    def _selectArmyInList(self, armyDomain):
+        item = self.byCssSelector('.listUnits .units li[data-id="%s"]' % str(armyDomain.getId()))
+        item.click()
+
+    def _armyNotInList(self, armyDomain):
+        self.waitForElementHide('.listUnits .units li[data-id="%s"]' % str(armyDomain.getId()))
+
+    def _armyAction(self, action):
+        self.byCssSelector('.listUnits .actions li.%s:not(.disabled)' % action).click()
+
+    def _isArmyActionDisabled(self, action):
+        self.byCssSelector('.listUnits .actions li.%s.disabled' % action)
