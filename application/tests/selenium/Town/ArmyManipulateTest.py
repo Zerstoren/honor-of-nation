@@ -1,5 +1,7 @@
 from tests.selenium.Town import generic
 
+import tests.rerun
+
 from tests.package.interface import Interface
 from tests.package.dom import Dom
 from tests.package.db.town import Town
@@ -68,6 +70,7 @@ class Selenium_Town_ArmyManipulateTest(
         self.openTown(self.town)
         self.waitForElement('.listUnits .units li')
 
+    @tests.rerun.retry()
     def testMergeUnits(self):
         self._selectArmyInList(self.solider_1)
         self._selectArmyInList(self.solider_2)
@@ -92,6 +95,7 @@ class Selenium_Town_ArmyManipulateTest(
     #
     #     self.sleep(15)
 
+    @tests.rerun.retry()
     def testLeaveTown(self):
         self._selectArmyInList(self.general_1)
         self._armyAction('move_out')
@@ -103,7 +107,7 @@ class Selenium_Town_ArmyManipulateTest(
         self._selectArmyInList(self.solider_1)
         self._isArmyActionDisabled('move_out')
 
-
+    @tests.rerun.retry()
     def testAddSoliderToGeneral(self):
         self._selectArmyInList(self.general_1)
         self._selectArmyInList(self.solider_1)
@@ -115,6 +119,7 @@ class Selenium_Town_ArmyManipulateTest(
         unitDetail = Service_Army().loadDetail(self.user, self.general_1.getId())
         self.assertEqual(len(unitDetail['sub_army']), 2)
 
+    @tests.rerun.retry()
     def testAddSuiteToGeneral(self):
         self._selectArmyInList(self.general_1)
         self._selectArmyInList(self.solider_1)
