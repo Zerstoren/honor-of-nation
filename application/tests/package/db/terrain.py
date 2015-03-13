@@ -4,14 +4,14 @@ import service.MapUserVisible
 
 
 class Terrain(object):
-    def fillTerrain(self, fromX, fromY, toX, toY, land=0):
+    def fillTerrain(self, fromX, fromY, toX, toY, land=0, landType=0):
         region = helpers.MapRegion.MapRegion(
             fromX=fromX,
             fromY=fromY,
             toX=toX,
             toY=toY
         )
-        service.Map.Service_Map().fillCoordinate(region, land, 0)
+        service.Map.Service_Map().fillCoordinate(region, land, landType)
 
         return service.Map.Service_Map().getRegion(region)
 
