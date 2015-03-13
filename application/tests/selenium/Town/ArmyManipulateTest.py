@@ -88,12 +88,22 @@ class Selenium_Town_ArmyManipulateTest(
         self._selectArmyInList(self.general_1)
         self._isArmyActionDisabled('merge')
 
-    # def testSplitUnits(self):
-    #     self._selectArmyInList(self.solider_1)
-    #     self._armyAction('split')
-    #     self.byCssSelector('.confirm-split').click()
-    #
-    #     self.sleep(15)
+    def testSplitUnits(self):
+        self._selectArmyInList(self.solider_1)
+        self._armyAction('split')
+
+        self.selectRange(
+            self.byCssSelector('.split-block input[type="range"]'),
+            25
+        )
+        self.byCssSelector('.confirm-split').click()
+        self.waitForSocket()
+
+        self.solider_1.extract(True)
+        result = Service_Army().load(self.user, self.town.getMap().getPosition(), {'inBuild': True})
+        self.assertEqual(len(result), 13)
+        self.assertEqual(self.solider_1.getCount(), 25)
+
 
     @tests.rerun.retry()
     def testLeaveTown(self):
@@ -133,12 +143,11 @@ class Selenium_Town_ArmyManipulateTest(
             self.solider_1.getId()
         )
 
-    # def testRemoveUnit(self):
-    #     self._selectArmyInList(self.general_1)
-    #     self._armyAction('dissolution')
-    #     self.byCssSelector('.confirm-dissolution').click()
-    #
-    #     self.waitForSocket()
-    #
-    #     self._armyNotInList(self.general_1)
-    #
+    def testRemoveUnit(self):
+        self._selectArmyInList(self.general_1)
+        self._armyAction('dissolution')
+        self.byCssSelector('.confirm-dissolution').click()
+
+        self.waitForSocket()
+
+        self._armyNotInList(self.general_1)

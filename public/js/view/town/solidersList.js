@@ -55,7 +55,7 @@ define('view/town/solidersList', [
             this.selectedArmy = new CollectionArmy();
             this.set('icons', new ModelDummy());
             this.tooltipManager = new ViewElementsTooltip(this, 'ul.actions > li', {
-                placement: 'top'
+                placement: 'bottom'
             });
         },
 

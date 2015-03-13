@@ -8,7 +8,12 @@ class Dom(abstract.AbstractDeclaration):
         element.byXPath('//option[@value="' + optionValue + '"]').click()
 
     def selectRange(self, element, leftSize):
-        self.executeCommand('arguments[0].valueAsNumber = %i;' % leftSize, element)
+        self.executeCommand("""
+        arguments[0].valueAsNumber = arguments[0];
+        var mEvent = document.createEvent("Event");
+        mEvent.initEvent('change', true, true);
+        arguments[0].dispatchEvent(mEvent);
+        """, element, leftSize)
 
     def value(self, element, value):
         self.executeCommand('arguments[0].value = "";', element)
