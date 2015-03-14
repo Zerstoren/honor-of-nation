@@ -14,7 +14,7 @@ def retry(retry=None):
                         f(self, *args, **kwargs)
                         break
 
-                    except:
+                    except Exception:
                         attempt += 1
                         if self.execution == 'selenium':
                             self.driver.get_screenshot_as_file(
