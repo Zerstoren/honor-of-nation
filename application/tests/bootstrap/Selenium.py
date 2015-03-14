@@ -43,9 +43,9 @@ class SeleniumFacade(object):
             # firefoxProfile.set_preference("network.http.use-cache", False)
 
             return webdriver.Firefox(
-                firefox_binary = selenium.webdriver.firefox.firefox_binary.FirefoxBinary(
-                    log_file = open('/var/log/selenium.log', 'a')
-                )
+                # firefox_binary = selenium.webdriver.firefox.firefox_binary.FirefoxBinary(
+                #     log_file = open('/var/log/selenium.log', 'a')
+                # )
             )
 
         else:
