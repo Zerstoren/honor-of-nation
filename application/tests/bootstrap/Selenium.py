@@ -3,6 +3,7 @@ import os
 import config
 
 from selenium import webdriver
+import selenium.webdriver.firefox.firefox_binary
 
 
 class SeleniumFacade(object):
@@ -41,7 +42,11 @@ class SeleniumFacade(object):
             # firefoxProfile.set_preference("browser.cache.offline.enable", False)
             # firefoxProfile.set_preference("network.http.use-cache", False)
 
-            return webdriver.Firefox()
+            return webdriver.Firefox(
+                firefox_binary = selenium.webdriver.firefox.firefox_binary.FirefoxBinary(
+                    log_file = open('/var/log/selenium.log', 'a')
+                )
+            )
 
         else:
             raise Exception('Selenium browser is not selected')
