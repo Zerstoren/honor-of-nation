@@ -7,31 +7,20 @@ class Dom(abstract.AbstractDeclaration):
     def selectOptionValue(self, element, optionValue):
         element.byXPath('//option[@value="' + optionValue + '"]').click()
 
+    def selectRange(self, element, leftSize):
+        self.executeCommand("""
+        arguments[0].valueAsNumber = arguments[1];
+        var mEvent = document.createEvent("Event");
+        mEvent.initEvent('change', true, true);
+        arguments[0].dispatchEvent(mEvent);
+        """, element, leftSize)
+
     def value(self, element, value):
         self.executeCommand('arguments[0].value = "";', element)
         element.send_keys(value)
-        # chain = self.getChainAction()
-        # chain.click(element)
-        # chain.key_down(self.keys.LEFT_SHIFT)
-        # chain.key_down(self.keys.HOME)
-        # chain.key_up(self.keys.HOME)
-        # chain.key_down(self.keys.BACKSPACE)
-        # chain.key_up(self.keys.BACKSPACE)
-        # chain.key_up(self.keys.LEFT_SHIFT)
-        # chain.perform()
-        #
-        # element.send_keys(str(value))
-        # counter = 0
-        # while True:
-        #     if counter == 100:
-        #         raise Exception("Something is wrong with set values. Expected '%s' but have '%s'" % (
-        #             str(value), element.get_attribute('value')
-        #         ))
-        #     try:
-        #         assert element.get_attribute('value') == str(value)
-        #         break
-        #     except AssertionError:
-        #         counter += 1
-        #         self.sleep(0.2)
 
+    def setAttribute(self, element, key, value):
+        self.executeCommand("arguments[0].setAttribute(arguments[1], arguments[2]);", element, key, value)
 
+    def rightClick(self, element):
+        self.getChainAction().context_click(element).perform()

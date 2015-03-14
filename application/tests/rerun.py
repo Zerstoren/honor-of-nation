@@ -7,11 +7,10 @@ def retry(retry=None):
             attempt = 1
 
             while True:
-                if self.isSetup is False:
-                    self.setUp()
-
                 if attempt != maxAttempts:
                     try:
+                        if self.isSetup is False:
+                            self.setUp()
                         f(self, *args, **kwargs)
                         break
 
@@ -26,6 +25,8 @@ def retry(retry=None):
                             self.tearDown()
 
                 else:
+                    if self.isSetup is False:
+                        self.setUp()
                     f(self, *args, **kwargs)
                     break
 

@@ -34,8 +34,8 @@ class MapRegion(object):
         from collection import MapCollection
 
         mapCollection = MapCollection.Map_Collection()
-        for y in range(self.fromY, self.toY):
-            for x in range(self.fromX, self.toX):
+        for y in range(self.fromY, self.toY + 1):
+            for x in range(self.fromX, self.toX + 1):
                 mapCoordinate = MapCoordinate(x=x, y=y)
                 domain = Map_Domain()
                 domain.setId(mapCoordinate.getPosId())

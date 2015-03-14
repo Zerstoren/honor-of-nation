@@ -1,4 +1,5 @@
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains as WebDriverActionChain
 
 class AbstractDeclaration(object):
     TimeoutException = Exception
@@ -30,7 +31,7 @@ class AbstractDeclaration(object):
         pass
 
     def getChainAction(self):
-        pass
+        return WebDriverActionChain(None)
 
     def goAppUrl(self, path):
         pass

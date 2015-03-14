@@ -1,5 +1,5 @@
 define('service/standalone/map/gameMapItems/Access', [], function () {
-   return AbstractService.extend({
+    return AbstractService.extend({
         getMapHeight: function() {
             return this.sumHeight;
         },
@@ -40,6 +40,5 @@ define('service/standalone/map/gameMapItems/Access', [], function () {
                 y - parseInt(this.getMapHeight() / 2, 10)
             );
         }
-
-   });
+    });
 });

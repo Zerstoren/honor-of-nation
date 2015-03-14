@@ -1,5 +1,5 @@
 {{#wait == true}}
-    Waiting
+    <div class="waiting">Waiting</div>
 {{/wait == true}}
 {{#wait == false}}
 <div class="base-commander">
