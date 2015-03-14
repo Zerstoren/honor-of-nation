@@ -50,7 +50,16 @@ def import_files(path):
     testSuite = unittest.TestSuite(suites)
 
     if config.get('system.ignore_selenium') == 'False':
-        SeleniumFacadeInstance.createWindow('main')
+        i = 0
+        while True:
+            if i == 20:
+                raise Exception("Not connected to browser")
+
+            try:
+                SeleniumFacadeInstance.createWindow('main')
+                break
+            except:
+                i ++
 
     result = unittest.TextTestRunner().run(testSuite)
 
