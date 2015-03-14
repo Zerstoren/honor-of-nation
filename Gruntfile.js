@@ -200,15 +200,10 @@ module.exports = function(grunt) {
         execSync("rm -rf public/css");
     });
 
-    grunt.registerTask('_copy_fonts', '', function () {
-        execSync("cp -r public/fonts deploy/" + commitHash + "/fonts")
-    });
-
     //Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['_default', 'jshint', 'htmlbuild', 'sass', 'cssmin', 'tpls', 'concat', 'uglify', '_copy_fonts']);
-    grunt.registerTask('rebuild', ['_default', 'htmlbuild', 'sass', 'tpls', 'concat', 'clean', '_copy_fonts']);
+    grunt.registerTask('default', ['_default', 'jshint', 'htmlbuild', 'sass', 'cssmin', 'tpls', 'concat', 'uglify']);
+    grunt.registerTask('rebuild', ['_default', 'htmlbuild', 'sass', 'tpls', 'concat', 'clean']);
     grunt.registerTask('release', ['_release']);
     grunt.registerTask('deploy',  ['_deploy', 'htmlbuild', '_deploy_clean']);
-    grunt.registerTask('hint', ['_default', 'jshint']);
     grunt.registerTask('hint', ['_default', 'jshint']);
 };
