@@ -59,7 +59,7 @@ def import_files(path):
                 SeleniumFacadeInstance.createWindow('main')
                 break
             except:
-                i ++
+                i += 1
 
     result = unittest.TextTestRunner().run(testSuite)
 
