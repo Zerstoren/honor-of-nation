@@ -76,6 +76,8 @@ module.exports = function(grunt) {
                         'public/js/system/preStart.js',
                         'public/js/system/router.js',
                         'public/js/system/template.js',
+                        'public/js/system/interval.js',
+                        'public/js/system/errorHandler.js',
                         'public/js/system/bootstrap.js'
                     ],
                     dest: 'public/deploy/' + commitHash + '/js.js'
