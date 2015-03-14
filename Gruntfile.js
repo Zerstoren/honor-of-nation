@@ -37,7 +37,9 @@ module.exports = function(grunt) {
                     '!public/js/libs/ractive.js',
                     '!public/js/libs/ractive-backbone-adapter.js',
                     '!public/js/libs/underscore.js',
-                    '!public/js/libs/require.js'
+                    '!public/js/libs/require.js',
+                    '!public/js/libs/zlib.js',
+                    '!public/js/libs/easypath.js'
                 ]
             },
 

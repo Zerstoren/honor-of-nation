@@ -11,7 +11,7 @@ define('view/map/unitsManipulate', [
 
             this.unitMove = false;
             this.targetPosition = [null, null];
-            this.flag = jQuery('<div class="move-to-flag">')
+            this.flag = jQuery('<div class="move-to-flag">');
         },
 
         onMouseDragStart: function (ev) {

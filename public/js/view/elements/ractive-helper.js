@@ -14,7 +14,6 @@ define('view/elements/ractive-helper', [
         formatters: {
             fromIdToPlace: function (posId) {
                 var pos = mapHelp.fromIdToPlace(parseInt(posId, 10));
-                console.log(posId, pos)
                 return pos.x + 'x' + pos.y;
             },
 

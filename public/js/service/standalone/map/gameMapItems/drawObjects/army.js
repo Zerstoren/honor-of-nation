@@ -91,9 +91,9 @@ define('service/standalone/map/gameMapItems/drawObjects/army', [
                 path = domain.get('move_path');
 
             for (i = 0; i < path.length; i++) {
-                position = mapInstance.help.fromIdToPlace(path[i]['pos_id']);
+                position = mapInstance.help.fromIdToPlace(path[i].pos_id);
                 domCell = mapInstance.getDomCell(position.x, position.y);
-                domCell.find('.cont').append(this.pathway[path[i]['direction']].clone());
+                domCell.find('.cont').append(this.pathway[path[i].direction].clone());
             }
 
             this.armyForPostUpdate = [];

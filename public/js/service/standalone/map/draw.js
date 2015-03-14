@@ -86,7 +86,7 @@ define('service/standalone/map/draw', [
 
                 classList.push(tmp);
 
-                if(tmp = self.getDecoration(x, y, location)) {
+                if((tmp = self.getDecoration(x, y, location))) {
                     classList.push(tmp);
                 }
 

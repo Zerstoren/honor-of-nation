@@ -5,7 +5,7 @@ define('gateway/mapResources', [] , function () {
                 posId: posId
             }, function (data) {
                 if (data.done) {
-                    return return data.resource
+                    return data.resource;
                 }
             });
         }

@@ -54,9 +54,9 @@ define('libs/abstract/view', [
             if (!(events = this.eventsDragNDrop)) return this;
 
             for (var key in events) {
-                settings = events[key],
-                selectors = key.split('->'),
-                target = selectors[0].trim(),
+                settings = events[key];
+                selectors = key.split('->');
+                target = selectors[0].trim();
                 destination = selectors[1].trim();
 
                 drag = new ViewElementsDrag({
