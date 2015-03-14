@@ -7,10 +7,8 @@ from controller.ResourceController import CeleryPrivateController
 
 import service.TownBuilds
 
-import time
 
-
-class Backend_Controller_MapTest(
+class Backend_Controller_MapCeleryTest(
     Backend_Controller_Generic,
     Town,
     Resource

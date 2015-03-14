@@ -188,20 +188,102 @@ class Backend_Controller_TownBuildsTest(
             townBuildsDomain.getQueue()[0]['queue_code']
         )
 
-    @tests.rerun.retry()
-    def testWaitCompleteBuild(self):
+    def testRemoveGroupBuild(self):
+        buildsDomain = self.town.getBuilds()
+        self.controller.createBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'mill',
+            'level': 5
+        })
+
+        self.controller.removeBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'mill',
+            'level': 0
+        })
+
+        buildsDomain.extract(True)
+        self.assertEqual(
+            len(buildsDomain.getQueue()),
+            0
+        )
+        self.assertEqual(
+            buildsDomain.getMill(),
+            0
+        )
+
+    def testRemoveMixedBuild(self):
+        buildsDomain = self.town.getBuilds()
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),
             'key': 'mill',
             'level': 1
         })
 
-        time.sleep(3)
+        self.controller.createBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'farm',
+            'level': 1
+        })
 
-        builds = self.town.getBuilds()
-        builds.extract(True)
+        self.controller.createBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'mill',
+            'level': 2
+        })
 
-        self.assertEqual(builds.getMill(), 1)
+        self.controller.removeBuild(self.transfer, {
+            'town': str(self.town.getId()),
+            'key': 'mill',
+            'level': 0
+        })
+
+        buildsDomain.extract(True)
+        self.assertEqual(
+            len(buildsDomain.getQueue()),
+            1
+        )
+        self.assertEqual(
+            buildsDomain.getMill(),
+            0
+        )
+
+
+class Backend_Controller_TownBuildsCeleryTest(
+    Backend_Controller_Generic,
+    Town
+):
+    def _getTownBuildsController(self):
+        import controller.TownBuildsController
+        return controller.TownBuildsController.MainController()
+
+    def _getCeleryController(self):
+        import controller.TownBuildsController
+        return controller.TownBuildsController.CeleryPrivateController()
+
+    def _getCeleryController(self):
+        import controller.TownBuildsController
+        return controller.TownBuildsController.CeleryPrivateController()
+
+    def setUp(self):
+        self.initCelery()
+        super().setUp()
+        self.controller = self._getTownBuildsController()
+        self.transfer = self._login()
+        self.user = self.transfer.getUser()
+
+        self.fillTerrain(0, 0, 2, 2)
+        self.town = self.addTown(1, 1, self.user, 10000)
+        self.builds = self.town.getBuilds()
+
+        self.resources = self.user.getResources()
+        self.resources.setRubins(1000000)
+        self.resources.setWood(1000000)
+        self.resources.setStone(1000000)
+        self.resources.setSteel(1000000)
+        self.resources.setEat(1000000)
+        self.resources.getMapper().save(self.resources)
+
 
     @tests.rerun.retry()
     def testWaitCompleteQueueBuild(self):
@@ -285,126 +367,17 @@ class Backend_Controller_TownBuildsTest(
             0
         )
 
-    def testRemoveGroupBuild(self):
-        buildsDomain = self.town.getBuilds()
-        self.controller.createBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 5
-        })
-
-        self.controller.removeBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 0
-        })
-
-        buildsDomain.extract(True)
-        self.assertEqual(
-            len(buildsDomain.getQueue()),
-            0
-        )
-        self.assertEqual(
-            buildsDomain.getMill(),
-            0
-        )
-
-    def testRemoveMixedBuild(self):
-        buildsDomain = self.town.getBuilds()
-        self.controller.createBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 1
-        })
-
-        self.controller.createBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'farm',
-            'level': 1
-        })
-
-        self.controller.createBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 2
-        })
-
-        self.controller.removeBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 0
-        })
-
-        buildsDomain.extract(True)
-        self.assertEqual(
-            len(buildsDomain.getQueue()),
-            1
-        )
-        self.assertEqual(
-            buildsDomain.getMill(),
-            0
-        )
-
     @tests.rerun.retry()
-    def testWaitAfterRemove(self):
-        buildsDomain = self.town.getBuilds()
+    def testWaitCompleteBuild(self):
         self.controller.createBuild(self.transfer, {
             'town': str(self.town.getId()),
             'key': 'mill',
             'level': 1
         })
 
-        self.controller.removeBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'mill',
-            'level': 0
-        })
+        time.sleep(3)
 
-        buildsDomain.extract(True)
-        self.assertEqual(
-            len(buildsDomain.getQueue()),
-            0
-        )
-        self.assertEqual(
-            buildsDomain.getMill(),
-            0
-        )
+        builds = self.town.getBuilds()
+        builds.extract(True)
 
-        time.sleep(2)
-
-        buildsDomain.extract(True)
-        self.assertEqual(
-            len(buildsDomain.getQueue()),
-            0
-        )
-        self.assertEqual(
-            buildsDomain.getMill(),
-            0
-        )
-
-    @tests.rerun.retry(8)
-    def testWaitCancelAfterTime(self):
-        buildsDomain = self.town.getBuilds()
-        self.controller.createBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'v_council',
-            'level': 1
-        })
-
-        time.sleep(1)
-
-        self.controller.removeBuild(self.transfer, {
-            'town': str(self.town.getId()),
-            'key': 'v_council',
-            'level': 0
-        })
-
-
-        self.assertEqual(
-            len(buildsDomain.getQueue()),
-            0
-        )
-        self.assertEqual(
-            buildsDomain.getVCouncil(),
-            0
-        )
+        self.assertEqual(builds.getMill(), 1)
