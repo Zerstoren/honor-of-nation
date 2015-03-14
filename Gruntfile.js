@@ -57,6 +57,8 @@ module.exports = function(grunt) {
                         'public/js/libs/ractive-backbone-adapter.js',
                         'public/js/libs/socket.js',
                         'public/js/libs/defferedTrigger.js',
+                        'public/js/libs/easypath.js',
+                        'public/js/libs/zlib.js',
                         'public/js/libs/bootstrap.js',
 
                         'public/deploy/' + commitHash + '/view.js',
