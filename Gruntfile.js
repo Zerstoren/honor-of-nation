@@ -119,6 +119,18 @@ module.exports = function(grunt) {
                         commit: commitHash
                     }
                 }
+            },
+
+            htmlmin: {                                     // Task
+                dist: {                                      // Target
+                    options: {                                 // Target options
+                        removeComments: true,
+                        collapseWhitespace: true
+                    },
+                    files: {                                   // Dictionary of files
+                        'public/js/tpl/**': 'public/deploy/tpl/**',     // 'destination': 'source'
+                    }
+                }
             }
         });
     });
@@ -132,7 +144,7 @@ module.exports = function(grunt) {
                 file: function (root, fileStats, next) {
                     data = fs.readFileSync(root + '/' + fileStats.name).toString();
                     results[(root + '/' + fileStats.name).replace('public/js/tpl/', '').replace('.tpl', '')] =
-                        data.replace(/\n/gmi, '').replace(/  /gmi, "");
+                        data.replace(/\n/gmi, '').replace(/[ ]+/gmi, " ");
 
                     next();
                 }
@@ -188,10 +200,15 @@ module.exports = function(grunt) {
         execSync("rm -rf public/css");
     });
 
+    grunt.registerTask('_copy_fonts', '', function () {
+        execSync("cp -r public/fonts deploy/" + commitHash + "/fonts")
+    });
+
     //Эти задания будут выполнятся сразу же когда вы в консоли напечатание grunt, и нажмете Enter
-    grunt.registerTask('default', ['_default', 'jshint', 'htmlbuild', 'sass', 'cssmin', 'tpls', 'concat', 'uglify', 'clean']);
-    grunt.registerTask('rebuild', ['_default', 'htmlbuild', 'sass', 'tpls', 'concat', 'clean']);
+    grunt.registerTask('default', ['_default', 'jshint', 'htmlbuild', 'sass', 'cssmin', 'tpls', 'concat', 'uglify', '_copy_fonts']);
+    grunt.registerTask('rebuild', ['_default', 'htmlbuild', 'sass', 'tpls', 'concat', 'clean', '_copy_fonts']);
     grunt.registerTask('release', ['_release']);
     grunt.registerTask('deploy',  ['_deploy', 'htmlbuild', '_deploy_clean']);
+    grunt.registerTask('hint', ['_default', 'jshint']);
     grunt.registerTask('hint', ['_default', 'jshint']);
 };
