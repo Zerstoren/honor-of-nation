@@ -249,3 +249,10 @@ class Selenium_Generic(Generic):
         self.waitForElementHide('.connect-is-estabilished .text')
 
         return user
+
+    def dragNDrop(self, target, destination):
+        chain = self.getChainAction()
+        chain.click_and_hold(target)
+        chain.move_to_element(destination)
+        chain.release(destination)
+        chain.perform()

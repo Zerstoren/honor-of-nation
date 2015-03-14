@@ -3,17 +3,24 @@ from tests.selenium.Map.generic import Selenium_Map_Generic
 from tests.package.db.town import Town
 from tests.package.db.army import Army
 from tests.package.db.equipment import Equipment
+from tests.package.map import Map
+
+import tests.rerun
+
+from helpers.MapRegion import MapRegion
 
 
 class Selenium_Map_UnitsTest(
     Selenium_Map_Generic,
     Town,
     Army,
-    Equipment
+    Equipment,
+    Map
 ):
     def setUp(self):
         super().setUp()
         self.user = self.fixture.getUser(0)
+        self.user.getMapper().save(self.user)
         self.region = self.fillTerrain(0, 0, 1, 1, landType=1)
         self.fillTerrain(0, 0, 15, 15, landType=1)
         self.openRegion(self.user, self.region)
@@ -52,6 +59,48 @@ class Selenium_Map_UnitsTest(
 
         self.login()
 
-    def testBaseShow(self):
-        pass
+    def _waitForUnitsMoveComplete(self, general):
+        general.extract(True)
+        while True:
+            self.waitForElement('.unit_move_path')
+            self.waitForElementHide('.unit_move_path.c')
 
+            general.extract(True)
+            if len(general.getMovePath()) == 0:
+                break
+
+    @tests.rerun.retry()
+    def testBaseMove(self):
+        armyContainer = self.mapCell(0, 0).getContainer(self.general.getId())
+        targetPosition = self.mapCell(4, 0).getItem()
+        self.dragNDrop(armyContainer, targetPosition)
+
+        self.waitForElement('.unit_move_path')
+
+        self.general.extract(True)
+        path = self.general.getMovePath()
+        self.assertEquals(len(path), 4)
+        self.assertEqual(path[0]['pos_id'], 1)
+        self.assertEqual(path[1]['pos_id'], 2)
+        self.assertEqual(path[2]['pos_id'], 3)
+        self.assertEqual(path[3]['pos_id'], 4)
+
+    @tests.rerun.retry()
+    def testMoveMode4(self):
+        armyContainer = self.mapCell(0, 0).getContainer(self.general.getId())
+        targetPosition = self.mapCell(4, 0).getItem()
+
+        armyContainer.click()
+        self.byCssSelector('button.mode[data-mode="4"]').click()
+
+        self.dragNDrop(armyContainer, targetPosition)
+
+        self._waitForUnitsMoveComplete(self.general)
+
+        self.general.extract(True)
+        self.assertEqual(self.general.getLocation(), 4)
+
+        collection = MapRegion(fromX=0, toX=6, fromY=0, toY=2).getCollection()
+        mapUserCollectionVisible = collection.getMapVisible(self.user)
+
+        self.assertEqual(len(mapUserCollectionVisible), 21)

@@ -22,7 +22,7 @@ class MapUserVisible_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
 
     def getByIds(self, user, ids):
         queryFilter = Common.Common_Filter()
-        queryFilter.addIn('_id', ids)
+        queryFilter.addIn('pos_id', ids)
         queryFilter.add('user_id', user.getId())
 
         return self._select(queryFilter)
