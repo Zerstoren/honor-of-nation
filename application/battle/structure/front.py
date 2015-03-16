@@ -10,6 +10,20 @@ class FrontCollection(object):
     def __init__(self, inDefence):
         self.inDefence = inDefence
 
+    def get(self, name):
+        if name == Front.TYPE_AVANGARD:
+            return self.avangard
+        elif name == Front.TYPE_LEFT_FLANG:
+            return self.leftFlang
+        elif name == Front.TYPE_RIGHT_FLANG:
+            return self.rightFlang
+        elif name == Front.TYPE_REAR:
+            return self.rear
+
+    def getNextTarget(self, name):
+        """used by enemy"""
+        if
+
     def getArcheryTarget(self):
         """Used by enemy"""
         avangardSize = self.avangard.getUnitsCount()
@@ -63,6 +77,7 @@ class FrontCollection(object):
         self.rightFlang.setLocation(location)
         self.rear.setLocation(location)
 
+
 class Front(object):
     TYPE_AVANGARD = 0
     TYPE_LEFT_FLANG = 1
@@ -77,6 +92,13 @@ class Front(object):
     def __init__(self, frontDirection):
         self._type = frontDirection
         self.groups = []
+
+    def move(self):
+        for group in self.groups:
+            group.move()
+
+    def getType(self):
+        return self._type
 
     def addGroup(self, group):
         self.groups.append(group)

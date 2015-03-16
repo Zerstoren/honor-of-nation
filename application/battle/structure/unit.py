@@ -1,12 +1,15 @@
 import copy
 
+from battle.equipment.armor.abstract import AbstractArmor
 from battle.equipment.armor.mail import Mail as Armor_Mail
 from battle.equipment.armor.leather import Leather as Armor_Leather
 from battle.equipment.armor.plate import Plate as Armor_Plate
 
+from battle.equipment.shield.abstract import AbstractShield
 from battle.equipment.shield.wood import Wood as Shield_Wood
 from battle.equipment.shield.steel import Steel as Shield_Steel
 
+from battle.equipment.weapon.abstract import AbstractWeapon
 from battle.equipment.weapon.blunt import Blunt as Weapon_Blunt
 from battle.equipment.weapon.bow import Bow as Weapon_Bow
 from battle.equipment.weapon.spear import Spear as Weapon_Spear
@@ -19,10 +22,13 @@ from models.Equipment.Weapon.Data import const as WeaponConst
 class Unit(object):
     def __init__(self, armyInstance):
         self._id = None
-        self.armor = None
-        self.weapon = None
-        self.second_weapon = False
-        self.shield = False
+        self.armor = AbstractArmor.getInstance()
+        self.weapon = AbstractWeapon.getInstance()
+        self.second_weapon = AbstractWeapon.getInstance()
+        self.shield = AbstractShield.getInstance()
+
+        self.steps = 0
+        self.attackReady = True
 
         self.health = 0
         self.agility = 0

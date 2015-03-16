@@ -1,4 +1,4 @@
-from battle.structure.front import Front
+from battle.structure.front import Front, FrontCollection
 
 class Battle(object):
     attacker = None
@@ -16,10 +16,21 @@ class Battle(object):
         self.location = location
 
     def simulate(self):
-        for i in range(self.location.timeToConvergence()):
+        for i in range(0, self.location.timeToAttack()):
             self.archeryFire()
 
     def archeryFire(self):
         target = self.attacker.getArcheryTarget()
         for front in self.defender.iterateAll():
+            frontAttacker = self.attacker.get(front.getType())
+
             front.archersFire(target)
+            frontAttacker.archersFire(front)
+
+            frontAttacker.move()
+            front.move()
+
+        while True:
+            for front in Front.TYPES[0:3]:
+                frontAttacker = self.attacker.getNextTarget(front)
+                frontDefender = self.defender.getNextTarget(front)

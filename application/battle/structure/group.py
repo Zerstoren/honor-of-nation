@@ -17,6 +17,10 @@ class Group(object):
             target = targetFront.getRandomGroup().getRandomUnit()
             Actions.archerFire(archer, target, bonus)
 
+    def move(self):
+        for unit in self.units:
+            Actions.move(unit)
+
     def getRandomUnit(self):
         return self.units[ rand.randint(0, len(self.units) - 1) ]
 
