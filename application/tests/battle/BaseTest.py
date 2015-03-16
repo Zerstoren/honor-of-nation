@@ -12,11 +12,11 @@ class Battle_BaseTest(Battle_Generic):
 
     def testSimpleBattle(self):
         unitsAttacker = self.createArmy(self.townAttacker, self.attackerEquipmentUnit, count=500)
-        generalAttacker = self.createArmy(self.townAttacker, self.attackerEquipmentGeneral)
+        generalAttacker = self.createArmy(self.townAttacker, self.attackerEquipmentGeneral, count=1)
         self.setArmySoliderToGeneral(unitsAttacker, generalAttacker)
 
         unitsDefender = self.createArmy(self.townDefender, self.defenderEquipmentUnit, count=500)
-        generalDefender = self.createArmy(self.townDefender, self.defenderEquipmentGeneral)
+        generalDefender = self.createArmy(self.townDefender, self.defenderEquipmentGeneral, count=1)
         self.setArmySoliderToGeneral(unitsDefender, generalDefender)
 
         self.prepare([generalAttacker], [generalDefender])

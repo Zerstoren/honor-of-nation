@@ -1,71 +1,95 @@
-from collection.ArmyCollection import Army_Collection
 from service.Army import Service_Army
 
-from battle.structure.front import Front
+from battle.structure.front import Front, FrontCollection
 from battle.structure.group import Group
 from battle.structure.unit import Unit
 
+from battle.places.factory import PlacesFactory
 
 class Prepare(object):
     def __init__(self, defenders, attackers):
-        self.attackers = {
-            Front.TYPE_AVANGARD: None,
-            Front.TYPE_LEFT_FLANG: None,
-            Front.TYPE_RIGHT_FLANG: None,
-            Front.TYPE_REAR: None
-        }
+        self.attackers = FrontCollection(inDefence=False)
+        self.defenders = FrontCollection(inDefence=True)
 
-        self.defenders = {
-            Front.TYPE_AVANGARD: None,
-            Front.TYPE_LEFT_FLANG: None,
-            Front.TYPE_RIGHT_FLANG: None,
-            Front.TYPE_REAR: None
-        }
+        self.location = None
 
         serviceArmy = Service_Army()
 
-        self.defendersCollection = Army_Collection()
+        self.defendersCollection = []
         for defender in defenders:
             for i in self.parseDetailLoad(serviceArmy.loadDetail(None, defender)):
-                self.defendersCollection.append(i)
+                self.defendersCollection += i
 
-        self.attackersCollection =  Army_Collection()
+        self.attackersCollection = []
         for attacker in attackers:
             for i in self.parseDetailLoad(serviceArmy.loadDetail(None, attacker)):
-                print(i)
-                self.attackersCollection.append(i)
+                self.attackersCollection += i
 
         self.createFronts()
+        self.getLocation(defenders[0])
+
+        self.attackers.setLocation(self.location)
+        self.defenders.setLocation(self.location)
+
+    def getLocation(self, defender):
+        armyDomain = Service_Army().get(defender)
+        mapDomain = armyDomain.getMap()
+
+        self.location = PlacesFactory.getPlace(mapDomain)
 
     def createFronts(self):
-        self.attackers[Front.TYPE_AVANGARD] = self.getGroups(self.attackersCollection, Front.TYPE_AVANGARD, 'attack')
+        self.attackers.setAvangard(self.getGroups(self.attackersCollection, Front.TYPE_AVANGARD, 'attack'))
+        self.attackers.setLeftFlang(self.getGroups(self.attackersCollection, Front.TYPE_LEFT_FLANG, 'attack'))
+        self.attackers.setRightFlang(self.getGroups(self.attackersCollection, Front.TYPE_RIGHT_FLANG, 'attack'))
+        self.attackers.setRear(self.getGroups(self.attackersCollection, Front.TYPE_REAR, 'attack'))
+
+        self.defenders.setAvangard(self.getGroups(self.defendersCollection, Front.TYPE_AVANGARD, 'defence'))
+        self.defenders.setLeftFlang(self.getGroups(self.defendersCollection, Front.TYPE_LEFT_FLANG, 'defence'))
+        self.defenders.setRightFlang(self.getGroups(self.defendersCollection, Front.TYPE_RIGHT_FLANG, 'defence'))
+        self.defenders.setRear(self.getGroups(self.defendersCollection, Front.TYPE_REAR, 'defence'))
 
     def getGroups(self, unitsCollection, front, direction):
-        for general, units in unitsCollection:
-            if direction == 'attack' and general.getFormationAttack() == front:
-                pass
-            elif direction == 'defence' and general.getFormationDefence() == front:
-                pass
+        front = Front(front)
 
-    def getUnits(self):
-        pass
+        for general, units in unitsCollection:
+            if (direction == 'attack' and general.getFormationAttack() == front) or \
+                (direction == 'defence' and general.getFormationDefence() == front):
+
+                group = Group()
+                self.getUnits(general, units, group)
+                front.addGroup(group)
+
+        return front
+
+    def getUnits(self, general, units, groupInstance):
+        groupInstance.setGeneral(Unit(general))
+
+        for unit in units:
+            unitInstance = Unit(unit)
+
+            for i in range(unit.getCount()):
+                groupInstance.addUnit(unitInstance.cloneInstance())
 
     def parseDetailLoad(self, loads):
-        def load(data):
-            items = []
+        items = []
 
-            general = loads['current']
-            generalUnits = []
+        general = loads['current']
+        generalUnits = []
 
-            if loads['suite']:
-                generalUnits.append(loads['suite'])
+        if loads['suite']:
+            generalUnits.append(loads['suite'])
 
-            for i in loads['sub_army']:
-                if not i['current'].getIsGeneral():
-                    generalUnits.append(i['current'])
-                else:
-                    items += load(i)
+        for i in loads['sub_army']:
+            if not i['current'].getIsGeneral():
+                generalUnits.append(i['current'])
+            else:
+                items += self.parseDetailLoad(i)
 
-            return [(general, generalUnits)] + items
+        return [(general, generalUnits)] + items
 
-        return load(loads)
+    def export(self):
+        return {
+            'attacker': self.attackers,
+            'defender': self.defenders,
+            'location': self.location
+        }

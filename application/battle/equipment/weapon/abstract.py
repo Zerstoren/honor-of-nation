@@ -1,0 +1,4 @@
+
+
+class AbstractWeapon(object):
+    pass

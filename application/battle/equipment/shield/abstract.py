@@ -1,0 +1,4 @@
+
+
+class AbstractShield(object):
+    pass
