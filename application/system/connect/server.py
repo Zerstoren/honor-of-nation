@@ -103,8 +103,8 @@ class BalancerBroker():
 
     def onConnectNewClient(self, connector):
         if len(self.connections) == 0:
-            import balancer.server.clientConnector
-            balancer.server.clientConnector.ClientPool.sendStartup()
+            import network.server.clientConnector
+            network.server.clientConnector.ClientPool.sendStartup()
 
         connector.setReadListener(self.onMessage)
         connector.setCloseListener(self.onConnectClose)
@@ -134,5 +134,5 @@ class BalancerBroker():
         self.connections.remove(connector)
 
         if len(self.connections) == 0:
-            import balancer.server.clientConnector
-            balancer.server.clientConnector.ClientPool.sendDropDown()
+            import network.server.clientConnector
+            network.server.clientConnector.ClientPool.sendDropDown()

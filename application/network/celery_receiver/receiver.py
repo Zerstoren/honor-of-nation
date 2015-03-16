@@ -2,7 +2,7 @@ import config
 import system.connect.server
 import system.log
 
-import balancer.server.userPool
+import network.server.userPool
 
 import pickle
 
@@ -30,7 +30,7 @@ class Receiver_Instance():
 
         try:
 
-            connector = balancer.server.userPool.UserPool.getUser(info['user'])
+            connector = network.server.userPool.UserPool.getUser(info['user'])
             connector.send(info['data'])
             system.log.debug("Data send to user ID %s" % str(info['user']))
 

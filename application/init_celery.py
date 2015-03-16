@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from tornado import ioloop
 
-import balancer.celery_sender.sender
+import network.celery_sender.sender
 import config
 
 import helpers.times
@@ -42,7 +42,7 @@ app.conf.update(
 )
 
 def message(message, user):
-    balancer.celery_sender.sender.Respondent.writeMessage(
+    network.celery_sender.sender.Respondent.writeMessage(
         message,
         str(user.getId())
     )

@@ -2,8 +2,8 @@ import uuid
 
 from tornado import websocket
 
-import balancer.server.userPool
-import balancer.server.surveyor
+import network.server.userPool
+import network.server.surveyor
 
 import zlib
 
@@ -22,7 +22,7 @@ class ClientConnector():
 
         ClientPool.add(self)
 
-        if balancer.server.surveyor.Surveyor.isReady() is False:
+        if network.server.surveyor.Surveyor.isReady() is False:
             self.send(zlib.compress(b'dropdown', 5))
 
     def disconnect(self):
@@ -41,11 +41,11 @@ class ClientConnector():
 
     def setUser(self, userId):
         self.userId = userId
-        balancer.server.userPool.UserPool.addUser(self, userId)
+        network.server.userPool.UserPool.addUser(self, userId)
 
     def rmUser(self):
         if self.userId:
-            balancer.server.userPool.UserPool.removeUser(self.userId)
+            network.server.userPool.UserPool.removeUser(self.userId)
 
 
 class ClientPool_Instance():

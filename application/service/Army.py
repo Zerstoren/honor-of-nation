@@ -10,6 +10,8 @@ from models.Army import Common as Army_Common
 from service.Town import Service_Town
 from service.Map import Service_Map
 
+from battle.structure.front import Front
+
 import exceptions.army
 import helpers.MapCoordinate
 
@@ -50,6 +52,7 @@ class Service_Army(AbstractService.Service_Abstract):
         def load(leader):
             suite = leader.getSuite()
             army = Army_Factory.getCollectionByGeneral(leader)
+            # army.extract()
 
             armyData = []
 
@@ -277,10 +280,11 @@ class Service_Army(AbstractService.Service_Abstract):
         domain.setPower(100)
         domain.setMode(1)
         domain.setMovePath([])
-        domain.setFormation(None)
         domain.setSuite(None)
         domain.setIsGeneral(unit.getType() == Common.TYPE_GENERAL)
         domain.setLastPowerUpdate(int(time.time()))
+        domain.setFormationAttack(Front.TYPE_AVANGARD)
+        domain.setFormationDefence(Front.TYPE_AVANGARD)
 
         domain.getMapper().save(domain)
         return domain

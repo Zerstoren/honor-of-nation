@@ -3,7 +3,7 @@ import pickle
 
 import config
 import system.connect.server
-import balancer.server.clientConnector
+import network.server.clientConnector
 
 
 class Surveyor_Instance(system.connect.server.BalancerBroker):
@@ -25,7 +25,7 @@ class Surveyor_Instance(system.connect.server.BalancerBroker):
     def _processData(self, data):
         info = pickle.loads(data)
 
-        userConnector = balancer.server.clientConnector.ClientPool.get(info['connect'])
+        userConnector = network.server.clientConnector.ClientPool.get(info['connect'])
         userConnector.setUser(info['user'])
 
         return (info['data'], info['connect'], userConnector, )
