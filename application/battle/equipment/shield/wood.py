@@ -3,9 +3,7 @@ from . import abstract
 class Wood(abstract.AbstractShield):
     instance = None
 
-    @staticmethod
-    def shieldArcheryProtection():
-        return 1
+    shieldArcheryBlocking = 1
 
     @staticmethod
     def getInstance():

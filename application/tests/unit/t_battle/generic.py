@@ -18,7 +18,7 @@ from battle.equipment.weapon.sword import Sword as Weapon_Sword
 from models.Equipment.Armor.Data import const as ArmorConst
 from models.Equipment.Weapon.Data import const as WeaponConst
 
-import importlib
+import imp
 
 
 class UnitTest_Battle_Generic(UnitTest_Generic):
@@ -40,7 +40,7 @@ class UnitTest_Battle_Generic(UnitTest_Generic):
         super().tearDown()
         if self.randomDisabled:
             self.randomDisabled = False
-            importlib.reload(rand)
+            imp.reload(rand)
 
     def disableRandomChoice(self, always=False):
         self.randomDisabled = True

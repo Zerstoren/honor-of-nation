@@ -35,7 +35,7 @@ class UnitTest_Battle_ActionsTest(UnitTest_Battle_Generic):
         target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, agility=30)
 
         self.assertEqual(
-            Actions._getArcherChange(shooter, target, 1.3),
+            Actions._getArcherChance(shooter, target, 1.3),
             52
         )
 
@@ -44,7 +44,7 @@ class UnitTest_Battle_ActionsTest(UnitTest_Battle_Generic):
         target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, agility=30)
 
         self.assertEqual(
-            Actions._getArcherChange(shooter, target, 1),
+            Actions._getArcherChance(shooter, target, 1),
             5
         )
 
@@ -53,7 +53,7 @@ class UnitTest_Battle_ActionsTest(UnitTest_Battle_Generic):
         target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, agility=0)
 
         self.assertEqual(
-            Actions._getArcherChange(shooter, target, 1),
+            Actions._getArcherChance(shooter, target, 1),
             100
         )
 
@@ -64,23 +64,5 @@ class UnitTest_Battle_ActionsTest(UnitTest_Battle_Generic):
 
         self.assertEqual(
             Actions._getArcheryDamage(shooter, target, 1),
-            116
-        )
-
-    def testMinimalArcherDamage(self):
-        shooter = self.createUnit(weaponType=self.TYPE_WEAPON_BOW, damage=100, strength=0)
-        target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, absorption=300)
-
-        self.assertEqual(
-            Actions._getArcheryDamage(shooter, target, 1),
-            50
-        )
-
-    def testMaximalArcherDamage(self):
-        shooter = self.createUnit(weaponType=self.TYPE_WEAPON_BOW, damage=100, strength=300)
-        target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, absorption=0)
-
-        self.assertEqual(
-            Actions._getArcheryDamage(shooter, target, 1),
-            150
+            105
         )

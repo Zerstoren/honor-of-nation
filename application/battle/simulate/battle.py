@@ -32,5 +32,5 @@ class Battle(object):
 
         while True:
             for front in Front.TYPES[0:3]:
-                frontAttacker = self.attacker.getNextTarget(front)
-                frontDefender = self.defender.getNextTarget(front)
+                frontAttackerTarget = self.attacker.getNextTarget(front, self.defender)
+                frontDefenderTarget = self.defender.getNextTarget(front, self.attacker)

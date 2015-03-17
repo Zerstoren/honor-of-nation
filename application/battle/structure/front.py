@@ -6,11 +6,15 @@ class FrontCollection(object):
     leftFlang = None
     rightFlang = None
     rear = None
+    location = None
 
     def __init__(self, inDefence):
         self.inDefence = inDefence
 
     def get(self, name):
+        """
+        :rtype: Front
+        """
         if name == Front.TYPE_AVANGARD:
             return self.avangard
         elif name == Front.TYPE_LEFT_FLANG:
@@ -20,9 +24,34 @@ class FrontCollection(object):
         elif name == Front.TYPE_REAR:
             return self.rear
 
-    def getNextTarget(self, name):
-        """used by enemy"""
-        if
+    def parseAction(self, sequence, enemyFrontCollection, myFront):
+        if type(sequence) is set:
+            for direction in sequence:
+                if enemyFrontCollection.get(direction).getUnitsCount():
+                    myFront.setTarget(enemyFrontCollection.get(direction))
+                    return True
+
+            return False
+        else:
+            for myDirection in sequence:
+                if self.get(sequence[myDirection]).getUnitsCount() == 0:
+                    return self.parseAction(sequence[myDirection], enemyFrontCollection, myFront)
+
+    def getNextTarget(self, frontName, enemyFrontCollection):
+        """
+        :type frontName: string
+        :type enemyFrontCollection: FrontCollection
+        """
+        myFront = self.get(frontName)
+        if myFront or myFront.getTarget().getUnitsCount():
+            return myFront.getTarget()
+        else:
+            if self.inDefence:
+                sequence = self.location.getSequenceOfStrategicActionsDefender()
+            else:
+                sequence = self.location.getSequenceOfStrategicActionsAttacker()
+
+            self.parseAction(sequence[frontName], enemyFrontCollection, myFront)
 
     def getArcheryTarget(self):
         """Used by enemy"""
@@ -72,6 +101,7 @@ class FrontCollection(object):
         self.rear = front
 
     def setLocation(self, location):
+        self.location = location
         self.avangard.setLocation(location)
         self.leftFlang.setLocation(location)
         self.rightFlang.setLocation(location)
@@ -89,11 +119,19 @@ class Front(object):
     location = None
     inDefence = None
 
+    currentFrontTarget = None
+    currentWaitToMove = 0
+
     def __init__(self, frontDirection):
         self._type = frontDirection
         self.groups = []
 
     def move(self):
+        if self.currentWaitToMove:
+            self.currentWaitToMove -= 1
+        else:
+            raise Exception("Why they move, fix it")
+
         for group in self.groups:
             group.move()
 
@@ -134,3 +172,17 @@ class Front(object):
 
     def setInDefence(self, inDefence):
         self.inDefence = inDefence
+
+    def getTarget(self):
+        """
+        :rtype: Front
+        """
+        return self.currentFrontTarget
+
+    def setTarget(self, targetFront, isClose=False):
+        self.currentFrontTarget = targetFront
+
+        if isClose:
+            self.currentWaitToMove = 0
+        else:
+            self.currentWaitToMove = self.location.timeToAttack()

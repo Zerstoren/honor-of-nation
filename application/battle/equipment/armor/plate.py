@@ -4,9 +4,7 @@ from battle.equipment.armor import abstract
 class Plate(abstract.AbstractArmor):
     instance = None
 
-    @staticmethod
-    def getArcheryProtection():
-        return 5
+    archeryArmorProtection = -5.0
 
     @staticmethod
     def getInstance():

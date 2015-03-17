@@ -16,28 +16,18 @@ class Actions(object):
         :type bonus: int
         :type: bool
         """
-        if rand.chance(Actions._getArcherChange(shooter, target, bonus)) is False:
+        if rand.chance(Actions._getArcherChance(shooter, target, bonus)) is False:
             return False
 
         shooter.attackReady = False
-        if target.shield and rand.chance(target.shieldBlocking):
-            target.shieldDurability -= shooter.damage
-
-            if target.shieldDurability <= 0:
-                target.shield = None
-                target.shieldDurability = 0
-                target.shieldBlocking = 0
-
+        if target.shield and target.shield.gettingArcheryFire(shooter.damage, target):
             return False
 
-        realDamage = Actions._getArcheryDamage(shooter, target, bonus)
-
-        target.health -= realDamage
-
+        target.health -= Actions._getArcheryDamage(shooter, target, bonus)
         return True
 
     @staticmethod
-    def _getArcherChange(shooter, target, bonus):
+    def _getArcherChance(shooter, target, bonus):
         clearChance = (10 + (shooter.agility - target.agility))
         if clearChance > 100:
             clearChance = 100
@@ -48,14 +38,5 @@ class Actions(object):
 
     @staticmethod
     def _getArcheryDamage(shooter, target, bonus):
-        armorMod = (100 + target.armor.getArcheryProtection()) / 100
-        defenceMod = ((100 - ((target.absorption - shooter.strength) / 4)) / 100) * bonus
-
-        result = round(shooter.damage * armorMod * defenceMod)
-
-        if result >= shooter.damage * 1.5:
-            result = 150
-        elif result <= shooter.damage / 1.5:
-            result = 50
-
-        return result
+        armorMod = target.armor.getArcheryArmorProtection()
+        return round(shooter.damage / armorMod)

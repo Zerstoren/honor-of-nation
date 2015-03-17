@@ -1,14 +1,27 @@
 
 
 class AbstractPlace(object):
-    def timeToAttack(self):
+    @staticmethod
+    def timeToAttack():
         """:rtype: int"""
         pass
 
-    def getArcheryBonusDefender(self):
+    @staticmethod
+    def getArcheryBonusDefender():
         """:rtype: int"""
         pass
 
-    def getArcheryBonusAttacker(self):
+    @staticmethod
+    def getArcheryBonusAttacker():
         """:rtype: int"""
+        pass
+
+    @staticmethod
+    def getSequenceOfStrategicActionsAttacker():
+        """:rtype: object"""
+        pass
+
+    @staticmethod
+    def getSequenceOfStrategicActionsDefender():
+        """:rtype: object"""
         pass
