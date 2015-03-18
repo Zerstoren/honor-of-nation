@@ -63,6 +63,24 @@ class UnitTest_Battle_ActionsTest(UnitTest_Battle_Generic):
         target = self.createUnit(armorType=self.TYPE_ARMOR_LEATHER, absorption=60)
 
         self.assertEqual(
-            Actions._getArcheryDamage(shooter, target, 1),
+            Actions._getArcheryDamage(shooter, target),
             105
+        )
+
+    def testArcherCriticalDamage(self):
+        shooter = self.createUnit(weaponType=self.TYPE_WEAPON_BOW, damage=100, criticalChance=100, criticalDamage=5)
+        self.disableRandomChoice(True)
+
+        self.assertEqual(
+            Actions._getCriticalDamage(shooter, shooter.damage),
+            500
+        )
+
+    def testArcherCriticalDamageNotChose(self):
+        shooter = self.createUnit(weaponType=self.TYPE_WEAPON_BOW, damage=100, criticalChance=100, criticalDamage=5)
+        self.disableRandomChoice(False)
+
+        self.assertEqual(
+            Actions._getCriticalDamage(shooter, shooter.damage),
+            100
         )

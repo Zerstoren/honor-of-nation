@@ -113,7 +113,7 @@ class UnitTest_Battle_Generic(UnitTest_Generic):
 
         damage = 0,
         attackSpeed = 0,
-        criticalDamage = 0,
+        criticalDamage = 1,
         criticalChance = 0,
 
         second_damage = 0,

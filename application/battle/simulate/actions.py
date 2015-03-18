@@ -20,7 +20,10 @@ class Actions(object):
         if target.shield and target.shield.gettingArcheryFire(shooter.damage, target):
             return False
 
-        target.health -= Actions._getArcheryDamage(shooter, target)
+        damage = Actions._getArcheryDamage(shooter, target)
+        damage = Actions._getCriticalDamage(shooter, damage)
+
+        target.health -= damage
         return True
 
     @staticmethod
@@ -37,3 +40,10 @@ class Actions(object):
     def _getArcheryDamage(shooter, target):
         armorMod = target.armor.getArcheryArmorProtection()
         return round(shooter.damage / armorMod)
+
+    @staticmethod
+    def _getCriticalDamage(shooter, damage):
+        if rand.chance(shooter.criticalChance):
+            damage = round(damage * shooter.criticalDamage)
+
+        return damage

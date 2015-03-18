@@ -7,22 +7,26 @@ class UnitTest_Battle_BattleTest(UnitTest_Battle_Generic):
     def testArcheryOneFrontFight(self):
         attackerUnit = self.createUnit(
             weaponType=self.TYPE_WEAPON_BOW,
-            damage=1,
-            attackSpeed=100,
-            health=10,
+            damage=85,
+            attackSpeed=9,
+            criticalChance=1,
+            criticalDamage=1.5,
+            health=80,
             agility=10
         )
 
         defenderUnit = self.createUnit(
             weaponType=self.TYPE_WEAPON_BOW,
-            damage=1,
-            attackSpeed=1,
-            health=10,
-            agility=10
+            damage=85,
+            attackSpeed=550,
+            health=80,
+            agility=10,
+            criticalChance=1,
+            criticalDamage=1.5
         )
 
         attackerGroup = self.createGroup(100, attackerUnit)
-        defenderGroup = self.createGroup(100, defenderUnit)
+        defenderGroup = self.createGroup(1, defenderUnit)
 
         attackerFrontCollection = self.createFrontCollection(False)
         defenderFrontCollection = self.createFrontCollection(True)

@@ -167,6 +167,19 @@ class Front(object):
         for group in self.groups:
             group.archersFire(target, bonus)
 
+    def meleeFire(self):
+        if not self.currentFrontTarget and self.currentWaitToMove != 0:
+            return
+
+        targetFront = self.getTarget()
+        targetFront.getRandomMeleeGroup()
+
+        for group in self.groups:
+            group.setdTarget
+
+    def getRandomMeleeGroup(self):
+        pass
+
     def getUnitsCount(self):
         frontSize = 0
         for group in self.groups:
@@ -178,6 +191,13 @@ class Front(object):
         frontSize = 0
         for group in self.groups:
             frontSize += group.getMeleeCount()
+
+        return frontSize
+
+    def getRangeCount(self):
+        frontSize = 0
+        for group in self.groups:
+            frontSize += group.getRangeCount()
 
         return frontSize
 

@@ -21,15 +21,15 @@ class Battle(object):
     def simulate(self):
         while True:
             for front in Front.TYPES[0:3]:
+                self.attacker.getNextTarget(front, self.defender)
+                self.defender.getNextTarget(front, self.attacker)
+
+            for front in Front.TYPES[0:3]:
                 self.attacker.get(front).move()
                 self.defender.get(front).move()
 
-
             self.archeryFire()
-
-            # for front in Front.TYPES[0:3]:
-            #     # frontAttackerTarget = self.attacker.getNextTarget(front, self.defender)
-            #     # frontDefenderTarget = self.defender.getNextTarget(front, self.attacker)
+            self.meleeAttack()
 
             if self.checkIsComplete():
                 break
@@ -42,14 +42,23 @@ class Battle(object):
             frontAttacker = self.attacker.get(front)
             frontDefender = self.defender.get(front)
 
+            if frontDefender.getRangeCount():
+                frontDefender.archersFire(targetAttacker)
 
-            s = self.attacker.getArmySize()
-            frontDefender.archersFire(targetAttacker)
-            print('attacker', s, self.attacker.getArmySize())
+            if frontAttacker.getRangeCount():
+                frontAttacker.archersFire(targetDefender)
 
-            s = self.defender.getArmySize()
-            frontAttacker.archersFire(targetDefender)
-            print('defender', s, self.defender.getArmySize())
+    def meleeAttack(self):
+        for front in Front.TYPES:
+            frontAttacker = self.attacker.get(front)
+            frontDefender = self.defender.get(front)
+
+            # if frontDefender.getRangeCount():
+            #     frontDefender.meleeFire()
+            #
+            # if frontAttacker.getRangeCount():
+            #     frontAttacker.meleeFire()
+
 
     def checkIsComplete(self):
         if self.attacker.getArmySize() == 0:
