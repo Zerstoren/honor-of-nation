@@ -25,6 +25,15 @@ class FrontCollection(object):
             return self.rear
 
     def parseAction(self, sequence, enemyFrontCollection, myFront):
+        """
+        :type sequence: set
+        :type enemyFrontCollection: FrontCollection
+        :type myFront: Front
+        """
+
+        if myFront.getMeleeCount() == 0:
+            return False
+
         if type(sequence) is set:
             for direction in sequence:
                 if enemyFrontCollection.get(direction).getUnitsCount():
@@ -43,7 +52,7 @@ class FrontCollection(object):
         :type enemyFrontCollection: FrontCollection
         """
         myFront = self.get(frontName)
-        if myFront or myFront.getTarget().getUnitsCount():
+        if myFront and myFront.getTarget() and myFront.getTarget().getUnitsCount():
             return myFront.getTarget()
         else:
             if self.inDefence:
@@ -59,14 +68,17 @@ class FrontCollection(object):
         leftFlang = self.leftFlang.getUnitsCount()
         rightFlang = self.rightFlang.getUnitsCount()
         target = None
+        count = 0
 
-        if avangardSize >= 0:
+        if avangardSize >= count and not self.avangard.isBussy():
             target = self.avangard
+            count = avangardSize
 
-        if leftFlang >= avangardSize:
+        if leftFlang >= count and not self.leftFlang.isBussy():
             target = self.leftFlang
+            count = leftFlang
 
-        if rightFlang >= leftFlang:
+        if rightFlang >= count and not self.rightFlang.isBussy():
             target = self.rightFlang
 
         return target
@@ -74,6 +86,13 @@ class FrontCollection(object):
     def iterateAll(self):
         for i in [self.avangard, self.leftFlang, self.rightFlang, self.rear]:
             yield i
+
+    def getArmySize(self):
+        armySize = 0
+        for front in Front.TYPES:
+            armySize += self.get(front).getUnitsCount()
+
+        return armySize
 
     def setAvangard(self, front):
         """
@@ -109,9 +128,9 @@ class FrontCollection(object):
 
 
 class Front(object):
-    TYPE_AVANGARD = 0
-    TYPE_LEFT_FLANG = 1
-    TYPE_RIGHT_FLANG = 2
+    TYPE_AVANGARD = 1
+    TYPE_LEFT_FLANG = 2
+    TYPE_RIGHT_FLANG = 3
     TYPE_REAR = 4
 
     TYPES = (1, 2, 3, 4, )
@@ -129,8 +148,6 @@ class Front(object):
     def move(self):
         if self.currentWaitToMove:
             self.currentWaitToMove -= 1
-        else:
-            raise Exception("Why they move, fix it")
 
         for group in self.groups:
             group.move()
@@ -148,7 +165,7 @@ class Front(object):
             bonus = self.location.getArcheryBonusAttacker()
 
         for group in self.groups:
-            group.archerFire(target, bonus)
+            group.archersFire(target, bonus)
 
     def getUnitsCount(self):
         frontSize = 0
@@ -156,6 +173,17 @@ class Front(object):
             frontSize += group.getCount()
 
         return frontSize
+
+    def getMeleeCount(self):
+        frontSize = 0
+        for group in self.groups:
+            frontSize += group.getMeleeCount()
+
+        return frontSize
+
+    def isBussy(self):
+        """Is this front in local battle"""
+        return self.currentFrontTarget and self.currentWaitToMove != 0
 
     def getRandomGroup(self):
         """
@@ -181,8 +209,12 @@ class Front(object):
 
     def setTarget(self, targetFront, isClose=False):
         self.currentFrontTarget = targetFront
+        self.setGroupsTargets(targetFront)
 
         if isClose:
             self.currentWaitToMove = 0
         else:
             self.currentWaitToMove = self.location.timeToAttack()
+
+    def setGroupsTargets(self, targetFront):
+        pass

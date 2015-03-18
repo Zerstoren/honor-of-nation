@@ -9,11 +9,11 @@ class Field(abstract.AbstractPlace):
 
     @staticmethod
     def getArcheryBonusDefender():
-        pass
+        return 1.3
 
     @staticmethod
     def getArcheryBonusAttacker():
-        pass
+        return 1.3
 
     @staticmethod
     def getSequenceOfStrategicActionsAttacker():
@@ -58,7 +58,7 @@ class Field(abstract.AbstractPlace):
 
     @staticmethod
     def getSequenceOfStrategicActionsDefender():
-        return Field.getArcheryBonusAttacker()
+        return Field.getSequenceOfStrategicActionsAttacker()
 
     @staticmethod
     def getInstance():

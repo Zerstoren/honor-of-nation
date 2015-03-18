@@ -3,10 +3,7 @@ from . import rand
 class Actions(object):
     @staticmethod
     def move(unit):
-        unit.steps += 1
-
-        if unit.steps % unit.weapon_speed == 0:
-            unit.attackReady = True
+        unit.steps += unit.attackSpeed
 
     @staticmethod
     def archerFire(shooter, target, bonus):
@@ -23,7 +20,7 @@ class Actions(object):
         if target.shield and target.shield.gettingArcheryFire(shooter.damage, target):
             return False
 
-        target.health -= Actions._getArcheryDamage(shooter, target, bonus)
+        target.health -= Actions._getArcheryDamage(shooter, target)
         return True
 
     @staticmethod
@@ -37,6 +34,6 @@ class Actions(object):
         return round(clearChance * bonus)
 
     @staticmethod
-    def _getArcheryDamage(shooter, target, bonus):
+    def _getArcheryDamage(shooter, target):
         armorMod = target.armor.getArcheryArmorProtection()
         return round(shooter.damage / armorMod)

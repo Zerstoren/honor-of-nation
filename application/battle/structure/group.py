@@ -14,8 +14,19 @@ class Group(object):
         :return:
         """
         for archer in self.range:
-            target = targetFront.getRandomGroup().getRandomUnit()
-            Actions.archerFire(archer, target, bonus)
+            if archer.steps >= 10:
+                shoots = int(archer.steps / 10)
+                archer.steps = archer.steps % 10
+
+                for i in range(shoots):
+                    group = targetFront.getRandomGroup()
+                    if group.getCount() == 0:
+                        break
+
+                    target = group.getRandomUnit()
+
+                    if Actions.archerFire(archer, target, bonus) and target.health <= 0:
+                        group.removeUnit(target)
 
     def move(self):
         for unit in self.units:
@@ -26,6 +37,9 @@ class Group(object):
 
     def getCount(self):
         return len(self.units)
+
+    def getMeleeCount(self):
+        return len(self.melee)
 
     def setGeneral(self, general):
         self.general = general
