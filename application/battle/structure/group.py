@@ -1,5 +1,6 @@
 from battle.simulate.actions import Actions
 from battle.simulate import rand
+import helpers.math
 
 class Group(object):
     def __init__(self):
@@ -30,6 +31,13 @@ class Group(object):
 
                 if Actions.archerFire(archer, target, bonus) and target.health <= 0:
                     group.removeUnit(target)
+
+    def meleeAttack(self):
+        for unit in self.getUnits():
+            target = helpers.math.getInfinityGenerator(self.getTarget().getUnits())
+
+            if Actions.meleeFire(unit, target):
+                print("COMPLETE")
 
     def move(self):
         for unit in self.units:
@@ -62,8 +70,13 @@ class Group(object):
 
         self.units.append(unit)
 
+    def getTarget(self):
+        return self.target
+
     def setTarget(self, target):
         self.target = target
+        if not target.getTarget():
+            target.setTarget(self)
 
     def getUnits(self):
         for unit in self.units:

@@ -1,4 +1,5 @@
 from battle.simulate import rand
+import  helpers.math
 
 
 class FrontCollection(object):
@@ -172,13 +173,38 @@ class Front(object):
             return
 
         targetFront = self.getTarget()
-        targetFront.getRandomMeleeGroup()
+
+        if targetFront.getMeleeCount():
+            generator = targetFront.getMeleeGroup()
+        elif targetFront.getRangeCount():
+            generator = targetFront.getRangeGroup()
+        else:
+            return False
 
         for group in self.groups:
-            group.setdTarget
+            if not group.getTarget():
+                targetGroup = next(generator)
+                group.setTarget(targetGroup)
 
-    def getRandomMeleeGroup(self):
-        pass
+        for group in self.groups:
+            group.meleeAttack()
+
+
+    def getMeleeGroup(self, ignoreWithTarget=True):
+        for group in self.groups:
+            if group.getUnitsCount() and group.getMeleeCount():
+                if ignoreWithTarget is True and not group.getTarget():
+                    yield group
+                elif ignoreWithTarget is False:
+                    yield group
+
+    def getRangeGroup(self, ignoreWithTarget=True):
+        for group in self.groups:
+            if group.getUnitsCount() and group.getRangeCount():
+                if ignoreWithTarget is True and not group.getTarget():
+                    yield group
+                elif ignoreWithTarget is False:
+                    yield group
 
     def getUnitsCount(self):
         frontSize = 0

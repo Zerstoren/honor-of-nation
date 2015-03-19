@@ -53,11 +53,11 @@ class Battle(object):
             frontAttacker = self.attacker.get(front)
             frontDefender = self.defender.get(front)
 
-            # if frontDefender.getRangeCount():
-            #     frontDefender.meleeFire()
-            #
-            # if frontAttacker.getRangeCount():
-            #     frontAttacker.meleeFire()
+            if frontDefender.getMeleeCount():
+                frontDefender.meleeFire()
+
+            if frontAttacker.getMeleeCount():
+                frontAttacker.meleeFire()
 
 
     def checkIsComplete(self):

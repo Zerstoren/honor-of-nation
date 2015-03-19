@@ -4,6 +4,11 @@ class Actions(object):
     @staticmethod
     def move(unit):
         unit.steps += unit.attackSpeed
+        unit.absorption -= 1
+
+    @staticmethod
+    def meleeFire(unit, target):
+        pass
 
     @staticmethod
     def archerFire(shooter, target, bonus):
