@@ -2,9 +2,9 @@ from battle.simulate import rand
 
 class AbstractShield(object):
     instance = None
-    shieldArcheryBlocking = 1 # No action
+    shieldBlocking = 1 # No action
 
-    def gettingArcheryFire(self, archerDamage, unit):
+    def tryBlocking(self, archerDamage, unit):
         """
         :param archerDamage: damage size
         :param unit: shield who get the archery damage
@@ -13,7 +13,7 @@ class AbstractShield(object):
         if not rand.chance(unit.shieldBlocking):
             return False
 
-        unit.shieldDurability -= round(archerDamage * self.shieldArcheryBlocking)
+        unit.shieldDurability -= round(archerDamage * self.shieldBlocking)
 
         if unit.shieldDurability <= 0:
             unit.shield = None

@@ -3,7 +3,7 @@ from . import abstract
 class Steel(abstract.AbstractShield):
     instance = None
 
-    shieldArcheryBlocking = 0.85
+    shieldBlocking = 0.85
 
     @staticmethod
     def getInstance():

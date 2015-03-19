@@ -14,5 +14,5 @@ class UnitTest_Battle_ShieldTest(UnitTest_Battle_Generic):
             shieldDurability=100
         )
 
-        self.assertTrue(AbstractShield().gettingArcheryFire(50, unit))
+        self.assertTrue(AbstractShield().tryBlocking(50, unit))
         self.assertEqual(unit.shieldDurability, 50)

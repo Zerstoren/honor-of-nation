@@ -8,7 +8,27 @@ class Actions(object):
 
     @staticmethod
     def meleeFire(unit, target):
-        pass
+        """
+        :type unit: battle.structure.unit.Unit
+        :type target: battle.structure.unit.Unit
+        """
+
+        if rand.chance(Actions._getMeleeChance(unit, target)) is False:
+            return False
+
+        unit.attackReady = False
+        if target.shield and target.shield.tryBlocking(unit.damage, target):
+            return False
+
+    @staticmethod
+    def _getMeleeChance(unit, target):
+        chance = (50 + (unit.agility - target.agility))
+        if chance > 90:
+            chance = 90
+        elif chance <= 10:
+            chance = 10
+
+        return chance
 
     @staticmethod
     def archerFire(shooter, target, bonus):
@@ -22,7 +42,7 @@ class Actions(object):
             return False
 
         shooter.attackReady = False
-        if target.shield and target.shield.gettingArcheryFire(shooter.damage, target):
+        if target.shield and target.shield.tryBlocking(shooter.damage, target):
             return False
 
         damage = Actions._getArcheryDamage(shooter, target)
