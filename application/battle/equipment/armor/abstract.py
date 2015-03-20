@@ -2,11 +2,10 @@
 
 class AbstractArmor(object):
     instance = None
+    armorType = None
 
-    archeryArmorProtection = 0.0 # no mods
-
-    def getArcheryArmorProtection(self):
-        return (100.0 + self.archeryArmorProtection) / 100.0
+    def getType(self):
+        return self.armorType
 
     @staticmethod
     def getInstance():

@@ -4,7 +4,7 @@ class Actions(object):
     @staticmethod
     def move(unit):
         unit.steps += unit.attackSpeed
-        unit.absorption -= 1
+        unit.stepsMoved += 1
 
     @staticmethod
     def meleeFire(unit, target):
@@ -20,6 +20,12 @@ class Actions(object):
         if target.shield and target.shield.tryBlocking(unit.damage, target):
             return False
 
+        damage = Actions._getMeleeDamage(unit, target)
+        damage = Actions._getCriticalDamage(unit, damage)
+
+        target.health -= damage
+        return True
+
     @staticmethod
     def _getMeleeChance(unit, target):
         chance = (50 + (unit.agility - target.agility))
@@ -29,6 +35,17 @@ class Actions(object):
             chance = 10
 
         return chance
+
+    @staticmethod
+    def _getMeleeDamage(unit, target):
+        """
+        :type unit: battle.structure.unit.Unit
+        :type target: battle.structure.unit.Unit
+        """
+
+        armorModification = unit.weapon.getModificationByArmor(target.armor)
+        absorptionBonus = (100.0 - (target.absorption - unit.strength)) / 100.0
+        return round(unit.damage * armorModification * absorptionBonus)
 
     @staticmethod
     def archerFire(shooter, target, bonus):
@@ -63,8 +80,8 @@ class Actions(object):
 
     @staticmethod
     def _getArcheryDamage(shooter, target):
-        armorMod = target.armor.getArcheryArmorProtection()
-        return round(shooter.damage / armorMod)
+        armorMod = shooter.weapon.getModificationByArmor(target.armor)
+        return round(shooter.damage * armorMod)
 
     @staticmethod
     def _getCriticalDamage(shooter, damage):

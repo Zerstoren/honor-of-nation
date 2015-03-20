@@ -1,10 +1,11 @@
 from battle.equipment.armor import abstract
+from models.Equipment.Armor import Common
 
 
 class Plate(abstract.AbstractArmor):
     instance = None
 
-    archeryArmorProtection = -5.0
+    armorType = Common.TYPE_ARMOR_PLATE
 
     @staticmethod
     def getInstance():

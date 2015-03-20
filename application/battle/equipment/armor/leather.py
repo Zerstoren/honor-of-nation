@@ -1,10 +1,11 @@
 from battle.equipment.armor import abstract
+from models.Equipment.Armor import Common
 
 
 class Leather(abstract.AbstractArmor):
     instance = None
 
-    archeryArmorProtection = -5.0
+    armorType = Common.TYPE_ARMOR_LEATHER
 
     @staticmethod
     def getInstance():

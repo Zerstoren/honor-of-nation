@@ -28,6 +28,7 @@ class Unit(object):
         self.shield = AbstractShield.getInstance()
 
         self.steps = 0
+        self.stepsMoved = 0
         self.attackReady = True
 
         self.health = 0
