@@ -39,7 +39,8 @@ module.exports = function(grunt) {
                     '!public/js/libs/underscore.js',
                     '!public/js/libs/require.js',
                     '!public/js/libs/zlib.js',
-                    '!public/js/libs/easypath.js'
+                    '!public/js/libs/easypath.js',
+                    '!public/js/libs/libcanvas.js'
                 ]
             },
 
@@ -49,6 +50,7 @@ module.exports = function(grunt) {
                     src: [
                         'public/js/libs/require.js',
                         'public/js/libs/underscore.js',
+                        'public/js/libs/libcanvas.js',
                         'public/js/libs/alertify.js',
                         'public/js/libs/jquery.js',
                         'public/js/libs/bootstrap.js',
