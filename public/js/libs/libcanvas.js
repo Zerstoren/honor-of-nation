@@ -6123,10 +6123,14 @@ declare( 'LibCanvas.App.Layer', {
         return this;
     },
 
-    redrawAll: function (fn) {
+    redrawAll: function () {
         atom.array.invoke(this.elements, 'redraw');
-        this.afterDraw = fn;
         return this;
+    },
+    
+    redrawForce: function () {
+        this.redrawAll();
+        this.draw();
     },
 
     /** @private */
@@ -6181,10 +6185,6 @@ declare( 'LibCanvas.App.Layer', {
         atom.array.sortBy( elements, 'zIndex' );
         for (var i = elements.length; i--;) {
             this.drawElement(elements[i], ctx, resources);
-        }
-        if (this.afterDraw) {
-            this.afterDraw();
-            this.afterDraw = null;
         }
     },
 

@@ -1,13 +1,16 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
-
     'service/standalone/map',
-    'service/standalone/map/gameMapItems/drawObjects/resource',
-    'service/standalone/map/gameMapItems/drawObjects/town',
-    'service/standalone/map/gameMapItems/drawObjects/army'
+    'system/imageLoader',
+
+    'service/standalone/map/objects/resource',
+    'service/standalone/map/objects/town',
+    'service/standalone/map/objects/army'
 ], function (
     userService,
     mapInstance,
+    imageLoader,
+
     MapDrawObjectsResource,
     MapDrawObjectsTown,
     MapDrawObjectsArmy
@@ -35,6 +38,8 @@ define('service/standalone/map/draw', [
             this.mapDrawObjectsResource = new MapDrawObjectsResource();
             this.mapDrawObjectsArmy = new MapDrawObjectsArmy();
             this.$isInit = false;
+
+            this.$mapDI.on('updateDataLayer', this.onUpdateDataFnLayer, this);
         },
 
         init: function () {
@@ -54,14 +59,12 @@ define('service/standalone/map/draw', [
             this.map  = {};
             this.$previousMousePosition = [0, 0];
 
-            this.setUpdateDataFnLayer();
-
-            jQuery(window).resize(function (e) {
-                var position = this.$mapDI.getPosition();
-                this.$mapDI.clear();
-                this.$mapDI.$drawMap();
-                this.$mapDI.setPosition(position[0], position[1]);
-            }.bind(this));
+            //jQuery(window).resize(function (e) {
+            //    var position = this.$mapDI.getPosition();
+            //    this.$mapDI.clear();
+            //    this.$mapDI.$drawMap();
+            //    this.$mapDI.setPosition(position[0], position[1]);
+            //}.bind(this));
 
             return true;
         },
@@ -70,41 +73,44 @@ define('service/standalone/map/draw', [
             this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
         },
 
-        setUpdateDataFnLayer: function() {
-            var self = this;
+        onUpdateDataFnLayer: function (point) {
+            var location,
+                x = point.mapX,
+                y = point.mapY;
 
-            this.$mapDI.setUpdateDataFnLayer(function (x, y) {
-                var location = mapInstance.help.fromPlaceToId(x, y);
-                if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
-                    return ['no_map'];
-                }
+            if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
+                return point.setShadow(true);
+            }
 
-                var tmp, classList = [];
-                if(!(tmp = self.getLand(x, y, location))) {
-                    return ['shadow'];
-                }
+            location = mapInstance.help.fromPlaceToId(x, y);
+            var tmp;
+            if(!(tmp = self.getLand(x, y, location))) {
+                return point.setShadow(true);
+            }
 
-                classList.push(tmp);
+            point.setGround(tmp);
 
-                if((tmp = self.getDecoration(x, y, location))) {
-                    classList.push(tmp);
-                }
+            if((tmp = self.getDecoration(x, y, location))) {
+                point.setDecor(tmp);
+            }
 
-                self.getBuild(x, y, location);
-                self.getArmy(x, y, location);
+            point.setBuild(
+                self.getBuild(x, y, location)
+            );
 
-                return classList;
-            });
+            point.setUnit(
+                self.getArmy(x, y, location)
+            );
         },
 
         getLand: function(x, y) {
             if(this.map[y] === undefined || this.map[y][x] === undefined) {
-                return 'shadow';
+                return false;
             }
 
-            return "land-" +
+            imageLoader.get("ground-" +
                 this.map[y][x][this.TRANSFER_ALIAS_LAND] + "-" +
-                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE];
+                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]);
         },
 
         getDecoration: function(x, y) {
@@ -112,43 +118,43 @@ define('service/standalone/map/draw', [
                 return false;
             }
 
-            return "decor-" + this.map[y][x][this.TRANSFER_ALIAS_DECOR];
+            return imageLoader.get("decor-" + this.map[y][x][this.TRANSFER_ALIAS_DECOR]);
         },
 
         getBuild: function(x, y) {
-            if(this.map[y] === undefined || this.map[y][x] === undefined) {
-                return false;
-            }
-
-            switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
-                case this.BUILD_TOWNS:
-                    return this.mapDrawObjectsTowns.getTownObject(
-                        x,
-                        y,
-                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
-                    );
-
-                case this.BUILD_RESOURCES:
-                    return this.mapDrawObjectsResource.getResourceObject(
-                        x,
-                        y,
-                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
-                    );
-
-                case this.BUILD_EMPTY:
-                    return false;
-
-                default:
-                    return false;
-            }
+            //if(this.map[y] === undefined || this.map[y][x] === undefined) {
+            //    return false;
+            //}
+            //
+            //switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
+            //    case this.BUILD_TOWNS:
+            //        return this.mapDrawObjectsTowns.getTownObject(
+            //            x,
+            //            y,
+            //            this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
+            //        );
+            //
+            //    case this.BUILD_RESOURCES:
+            //        return this.mapDrawObjectsResource.getResourceObject(
+            //            x,
+            //            y,
+            //            this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
+            //        );
+            //
+            //    case this.BUILD_EMPTY:
+            //        return false;
+            //
+            //    default:
+            //        return false;
+            //}
         },
 
         getArmy: function (x, y, mapId) {
-            if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-                return false;
-            }
-
-            return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
+            //if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
+            //    return false;
+            //}
+            //
+            //return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
         },
 
         mapMerge: function(map) {

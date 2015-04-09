@@ -1,15 +1,9 @@
 define('service/standalone/map', [
-//    'service/standalone/map/gameMapItems/Mouse',
-//    'service/standalone/map/gameMapItems/Draw',
-//    'service/standalone/map/gameMapItems/Access',
-    'service/standalone/map/camvas/help',
+    'service/standalone/map/canvas/help',
     'service/standalone/map/canvas/controller'
 ], function (
     Help,
     CanvasController
-//    Mouse,
-//    Draw,
-//    Access,
 ) {
     var Init = AbstractService.extend({
         initialize: function () {
@@ -19,6 +13,19 @@ define('service/standalone/map', [
 //            this.on('mouseMove', this.$onMouseMove, this);
 //            this.on('mouseClick', this.$onMouseClick, this);
 //            this.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
+        },
+
+        getMapSize: function () {
+            return this.controller.mapSize;
+        },
+
+        getMapItems: function () {
+            return this.controller.mapItems;
+        },
+
+        setCameraPosition: function (x, y) {
+            this.controller.centerCameraToPosition([x, y]);
+            this.trigger('onSetPosition', x, y);
         }
 
 //        $onMouseMove: function (e) {

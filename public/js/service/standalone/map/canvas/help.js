@@ -1,4 +1,4 @@
-define('service/standalone/map/gameMapItems/Help', [
+define('service/standalone/map/canvas/help', [
     'system/config',
     'view/block/error'
 ], function (

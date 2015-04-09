@@ -38,25 +38,23 @@ define('service/standalone/map/loader', [
         positionMapLoad: function(x, y) {
             var dumpX, chunkItem,
                 self = this,
+                mapItems = this.$mapDI.getMapItems(),
+                mapItem,
                 chunkList = [],
-                width = this.$mapDI.getMapWidth(),
-                height = this.$mapDI.getMapHeight(),
-                maxWidth = x + width,
-                maxHeight = y + height;
+                i,
+                size = this.$mapDI.getMapSize();
 
-            for(0; y < maxHeight; y += 4) {
-                dumpX = x;
+            for (i = 0; i < mapItems.length; i++) {
+                mapItem = mapItems[i];
 
-                for(0; x < maxWidth; x += 4) {
-                    chunkItem = this.$mapDI.help.fromPlaceToChunk(x, y);
+                chunkItem = this.$mapDI.help.fromPlaceToChunk(mapItem.mapX, mapItem.mapY);
 
-                    if(!_.contains(chunkList, chunkItem) && !_.contains(this.chunksLoaded, chunkItem)) {
-                        chunkList.push(chunkItem);
-                    }
+                if(!_.contains(chunkList, chunkItem) && !_.contains(this.chunksLoaded, chunkItem)) {
+                    chunkList.push(chunkItem);
                 }
-
-                x = dumpX;
             }
+
+            console.log(chunkList);
 
             if(chunkList.length) {
                 this.chunksLoaded = _.union(this.chunksLoaded, chunkList);

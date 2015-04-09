@@ -1,46 +1,108 @@
 define('service/standalone/map/canvas/controller', [
-    'service/standalone/map/canvas/mapLayer',
+    'service/standalone/map/canvas/layers/map',
+
     'service/standalone/map/canvas/support'
 ], function (
     MapLayer,
     support
 ) {
+    var MapItemPoint = atom.declare(LibCanvas.Point, {
+        mapX   : null,
+        mapY   : null,
+        ground : null,
+        decor  : null,
+        shadow : false,
+        build  : null,
+        unit   : null,
+
+        clearElements: function () {
+            this.ground = null;
+            this.decor  = null;
+            this.shadow = false;
+            this.build  = null;
+            this.unit   = null;
+        },
+
+        setGround: function (img) {
+            this.ground = img;
+            return this;
+        },
+
+        setDecor: function (img, shift) {
+            this.decor = {
+                img: img,
+                shift: shift
+            };
+            return this;
+        },
+
+        setShadow: function (bool) {
+            this.shadow = bool;
+            return this;
+        },
+
+        setBuild: function (fn) {
+            this.build = fn;
+            return this;
+        },
+
+        setUnit: function (fn) {
+            this.unit = fn;
+            return this;
+        }
+    });
+
     return AbstractService.extend({
         initialize: function () {
+            this.mapItems = [];
+
             this.currentCameraLocation = new LibCanvas.Point(10, 10);
             this.cellWidth = 128;
             this.cellHeight = 64;
             this.canvasSize = new LibCanvas.Size(window.innerWidth * 2, window.innerHeight * 2);
             this.mapSize = this.calculateAppSize();
+            this.size = new LibCanvas.Point(this.mapSize.width, this.mapSize.height)
 
-            this.app = new LibCanvas.App({
-                size: new LibCanvas.Size(this.canvasSize.width, this.canvasSize.height),
-                appendTo: 'body',
+            this.projection = new LibCanvas.Engines.Isometric.Projection({
+                factor: [ 1, 0.5, 1 ],
+                start : new LibCanvas.Point(
+                    (this.canvasSize.width / 2) - (this.mapSize.width * this.cellWidth / 2),
+                    (this.canvasSize.height / 2)
+                ),
+                size  : this.cellWidth / 2
             });
 
-            this.mapLayer = this.app.createLayer({
-                name: 'map',
-                intersection: 'manual'
-            });
+            this.createMapItems();
+
+            this.initLayers();
 
             this.mouse = new LibCanvas.Mouse(this.app.container.bounds);
-            this.map = new MapLayer(this.mapLayer, {
-                projection: new LibCanvas.Engines.Isometric.Projection({
-                    factor: [ 1, 0.5, 1 ],
-                    start : new LibCanvas.Point(
-                        (this.canvasSize.width / 2) - (this.mapSize.width * this.cellWidth / 2),
-                        (this.canvasSize.height / 2)
-                    ),
-                    size  : 64
-                }),
-                camera: this.currentCameraLocation,
-                size: new LibCanvas.Point(this.mapSize.width, this.mapSize.height),
-                canvasSize: this.canvasSize
-            });
 
             this.addMouseControl();
             this.initDragger();
             this.shiftToCenter();
+
+            this.redraw(true);
+        },
+
+        initLayers: function () {
+            this.app = new LibCanvas.App({
+                size: new LibCanvas.Size(this.canvasSize.width, this.canvasSize.height),
+                appendTo: 'body'
+            });
+
+            this.mapLayer = this.app.createLayer({
+                name: 'map',
+                intersection: 'manual',
+                zIndex: 1
+            });
+
+            this.ground = new MapLayer(this.mapLayer, {
+                projection: this.projection,
+                size: this.size,
+                mapItems: this.mapItems,
+                zIndex: 1
+            });
         },
 
         initDragger: function () {
@@ -55,6 +117,33 @@ define('service/standalone/map/canvas/controller', [
                 .start(function (e) {
                     return e.button == 0 || e.type == "touchstart";
                 }.bind(this));
+        },
+
+        redraw: function (force) {
+            var i, pos;
+            if (force)
+                console.time('sum');
+
+            console.time('calculate');
+            for (i = 0; i < this.mapItems.length; i++) {
+                pos = this.mapItems[i];
+                pos.clearElements();
+                pos.mapX = pos.xp + this.currentCameraLocation.x;
+                pos.mapX = pos.yp + this.centerCameraToPosition.y;
+
+                this.trigger('updateDataLayer', pos);
+            }
+            console.timeEnd('calculate');
+
+            if (force) {
+                this.mapLayer.redrawForce();
+            } else {
+                this.mapLayer.redrawAll();
+            }
+
+            if (force)
+                console.timeEnd('sum');
+            console.log('Render complete');
         },
 
         onMapEdge: function (edge) {
@@ -101,10 +190,9 @@ define('service/standalone/map/canvas/controller', [
             }
 
             if (mapUpdate) {
-                this.mapLayer.redrawAll(function () {
-                    this.shift.addShift(newShift);
-                    this.currentCameraLocation.move(newCameraPosition)
-                }.bind(this));
+                this.shift.addShift(newShift);
+                this.currentCameraLocation.move(newCameraPosition);
+                this.redraw(true);
             }
         },
 
@@ -137,9 +225,9 @@ define('service/standalone/map/canvas/controller', [
                 position.x - (this.mapSize.width / 2),
                 position.y - (this.mapSize.height / 2)
             );
-            this.shift.addShift([-64, 0]);
 
-            this.mapLayer.redrawAll();
+            this.shift.addShift([this.cellWidth / 2 / -1, 0]);
+            this.redraw(true);
         },
 
         addMouseControl: function () {
@@ -171,6 +259,43 @@ define('service/standalone/map/canvas/controller', [
             matrixWidth = (this.canvasSize.width > this.canvasSize.height ? this.canvasSize.width : this.canvasSize.height) / 64;
 
             return new LibCanvas.Size(Math.floor(matrixWidth), Math.floor(matrixHeight));
+        },
+
+        createMapItems: function () {
+            var x, y, newPoint,
+                mapWidth = this.canvasSize.width,
+                mapHeight = this.canvasSize.height,
+                s = new LibCanvas.Point(this.mapSize.width, this.mapSize.height);
+
+            atom.array.empty(this.mapItems);
+
+            for (y = 0; y < s.y; y++) {
+                for (x = s.x - 1; x >= 0; x--) {
+                    newPoint = this.createPoint(x, y);
+                    if (
+                        newPoint.x < -128 || newPoint.x > mapWidth ||
+                        newPoint.y < -128 || newPoint.y > mapHeight
+                    ) {
+                        continue;
+                    }
+                    newPoint.xp = x;
+                    newPoint.yp = y;
+                    this.mapItems.push( newPoint );
+                }
+            }
+
+            return this;
+        },
+
+        createPoint: function (x, y) {
+            var point = new LibCanvas.Point3D(x, y, 1);
+            var newPoint = new MapItemPoint(
+                this.projection.toIsometric(point)
+            );
+            newPoint.xp = x;
+            newPoint.yp = y;
+
+            return newPoint;
         }
     });
 });
