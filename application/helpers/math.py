@@ -9,17 +9,3 @@ def percent(value, percent):
 
 def rate(value):
     return int(value * RATE / 100)
-
-
-def getInfinityGenerator(generatorFn):
-    iterator = generatorFn()
-    retValue = next(iterator)
-    while True:
-        yield retValue
-
-        try:
-            retValue = next(iterator)
-        except StopIteration:
-            iterator = generatorFn()
-            retValue = next(iterator)
-

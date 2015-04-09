@@ -27,7 +27,7 @@ class FrontCollection(object):
 
     def parseAction(self, sequence, enemyFrontCollection, myFront):
         """
-        :type sequence: set
+        :type sequence: tuple
         :type enemyFrontCollection: FrontCollection
         :type myFront: Front
         """
@@ -35,8 +35,9 @@ class FrontCollection(object):
         if myFront.getMeleeCount() == 0:
             return False
 
-        if type(sequence) is set:
+        if type(sequence) is tuple:
             for direction in sequence:
+                res = enemyFrontCollection.get(direction).getUnitsCount()
                 if enemyFrontCollection.get(direction).getUnitsCount():
                     myFront.setTarget(enemyFrontCollection.get(direction))
                     return True
@@ -169,7 +170,7 @@ class Front(object):
             group.archersFire(target, bonus)
 
     def meleeFire(self):
-        if not self.currentFrontTarget and self.currentWaitToMove != 0:
+        if not self.getTarget() and self.currentWaitToMove != 0:
             return
 
         targetFront = self.getTarget()
@@ -189,10 +190,9 @@ class Front(object):
         for group in self.groups:
             group.meleeAttack()
 
-
     def getMeleeGroup(self, ignoreWithTarget=True):
         for group in self.groups:
-            if group.getUnitsCount() and group.getMeleeCount():
+            if group.getCount() and group.getMeleeCount():
                 if ignoreWithTarget is True and not group.getTarget():
                     yield group
                 elif ignoreWithTarget is False:
@@ -200,7 +200,7 @@ class Front(object):
 
     def getRangeGroup(self, ignoreWithTarget=True):
         for group in self.groups:
-            if group.getUnitsCount() and group.getRangeCount():
+            if group.getCount() and group.getRangeCount():
                 if ignoreWithTarget is True and not group.getTarget():
                     yield group
                 elif ignoreWithTarget is False:

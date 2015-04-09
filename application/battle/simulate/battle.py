@@ -53,6 +53,10 @@ class Battle(object):
             frontAttacker = self.attacker.get(front)
             frontDefender = self.defender.get(front)
 
+            if front == Front.TYPE_AVANGARD:
+                print("Attacker", frontAttacker.getUnitsCount())
+                print("Defender", frontDefender.getUnitsCount())
+
             if frontDefender.getMeleeCount():
                 frontDefender.meleeFire()
 
