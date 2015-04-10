@@ -26,17 +26,17 @@ define('service/standalone/map/objects/army', [
         },
 
         initialize: function () {
-            this.armyMap = {};
-            mapInstance.on('postUpdate', this.onUpdate, this);
-            this.armyForPostUpdate = [];
+//            this.armyMap = {};
+//            mapInstance.on('postUpdate', this.onUpdate, this);
+//            this.armyForPostUpdate = [];
         },
 
         addArmy: function (domain) {
-            if (!this.armyMap[domain.get('location')]) {
-                this.armyMap[domain.get('location')] = [];
-            }
-
-            this.armyMap[domain.get('location')].push(domain);
+//            if (!this.armyMap[domain.get('location')]) {
+//                this.armyMap[domain.get('location')] = [];
+//            }
+//
+//            this.armyMap[domain.get('location')].push(domain);
         },
 
         updateArmyPosition: function (oldLocation, general) {

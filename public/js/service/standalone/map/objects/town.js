@@ -4,24 +4,26 @@ define('service/standalone/map/objects/town', [
     'factory/town',
     'model/town',
 
-
-    'service/standalone/map'
+    'service/standalone/map',
+    'system/imageLoader'
 ], function(
     template,
 
     factoryTown,
     ModelTown,
 
-    mapInstance
+    mapInstance,
+    imageLoader
 ) {
     "use strict";
 
     return AbstractService.extend({
-        initialize: function() {
-
+        getDetail: function (x, y) {
+            var posId = mapInstance.help.fromPlaceToId(x, y);
+            return factoryTown.searchInPool('pos_id', posId)[0];
         },
 
-        getTownObject: function(x, y, type) {
+        getTownObject: function(x, y) {
             var domain,
                 posId = mapInstance.help.fromPlaceToId(x, y);
 
@@ -34,34 +36,27 @@ define('service/standalone/map/objects/town', [
                     try {
                         factoryTown.pushToPool(domain);
                     } catch (e) {}
-                    this.drawBuildObject(domain);
-                    mapInstance.update();
+                    mapInstance.draw();
                 }.bind(this));
-            } else {
-                this.drawBuildObject(domain);
-            }
-        },
 
-        drawBuildObject: function(domain) {
-            var result = mapInstance.help.fromIdToPlace(parseInt(domain.get('pos_id'), 10));
-            var domCell = mapInstance.getDomCell(result.x, result.y);
-
-            if(domain.$$domCell === domCell) {
                 return false;
-            }
+            } else {
+                return function (point, ctx) {
+                    var townImage,
+                        type = domain.get('type');
 
-            if(!domain.$$domCell) {
-                domain.$$container = template('elements/map/objects/town', {
-                    data: domain.toJSON()
-                });
-            }
+                    switch(type) {
+                        case 0: townImage = imageLoader.get('city-village'); break;
+                        case 1: townImage = imageLoader.get('city-town'); break;
+                        case 2: townImage = imageLoader.get('city-castle'); break;
+                    }
 
-            if(domCell) {
-                domain.$$domCell = domCell;
-                domCell.find('.cont').append(domain.$$container);
+                    ctx.drawImage({
+                        image: townImage,
+                        from: [point.x + 6, point.y + 12]
+                    });
+                };
             }
-
-            return true;
         }
     });
 });

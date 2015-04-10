@@ -5758,9 +5758,6 @@ declare( 'LibCanvas.App.LayerShift', {
      */
     limitShift: null,
 
-    /**
-     * @param {Rectangle} limitShift
-     */
     setLimitShift: function (limitShift) {
         this.limitShift = limitShift ? Rectangle(limitShift) : null;
         return this;

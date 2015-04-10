@@ -117,21 +117,19 @@ define('system/bootstrap', ['system/router', 'libs/socket'], function(routes, So
         'libs/abstract/view'
     ], function () {
         requirejs([
-            'system/preStart',
-            'system/config',
             'system/imageLoader'
-        ], function (
-            preStart,
-            config,
-            imageLoader
-        ) {
-            if (imageLoader.isReady) {
-                Backbone.history.start({pushState: true});
-            } else {
-                imageLoader.on('ready', function () {
+        ], function (imageLoader) {
+            imageLoader.on('ready', function () {
+                requirejs([
+                    'system/preStart',
+                    'system/config'
+                ], function (
+                    preStart,
+                    config
+                ) {
                     Backbone.history.start({pushState: true});
-                })
-            }
+                });
+            });
         });
     });
 

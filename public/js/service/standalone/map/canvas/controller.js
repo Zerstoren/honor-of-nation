@@ -1,9 +1,18 @@
 define('service/standalone/map/canvas/controller', [
     'service/standalone/map/canvas/layers/map',
+    'service/standalone/map/canvas/layers/decor',
+    'service/standalone/map/canvas/layers/build',
+    'service/standalone/map/canvas/layers/shadow',
+    'service/standalone/map/canvas/layers/unit',
 
     'service/standalone/map/canvas/support'
 ], function (
     MapLayer,
+    DecorLayer,
+    BuildLayer,
+    ShadowLayer,
+    UnitLayer,
+
     support
 ) {
     var MapItemPoint = atom.declare(LibCanvas.Point, {
@@ -97,12 +106,35 @@ define('service/standalone/map/canvas/controller', [
                 zIndex: 1
             });
 
+            this.mapLayer.stop();
             this.ground = new MapLayer(this.mapLayer, {
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
                 zIndex: 1
             });
+
+            this.decor = new DecorLayer(this.mapLayer, {
+                projection: this.projection,
+                size: this.size,
+                mapItems: this.mapItems,
+                zIndex: 2
+            });
+
+            this.build = new BuildLayer(this.mapLayer, {
+                projection: this.projection,
+                size: this.size,
+                mapItems: this.mapItems,
+                zIndex: 3
+            });
+
+            this.shadow = new ShadowLayer(this.mapLayer, {
+                projection: this.projection,
+                size: this.size,
+                mapItems: this.mapItems,
+                zIndex: 4
+            });
+            this.mapLayer.start();
         },
 
         initDragger: function () {
@@ -121,17 +153,19 @@ define('service/standalone/map/canvas/controller', [
 
         redraw: function (force) {
             var i, pos;
-            if (force)
-                console.time('sum');
+            if (!this.updateDataLayerCallback)
+                return;
+
+            if (force) console.time('sum');
 
             console.time('calculate');
             for (i = 0; i < this.mapItems.length; i++) {
                 pos = this.mapItems[i];
                 pos.clearElements();
                 pos.mapX = pos.xp + this.currentCameraLocation.x;
-                pos.mapX = pos.yp + this.centerCameraToPosition.y;
+                pos.mapY = pos.yp + this.currentCameraLocation.y;
 
-                this.trigger('updateDataLayer', pos);
+                this.updateDataLayerCallback(pos);
             }
             console.timeEnd('calculate');
 
@@ -141,8 +175,7 @@ define('service/standalone/map/canvas/controller', [
                 this.mapLayer.redrawAll();
             }
 
-            if (force)
-                console.timeEnd('sum');
+            if (force) console.timeEnd('sum');
             console.log('Render complete');
         },
 
@@ -205,6 +238,10 @@ define('service/standalone/map/canvas/controller', [
             );
         },
 
+        updateDataLayer: function (fn) {
+            this.updateDataLayerCallback = fn;
+        },
+
         shiftToCenter: function () {
             var mapSize = this.app.settings.get('size').clone();
             var mapRectange = new LibCanvas.Shapes.Rectangle({
@@ -231,25 +268,50 @@ define('service/standalone/map/canvas/controller', [
         },
 
         addMouseControl: function () {
-//            var mouse = this.mouse,
-//                dataFn = function (e) {
-//                    point = this.map.to3D([
-//                            mouse.point.x - this.shift.getShift().x,
-//                            mouse.point.y - this.shift.getShift().y
-//                        ]
-//                    );
-//
-//                    e.position = point;
-//
-//                    return e;
-//                };
-//
-//            mouse.events.add({
-//                click: function (e, mouse) {
-//
-//                }.bind(this)
-//            });
-//
+            var mouse = this.mouse,
+                self = this,
+                dataFn = function (e) {
+                    var point = self.ground.to3D([
+                            mouse.point.x - self.shift.getShift().x,
+                            mouse.point.y - self.shift.getShift().y
+                        ]
+                    );
+
+                    point.x += self.currentCameraLocation.x;
+                    point.y += self.currentCameraLocation.y;
+
+                    e.position = point;
+
+                    return e;
+                };
+
+            mouse.events.add({
+                click: function (e) {
+                    if(e.which === 1) {
+                        this.trigger('mouseClick', dataFn(e));
+                    } else if(e.which === 3) {
+                        this.trigger('mouseRightClick', dataFn(e));
+                    } else if(e.which === 2) {
+                        this.trigger('mouseMiddleClick', dataFn(e));
+                    }
+                }.bind(this),
+
+                dblclick: function (e) {
+                    this.trigger('mouseDoubleClick', dataFn(e));
+                }.bind(this),
+
+                move: function (e) {
+                    this.trigger('mouseMove', dataFn(e));
+                }.bind(this),
+
+                down: function (e) {
+                    this.trigger('mouseDown', dataFn(e));
+                }.bind(this),
+
+                up: function (e) {
+                    this.trigger('mouseUp', dataFn(e));
+                }.bind(this)
+            });
         },
 
         calculateAppSize: function () {

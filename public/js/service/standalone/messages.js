@@ -64,7 +64,7 @@ define('service/standalone/messages', [
             }
 
             factoryTown.updateDomainFromData(data.town);
-            mapInstance.update();
+            mapInstance.draw();
         },
 
         onMapResourceUpdate: function (data) {
@@ -74,7 +74,7 @@ define('service/standalone/messages', [
 
             _.each(data.resources, function (resource) {
                 factoryMapResources.updateDomainFromData(resource);
-                mapInstance.update();
+                mapInstance.draw();
             });
         },
 
@@ -84,12 +84,12 @@ define('service/standalone/messages', [
 
             factoryArmy.updateDomainFromData(data.general);
             mapDraw.updateArmyPosition(location, general);
-            mapInstance.update();
+            mapInstance.draw();
         },
 
         onMapShow: function (data) {
             mapDraw.mapMerge(data.result.data);
-            mapInstance.update();
+            mapInstance.draw();
         }
     });
 

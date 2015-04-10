@@ -29,7 +29,7 @@ define('service/map/main', [
 
         onAddArmy: function (domain) {
             mapDrawInstance.getInstanceArmy().addArmy(domain);
-            mapInstance.update();
+            mapInstance.draw();
         },
 
         onMoveArmy: function (armyId, x, y) {

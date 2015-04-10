@@ -1,4 +1,4 @@
-define('service/standalone/map/canvas/layers/decor', [
+define('service/standalone/map/canvas/layers/unit', [
     'service/standalone/map/canvas/layers/abstract'
 ], function (
     AbstractLayer

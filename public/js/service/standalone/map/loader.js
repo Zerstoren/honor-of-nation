@@ -29,20 +29,15 @@ define('service/standalone/map/loader', [
             gatewayMap.on('reloadRegion', function(message) {
                 self.regionReload(message.fromX, message.fromY, message.toX, message.toY);
             });
-
-//            this.$mapDI.subscribe('mouseMove', function(a, b, c) {
-//
-//            });
         },
 
         positionMapLoad: function(x, y) {
-            var dumpX, chunkItem,
+            var chunkItem,
                 self = this,
                 mapItems = this.$mapDI.getMapItems(),
                 mapItem,
                 chunkList = [],
-                i,
-                size = this.$mapDI.getMapSize();
+                i;
 
             for (i = 0; i < mapItems.length; i++) {
                 mapItem = mapItems[i];
@@ -53,8 +48,6 @@ define('service/standalone/map/loader', [
                     chunkList.push(chunkItem);
                 }
             }
-
-            console.log(chunkList);
 
             if(chunkList.length) {
                 this.chunksLoaded = _.union(this.chunksLoaded, chunkList);

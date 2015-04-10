@@ -38,8 +38,10 @@ define('service/standalone/map/draw', [
             this.mapDrawObjectsResource = new MapDrawObjectsResource();
             this.mapDrawObjectsArmy = new MapDrawObjectsArmy();
             this.$isInit = false;
+            this.map  = {};
 
-            this.$mapDI.on('updateDataLayer', this.onUpdateDataFnLayer, this);
+//            this.$mapDI.on('updateDataLayer', r, this);
+            this.onUpdateDataFnLayer();
         },
 
         init: function () {
@@ -56,9 +58,6 @@ define('service/standalone/map/draw', [
                 );
             }.bind(this));
 
-            this.map  = {};
-            this.$previousMousePosition = [0, 0];
-
             //jQuery(window).resize(function (e) {
             //    var position = this.$mapDI.getPosition();
             //    this.$mapDI.clear();
@@ -73,34 +72,40 @@ define('service/standalone/map/draw', [
             this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
         },
 
-        onUpdateDataFnLayer: function (point) {
-            var location,
-                x = point.mapX,
-                y = point.mapY;
+        onUpdateDataFnLayer: function () {
+            var self = this,
+                location;
 
-            if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
-                return point.setShadow(true);
-            }
+            this.$mapDI.updateDataLayer(function (point) {
+                var x = point.mapX,
+                    y = point.mapY;
 
-            location = mapInstance.help.fromPlaceToId(x, y);
-            var tmp;
-            if(!(tmp = self.getLand(x, y, location))) {
-                return point.setShadow(true);
-            }
+                if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
+                    return point.setShadow(true);
+                }
 
-            point.setGround(tmp);
+                location = mapInstance.help.fromPlaceToId(x, y);
+                var tmp;
+                if(!(tmp = self.getLand(x, y, location))) {
+                    return point.setShadow(true);
+                }
 
-            if((tmp = self.getDecoration(x, y, location))) {
-                point.setDecor(tmp);
-            }
+                point.setGround(tmp);
 
-            point.setBuild(
-                self.getBuild(x, y, location)
-            );
+                if((tmp = self.getDecoration(x, y, location))) {
+                    point.setDecor(tmp);
+                }
 
-            point.setUnit(
-                self.getArmy(x, y, location)
-            );
+                point.setBuild(
+                    self.getBuild(x, y, location)
+                );
+
+//                point.setUnit(
+//                    self.getArmy(x, y, location)
+//                );
+
+                return null;
+            });
         },
 
         getLand: function(x, y) {
@@ -108,7 +113,7 @@ define('service/standalone/map/draw', [
                 return false;
             }
 
-            imageLoader.get("ground-" +
+            return imageLoader.get("ground-" +
                 this.map[y][x][this.TRANSFER_ALIAS_LAND] + "-" +
                 this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]);
         },
@@ -122,39 +127,65 @@ define('service/standalone/map/draw', [
         },
 
         getBuild: function(x, y) {
-            //if(this.map[y] === undefined || this.map[y][x] === undefined) {
-            //    return false;
-            //}
-            //
-            //switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
-            //    case this.BUILD_TOWNS:
-            //        return this.mapDrawObjectsTowns.getTownObject(
-            //            x,
-            //            y,
-            //            this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
-            //        );
-            //
-            //    case this.BUILD_RESOURCES:
-            //        return this.mapDrawObjectsResource.getResourceObject(
-            //            x,
-            //            y,
-            //            this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
-            //        );
-            //
-            //    case this.BUILD_EMPTY:
-            //        return false;
-            //
-            //    default:
-            //        return false;
-            //}
+            if(this.map[y] === undefined || this.map[y][x] === undefined) {
+                return false;
+            }
+
+            switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
+                case this.BUILD_TOWNS:
+                    return this.mapDrawObjectsTowns.getTownObject(
+                        x,
+                        y
+                    );
+//
+//                case this.BUILD_RESOURCES:
+//                    return this.mapDrawObjectsResource.getResourceObject(
+//                        x,
+//                        y,
+//                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
+//                    );
+
+                case this.BUILD_EMPTY:
+                    return false;
+
+                default:
+                    return false;
+            }
         },
 
         getArmy: function (x, y, mapId) {
-            //if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-            //    return false;
-            //}
-            //
-            //return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
+//            if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
+//                return false;
+//            }
+//
+//            return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
+        },
+
+        getInfo: function (x, y, type) {
+            if(this.map[y] === undefined || this.map[y][x] === undefined) {
+                return false;
+            }
+
+            if (type === 'land') {
+                return [
+                    this.map[y][x][this.TRANSFER_ALIAS_LAND],
+                    this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]
+                ];
+
+            } else if (type === 'decor') {
+                return this.map[y][x][this.TRANSFER_ALIAS_DECOR];
+
+            } else if (type === 'build') {
+                switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
+                    case this.BUILD_TOWNS:
+                        return {
+                            'type': 'town',
+                            'domain': this.mapDrawObjectsTowns.getDetail(x, y)
+                        };
+                }
+            }
+
+            return false;
         },
 
         mapMerge: function(map) {
@@ -174,7 +205,7 @@ define('service/standalone/map/draw', [
                 }
             }
 
-            this.$mapDI.update();
+            this.$mapDI.draw();
         },
 
         getInstanceArmy: function () {

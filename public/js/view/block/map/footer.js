@@ -58,8 +58,8 @@ define('view/block/map/footer', [
         },
 
         onMouseMove: function (e) {
-            this.data.footer.set('x', e.x);
-            this.data.footer.set('y', e.y);
+            this.data.footer.set('x', e.position.x);
+            this.data.footer.set('y', e.position.y);
         },
 
         onFocusObject: function (x, y, type, idContainer) {

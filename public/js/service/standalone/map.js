@@ -10,9 +10,12 @@ define('service/standalone/map', [
             this.controller = new CanvasController();
             this.help = new Help();
 
-//            this.on('mouseMove', this.$onMouseMove, this);
-//            this.on('mouseClick', this.$onMouseClick, this);
-//            this.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
+            this.traverseEvent('updateDataLayer', this.controller);
+            this.traverseEvent('mouseMove', this.controller);
+
+            this.controller.on('mouseMove', this.$onMouseMove, this);
+            this.controller.on('mouseClick', this.$onMouseClick, this);
+            this.controller.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
         },
 
         getMapSize: function () {
@@ -26,9 +29,17 @@ define('service/standalone/map', [
         setCameraPosition: function (x, y) {
             this.controller.centerCameraToPosition([x, y]);
             this.trigger('onSetPosition', x, y);
-        }
+        },
 
-//        $onMouseMove: function (e) {
+        draw: function () {
+            this.controller.redraw();
+        },
+
+        updateDataLayer: function (fn) {
+            this.controller.updateDataLayer(fn);
+        },
+
+        $onMouseMove: function (e) {
 //            var type = null,
 //                idContainer,
 //                container = jQuery(e.target);
@@ -43,9 +54,23 @@ define('service/standalone/map', [
 //            } else {
 //                this.trigger('onMouseMoveObject', null, null, null);
 //            }
-//        },
-//
-//        $onMouseClick: function (e) {
+            var mapDrawInstance = require('service/standalone/map/draw'),
+                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
+
+            if (result) {
+                this.trigger(
+                    'onMouseMoveObject',
+                    e.position.x,
+                    e.position.y,
+                    result.type,
+                    result.domain.get('_id')
+                );
+            } else {
+                this.trigger('onMouseMoveObject', null, null, null);
+            }
+        },
+
+        $onMouseClick: function (e) {
 //            var idContainer, type, base,
 //                container = jQuery(e.target);
 //
@@ -74,22 +99,22 @@ define('service/standalone/map', [
 //                    this.$lastFocusedContainer = null;
 //                }
 //            }
-//        },
-//
-//        $onMouseDoubleClick: function (e) {
-//            var type = null,
-//                idContainer,
-//                container = jQuery(e.target);
-//
-//            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-//
-//            if(container.length) {
-//                type = container.attr('data-type');
-//                idContainer = container.attr('data-id');
-//
-//                this.trigger('onMouseDoubleClickObject', e.x, e.y, type, idContainer);
-//            }
-//        }
+        },
+
+        $onMouseDoubleClick: function (e) {
+            var mapDrawInstance = require('service/standalone/map/draw'),
+                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
+
+            if (result) {
+                this.trigger(
+                    'onMouseDoubleClickObject',
+                    e.position.x,
+                    e.position.y,
+                    result.type,
+                    result.domain.get('_id')
+                );
+            }
+        }
     });
 
     return new Init();
