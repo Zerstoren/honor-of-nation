@@ -1,8 +1,8 @@
 define('view/elements/ractive-helper', [
-    'view/elements/map/help'
-], function (ViewElementsMapHelp) {
+    'service/standalone/map/canvas/help'
+], function (ServiceStandaloneMapCanvasHelp) {
 
-    var mapHelp = new ViewElementsMapHelp();
+    var mapHelp = new ServiceStandaloneMapCanvasHelp();
 
     Ractive.defaults.data = {
         console: {

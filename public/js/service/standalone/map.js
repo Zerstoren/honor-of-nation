@@ -26,11 +26,6 @@ define('service/standalone/map', [
             return this.controller.mapItems;
         },
 
-        setCameraPosition: function (x, y) {
-            this.controller.centerCameraToPosition([x, y]);
-            this.trigger('onSetPosition', x, y);
-        },
-
         draw: function () {
             this.controller.redraw();
         },
@@ -39,21 +34,30 @@ define('service/standalone/map', [
             this.controller.updateDataLayer(fn);
         },
 
+        getCameraPosition: function () {
+            return this.controller.currentCameraLocation.clone();
+        },
+
+        setCameraPosition: function (x, y) {
+            this.controller.currentCameraLocation.set(x, y);
+            this.controller.redraw();
+            this.trigger('onSetPosition', x, y);
+        },
+
+        getCenterCameraPosition: function () {
+            return this.controller.getCenterCameraPosition();
+        },
+
+        setCenterCameraPosition: function (x, y) {
+            this.controller.centerCameraToPosition([x, y]);
+            this.trigger('onSetPosition', x, y);
+        },
+
+        reload: function () {
+            this.controller.reloadInfo();
+        },
+
         $onMouseMove: function (e) {
-//            var type = null,
-//                idContainer,
-//                container = jQuery(e.target);
-//
-//            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-//
-//            if(container.length) {
-//                type = container.attr('data-type');
-//                idContainer = container.attr('data-id');
-//
-//                this.trigger('onMouseMoveObject', e.x, e.y, type, idContainer);
-//            } else {
-//                this.trigger('onMouseMoveObject', null, null, null);
-//            }
             var mapDrawInstance = require('service/standalone/map/draw'),
                 result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
 
@@ -71,34 +75,20 @@ define('service/standalone/map', [
         },
 
         $onMouseClick: function (e) {
-//            var idContainer, type, base,
-//                container = jQuery(e.target);
-//
-//            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-//
-//            if(container.length) {
-//                if (this.$lastFocusedContainer) {
-//                    this.$lastFocusedContainer.removeClass('focused');
-//                    this.$lastFocusedContainer = null;
-//
-//                    this.trigger('onMouseClickObject', null, null, null);
-//                }
-//
-//                type = container.attr('data-type');
-//                idContainer = container.attr('data-id');
-//                base = container.parents('.cont').find('.map-item[data-id="' + idContainer + '"]');
-//
-//                this.trigger('onMouseClickObject', e.x, e.y, type, idContainer);
-//                this.$lastFocusedContainer = base;
-//                base.addClass('focused');
-//            } else if (!this.$dragStarted) {
-//                this.trigger('onMouseClickObject', null, null, null);
-//
-//                if (this.$lastFocusedContainer) {
-//                    this.$lastFocusedContainer.removeClass('focused');
-//                    this.$lastFocusedContainer = null;
-//                }
-//            }
+            var mapDrawInstance = require('service/standalone/map/draw'),
+                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
+
+            if(result) {
+                this.trigger(
+                    'onMouseClickObject',
+                    e.position.x,
+                    e.position.y,
+                    result.type,
+                    result.domain.get('_id')
+                );
+            } else if (!this.controller.isDragged()) {
+                this.trigger('onMouseClickObject', null, null, null);
+            }
         },
 
         $onMouseDoubleClick: function (e) {

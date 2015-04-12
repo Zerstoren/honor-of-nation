@@ -70,7 +70,36 @@ define('service/standalone/map/canvas/controller', [
             this.cellHeight = 64;
             this.canvasSize = new LibCanvas.Size(window.innerWidth * 2, window.innerHeight * 2);
             this.mapSize = this.calculateAppSize();
-            this.size = new LibCanvas.Point(this.mapSize.width, this.mapSize.height)
+            this.size = new LibCanvas.Point(this.mapSize.width, this.mapSize.height);
+
+            this.projection = new LibCanvas.Engines.Isometric.Projection({
+                factor: [ 1, 0.5, 1 ],
+                start : new LibCanvas.Point(
+                    (this.canvasSize.width / 2) - (this.mapSize.width * this.cellWidth / 2),
+                    (this.canvasSize.height / 2)
+                ),
+                size  : this.cellWidth / 2
+            });
+
+            this.createMapItems();
+
+            this.initLayers();
+
+            this.mouse = new LibCanvas.Mouse(this.app.container.bounds);
+
+            this.addMouseControl();
+            this.initDragger();
+            this.shiftToCenter();
+
+            this.redraw(true);
+        },
+
+        reloadInfo: function () {
+            this.app.destroy();
+            this.canvasSize = new LibCanvas.Size(window.innerWidth * 2, window.innerHeight * 2);
+
+            this.mapSize = this.calculateAppSize();
+            this.size = new LibCanvas.Point(this.mapSize.width, this.mapSize.height);
 
             this.projection = new LibCanvas.Engines.Isometric.Projection({
                 factor: [ 1, 0.5, 1 ],
@@ -149,6 +178,10 @@ define('service/standalone/map/canvas/controller', [
                 .start(function (e) {
                     return e.button == 0 || e.type == "touchstart";
                 }.bind(this));
+        },
+
+        isDragged: function () {
+            return this.dragger.drag;
         },
 
         redraw: function (force) {
@@ -255,12 +288,19 @@ define('service/standalone/map/canvas/controller', [
             this.shift.setShift([leftShift / -1, rightShift / -1], false);
         },
 
+        getCenterCameraPosition: function () {
+            return this.currentCameraLocation.clone()
+                .move(
+                    [Math.floor(this.mapSize.width / 2), Math.floor(this.mapSize.height / 2)]
+                );
+        },
+
         centerCameraToPosition: function(position) {
             this.shiftToCenter();
             position = new LibCanvas.Point(position);
             this.currentCameraLocation.set(
-                position.x - (this.mapSize.width / 2),
-                position.y - (this.mapSize.height / 2)
+                position.x - Math.floor(this.mapSize.width / 2),
+                position.y - Math.floor(this.mapSize.height / 2)
             );
 
             this.shift.addShift([this.cellWidth / 2 / -1, 0]);

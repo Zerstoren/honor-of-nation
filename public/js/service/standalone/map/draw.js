@@ -40,7 +40,6 @@ define('service/standalone/map/draw', [
             this.$isInit = false;
             this.map  = {};
 
-//            this.$mapDI.on('updateDataLayer', r, this);
             this.onUpdateDataFnLayer();
         },
 
@@ -52,18 +51,17 @@ define('service/standalone/map/draw', [
             this.$isInit = true;
 
             userService.getDeffer().deffer(DefferedTrigger.ON_GET_AND_UPDATE, function (userDomain) {
-                this.$mapDI.setCameraPosition(
+                this.$mapDI.setCenterCameraPosition(
                     userDomain.get('position').x,
                     userDomain.get('position').y
                 );
             }.bind(this));
 
-            //jQuery(window).resize(function (e) {
-            //    var position = this.$mapDI.getPosition();
-            //    this.$mapDI.clear();
-            //    this.$mapDI.$drawMap();
-            //    this.$mapDI.setPosition(position[0], position[1]);
-            //}.bind(this));
+            jQuery(window).resize(function (e) {
+                var camera = this.$mapDI.getCenterCameraPosition();
+                this.$mapDI.reload();
+                this.$mapDI.setCenterCameraPosition(camera.x, camera.y);
+            }.bind(this));
 
             return true;
         },
@@ -137,13 +135,12 @@ define('service/standalone/map/draw', [
                         x,
                         y
                     );
-//
-//                case this.BUILD_RESOURCES:
-//                    return this.mapDrawObjectsResource.getResourceObject(
-//                        x,
-//                        y,
-//                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
-//                    );
+
+                case this.BUILD_RESOURCES:
+                    return this.mapDrawObjectsResource.getResourceObject(
+                        x,
+                        y
+                    );
 
                 case this.BUILD_EMPTY:
                     return false;
@@ -181,6 +178,12 @@ define('service/standalone/map/draw', [
                         return {
                             'type': 'town',
                             'domain': this.mapDrawObjectsTowns.getDetail(x, y)
+                        };
+
+                    case this.BUILD_RESOURCES:
+                        return {
+                            'type': 'resource',
+                            'domain': this.mapDrawObjectsResource.getDetail(x, y)
                         };
                 }
             }

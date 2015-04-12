@@ -2,18 +2,21 @@ define('service/standalone/map/objects/resource', [
     'system/template',
     'factory/mapResources',
     'model/mapResources',
-    'service/standalone/map'
+    'service/standalone/map',
+    'system/imageLoader'
 ], function(
     template,
     factoryMapResources,
     ModelMapResources,
-    mapInstance
+    mapInstance,
+    imageLoader
 ) {
     "use strict";
 
     return AbstractService.extend({
-        initialize: function() {
-
+        getDetail: function (x, y) {
+            var posId = mapInstance.help.fromPlaceToId(x, y);
+            return factoryMapResources.searchInPool('pos_id', posId)[0];
         },
 
         getResourceObject: function(x, y) {
@@ -28,37 +31,24 @@ define('service/standalone/map/objects/resource', [
                 domain.mapLoad(function () {
                     try {
                         factoryMapResources.pushToPool(domain);
-                    } catch(e) {}
-                    this.drawResourceObject(domain);
-                    mapInstance.update();
+                    } catch (e) {}
+                    mapInstance.draw();
                 }.bind(this));
-            } else {
-                this.drawResourceObject(domain);
-            }
-        },
 
-        drawResourceObject: function(domain) {
-            var result = mapInstance.help.fromIdToPlace(parseInt(domain.get('pos_id'), 10));
-            var domCell = mapInstance.getDomCell(result.x, result.y);
-
-            if(domain.$$domCell === domCell) {
                 return false;
-            }
+            } else {
+                return function (point, ctx) {
+                    var resourceImage,
+                        type = domain.get('type');
 
-            if(!domain.$$domCell) {
-                domain.$$container = jQuery(
-                    template('elements/map/objects/resource', {
-                        data: domain.toJSON()
-                    })
-                );
-            }
+                    resourceImage = imageLoader.get('resource-' + type);
 
-            if(domCell) {
-                domain.$$domCell = domCell;
-                domCell.find('.cont').append(domain.$$container);
+                    ctx.drawImage({
+                        image: resourceImage,
+                        from: [point.x + 6, point.y + 24]
+                    });
+                };
             }
-
-            return true;
         }
     });
 });

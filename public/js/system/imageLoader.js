@@ -5,6 +5,13 @@ define('system/imageLoader', [], function () {
 
         // ground
         'ground-1-1': 'ground/1-1.png',
+        'ground-1-2': 'ground/1-2.png',
+        'ground-1-3': 'ground/1-3.png',
+        'ground-1-4': 'ground/1-4.png',
+        'ground-1-5': 'ground/1-5.png',
+        'ground-1-6': 'ground/1-6.png',
+        'ground-1-7': 'ground/1-7.png',
+
         'ground-2-1': 'ground/2-1.png',
 
         // decor
@@ -18,10 +25,10 @@ define('system/imageLoader', [], function () {
         'city-village': 'build/village.png',
 
         // resources
-        'rubins': 'build/rubins.png',
-        'steel': 'build/steel.png',
-        'stone': 'build/stone.png',
-        'wood': 'build/wood.png'
+        'resource-rubins': 'build/rubins.png',
+        'resource-steel': 'build/steel.png',
+        'resource-stone': 'build/stone.png',
+        'resource-wood': 'build/wood.png'
     };
 
     preloader = new atom.ImagePreloader({
