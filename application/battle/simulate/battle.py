@@ -20,7 +20,10 @@ class Battle(object):
         self.defender.setLocation(location)
 
     def simulate(self):
+        i = 0
+
         while True:
+            i += 1
             for front in Front.TYPES[0:3]:
                 self.attacker.getNextTarget(front, self.defender)
                 self.defender.getNextTarget(front, self.attacker)
@@ -33,6 +36,9 @@ class Battle(object):
             self.meleeAttack()
 
             if self.checkIsComplete():
+                break
+
+            if i == 10:
                 break
 
     def archeryFire(self):

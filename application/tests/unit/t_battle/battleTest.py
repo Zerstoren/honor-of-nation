@@ -113,6 +113,12 @@ class UnitTest_Battle_BattleTest(UnitTest_Battle_Generic):
         defenderGroupRightFront = self.createGroup(1, defenderUnit)
         defenderGroupRear = self.createGroup(1, defenderUnit)
 
+        attackerGroup.it = 'attacker_avangard'
+        defenderGroupAvangard.it = 'defender_avangard'
+        defenderGroupLeftFront.it = 'defender_left_flang'
+        defenderGroupRightFront.it = 'defender_right_flang'
+        defenderGroupRear.it = 'defender_rear'
+
         attackerFrontCollection = self.createFrontCollection(False)
         defenderFrontCollection = self.createFrontCollection(True)
 
@@ -122,6 +128,12 @@ class UnitTest_Battle_BattleTest(UnitTest_Battle_Generic):
         defenderFrontCollection.get(self.FRONT_LEFT_FLANG).addGroup(defenderGroupLeftFront)
         defenderFrontCollection.get(self.FRONT_RIGHT_FLANG).addGroup(defenderGroupRightFront)
         defenderFrontCollection.get(self.FRONT_REAR).addGroup(defenderGroupRear)
+
+        attackerFrontCollection.get(self.FRONT_AVANGARD).it = 'attacker_avangard'
+        defenderFrontCollection.get(self.FRONT_AVANGARD).it = 'defender_avangard'
+        defenderFrontCollection.get(self.FRONT_LEFT_FLANG).it = 'defender_left_flang'
+        defenderFrontCollection.get(self.FRONT_RIGHT_FLANG).it = 'defender_right_flang'
+        defenderFrontCollection.get(self.FRONT_REAR).it = 'defender_rear'
 
         self.disableRandomChoice(True)
         self.disableRandomInt(False)

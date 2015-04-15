@@ -1,5 +1,5 @@
 from battle.simulate import rand
-import  helpers.math
+import helpers.math
 import itertools
 
 from exceptions import battle as battleExceptions
@@ -189,6 +189,8 @@ class Front(object):
             return False
 
         units = list(generator)
+
+        print(self.it, self.getUnitsCount())
 
         if len(units) == 0:
             raise battleExceptions.EnemyFrontIsDeath("Target is death")
