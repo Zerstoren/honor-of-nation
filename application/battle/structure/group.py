@@ -112,5 +112,6 @@ class Group(object):
 
         if unit.weapon.isMelee:
             self.melee.remove(unit)
+            print(len(self.melee))
         else:
             self.range.remove(unit)

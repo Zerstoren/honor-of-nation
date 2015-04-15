@@ -1,4 +1,5 @@
 from battle.structure.front import Front, FrontCollection
+from exceptions import battle as battleExceptions
 
 class Battle(object):
     attacker = None
@@ -53,16 +54,17 @@ class Battle(object):
             frontAttacker = self.attacker.get(front)
             frontDefender = self.defender.get(front)
 
-            if front == Front.TYPE_AVANGARD:
-                print("Attacker", frontAttacker.getUnitsCount())
-                print("Defender", frontDefender.getUnitsCount())
-
             if frontDefender.getMeleeCount():
-                frontDefender.meleeFire()
+                try:
+                    frontDefender.meleeFire()
+                except battleExceptions.EnemyFrontIsDeath:
+                    pass
 
             if frontAttacker.getMeleeCount():
-                frontAttacker.meleeFire()
-
+                try:
+                    frontAttacker.meleeFire()
+                except battleExceptions.EnemyFrontIsDeath:
+                    pass
 
     def checkIsComplete(self):
         if self.attacker.getArmySize() == 0:

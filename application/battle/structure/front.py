@@ -1,5 +1,8 @@
 from battle.simulate import rand
 import  helpers.math
+import itertools
+
+from exceptions import battle as battleExceptions
 
 
 class FrontCollection(object):
@@ -170,10 +173,13 @@ class Front(object):
             group.archersFire(target, bonus)
 
     def meleeFire(self):
-        if not self.getTarget() and self.currentWaitToMove != 0:
-            return
-
         targetFront = self.getTarget()
+
+        if targetFront is None:
+            return 
+
+        if not targetFront and self.currentWaitToMove != 0:
+            return
 
         if targetFront.getMeleeCount():
             generator = targetFront.getMeleeGroup()
@@ -181,6 +187,12 @@ class Front(object):
             generator = targetFront.getRangeGroup()
         else:
             return False
+
+        units = list(generator)
+
+        if len(units) == 0:
+            raise battleExceptions.EnemyFrontIsDeath("Target is death")
+        generator = itertools.cycle(units)
 
         for group in self.groups:
             if not group.getTarget():
