@@ -40,7 +40,6 @@ class FrontCollection(object):
 
         if type(sequence) is tuple:
             for direction in sequence:
-                res = enemyFrontCollection.get(direction).getUnitsCount()
                 if enemyFrontCollection.get(direction).getUnitsCount():
                     myFront.setTarget(enemyFrontCollection.get(direction))
                     return True
@@ -65,7 +64,9 @@ class FrontCollection(object):
             else:
                 sequence = self.location.getSequenceOfStrategicActionsAttacker()
 
-            self.parseAction(sequence[frontName], enemyFrontCollection, myFront)
+            result = self.parseAction(sequence[frontName], enemyFrontCollection, myFront)
+            if result is False:
+                print(myFront)
 
     def getArcheryTarget(self):
         """Used by enemy"""
@@ -176,24 +177,19 @@ class Front(object):
         targetFront = self.getTarget()
 
         if targetFront is None:
-            return 
+            return
 
         if not targetFront and self.currentWaitToMove != 0:
             return
 
         if targetFront.getMeleeCount():
-            generator = targetFront.getMeleeGroup()
+            units = targetFront.getMeleeGroups()
         elif targetFront.getRangeCount():
-            generator = targetFront.getRangeGroup()
+            units = targetFront.getRangeGroups()
         else:
             return False
 
-        units = list(generator)
-
-        print(self.it, self.getUnitsCount())
-
-        if len(units) == 0:
-            raise battleExceptions.EnemyFrontIsDeath("Target is death")
+        print(self.it, units)
         generator = itertools.cycle(units)
 
         for group in self.groups:
@@ -204,21 +200,32 @@ class Front(object):
         for group in self.groups:
             group.meleeAttack()
 
-    def getMeleeGroup(self, ignoreWithTarget=True):
-        for group in self.groups:
-            if group.getCount() and group.getMeleeCount():
-                if ignoreWithTarget is True and not group.getTarget():
-                    yield group
-                elif ignoreWithTarget is False:
-                    yield group
+    def getMeleeGroups(self, ignoreWithTarget=True):
+        groups = []
 
-    def getRangeGroup(self, ignoreWithTarget=True):
         for group in self.groups:
-            if group.getCount() and group.getRangeCount():
-                if ignoreWithTarget is True and not group.getTarget():
-                    yield group
-                elif ignoreWithTarget is False:
-                    yield group
+            if group.getCount() and group.getMeleeCount() and \
+                ((ignoreWithTarget is True and not group.getTarget()) or ignoreWithTarget is False):
+                    groups.append(group)
+
+        return groups
+
+    def getRangeGroups(self, ignoreWithTarget=True):
+        groups = []
+
+        for group in self.groups:
+            if group.getCount() and group.getRangeCount() and \
+                ((ignoreWithTarget is True and not group.getTarget()) or ignoreWithTarget is False):
+                    groups.append(group)
+
+        return groups
+
+        # for group in self.groups:
+        #     if group.getCount() and group.getRangeCount():
+        #         if ignoreWithTarget is True and not group.getTarget():
+        #             yield group
+        #         elif ignoreWithTarget is False:
+        #             yield group
 
     def getUnitsCount(self):
         frontSize = 0

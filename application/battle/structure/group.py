@@ -37,6 +37,7 @@ class Group(object):
         group = self.getTarget()
         infinityGenerator = itertools.cycle(group.getUnits())
 
+        # print(self.it)
         for unit in self.getUnits():
             tmp = None
             target = None
@@ -50,6 +51,7 @@ class Group(object):
             if target is None:
                 break
 
+            # print('group----->', group.it, len(group.units))
             if Actions.meleeFire(unit, target) and target.health <= 0:
                 group.removeUnit(target)
 
