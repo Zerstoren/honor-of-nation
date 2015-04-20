@@ -1,6 +1,4 @@
 from . import abstract
-import lxml
-import config
 
 from models.Map.Factory import Map_Factory
 from helpers.MapCoordinate import MapCoordinate
@@ -38,9 +36,9 @@ class Map(abstract.AbstractDeclaration):
 
         while currentPosition[0] != completeX or currentPosition[1] != completeY:
             actionChain.click_and_hold()
-            actionChain.move_by_offset(96 * directionX, 96 * directionY)
+            actionChain.move_by_offset(128 * directionX, 64 * directionY)
             actionChain.release()
-            actionChain.move_by_offset(int((96 * directionX) / -1), int((96 * directionY) / -1))
+            actionChain.move_by_offset(int((128 * directionX) / -1), int((64 * directionY) / -1))
 
             currentPosition[0] -= directionX
             currentPosition[1] -= directionY
@@ -61,25 +59,26 @@ class MapCell(object):
     NEXT_BOTTOM = (0, 1, )
 
     def __init__(self, inst, x, y):
-        posX, posY = inst.executeCommand("return require('service/standalone/map').getPosition()")
+        posX, posY = inst.executeCommand("""
+            var cameraPos = require('service/standalone/map').getCameraPosition();
+            return [cameraPos.x, cameraPos.y];
+        """)
         x -= posX
         y -= posY
 
         # if not posX < x < posX + winWidth or not posY < y < posY + winHeight:
         #     raise Exception('Map position %(x)sx%(y)s is invisible for user' % {"x": x, "y": y})
 
-        mapHTMLItem = inst.byCssSelector('#td-%sx%s' % (x, y))
-
         self.__inst = inst
-        self.__item = mapHTMLItem
+        self.__item = inst.executeCommand("return require('service/standalone/map/draw').map[y][x]")
         self.__x = x
         self.__y = y
-        self.__classList = mapHTMLItem.get_attribute('class').split(' ')
-        self.__html = mapHTMLItem.get_attribute('innerHTML')
-        self.__lxml = None
+        # self.__classList = mapHTMLItem.get_attribute('class').split(' ')
+        # self.__html = mapHTMLItem.get_attribute('innerHTML')
+        # self.__lxml = None
 
-    def getItem(self):
-        return self.__item
+    # def getItem(self):
+    #     return self.__item
 
     def getPosition(self):
         return (self.__x, self.__y, )
@@ -107,9 +106,9 @@ class MapCell(object):
     def isHidden(self):
         return self.__classList[0] == 'shadow'
 
-    def getContainer(self, containerId):
-        return self.__item.byCss('div.container[data-id="%s"]' % str(containerId))
-
-    def __loadLXML(self):
-        if self.__lxml is None:
-            self.__lxml = lxml.html.document_fromstring(self.__html)
+    # def getContainer(self, containerId):
+    #     return self.__item.byCss('div.container[data-id="%s"]' % str(containerId))
+    #
+    # def __loadLXML(self):
+    #     if self.__lxml is None:
+    #         self.__lxml = lxml.html.document_fromstring(self.__html)
