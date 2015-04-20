@@ -1,10 +1,14 @@
 from battle.simulate.actions import Actions
 from battle.simulate import rand
+from battle import log
 
 import itertools
 
 class Group(object):
+    it = None
+
     def __init__(self):
+        self.groupSize = 0
         self.general = None
         self.units = []
         self.melee = []
@@ -16,6 +20,8 @@ class Group(object):
         :type targetFront: battle.structure.front.Front
         :return:
         """
+        log.group('`%s` %i archers fire for enemy `%s`' % (self.it, len(self.range), targetFront.it))
+
         for archer in self.range:
             if not archer.steps >= 10:
                 continue
@@ -23,6 +29,7 @@ class Group(object):
             shoots = int(archer.steps / 10)
             archer.steps %= 10
 
+            log.unit('`%s` create archery shoots %i' % (archer.it, shoots))
             for i in range(shoots):
                 group = targetFront.getRandomGroup()
                 if group.getCount() == 0:
@@ -30,30 +37,41 @@ class Group(object):
 
                 target = group.getRandomUnit()
 
+                log.unit('`%s` shoot to enemy `%s`' % (archer.it, target.it))
                 if Actions.archerFire(archer, target, bonus) and target.health <= 0:
+                    log.unit('`%s` archer killed enemy `%s`' % (archer.it, target.it))
                     group.removeUnit(target)
 
     def meleeAttack(self):
-        group = self.getTarget()
-        infinityGenerator = itertools.cycle(group.getUnits())
+        targetGroup = self.getTarget()
+        infinityGenerator = itertools.cycle(targetGroup.getUnits())
 
-        # print(self.it)
         for unit in self.getUnits():
-            tmp = None
-            target = None
+            if not unit.steps >= 10:
+                log.unit('`%s` skip step, he is weak')
+                continue
 
-            for i in range(len(group.getUnits())):
-                tmp = next(infinityGenerator)
+            blows = int(unit.steps / 10)
+            unit.steps %= 10
 
-                if group.hasUnit(tmp):
-                    target = tmp
+            log.unit('`%s` has blows %i' % (unit.it, blows))
+            for blow in range(blows):
+                target = None
+                for i in range(targetGroup.getCount()):
+                    tmp = next(infinityGenerator)
+                    if targetGroup.hasUnit(tmp):
+                        target = tmp
+                        break
 
-            if target is None:
-                break
+                if target is None:
+                    log.group('`%s` killed enemy group `%s`' % (self.it, targetGroup.it))
+                    self.removeTarget()
+                    return
 
-            # print('group----->', group.it, len(group.units))
-            if Actions.meleeFire(unit, target) and target.health <= 0:
-                group.removeUnit(target)
+                log.unit('`%s` blow enemy `%s`' % (unit.it, target.it))
+                if Actions.meleeFire(unit, target) and target.health <= 0:
+                    targetGroup.removeUnit(target)
+                    log.unit('`%s` infantry killed enemy `%s`' % (unit.it, target.it))
 
     def move(self):
         for unit in self.units:
@@ -79,6 +97,8 @@ class Group(object):
         return self.general
 
     def addUnit(self, unit):
+        self.groupSize += 1
+
         if unit.weapon.isMelee:
             self.melee.append(unit)
         else:
@@ -94,8 +114,14 @@ class Group(object):
 
     def setTarget(self, target):
         self.target = target
-        if not target.getTarget():
+        log.group('`%s` set melee target `%s`' % (self, self.target))
+
+        if target and not target.getTarget():
             target.setTarget(self)
+
+    def removeTarget(self):
+        self.target = None
+        log.group('`%s` remove target' % self.it)
 
     def getUnits(self):
         return self.units
@@ -116,3 +142,6 @@ class Group(object):
             self.melee.remove(unit)
         else:
             self.range.remove(unit)
+
+    def __str__(self):
+        return self.it

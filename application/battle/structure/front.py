@@ -1,11 +1,11 @@
 from battle.simulate import rand
-import helpers.math
 import itertools
 
-from exceptions import battle as battleExceptions
+from battle import log
 
 
 class FrontCollection(object):
+    it = None
     avangard = None
     leftFlang = None
     rightFlang = None
@@ -41,13 +41,20 @@ class FrontCollection(object):
         if type(sequence) is tuple:
             for direction in sequence:
                 if enemyFrontCollection.get(direction).getUnitsCount():
-                    myFront.setTarget(enemyFrontCollection.get(direction))
+                    targetFront = enemyFrontCollection.get(direction)
+                    isClose = False
+                    if targetFront.getTarget() == myFront:
+                        isClose = targetFront.currentWaitToMove
+
+                    myFront.setTarget(targetFront, isClose)
+                    log.front('`%s` set target `%s`' % (targetFront.it, myFront.it))
                     return True
 
             return False
         else:
             for myDirection in sequence:
-                if self.get(sequence[myDirection]).getUnitsCount() == 0:
+                # print(self.it, myDirection, sequence, sequence[myDirection])
+                if self.get(myDirection).getUnitsCount() == 0:
                     return self.parseAction(sequence[myDirection], enemyFrontCollection, myFront)
 
     def getNextTarget(self, frontName, enemyFrontCollection):
@@ -57,16 +64,15 @@ class FrontCollection(object):
         """
         myFront = self.get(frontName)
         if myFront and myFront.getTarget() and myFront.getTarget().getUnitsCount():
-            return myFront.getTarget()
+            log.front('`%s` has target `%s`' % (myFront.it, myFront.getTarget().it))
+            return
         else:
             if self.inDefence:
                 sequence = self.location.getSequenceOfStrategicActionsDefender()
             else:
                 sequence = self.location.getSequenceOfStrategicActionsAttacker()
 
-            result = self.parseAction(sequence[frontName], enemyFrontCollection, myFront)
-            if result is False:
-                print(myFront)
+            self.parseAction(sequence[frontName], enemyFrontCollection, myFront)
 
     def getArcheryTarget(self):
         """Used by enemy"""
@@ -134,6 +140,8 @@ class FrontCollection(object):
 
 
 class Front(object):
+    it = None
+
     TYPE_AVANGARD = 1
     TYPE_LEFT_FLANG = 2
     TYPE_RIGHT_FLANG = 3
@@ -155,6 +163,7 @@ class Front(object):
         if self.currentWaitToMove:
             self.currentWaitToMove -= 1
 
+        log.front('`%s` move left %i' % (self.it, self.currentWaitToMove))
         for group in self.groups:
             group.move()
 
@@ -170,6 +179,8 @@ class Front(object):
         else:
             bonus = self.location.getArcheryBonusAttacker()
 
+        log.front('`%s` archery fire to `%s`' % (self.it, target.it, ))
+
         for group in self.groups:
             group.archersFire(target, bonus)
 
@@ -179,23 +190,34 @@ class Front(object):
         if targetFront is None:
             return
 
-        if not targetFront and self.currentWaitToMove != 0:
+        if not targetFront or self.currentWaitToMove != 0:
             return
 
         if targetFront.getMeleeCount():
-            units = targetFront.getMeleeGroups()
+            units = targetFront.getMeleeGroups(False)
         elif targetFront.getRangeCount():
-            units = targetFront.getRangeGroups()
+            units = targetFront.getRangeGroups(False)
         else:
             return False
 
-        print(self.it, units)
         generator = itertools.cycle(units)
 
         for group in self.groups:
-            if not group.getTarget():
-                targetGroup = next(generator)
-                group.setTarget(targetGroup)
+            if group.getTarget():
+                continue
+
+            targetGroup = None
+
+            for i in range(targetFront.getUnitsCount()):
+                tmp = next(generator)
+                if targetFront.hasGroup(tmp):
+                    targetGroup = tmp
+                    break
+
+            if targetGroup is None:
+                return
+
+            group.setTarget(targetGroup)
 
         for group in self.groups:
             group.meleeAttack()
@@ -220,12 +242,8 @@ class Front(object):
 
         return groups
 
-        # for group in self.groups:
-        #     if group.getCount() and group.getRangeCount():
-        #         if ignoreWithTarget is True and not group.getTarget():
-        #             yield group
-        #         elif ignoreWithTarget is False:
-        #             yield group
+    def getGroups(self):
+        return self.groups
 
     def getUnitsCount(self):
         frontSize = 0
@@ -278,10 +296,13 @@ class Front(object):
         self.currentFrontTarget = targetFront
         self.setGroupsTargets(targetFront)
 
-        if isClose:
-            self.currentWaitToMove = 0
+        if type(isClose) is int:
+            self.currentWaitToMove = isClose
         else:
             self.currentWaitToMove = self.location.timeToAttack()
+
+    def hasGroup(self, group):
+        return group in self.groups
 
     def setGroupsTargets(self, targetFront):
         pass
