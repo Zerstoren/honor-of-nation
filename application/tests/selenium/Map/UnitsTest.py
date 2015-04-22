@@ -21,8 +21,8 @@ class Selenium_Map_UnitsTest(
         super().setUp()
         self.user = self.fixture.getUser(0)
         self.user.getMapper().save(self.user)
-        self.region = self.fillTerrain(0, 0, 1, 1, landType=1)
-        self.fillTerrain(0, 0, 15, 15, landType=1)
+        self.region = self.fillTerrain(0, 0, 15, 15, landType=1)
+        self.fillTerrain(0, 0, 15, 15, land=1, landType=1)
         self.openRegion(self.user, self.region)
         self.town = self.addTown(0, 0, self.user, 1)
 
@@ -71,11 +71,16 @@ class Selenium_Map_UnitsTest(
 
     @tests.rerun.retry()
     def testBaseMove(self):
-        armyContainer = self.mapCell(0, 0).getContainer(self.general.getId())
-        targetPosition = self.mapCell(4, 0).getItem()
-        self.dragNDrop(armyContainer, targetPosition)
+        self.mapCenterCamera(0, 0)
+        self.waitForMapItemLoad(0, 0)
+        # armyContainer = .getContainer(self.general.getId())
+        armyPosition = self.mapCell(0, 0)
+        targetPosition = self.mapCell(4, 0)
+        self.mapDragNDrop(armyPosition, targetPosition)
 
-        self.waitForElement('.unit_move_path')
+        # self.waitForElement('.unit_move_path')
+        #
+        # self.sleep(10)
 
         self.general.extract(True)
         path = self.general.getMovePath()

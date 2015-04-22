@@ -4,6 +4,7 @@ from selenium.webdriver import ActionChains as WebDriverActionChain
 class AbstractDeclaration(object):
     TimeoutException = Exception
     NoSuchElementException = Exception
+    WebDriverException = Exception
     keys = Keys
 
     def sleep(self, n):
