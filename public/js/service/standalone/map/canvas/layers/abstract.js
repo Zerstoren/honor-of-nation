@@ -8,8 +8,7 @@ define('service/standalone/map/canvas/layers/abstract', [], function () {
             this.size       = this.settings.get('size');
             this.mapItems   = this.settings.get('mapItems');
 
-            this
-                .createShape();
+            this.createShape();
         },
 
         createShape: function () {

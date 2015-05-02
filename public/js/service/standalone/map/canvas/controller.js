@@ -53,11 +53,6 @@ define('service/standalone/map/canvas/controller', [
         setBuild: function (fn) {
             this.build = fn;
             return this;
-        },
-
-        setUnit: function (fn) {
-            this.unit = fn;
-            return this;
         }
     });
 
@@ -135,6 +130,13 @@ define('service/standalone/map/canvas/controller', [
                 zIndex: 1
             });
 
+            this.unitLayer = this.app.createLayer({
+                name: 'unit',
+                intersection: 'auto',
+                invoke: true,
+                zIndex: 1
+            });
+
             this.mapLayer.stop();
             this.ground = new MapLayer(this.mapLayer, {
                 projection: this.projection,
@@ -161,20 +163,33 @@ define('service/standalone/map/canvas/controller', [
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
-                zIndex: 4
+                zIndex: 5
             });
             this.mapLayer.start();
         },
 
+        createUnitLayerControl: function () {
+            return new UnitLayer(this.unitLayer, {
+                projection: this.projection,
+                size: this.size,
+                mapItems: this.mapItems,
+                zIndex: 0
+            })
+        },
+
         initDragger: function () {
             this.move = null;
+
             this.shift = new support.CustomLayerShift(this.mapLayer);
+            this.unitShift = new support.CustomLayerShift(this.unitLayer);
+
             this.shift.setLimitCallback(this.onMapEdge.bind(this));
 
             this.updateShiftLimit();
 
             this.dragger = new support.CustomDragger( this.mouse )
                 .addLayerShift( this.shift )
+                .addLayerShift( this.unitShift )
                 .start(function (e) {
                     return e.button == 0 || e.type == "touchstart";
                 }.bind(this));
@@ -200,12 +215,18 @@ define('service/standalone/map/canvas/controller', [
 
                 this.updateDataLayerCallback(pos);
             }
+            this.trigger('calculate');
             console.timeEnd('calculate');
 
             if (force) {
                 this.mapLayer.redrawForce();
+
+                require('service/standalone/map/draw').getInstanceArmy().onUpdate();
+                this.unitLayer.updateAll();
+                this.unitLayer.redrawForce();
             } else {
                 this.mapLayer.redrawAll();
+                this.unitLayer.redrawAll();
             }
 
             if (force) console.timeEnd('sum');
@@ -256,7 +277,9 @@ define('service/standalone/map/canvas/controller', [
             }
 
             if (mapUpdate) {
+                this.unitShift.addShift(newShift);
                 this.shift.addShift(newShift);
+
                 this.currentCameraLocation.move(newCameraPosition);
                 this.redraw(true);
             }
@@ -264,6 +287,13 @@ define('service/standalone/map/canvas/controller', [
 
         updateShiftLimit: function () {
             this.shift.setLimitShift(
+                new LibCanvas.Shapes.Rectangle(
+                    new LibCanvas.Point(this.canvasSize.width / 2 / -1, this.canvasSize.height / 2 / -1),
+                    new LibCanvas.Point(0, 0)
+                )
+            );
+
+            this.unitShift.setLimitShift(
                 new LibCanvas.Shapes.Rectangle(
                     new LibCanvas.Point(this.canvasSize.width / 2 / -1, this.canvasSize.height / 2 / -1),
                     new LibCanvas.Point(0, 0)
@@ -286,6 +316,7 @@ define('service/standalone/map/canvas/controller', [
             var rightShift = Math.floor(mapRectange.center.y - (window.innerHeight / 2));
 
             this.shift.setShift([leftShift / -1, rightShift / -1], false);
+            this.unitShift.setShift([leftShift / -1, rightShift / -1], false);
         },
 
         getCenterCameraPosition: function () {
@@ -304,7 +335,22 @@ define('service/standalone/map/canvas/controller', [
             );
 
             this.shift.addShift([this.cellWidth / 2 / -1, 0]);
+            this.unitShift.addShift([this.cellWidth / 2 / -1, 0]);
             this.redraw(true);
+        },
+
+        fromPositionToMapItem: function (x, y) {
+            var itemX = x - this.currentCameraLocation.x,
+                itemY = y - this.currentCameraLocation.y;
+
+            if (
+                (itemX > this.size.x || itemY < 0) &&
+                (itemY > this.size.y || itemY < 0)
+            ) {
+                return null;
+            }
+
+            return {x: itemX, y: itemY};
         },
 
         addMouseControl: function () {

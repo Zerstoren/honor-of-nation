@@ -79,11 +79,7 @@ define('service/standalone/messages', [
         },
 
         onMoveUnit: function (data) {
-            var general = factoryArmy.getDomainFromData(data.general),
-                location = general.get('location');
-
             factoryArmy.updateDomainFromData(data.general);
-            mapDraw.updateArmyPosition(location, general);
             mapInstance.draw();
         },
 

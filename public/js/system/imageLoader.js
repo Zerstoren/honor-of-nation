@@ -28,7 +28,10 @@ define('system/imageLoader', [], function () {
         'resource-rubins': 'build/rubins.png',
         'resource-steel': 'build/steel.png',
         'resource-stone': 'build/stone.png',
-        'resource-wood': 'build/wood.png'
+        'resource-wood': 'build/wood.png',
+
+        // units
+        'commander': 'units/commander.png'
     };
 
     preloader = new atom.ImagePreloader({

@@ -1,19 +1,25 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
     'service/standalone/map',
+
     'system/imageLoader',
 
     'service/standalone/map/objects/resource',
     'service/standalone/map/objects/town',
-    'service/standalone/map/objects/army'
+    'service/standalone/map/objects/army',
+
+    'service/standalone/map/eventWrapper'
 ], function (
     userService,
     mapInstance,
+
     imageLoader,
 
     MapDrawObjectsResource,
     MapDrawObjectsTown,
-    MapDrawObjectsArmy
+    MapDrawObjectsArmy,
+
+    EventWrapper
 ) {
     var Draw = AbstractService.extend({
 
@@ -66,10 +72,6 @@ define('service/standalone/map/draw', [
             return true;
         },
 
-        updateArmyPosition: function (oldLocation, general) {
-            this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
-        },
-
         onUpdateDataFnLayer: function () {
             var self = this,
                 location;
@@ -97,10 +99,6 @@ define('service/standalone/map/draw', [
                 point.setBuild(
                     self.getBuild(x, y, location)
                 );
-
-//                point.setUnit(
-//                    self.getArmy(x, y, location)
-//                );
 
                 return null;
             });
@@ -150,45 +148,51 @@ define('service/standalone/map/draw', [
             }
         },
 
-        getArmy: function (x, y, mapId) {
-//            if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-//                return false;
-//            }
-//
-//            return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
-        },
+        getInfo: function (e) {
+            var army,
+                x = e.position.x,
+                y = e.position.y,
+                ev = new EventWrapper(e);
 
-        getInfo: function (x, y, type) {
             if(this.map[y] === undefined || this.map[y][x] === undefined) {
-                return false;
+                ev.setShadow(true);
+                return ev;
             }
 
-            if (type === 'land') {
-                return [
-                    this.map[y][x][this.TRANSFER_ALIAS_LAND],
-                    this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]
-                ];
+            ev.setShadow(false);
 
-            } else if (type === 'decor') {
-                return this.map[y][x][this.TRANSFER_ALIAS_DECOR];
+            ev.setLand(
+                this.map[y][x][this.TRANSFER_ALIAS_LAND],
+                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]
+            );
 
-            } else if (type === 'build') {
-                switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
-                    case this.BUILD_TOWNS:
-                        return {
-                            'type': 'town',
-                            'domain': this.mapDrawObjectsTowns.getDetail(x, y)
-                        };
+            ev.setDecor(this.map[y][x][this.TRANSFER_ALIAS_DECOR]);
 
-                    case this.BUILD_RESOURCES:
-                        return {
-                            'type': 'resource',
-                            'domain': this.mapDrawObjectsResource.getDetail(x, y)
-                        };
-                }
+            switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
+                case this.BUILD_TOWNS:
+                    ev.setBuild(
+                        'town',
+                        this.mapDrawObjectsTowns.getDetail(x, y)
+                    );
+                    break;
+
+                case this.BUILD_RESOURCES:
+                    ev.setBuild(
+                        'resource',
+                        this.mapDrawObjectsResource.getDetail(x, y)
+                    );
+                    break;
             }
 
-            return false;
+            if ((army = this.mapDrawObjectsArmy.searchByPosition(x, y))) {
+                _.each(army, function (layerItem) {
+                    if (layerItem.isTriggerPoint([e.layerX, e.layerY])) {
+                        ev.setUnit('army', layerItem.getDomain())
+                    }
+                });
+            }
+
+            return ev;
         },
 
         mapMerge: function(map) {

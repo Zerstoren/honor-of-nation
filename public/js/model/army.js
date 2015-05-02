@@ -7,9 +7,6 @@ define('model/army', [
         model_url: 'army',
 
         deepSearchById: function (_id) {
-            var searchingArmy = null,
-                parentArmy = null;
-
             return this._deepSearch(this, _id);
         },
 

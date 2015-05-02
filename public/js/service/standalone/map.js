@@ -10,7 +10,7 @@ define('service/standalone/map', [
             this.controller = new CanvasController();
             this.help = new Help();
 
-            this.traverseEvent('updateDataLayer', this.controller);
+            this.traverseEvent('calculate', this.controller);
             this.traverseEvent('mouseMove', this.controller);
 
             this.controller.on('mouseMove', this.$onMouseMove, this);
@@ -32,6 +32,14 @@ define('service/standalone/map', [
 
         updateDataLayer: function (fn) {
             this.controller.updateDataLayer(fn);
+        },
+
+        fromPositionToMapItem: function (x, y) {
+            return this.controller.fromPositionToMapItem(x, y);
+        },
+
+        createUnitLayerControl: function () {
+            return this.controller.createUnitLayerControl();
         },
 
         getCameraPosition: function () {
@@ -58,52 +66,27 @@ define('service/standalone/map', [
         },
 
         $onMouseMove: function (e) {
-            var mapDrawInstance = require('service/standalone/map/draw'),
-                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
-
-            if (result) {
-                this.trigger(
-                    'onMouseMoveObject',
-                    e.position.x,
-                    e.position.y,
-                    result.type,
-                    result.domain.get('_id')
-                );
-            } else {
-                this.trigger('onMouseMoveObject', null, null, null);
-            }
+            var ev = require('service/standalone/map/draw').getInfo(e);
+            this.trigger(
+                'onMouseMoveObject',
+                ev
+            );
         },
 
         $onMouseClick: function (e) {
-            var mapDrawInstance = require('service/standalone/map/draw'),
-                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
-
-            if(result) {
-                this.trigger(
-                    'onMouseClickObject',
-                    e.position.x,
-                    e.position.y,
-                    result.type,
-                    result.domain.get('_id')
-                );
-            } else if (!this.controller.isDragged()) {
-                this.trigger('onMouseClickObject', null, null, null);
-            }
+            var ev = require('service/standalone/map/draw').getInfo(e);
+            this.trigger(
+                'onMouseClickObject',
+                ev
+            );
         },
 
         $onMouseDoubleClick: function (e) {
-            var mapDrawInstance = require('service/standalone/map/draw'),
-                result = mapDrawInstance.getInfo(e.position.x, e.position.y, 'build');
-
-            if (result) {
-                this.trigger(
-                    'onMouseDoubleClickObject',
-                    e.position.x,
-                    e.position.y,
-                    result.type,
-                    result.domain.get('_id')
-                );
-            }
+            var ev = require('service/standalone/map/draw').getInfo(e);
+            this.trigger(
+                'onMouseDoubleClickObject',
+                ev
+            );
         }
     });
 

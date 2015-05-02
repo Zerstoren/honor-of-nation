@@ -28,7 +28,6 @@ define('view/block/map/footer', [
             this.holder = holder;
             this.template = this.getTemplate('block/map/footer');
             this.$lastFocusedType = null;
-            this.$lastFocusedId = null;
             this.data.footer = new ModelDummy({
                 x: '-',
                 y: '-',
@@ -62,7 +61,18 @@ define('view/block/map/footer', [
             this.data.footer.set('y', e.position.y);
         },
 
-        onFocusObject: function (x, y, type, idContainer) {
+        onFocusObject: function (ev) {
+            var type, domain;
+
+            if (ev.unit()) {
+                type = ev.unitType();
+                domain = ev.unit();
+            } else if (ev.build()) {
+                type = ev.buildType();
+                domain = ev.build();
+            }
+
+
             if (this.data.footer.get('type') === type || this.$lastFocusedType) {
                 return;
             }
@@ -71,51 +81,59 @@ define('view/block/map/footer', [
 
             switch(type) {
                 case 'town':
-                    this.$focusOnTown(x, y, idContainer);
+                    this.$focusOnTown(domain);
                     break;
 
                 case 'resource':
-                    this.$focusOnResource(x, y, idContainer);
+                    this.$focusOnResource(domain);
                     break;
 
                 case 'army':
-                    this.$focusOnArmy(x, y, idContainer);
-                    break;
-                default:
-                    this.$removeFocusArmy();
+                    this.$focusOnArmy(domain);
                     break;
             }
         },
 
-        onMouseClickObject: function (x, y, type, idContainer) {
+        onMouseClickObject: function (ev) {
+            var type, domain;
+
+            if (ev.unit()) {
+                type = ev.unitType();
+                domain = ev.unit();
+            } else if (ev.build()) {
+                type = ev.buildType();
+                domain = ev.build();
+            } else {
+                type = null;
+
+            }
+
             this.data.footer.set('type', type);
             this.$lastFocusedType = type;
-            this.$lastFocusedId = idContainer;
 
             switch(type) {
                 case 'town':
-                    this.$focusOnTown(x, y, idContainer);
+                    this.$focusOnTown(domain);
                     break;
 
                 case 'resource':
-                    this.$focusOnResource(x, y, idContainer);
+                    this.$focusOnResource(domain);
                     break;
 
                 case 'army':
                     this.$removeFocusArmy();
-                    this.$focusOnArmy(x, y, idContainer);
+                    this.$focusOnArmy(domain);
                     break;
             }
         },
 
-        onMouseDoubleClickObject: function (x, y, type, idContainer) {
-            this.trigger('open', type, idContainer);
+        onMouseDoubleClickObject: function (ev) {
+            // TODO осмотреть слушателей
+            this.trigger('open', ev.buildType, ev.build);
         },
 
-        $focusOnTown: function (x, y, idContainer) {
-            var domain = factoryTown.getFromPool(idContainer);
-
-            if (domain === false) {
+        $focusOnTown: function (domain) {
+            if (domain === null) {
                 return false;
             }
 
@@ -124,10 +142,8 @@ define('view/block/map/footer', [
             return true;
         },
 
-        $focusOnResource: function (x, y, idContainer) {
-            var domain = factoryMapResources.getFromPool(idContainer);
-
-            if(domain === false) {
+        $focusOnResource: function (domain) {
+            if(domain === null) {
                 return false;
             }
 
@@ -135,10 +151,9 @@ define('view/block/map/footer', [
             return true;
         },
 
-        $focusOnArmy: function (x, y, idContainer) {
+        $focusOnArmy: function (domain) {
             var timeToComplete = null,
-                pathItem, power,
-                domain = factoryArmy.getFromPool(idContainer);
+                pathItem, power;
 
             if(domain === false) {
                 return false;
