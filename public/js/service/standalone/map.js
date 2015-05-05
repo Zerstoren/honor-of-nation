@@ -7,15 +7,25 @@ define('service/standalone/map', [
 ) {
     var Init = AbstractService.extend({
         initialize: function () {
+            this.drawMap = null;
+
+            window.require(['service/standalone/map/draw'], function (draw) {
+                this.drawMap = draw;
+
+                this.traverseEvent('calculate', this.controller);
+                this.traverseEvent('mouseMove', this.controller);
+
+                this.controller.on('mouseMove', this.$onMouseMove, this);
+                this.controller.on('mouseClick', this.$onMouseClick, this);
+                this.controller.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
+
+                this.controller.on('mouseDown', this.$onDragStart, this);
+                this.controller.on('mouseUp', this.$onDragStop, this);
+                this.controller.on('mouseMove', this.$onDragMove, this);
+            }.bind(this));
+
             this.controller = new CanvasController();
             this.help = new Help();
-
-            this.traverseEvent('calculate', this.controller);
-            this.traverseEvent('mouseMove', this.controller);
-
-            this.controller.on('mouseMove', this.$onMouseMove, this);
-            this.controller.on('mouseClick', this.$onMouseClick, this);
-            this.controller.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
         },
 
         getMapSize: function () {
@@ -65,27 +75,53 @@ define('service/standalone/map', [
             this.controller.reloadInfo();
         },
 
+        deactivateDrag: function () {
+            this.controller.disableDrag();
+        },
+
+        activateDrag: function () {
+            this.controller.enableDrag();
+        },
+
+        $onDragStart: function (e) {
+            this.trigger(
+                'onDragStart',
+                this.drawMap.getInfo(e)
+            );
+        },
+
+        $onDragStop: function (e) {
+            this.trigger(
+                'onDragStop',
+                this.drawMap.getInfo(e)
+            );
+        },
+
+        $onDragMove: function (e) {
+            this.trigger(
+                'onDragMove',
+                this.drawMap.getInfo(e)
+            );
+        },
+
         $onMouseMove: function (e) {
-            var ev = require('service/standalone/map/draw').getInfo(e);
             this.trigger(
                 'onMouseMoveObject',
-                ev
+                this.drawMap.getInfo(e)
             );
         },
 
         $onMouseClick: function (e) {
-            var ev = require('service/standalone/map/draw').getInfo(e);
             this.trigger(
                 'onMouseClickObject',
-                ev
+                this.drawMap.getInfo(e)
             );
         },
 
         $onMouseDoubleClick: function (e) {
-            var ev = require('service/standalone/map/draw').getInfo(e);
             this.trigger(
                 'onMouseDoubleClickObject',
-                ev
+                this.drawMap.getInfo(e)
             );
         }
     });

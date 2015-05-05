@@ -80,7 +80,6 @@ define('service/standalone/messages', [
 
         onMoveUnit: function (data) {
             factoryArmy.updateDomainFromData(data.general);
-            mapInstance.draw();
         },
 
         onMapShow: function (data) {

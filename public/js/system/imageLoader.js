@@ -3,6 +3,8 @@ define('system/imageLoader', [], function () {
     imagesConfig = {
         'shadow': 'ground/shadow.png',
 
+        'ground-debug': 'ground/debug.png',
+
         // ground
         'ground-1-1': 'ground/1-1.png',
         'ground-1-2': 'ground/1-2.png',
@@ -31,7 +33,19 @@ define('system/imageLoader', [], function () {
         'resource-wood': 'build/wood.png',
 
         // units
-        'commander': 'units/commander.png'
+        'commander': 'units/commander.png',
+        'unit-marker-move': 'units/marker.png',
+
+        'move-top':          'units/path.png [0:0:64:64]',
+        'move-top-right':    'units/path.png [0:64:64:64]',
+        'move-right':        'units/path.png [0:128:64:64]',
+        'move-bottom-right': 'units/path.png [0:192:64:64]',
+        'move-bottom':       'units/path.png [0:256:64:64]',
+        'move-bottom-left':  'units/path.png [0:320:64:64]',
+        'move-left':         'units/path.png [0:384:64:64]',
+        'move-top-left':     'units/path.png [0:448:64:64]',
+        'move-center':       'units/path.png [0:512:64:64]'
+
     };
 
     preloader = new atom.ImagePreloader({

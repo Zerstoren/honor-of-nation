@@ -2,6 +2,7 @@ import unittest
 import config
 import hashlib
 import random
+import time
 
 import tests.bootstrap.bootstrap
 import tests.bootstrap.core
@@ -70,3 +71,18 @@ class Generic(
 
     def getRandomInt(self, minimal=0, maximal=100, prefix=''):
         return prefix + str(random.randint(minimal, maximal)) if prefix else random.randint(minimal, maximal)
+
+    def waitDomainUpdate(self, domain, fn, wait=1000):
+        i = 0
+
+        while True:
+            domain.extract(True)
+            if fn(domain):
+                break
+            else:
+                i += 50
+
+                if i == wait:
+                    raise Exception("Domain is not updated")
+
+                time.sleep(0.05)

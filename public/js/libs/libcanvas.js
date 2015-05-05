@@ -5882,7 +5882,7 @@ declare( 'LibCanvas.App.Dragger', {
         this.drag = false;
         this.events.fire( 'stop', [ e ]);
     },
-    /** @private */
+    /** @protected */
     dragMove: function (e) {
         if (!this.drag) return;
         for (var i = this.shifts.length; i--;) {

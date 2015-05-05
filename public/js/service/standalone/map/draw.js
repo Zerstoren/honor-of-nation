@@ -47,6 +47,24 @@ define('service/standalone/map/draw', [
             this.map  = {};
 
             this.onUpdateDataFnLayer();
+
+            if (window.env === 'develop') {
+                var self = this;
+                window.debugLand = function () {
+                    self.getLand = function (x, y) {
+                        if(self.map[y] === undefined || self.map[y][x] === undefined) {
+                            return false;
+                        }
+
+                        return imageLoader.get('ground-debug');
+                    };
+                    mapInstance.draw();
+                };
+
+                if (localStorage.getItem('debugLand') == 'true') {
+                    window.debugLand();
+                }
+            }
         },
 
         init: function () {

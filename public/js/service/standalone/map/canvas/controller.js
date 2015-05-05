@@ -192,11 +192,20 @@ define('service/standalone/map/canvas/controller', [
                 .addLayerShift( this.unitShift )
                 .start(function (e) {
                     return e.button == 0 || e.type == "touchstart";
-                }.bind(this));
+                });
+
         },
 
         isDragged: function () {
             return this.dragger.drag;
+        },
+
+        disableDrag: function () {
+            this.dragger.stop();
+        },
+
+        enableDrag: function () {
+            this.dragger.start();
         },
 
         redraw: function (force) {

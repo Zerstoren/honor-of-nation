@@ -39,3 +39,6 @@ class AbstractDeclaration(object):
 
     def executeCommand(self, script, *args):
         pass
+
+    def waitDomainUpdate(self, domain, fn):
+        pass

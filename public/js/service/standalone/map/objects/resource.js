@@ -14,13 +14,20 @@ define('service/standalone/map/objects/resource', [
     "use strict";
 
     return AbstractService.extend({
+        rubinsShift: new LibCanvas.Point(36, 24),
+        steelShift:  new LibCanvas.Point(0, 0),
+        eatShift:    new LibCanvas.Point(0, 0),
+        stoneShift:  new LibCanvas.Point(0, 0),
+        woodShift:   new LibCanvas.Point(0, 0),
+
         getDetail: function (x, y) {
             var posId = mapInstance.help.fromPlaceToId(x, y);
             return factoryMapResources.searchInPool('pos_id', posId)[0];
         },
 
         getResourceObject: function(x, y) {
-            var domain,
+            var self = this,
+                domain,
                 posId = mapInstance.help.fromPlaceToId(x, y);
 
             domain = factoryMapResources.searchInPool('pos_id', posId)[0];
@@ -38,14 +45,15 @@ define('service/standalone/map/objects/resource', [
                 return false;
             } else {
                 return function (point, ctx) {
-                    var resourceImage,
+                    var resourceImage, resourceShift,
                         type = domain.get('type');
 
                     resourceImage = imageLoader.get('resource-' + type);
+                    resourceShift = self[type + 'Shift'];
 
                     ctx.drawImage({
                         image: resourceImage,
-                        from: [point.x + 6, point.y + 24]
+                        from: [point.x + resourceShift.x, point.y + resourceShift.y]
                     });
                 };
             }

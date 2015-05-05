@@ -5,6 +5,8 @@ define('service/standalone/map/eventWrapper', [], function () {
             this._x = e.position.x;
             this._y = e.position.y;
 
+            this._e = e;
+
             this._shadow = null;
 
             this._land = null;
@@ -19,6 +21,10 @@ define('service/standalone/map/eventWrapper', [], function () {
             this._unit = null;
 
             this._unitsList = [];
+        },
+
+        e: function () {
+            return this._e;
         },
 
         x: function() {

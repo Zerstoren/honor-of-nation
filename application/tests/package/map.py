@@ -73,8 +73,8 @@ class Map(abstract.AbstractDeclaration):
         """)
 
         return {
-            'x': pointPosition[0] - mapShift[0],
-            'y': pointPosition[1] - mapShift[1]
+            'x': pointPosition[0] + mapShift[0] + 64,
+            'y': pointPosition[1] + mapShift[1]
         }
 
     def mapDragNDrop(self, fromMapCell, toMapCell):
@@ -104,7 +104,7 @@ class Map(abstract.AbstractDeclaration):
                 if i == 20:
                     raise self.WebDriverException("Can`t load map")
 
-                self.sleep(0.05)
+                self.sleep(0.2)
 
     def mapCenterCamera(self, x, y):
         self.executeCommand("""
@@ -115,7 +115,7 @@ class Map(abstract.AbstractDeclaration):
     def _moveMouseToPosition(self, chain, mapCell):
         body = self.byCssSelector('body')
         offset = self.getMousePosition(mapCell)
-        chain.move_to_element_with_offset(body, offset['y'], offset['y'])
+        chain.move_to_element_with_offset(body, offset['x'], offset['y'])
 
 class MapCell(object):
     NEXT_LEFT = (-1, 0, )
@@ -168,6 +168,18 @@ class MapCell(object):
 
     def isHidden(self):
         return False
+
+    def click(self):
+        chain = self.getMap().getChainAction()
+        self.getMap()._moveMouseToPosition(chain, self)
+        chain.click()
+        chain.perform()
+
+    def getMap(self):
+        """
+        :rtype: Map
+        """
+        return self.__inst
 
     # def getContainer(self, containerId):
     #     return self.__item.byCss('div.container[data-id="%s"]' % str(containerId))

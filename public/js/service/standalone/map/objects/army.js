@@ -2,6 +2,7 @@ define('service/standalone/map/objects/army', [
     'system/template',
     'factory/army',
     'model/army',
+
     'service/standalone/map'
 ], function(
     template,
@@ -23,12 +24,15 @@ define('service/standalone/map/objects/army', [
                 armyItem = mapInstance.createUnitLayerControl();
 
             armyItem.setDomain(domain);
+            domain.setLayerObject(armyItem);
 
             if (!this.armyMap[location]) {
                 this.armyMap[location] = [];
             }
 
             this.armyMap[location].push(armyItem);
+
+            domain.on('change:location', this.onUnitMove, this);
         },
 
         searchByPosition: function (x, y) {
@@ -38,6 +42,23 @@ define('service/standalone/map/objects/army', [
             } else {
                 return null;
             }
+        },
+
+        onUnitMove: function (domain, value) {
+            var oldLocation = domain.previous('location'),
+                location = domain.get('location'),
+                armyItem = domain.getLayerObject();
+
+            this.armyMap[oldLocation].splice(
+                this.armyMap[oldLocation].indexOf(armyItem),
+                1
+            );
+
+            if (!this.armyMap[location]) {
+                this.armyMap[location] = [];
+            }
+
+            this.armyMap[location].push(armyItem);
         },
 
         onUpdate: function () {
