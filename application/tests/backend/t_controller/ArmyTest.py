@@ -616,7 +616,7 @@ class Backend_Controller_Army_ManipulationTest(_Abstract_Controller):
             {
                 'pos_id': 2001,
                 'complete_after': 1,
-                'power': 10,
+                'power': 13,
                 'direction': 'r'
             }
         )
