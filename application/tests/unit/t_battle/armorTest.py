@@ -7,8 +7,9 @@ from battle.equipment.armor.plate import Plate as Armor_Plate
 
 
 class UnitTest_Battle_ArmorTest(UnitTest_Battle_Generic):
-    def testAlgorithmAbstract(self):
-        self.assertEqual(
-            AbstractArmor().getArcheryArmorProtection(),
-            1
-        )
+    pass
+    # def testAlgorithmAbstract(self):
+    #     self.assertEqual(
+    #         AbstractArmor().getArcheryArmorProtection(),
+    #         1
+    #     )
