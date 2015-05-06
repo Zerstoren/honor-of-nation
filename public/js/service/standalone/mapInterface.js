@@ -29,10 +29,10 @@ define('service/standalone/mapInterface', [
             return true;
         },
 
-        onOpen: function (type, idContainer) {
+        onOpen: function (type, domain) {
             switch(type) {
                 case 'town':
-                    systemRoute.navigate('/town/' + idContainer);
+                    systemRoute.navigate('/town/' + domain.get('_id'));
                     break;
             }
         },

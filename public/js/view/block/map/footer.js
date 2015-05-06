@@ -128,8 +128,7 @@ define('view/block/map/footer', [
         },
 
         onMouseDoubleClickObject: function (ev) {
-            // TODO осмотреть слушателей
-            this.trigger('open', ev.buildType, ev.build);
+            this.trigger('open', ev.buildType(), ev.build());
         },
 
         $focusOnTown: function (domain) {
