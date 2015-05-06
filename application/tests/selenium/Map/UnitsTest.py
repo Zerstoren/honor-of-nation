@@ -62,12 +62,14 @@ class Selenium_Map_UnitsTest(
     def _waitForUnitsMoveComplete(self, general):
         self.waitDomainUpdate(
             self.general,
-            lambda general: not bool(len(general.getMovePath()))
+            lambda general: not bool(len(general.getMovePath())),
+            wait=5000
         )
 
         self.waitDomainUpdate(
             self.general,
-            lambda general: bool(len(general.getMovePath()))
+            lambda general: bool(len(general.getMovePath())),
+            wait=5000
         )
 
         self.waitDomainUpdate(
