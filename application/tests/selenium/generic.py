@@ -6,6 +6,8 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains as WebDriverActionChain
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
+
 from selenium.webdriver.common.keys import Keys
 
 from selenium.webdriver.common.by import By as WebDriverCommonBy
@@ -57,6 +59,7 @@ class Selenium_Generic(Generic):
 
     TimeoutException = TimeoutException
     NoSuchElementException = NoSuchElementException
+    WebDriverException = WebDriverException
 
     BY_CSS = 'css'
     BY_XPATH = 'xpath'

@@ -68,7 +68,7 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
     def getDomainFromData_Unsafe(self, data):
         domain = Domain.MapUserVisible_Domain()
-        domain.setOptions(data)
+        domain._domain_data = data
         return domain
 
 MapUserVisible_Factory = MapUserVisible_Factory_Main()

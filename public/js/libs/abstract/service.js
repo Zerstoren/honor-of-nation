@@ -9,8 +9,9 @@ define('libs/abstract/service', [], function () {
 
         traverseEvent: function (eventName, fromView) {
             var traverseFn = function () {
-                this.trigger.apply(this, [eventName]);
-            }.bind(this);
+                var args = Array.prototype.slice.call(arguments);
+                this.trigger.apply(this, _.union([eventName], args));
+            };
 
             fromView.on(eventName, traverseFn, this);
 

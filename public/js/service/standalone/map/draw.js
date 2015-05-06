@@ -1,16 +1,25 @@
 define('service/standalone/map/draw', [
     'service/standalone/user',
-
     'service/standalone/map',
-    'service/standalone/map/gameMapItems/drawObjects/resource',
-    'service/standalone/map/gameMapItems/drawObjects/town',
-    'service/standalone/map/gameMapItems/drawObjects/army'
+
+    'system/imageLoader',
+
+    'service/standalone/map/objects/resource',
+    'service/standalone/map/objects/town',
+    'service/standalone/map/objects/army',
+
+    'service/standalone/map/eventWrapper'
 ], function (
     userService,
     mapInstance,
+
+    imageLoader,
+
     MapDrawObjectsResource,
     MapDrawObjectsTown,
-    MapDrawObjectsArmy
+    MapDrawObjectsArmy,
+
+    EventWrapper
 ) {
     var Draw = AbstractService.extend({
 
@@ -35,6 +44,27 @@ define('service/standalone/map/draw', [
             this.mapDrawObjectsResource = new MapDrawObjectsResource();
             this.mapDrawObjectsArmy = new MapDrawObjectsArmy();
             this.$isInit = false;
+            this.map  = {};
+
+            this.onUpdateDataFnLayer();
+
+            if (window.env === 'develop') {
+                var self = this;
+                window.debugLand = function () {
+                    self.getLand = function (x, y) {
+                        if(self.map[y] === undefined || self.map[y][x] === undefined) {
+                            return false;
+                        }
+
+                        return imageLoader.get('ground-debug');
+                    };
+                    mapInstance.draw();
+                };
+
+                if (localStorage.getItem('debugLand') == 'true') {
+                    window.debugLand();
+                }
+            }
         },
 
         init: function () {
@@ -45,66 +75,61 @@ define('service/standalone/map/draw', [
             this.$isInit = true;
 
             userService.getDeffer().deffer(DefferedTrigger.ON_GET_AND_UPDATE, function (userDomain) {
-                this.$mapDI.setCameraPosition(
+                this.$mapDI.setCenterCameraPosition(
                     userDomain.get('position').x,
                     userDomain.get('position').y
                 );
             }.bind(this));
 
-            this.map  = {};
-            this.$previousMousePosition = [0, 0];
-
-            this.setUpdateDataFnLayer();
-
             jQuery(window).resize(function (e) {
-                var position = this.$mapDI.getPosition();
-                this.$mapDI.clear();
-                this.$mapDI.$drawMap();
-                this.$mapDI.setPosition(position[0], position[1]);
+                var camera = this.$mapDI.getCenterCameraPosition();
+                this.$mapDI.reload();
+                this.$mapDI.setCenterCameraPosition(camera.x, camera.y);
             }.bind(this));
 
             return true;
         },
 
-        updateArmyPosition: function (oldLocation, general) {
-            this.mapDrawObjectsArmy.updateArmyPosition(oldLocation, general);
-        },
+        onUpdateDataFnLayer: function () {
+            var self = this,
+                location;
 
-        setUpdateDataFnLayer: function() {
-            var self = this;
+            this.$mapDI.updateDataLayer(function (point) {
+                var x = point.mapX,
+                    y = point.mapY;
 
-            this.$mapDI.setUpdateDataFnLayer(function (x, y) {
-                var location = mapInstance.help.fromPlaceToId(x, y);
                 if(x < 0 || x >= 2000 || y < 0 || y >= 2000) {
-                    return ['no_map'];
+                    return point.setShadow(true);
                 }
 
-                var tmp, classList = [];
+                location = mapInstance.help.fromPlaceToId(x, y);
+                var tmp;
                 if(!(tmp = self.getLand(x, y, location))) {
-                    return ['shadow'];
+                    return point.setShadow(true);
                 }
 
-                classList.push(tmp);
+                point.setGround(tmp);
 
                 if((tmp = self.getDecoration(x, y, location))) {
-                    classList.push(tmp);
+                    point.setDecor(tmp);
                 }
 
-                self.getBuild(x, y, location);
-                self.getArmy(x, y, location);
+                point.setBuild(
+                    self.getBuild(x, y, location)
+                );
 
-                return classList;
+                return null;
             });
         },
 
         getLand: function(x, y) {
             if(this.map[y] === undefined || this.map[y][x] === undefined) {
-                return 'shadow';
+                return false;
             }
 
-            return "land-" +
+            return imageLoader.get("ground-" +
                 this.map[y][x][this.TRANSFER_ALIAS_LAND] + "-" +
-                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE];
+                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]);
         },
 
         getDecoration: function(x, y) {
@@ -112,7 +137,7 @@ define('service/standalone/map/draw', [
                 return false;
             }
 
-            return "decor-" + this.map[y][x][this.TRANSFER_ALIAS_DECOR];
+            return imageLoader.get("decor-" + this.map[y][x][this.TRANSFER_ALIAS_DECOR]);
         },
 
         getBuild: function(x, y) {
@@ -124,15 +149,13 @@ define('service/standalone/map/draw', [
                 case this.BUILD_TOWNS:
                     return this.mapDrawObjectsTowns.getTownObject(
                         x,
-                        y,
-                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
+                        y
                     );
 
                 case this.BUILD_RESOURCES:
                     return this.mapDrawObjectsResource.getResourceObject(
                         x,
-                        y,
-                        this.map[y][x][this.TRANSFER_ALIAS_BUILD_TYPE]
+                        y
                     );
 
                 case this.BUILD_EMPTY:
@@ -143,12 +166,51 @@ define('service/standalone/map/draw', [
             }
         },
 
-        getArmy: function (x, y, mapId) {
-            if (!this.mapDrawObjectsArmy.armyMap[mapId]) {
-                return false;
+        getInfo: function (e) {
+            var army,
+                x = e.position.x,
+                y = e.position.y,
+                ev = new EventWrapper(e);
+
+            if(this.map[y] === undefined || this.map[y][x] === undefined) {
+                ev.setShadow(true);
+                return ev;
             }
 
-            return this.mapDrawObjectsArmy.getArmyObject(x, y, mapId);
+            ev.setShadow(false);
+
+            ev.setLand(
+                this.map[y][x][this.TRANSFER_ALIAS_LAND],
+                this.map[y][x][this.TRANSFER_ALIAS_LAND_TYPE]
+            );
+
+            ev.setDecor(this.map[y][x][this.TRANSFER_ALIAS_DECOR]);
+
+            switch(this.map[y][x][this.TRANSFER_ALIAS_BUILD]) {
+                case this.BUILD_TOWNS:
+                    ev.setBuild(
+                        'town',
+                        this.mapDrawObjectsTowns.getDetail(x, y)
+                    );
+                    break;
+
+                case this.BUILD_RESOURCES:
+                    ev.setBuild(
+                        'resource',
+                        this.mapDrawObjectsResource.getDetail(x, y)
+                    );
+                    break;
+            }
+
+            if ((army = this.mapDrawObjectsArmy.searchByPosition(x, y))) {
+                _.each(army, function (layerItem) {
+                    if (layerItem.isTriggerPoint([e.layerX, e.layerY])) {
+                        ev.setUnit('army', layerItem.getDomain())
+                    }
+                });
+            }
+
+            return ev;
         },
 
         mapMerge: function(map) {
@@ -168,7 +230,7 @@ define('service/standalone/map/draw', [
                 }
             }
 
-            this.$mapDI.update();
+            this.$mapDI.draw();
         },
 
         getInstanceArmy: function () {

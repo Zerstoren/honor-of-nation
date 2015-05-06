@@ -29,33 +29,24 @@ define('service/standalone/map/loader', [
             gatewayMap.on('reloadRegion', function(message) {
                 self.regionReload(message.fromX, message.fromY, message.toX, message.toY);
             });
-
-//            this.$mapDI.subscribe('mouseMove', function(a, b, c) {
-//
-//            });
         },
 
         positionMapLoad: function(x, y) {
-            var dumpX, chunkItem,
+            var chunkItem,
                 self = this,
+                mapItems = this.$mapDI.getMapItems(),
+                mapItem,
                 chunkList = [],
-                width = this.$mapDI.getMapWidth(),
-                height = this.$mapDI.getMapHeight(),
-                maxWidth = x + width,
-                maxHeight = y + height;
+                i;
 
-            for(0; y < maxHeight; y += 4) {
-                dumpX = x;
+            for (i = 0; i < mapItems.length; i++) {
+                mapItem = mapItems[i];
 
-                for(0; x < maxWidth; x += 4) {
-                    chunkItem = this.$mapDI.help.fromPlaceToChunk(x, y);
+                chunkItem = this.$mapDI.help.fromPlaceToChunk(mapItem.mapX, mapItem.mapY);
 
-                    if(!_.contains(chunkList, chunkItem) && !_.contains(this.chunksLoaded, chunkItem)) {
-                        chunkList.push(chunkItem);
-                    }
+                if(!_.contains(chunkList, chunkItem) && !_.contains(this.chunksLoaded, chunkItem)) {
+                    chunkList.push(chunkItem);
                 }
-
-                x = dumpX;
             }
 
             if(chunkList.length) {

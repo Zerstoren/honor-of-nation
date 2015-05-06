@@ -5,11 +5,9 @@ define('model/army', [
 ) {
     return AbstractModel.extend({
         model_url: 'army',
+        layer: null,
 
         deepSearchById: function (_id) {
-            var searchingArmy = null,
-                parentArmy = null;
-
             return this._deepSearch(this, _id);
         },
 
@@ -21,6 +19,14 @@ define('model/army', [
         getY: function () {
             var location = this.get('location');
             return mapInstance.help.fromIdToPlace(location).y;
+        },
+
+        getLayerObject: function () {
+            return this.layer;
+        },
+
+        setLayerObject: function (layer) {
+            this.layer = layer;
         },
 
         _deepSearch: function (model, _id) {

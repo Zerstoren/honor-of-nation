@@ -1,97 +1,130 @@
 define('service/standalone/map', [
-    'service/standalone/map/gameMapItems/Mouse',
-    'service/standalone/map/gameMapItems/Draw',
-    'service/standalone/map/gameMapItems/Access',
-    'service/standalone/map/gameMapItems/Help'
+    'service/standalone/map/canvas/help',
+    'service/standalone/map/canvas/controller'
 ], function (
-    Mouse,
-    Draw,
-    Access,
-    Help
+    Help,
+    CanvasController
 ) {
     var Init = AbstractService.extend({
         initialize: function () {
-            this.$layer = jQuery('#canvas_map');
+            this.drawMap = null;
 
-            this.config = {
-                cellSize: 96
-            };
+            window.require(['service/standalone/map/draw'], function (draw) {
+                this.drawMap = draw;
 
-            Draw.prototype.initialize.apply(this);
-            Mouse.prototype.initialize.apply(this);
+                this.traverseEvent('calculate', this.controller);
+                this.traverseEvent('mouseMove', this.controller);
 
+                this.controller.on('mouseMove', this.$onMouseMove, this);
+                this.controller.on('mouseClick', this.$onMouseClick, this);
+                this.controller.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
+
+                this.controller.on('mouseDown', this.$onDragStart, this);
+                this.controller.on('mouseUp', this.$onDragStop, this);
+                this.controller.on('mouseMove', this.$onDragMove, this);
+            }.bind(this));
+
+            this.controller = new CanvasController();
             this.help = new Help();
+        },
 
-            this.$drawMap();
-            this.on('mouseMove', this.$onMouseMove, this);
-            this.on('mouseClick', this.$onMouseClick, this);
-            this.on('mouseDoubleClick', this.$onMouseDoubleClick, this);
+        getMapSize: function () {
+            return this.controller.mapSize;
+        },
+
+        getMapItems: function () {
+            return this.controller.mapItems;
+        },
+
+        draw: function () {
+            this.controller.redraw();
+        },
+
+        updateDataLayer: function (fn) {
+            this.controller.updateDataLayer(fn);
+        },
+
+        fromPositionToMapItem: function (x, y) {
+            return this.controller.fromPositionToMapItem(x, y);
+        },
+
+        createUnitLayerControl: function () {
+            return this.controller.createUnitLayerControl();
+        },
+
+        getCameraPosition: function () {
+            return this.controller.currentCameraLocation.clone();
+        },
+
+        setCameraPosition: function (x, y) {
+            this.controller.currentCameraLocation.set(x, y);
+            this.controller.redraw();
+            this.trigger('onSetPosition', x, y);
+        },
+
+        getCenterCameraPosition: function () {
+            return this.controller.getCenterCameraPosition();
+        },
+
+        setCenterCameraPosition: function (x, y) {
+            this.controller.centerCameraToPosition([x, y]);
+            this.trigger('onSetPosition', x, y);
+        },
+
+        reload: function () {
+            this.controller.reloadInfo();
+        },
+
+        deactivateDrag: function () {
+            this.controller.disableDrag();
+        },
+
+        activateDrag: function () {
+            this.controller.enableDrag();
+        },
+
+        $onDragStart: function (e) {
+            this.trigger(
+                'onDragStart',
+                this.drawMap.getInfo(e)
+            );
+        },
+
+        $onDragStop: function (e) {
+            this.trigger(
+                'onDragStop',
+                this.drawMap.getInfo(e)
+            );
+        },
+
+        $onDragMove: function (e) {
+            this.trigger(
+                'onDragMove',
+                this.drawMap.getInfo(e)
+            );
         },
 
         $onMouseMove: function (e) {
-            var type = null,
-                idContainer,
-                container = jQuery(e.target);
-
-            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-
-            if(container.length) {
-                type = container.attr('data-type');
-                idContainer = container.attr('data-id');
-
-                this.trigger('onMouseMoveObject', e.x, e.y, type, idContainer);
-            } else {
-                this.trigger('onMouseMoveObject', null, null, null);
-            }
+            this.trigger(
+                'onMouseMoveObject',
+                this.drawMap.getInfo(e)
+            );
         },
 
         $onMouseClick: function (e) {
-            var idContainer, type, base,
-                container = jQuery(e.target);
-
-            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-
-            if(container.length) {
-                if (this.$lastFocusedContainer) {
-                    this.$lastFocusedContainer.removeClass('focused');
-                    this.$lastFocusedContainer = null;
-
-                    this.trigger('onMouseClickObject', null, null, null);
-                }
-
-                type = container.attr('data-type');
-                idContainer = container.attr('data-id');
-                base = container.parents('.cont').find('.map-item[data-id="' + idContainer + '"]');
-
-                this.trigger('onMouseClickObject', e.x, e.y, type, idContainer);
-                this.$lastFocusedContainer = base;
-                base.addClass('focused');
-            } else if (!this.$dragStarted) {
-                this.trigger('onMouseClickObject', null, null, null);
-
-                if (this.$lastFocusedContainer) {
-                    this.$lastFocusedContainer.removeClass('focused');
-                    this.$lastFocusedContainer = null;
-                }
-            }
+            this.trigger(
+                'onMouseClickObject',
+                this.drawMap.getInfo(e)
+            );
         },
 
         $onMouseDoubleClick: function (e) {
-            var type = null,
-                idContainer,
-                container = jQuery(e.target);
-
-            container = container.is('.map-item,.box_message') ?  container : jQuery(e.target).parents('.map-item,.box_message');
-
-            if(container.length) {
-                type = container.attr('data-type');
-                idContainer = container.attr('data-id');
-
-                this.trigger('onMouseDoubleClickObject', e.x, e.y, type, idContainer);
-            }
+            this.trigger(
+                'onMouseDoubleClickObject',
+                this.drawMap.getInfo(e)
+            );
         }
     });
 
-    var InitExemplar = Access.extend(Draw.prototype).extend(Mouse.prototype).extend(Init.prototype);
-    return new InitExemplar();
+    return new Init();
 });

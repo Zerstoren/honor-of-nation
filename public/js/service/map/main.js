@@ -29,12 +29,11 @@ define('service/map/main', [
 
         onAddArmy: function (domain) {
             mapDrawInstance.getInstanceArmy().addArmy(domain);
-            mapInstance.update();
+            mapInstance.draw();
         },
 
-        onMoveArmy: function (armyId, x, y) {
-            var army = factoryArmy.getFromPool(armyId),
-                prevX = army.getX(),
+        onMoveArmy: function (army, x, y) {
+            var prevX = army.getX(),
                 prevY = army.getY(),
                 sizeX = x > prevX ? x - prevX : prevX - x,
                 sizeY = y > prevY ? y - prevY : prevY - y,
@@ -106,7 +105,7 @@ define('service/map/main', [
             estar.calculate();
 
             if (path.length) {
-                gatewayArmy.move(armyId, path);
+                gatewayArmy.move(army.get('_id'), path);
             }
         },
 
