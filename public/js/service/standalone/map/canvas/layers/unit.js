@@ -9,6 +9,7 @@ define('service/standalone/map/canvas/layers/unit', [
     return atom.declare(AbstractLayer, {
         configure: function method () {
             this.movePath = [];
+            this.mapInstance = window.require('service/standalone/map');
             method.previous.call(this);
         },
 
@@ -88,7 +89,7 @@ define('service/standalone/map/canvas/layers/unit', [
             var self = this,
                 markerMove,
                 area = [],
-                unitPosition = this.controller.help.fromIdToPlace(this.army.get('location')),
+                unitPosition = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
                 unitArea = this._getArea(unitPosition.x, unitPosition.y, this.image, this.modelShift),
                 movePath = this.army.get('move_path');
 
@@ -102,7 +103,7 @@ define('service/standalone/map/canvas/layers/unit', [
 
             if (movePath.length) {
                 _.each(movePath, function (item) {
-                    var location = self.controller.help.fromIdToPlace(item.pos_id),
+                    var location = self.mapInstance.help.fromIdToPlace(item.pos_id),
                         position = self._getArea(
                             location.x,
                             location.y,
@@ -163,7 +164,7 @@ define('service/standalone/map/canvas/layers/unit', [
                 return false;
             }
 
-            var positionArmy = this.controller.help.fromIdToPlace(this.army.get('location')),
+            var positionArmy = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
                 armyDrawPoint = this.controller.fromPositionToMapItem(
                     positionArmy.x, positionArmy.y
                 );
