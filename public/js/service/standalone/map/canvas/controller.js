@@ -378,10 +378,9 @@ define('service/standalone/map/canvas/controller', [
             var mouse = this.mouse,
                 self = this,
                 dataFn = function (e) {
-
                     var point = self.ground.to3D([
-                            mouse.point.x - self.shift.getShift().x,
-                            mouse.point.y - self.shift.getShift().y
+                            e.clientX - self.shift.getShift().x,
+                            e.clientY - self.shift.getShift().y
                         ]
                     );
                     e.point = point.clone();
@@ -393,6 +392,15 @@ define('service/standalone/map/canvas/controller', [
 
                     return e;
                 };
+
+            jQuery(document).on('mousemove', function (e) {
+                this.trigger('mouseMove', dataFn(e));
+            }.bind(this));
+
+            jQuery(document).on('mouseup', function (e) {
+                this.trigger('mouseUp', dataFn(e));
+            }.bind(this));
+
 
             mouse.events.add({
                 click: function (e) {
@@ -410,7 +418,7 @@ define('service/standalone/map/canvas/controller', [
                 }.bind(this),
 
                 move: function (e) {
-                    this.trigger('mouseMove', dataFn(e));
+
                 }.bind(this),
 
                 down: function (e) {
@@ -418,7 +426,7 @@ define('service/standalone/map/canvas/controller', [
                 }.bind(this),
 
                 up: function (e) {
-                    this.trigger('mouseUp', dataFn(e));
+//                    this.trigger('mouseUp', dataFn(e));
                 }.bind(this)
             });
         },
