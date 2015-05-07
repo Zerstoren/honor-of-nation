@@ -7,6 +7,7 @@ define('service/standalone/map/canvas/layers/abstract', [], function () {
             this.projection = this.settings.get('projection');
             this.size       = this.settings.get('size');
             this.mapItems   = this.settings.get('mapItems');
+            this.controller = this.settings.get('controller');
 
             this.createShape();
         },
@@ -42,6 +43,45 @@ define('service/standalone/map/canvas/layers/abstract', [], function () {
             return this.hasPoint(result) ? result : null;
         },
 
-        clearPrevious: function(){}
+        clearPrevious: function(){},
+
+
+        _getArea: function (x, y, image, shift) {
+            var drawPosition,
+                mapPosition = this.controller.fromPositionToMapItem(x, y);
+
+            if (!mapPosition) {
+                return null;
+            }
+
+            drawPosition = this.projection.toIsometric([mapPosition.x, mapPosition.y]);
+            return this._getPolygonDescription(drawPosition, image, shift);
+        },
+
+        _getPolygonDescription: function (drawPoint, image, shift) {
+            if (shift === undefined) {
+                shift = {
+                    x: 0,
+                    y: 0
+                };
+            }
+
+            if (image === undefined) {
+                image = {
+                    width: 0,
+                    height: 0
+                };
+            }
+
+            drawPoint.x += shift.x;
+            drawPoint.y += shift.y;
+
+            return [
+                [drawPoint.x, drawPoint.y],
+                [drawPoint.x + image.width, drawPoint.y],
+                [drawPoint.x + image.width, drawPoint.y + image.height],
+                [drawPoint.x, drawPoint.y + image.height]
+            ];
+        }
     });
 });

@@ -4,6 +4,7 @@ define('system/imageLoader', [], function () {
         'shadow': 'ground/shadow.png',
 
         'ground-debug': 'ground/debug.png',
+        'cursor'      : 'ground/cursor.png',
 
         // ground
         'ground-1-1': 'ground/1-1.png',

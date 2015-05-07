@@ -8,8 +8,6 @@ define('service/standalone/map/canvas/layers/unit', [
 ) {
     return atom.declare(AbstractLayer, {
         configure: function method () {
-            window.ctx = this.layer.ctx;
-            this.mapInstance = window.require('service/standalone/map');
             this.movePath = [];
             method.previous.call(this);
         },
@@ -90,7 +88,7 @@ define('service/standalone/map/canvas/layers/unit', [
             var self = this,
                 markerMove,
                 area = [],
-                unitPosition = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
+                unitPosition = this.controller.help.fromIdToPlace(this.army.get('location')),
                 unitArea = this._getArea(unitPosition.x, unitPosition.y, this.image, this.modelShift),
                 movePath = this.army.get('move_path');
 
@@ -104,7 +102,7 @@ define('service/standalone/map/canvas/layers/unit', [
 
             if (movePath.length) {
                 _.each(movePath, function (item) {
-                    var location = self.mapInstance.help.fromIdToPlace(item.pos_id),
+                    var location = self.controller.help.fromIdToPlace(item.pos_id),
                         position = self._getArea(
                             location.x,
                             location.y,
@@ -130,9 +128,8 @@ define('service/standalone/map/canvas/layers/unit', [
         },
 
         renderTo: function (ctx) {
-            var self = this;
-
-            ctx2d = ctx.ctx2d;
+            var self = this,
+                ctx2d = ctx.ctx2d;
 
             if (this.movePath.length) {
                 _.each(this.movePath, function (item) {
@@ -166,8 +163,8 @@ define('service/standalone/map/canvas/layers/unit', [
                 return false;
             }
 
-            var positionArmy = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
-                armyDrawPoint = this.mapInstance.fromPositionToMapItem(
+            var positionArmy = this.controller.help.fromIdToPlace(this.army.get('location')),
+                armyDrawPoint = this.controller.fromPositionToMapItem(
                     positionArmy.x, positionArmy.y
                 );
 
@@ -181,58 +178,6 @@ define('service/standalone/map/canvas/layers/unit', [
 
         clearPrevious: function (ctx) {
             LibCanvas.App.Element.prototype.clearPrevious.apply(this, [ctx]);
-        },
-
-        _getArea: function (x, y, image, shift) {
-            var drawPosition,
-                mapPosition = this.mapInstance.fromPositionToMapItem(x, y);
-
-            if (shift === undefined) {
-                shift = {
-                    x: 0,
-                    y: 0
-                };
-            }
-
-            if (image === undefined) {
-                image = {
-                    width: 0,
-                    height: 0
-                };
-            }
-
-            if (!mapPosition) {
-                return null;
-            }
-
-            drawPosition = this.projection.toIsometric([mapPosition.x, mapPosition.y]);
-            return this._getPolygonDescription(drawPosition, image, shift);
-        },
-
-        _getPolygonDescription: function (drawPoint, image, shift) {
-            if (shift === undefined) {
-                shift = {
-                    x: 0,
-                    y: 0
-                };
-            }
-
-            if (image === undefined) {
-                image = {
-                    width: 0,
-                    height: 0
-                };
-            }
-
-            drawPoint.x += shift.x;
-            drawPoint.y += shift.y;
-
-            return [
-                [drawPoint.x, drawPoint.y],
-                [drawPoint.x + image.width, drawPoint.y],
-                [drawPoint.x + image.width, drawPoint.y + image.height],
-                [drawPoint.x, drawPoint.y + image.height]
-            ];
         }
     });
 });

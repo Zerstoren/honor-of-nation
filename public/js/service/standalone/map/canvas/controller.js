@@ -4,6 +4,7 @@ define('service/standalone/map/canvas/controller', [
     'service/standalone/map/canvas/layers/build',
     'service/standalone/map/canvas/layers/shadow',
     'service/standalone/map/canvas/layers/unit',
+    'service/standalone/map/canvas/layers/cursor',
 
     'service/standalone/map/canvas/support'
 ], function (
@@ -12,6 +13,7 @@ define('service/standalone/map/canvas/controller', [
     BuildLayer,
     ShadowLayer,
     UnitLayer,
+    CursorLayer,
 
     support
 ) {
@@ -139,6 +141,7 @@ define('service/standalone/map/canvas/controller', [
 
             this.mapLayer.stop();
             this.ground = new MapLayer(this.mapLayer, {
+                controller: this,
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
@@ -146,6 +149,7 @@ define('service/standalone/map/canvas/controller', [
             });
 
             this.decor = new DecorLayer(this.mapLayer, {
+                controller: this,
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
@@ -153,6 +157,7 @@ define('service/standalone/map/canvas/controller', [
             });
 
             this.build = new BuildLayer(this.mapLayer, {
+                controller: this,
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
@@ -160,20 +165,31 @@ define('service/standalone/map/canvas/controller', [
             });
 
             this.shadow = new ShadowLayer(this.mapLayer, {
+                controller: this,
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
                 zIndex: 5
             });
+
+            this.cursor = new CursorLayer(this.unitLayer, {
+                controller: this,
+                projection: this.projection,
+                size: this.size,
+                mapItems: [],
+                zIndex: 1
+            });
+
             this.mapLayer.start();
         },
 
         createUnitLayerControl: function () {
             return new UnitLayer(this.unitLayer, {
+                controller: this,
                 projection: this.projection,
                 size: this.size,
                 mapItems: this.mapItems,
-                zIndex: 0
+                zIndex: 2
             })
         },
 
@@ -194,10 +210,6 @@ define('service/standalone/map/canvas/controller', [
                     return e.button == 0 || e.type == "touchstart";
                 });
 
-        },
-
-        isDragged: function () {
-            return this.dragger.drag;
         },
 
         disableDrag: function () {
@@ -366,11 +378,13 @@ define('service/standalone/map/canvas/controller', [
             var mouse = this.mouse,
                 self = this,
                 dataFn = function (e) {
+
                     var point = self.ground.to3D([
                             mouse.point.x - self.shift.getShift().x,
                             mouse.point.y - self.shift.getShift().y
                         ]
                     );
+                    e.point = point.clone();
 
                     point.x += self.currentCameraLocation.x;
                     point.y += self.currentCameraLocation.y;
