@@ -103,6 +103,7 @@ class Selenium_Map_UnitsTest(
         targetPosition = self.mapCell(4, 0)
 
         armyPosition.click()
+        self.waitForElement('button.mode[data-mode="4"]')
         self.byCssSelector('button.mode[data-mode="4"]').click()
 
         self.mapDragNDrop(armyPosition, targetPosition)
