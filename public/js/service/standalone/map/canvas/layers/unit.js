@@ -129,8 +129,7 @@ define('service/standalone/map/canvas/layers/unit', [
         },
 
         renderTo: function (ctx) {
-            var self = this,
-                ctx2d = ctx.ctx2d;
+            var ctx2d = ctx.ctx2d;
 
             if (this.movePath.length) {
                 _.each(this.movePath, function (item) {
