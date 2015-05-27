@@ -89,6 +89,7 @@ define('view/block/map/footer', [
                     break;
 
                 case 'army':
+                    this.$removeFocusArmy();
                     this.$focusOnArmy(domain);
                     break;
             }
@@ -105,7 +106,6 @@ define('view/block/map/footer', [
                 domain = ev.build();
             } else {
                 type = null;
-
             }
 
             this.data.footer.set('type', type);

@@ -5,6 +5,8 @@ define('service/standalone/mapInterface', [
     'model/user',
     'collection/user',
 
+    'service/standalone/user',
+
     'view/elements/resource'
 ], function (
     preStart,
@@ -12,6 +14,8 @@ define('service/standalone/mapInterface', [
 
     ModelUser,
     CollectionUser,
+
+    ServiceStandaloneUser,
 
     viewElementResource
 ) {
@@ -30,9 +34,17 @@ define('service/standalone/mapInterface', [
         },
 
         onOpen: function (type, domain) {
+
             switch(type) {
                 case 'town':
-                    systemRoute.navigate('/town/' + domain.get('_id'));
+                    ServiceStandaloneUser.getDeffer().deffer(DefferedTrigger.ON_GET, function (user) {
+                        if (user.get('_id') !== domain.get('user')._id) {
+                            return;
+                        }
+
+                        systemRoute.navigate('/town/' + domain.get('_id'));
+                    });
+
                     break;
             }
         },

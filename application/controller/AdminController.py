@@ -79,7 +79,8 @@ class MainAdminController(AbstractAdminController):
 
     def saveCoordinate(self, transfer, data):
         user = transfer.getUser()
-        self._getAclAdminService().openMapForUser(user, data)
+
+        self._getAclParamsAdminService().openMapForUser(data['user'], data['coordinate'], user)
 
         transfer.send('/admin/saveCoordinate', {
             'done': True

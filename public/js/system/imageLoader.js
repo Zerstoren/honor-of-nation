@@ -36,6 +36,7 @@ define('system/imageLoader', [], function () {
         // units
         'commander': 'units/commander.png',
         'unit-marker-move': 'units/marker.png',
+        'unit-attack': 'units/attack.png',
 
         'move-top':          'units/path.png [0:0:64:64]',
         'move-top-right':    'units/path.png [0:64:64:64]',

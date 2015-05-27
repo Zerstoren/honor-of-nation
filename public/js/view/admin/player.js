@@ -58,9 +58,11 @@ define('view/admin/player', [], function () {
         },
 
         onSaveCoordinate: function (e) {
-            var data = this.get('position');
+            var data = {};
+            data.user = this.data.user.get('_id');
+            data.coordinate = this.get('position');
 
-            if (!data.fromX || !data.fromY || !data.toX || !data.toY) {
+            if (!data.coordinate.fromX || !data.coordinate.fromY || !data.coordinate.toX || !data.coordinate.toY) {
                 this.errorMessage('Указаны не все координаты');
                 return;
             }

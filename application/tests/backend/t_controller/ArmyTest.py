@@ -9,6 +9,7 @@ import controller.ArmyController
 
 import service.ArmyQueue
 import service.Army
+import service.User
 
 import time
 

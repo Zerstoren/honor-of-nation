@@ -26,6 +26,18 @@ class TransferMock(UserTransfer):
 
         self.__lastMessage.append(sendData)
 
+    def forceSend(self, module, message, fool=False):
+        assert type(message) == dict
+        assert type(module) == str
+
+        sendData = {
+            "message": message,
+            "module": module,
+            "async": self.async
+        }
+
+        self.__lastMessage.append(sendData)
+
     def getLastMessage(self, n=0):
         return self.__lastMessage[len(self.__lastMessage) - 1 - n]
 

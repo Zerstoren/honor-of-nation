@@ -64,6 +64,14 @@ def army(message):
     celeryController.armyCreated(message)
 
 
+@app.task(serializer='json', name='init_celery.waitBattle')
+@helpers.times.decorate
+def waitBattle(message):
+    import controller.BattleController
+    celeryController = controller.BattleController.CeleryPrivateController()
+    celeryController.waitBattle(message)
+
+
 @app.task(serialize='json', name='init_celery.army_move')
 @helpers.times.decorate
 def army_move(message):

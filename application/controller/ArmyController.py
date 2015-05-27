@@ -9,6 +9,8 @@ class _AbstractArmy(object):
     def _getParamsArmyService(self):
         return Service_Army().decorate(Service_Army.PARAMS_JSONPACK_ACL)
 
+    def _getArmyService(self):
+        return Service_Army()
 
 
 class MainController(_AbstractArmy):
@@ -155,9 +157,11 @@ class CeleryPrivateController(_AbstractArmy):
 
 class DeliveryController(_AbstractArmy):
     def updateUnitsOnMap(self, user, unitsList):
+        serviceArmyJsonPack = Service_Army().getDecorateClass(Service_Army.JSONPACK)
+
         user.getTransfer().forceSend('/delivery/unitsUpdateOnMap', {
             'done': True,
-            'units': unitsList
+            'units': [serviceArmyJsonPack.pack(unit) for unit in unitsList]
         })
 
     def moveOneUnit(self, general):

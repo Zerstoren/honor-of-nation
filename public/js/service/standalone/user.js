@@ -16,8 +16,15 @@ define('service/standalone/user', [
 ) {
 
     var User = AbstractService.extend({
+        STATE_WAR      : 0,
+        STATE_NEUTRAL  : 1,
+        STATE_TRADE    : 2,
+        STATE_UNION    : 3,
+        STATE_ALLIANCE : 4,
+
         initialize: function () {
             this.getMeFn = [];
+            this.states = {};
             this.defferTrigger = new window.DefferedTrigger();
         },
 
@@ -27,6 +34,10 @@ define('service/standalone/user', [
 
         getDeffer: function () {
             return this.defferTrigger;
+        },
+
+        getStateFor: function (userId) {
+            return this.states[userId];
         },
 
         login: function () {
@@ -58,7 +69,7 @@ define('service/standalone/user', [
         onLogin: function (data) {
             var self = this;
 
-            this.me.auth(data.login, data.password, function (domain, authResult) {
+            this.me.auth(data.login, data.password, function (domain, authResult, states) {
                 if (authResult === false) {
                     if (data.auto === true) {
                         self.renderForm();
@@ -77,6 +88,9 @@ define('service/standalone/user', [
 
                 self.defferTrigger.set(self.me);
 
+                _.each(states, function (item) {
+                    self.states[item.user] = item.state;
+                });
             });
         },
 

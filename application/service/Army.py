@@ -6,10 +6,11 @@ from models.Army.Factory import Army_Factory
 from models.Equipment.Units import Common
 from models.Map import Data as Map_Data
 from models.Army import Common as Army_Common
-
+from models.UserState import Common as UserStateCommon
 from service.Town import Service_Town
 from service.Map import Service_Map
-
+from service.User import Service_User
+from service.Battle import Service_Battle
 from battle.structure.front import Front
 
 import exceptions.army
@@ -18,7 +19,6 @@ import helpers.MapCoordinate
 import init_celery
 import config
 import time
-
 
 class Service_Army(AbstractService.Service_Abstract):
     NORMAL_MOVE_MINIMAL_POWER = 10
@@ -310,13 +310,14 @@ class Service_Army(AbstractService.Service_Abstract):
             general.setPower(general.getPower() - pathItem['power'])
             general.setLocation(pathItem['pos_id'])
             general.setMovePath(path)
+            mapCoordinate = helpers.MapCoordinate.MapCoordinate(posId=general.getLocation())
 
             from service.MapUserVisible import Service_MapUserVisible
-            Service_MapUserVisible().openAroundPlace(
-                general.getUser(),
-                helpers.MapCoordinate.MapCoordinate(posId=general.getLocation()),
-                2
-            )
+            Service_MapUserVisible().openAroundPlace(general.getUser(), mapCoordinate, 2)
+
+            general.getMapper().save(general)
+
+            self.checkBattleOnPosition(mapCoordinate, general)
 
             result = True
 
@@ -398,7 +399,69 @@ class Service_Army(AbstractService.Service_Abstract):
             import controller.ArmyController
             controller.ArmyController.DeliveryController().moveUnit(general)
 
+    def checkBattleOnPosition(self, mapCoordinate, general):
+        from collection.MapCollection import Map_Collection
 
+        userService = Service_User()
+
+        mapCollection = Map_Collection()
+        mapDomain = Service_Map().getByPosition(mapCoordinate)
+        mapCollection.append(mapDomain)
+
+        result = Service_Army().loadByMapCollection(mapCollection)
+
+        if len(result) == 1:
+            return # no units for battle
+
+        myArmy = {}
+        enemyArmy = {}
+
+        myArmy[general.getUser().getId()] = {
+            'units': [general],
+            'user': general.getUser()
+        }
+
+        for unit in result:
+            if unit.getId() == general.getId():
+                continue
+
+            unitUser = unit.getUser()
+
+            if userService.getUserState(general.getUser(), unitUser).getState() == UserStateCommon.STATE_WAR:
+                if unitUser.getId() not in enemyArmy:
+                    enemyArmy[unitUser.getId()] = {
+                        'units': [],
+                        'user': unitUser
+                    }
+
+                enemyArmy[unitUser.getId()]['units'].append(unit)
+
+                break # Limit for battle at 1 to 1
+
+        if len(myArmy) >= 1 and len(enemyArmy) >= 1:
+            def parseArmy(army):
+                ask = {}
+                for userId in army:
+                    ask[str(userId)] = {
+                        'user': userId,
+                        'accept': False,
+                        'units': [{'unit': unit.getId(), 'accept': False} for unit in army[userId]['units']]
+                    }
+
+                return ask
+
+            attackerAsk = parseArmy(myArmy)
+            defenderAsk = parseArmy(enemyArmy)
+
+            battleAskDomain = Service_Battle().addBattleAsk(mapCoordinate, attackerAsk, defenderAsk)
+
+            init_celery.waitBattle.apply_async(
+                (str(battleAskDomain.getId()), ),
+                countdown=int(config.get('battle.wait_for_start_battle'))
+            )
+
+            from controller.BattleController import DeliveryController
+            DeliveryController().askAboutBattle(mapCoordinate, myArmy, enemyArmy)
 
     def decorate(self, *args):
         """

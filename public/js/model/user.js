@@ -30,7 +30,7 @@
                 }
 
                 if (callback) {
-                    callback(this, message.auth_result);
+                    callback(this, message.auth_result, data.states);
                 }
             }
         });
