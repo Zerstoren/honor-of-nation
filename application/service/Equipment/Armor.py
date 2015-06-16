@@ -34,22 +34,8 @@ class Service_Equipment_Armor(AbstractEquipment):
         return True
 
     def _getArmorCalculatedDomain(self, data):
-        domain = Equipment_Armor_Domain()
-
-        if '_id' in data:
-            domain.setId(data['_id'])
-
         data = self._fixLevels(data)
-
-        domain.setType(data['type'])
-        domain.setHealth(data['health'])
-        domain.setAgility(data['agility'])
-        domain.setAbsorption(data['absorption'])
-
-        domain.setShield(data['shield'])
-        domain.setShieldType(data['shield_type'])
-        domain.setShieldDurability(data['shield_durability'])
-        domain.setShieldBlocking(data['shield_blocking'])
+        domain = Equipment_Armor_Factory.getDomainFromData(data)
 
         currentPrice = self._calculatePrice(domain)
 
