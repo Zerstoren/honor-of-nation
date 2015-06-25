@@ -1,6 +1,6 @@
 from .Abstract import AbstractService
-import models.Resources.Mapper
-import models.Resources.Domain
+
+import models.Resources.Factory
 import models.Resources.Common
 
 from service.Town import Service_Town
@@ -10,12 +10,7 @@ class Service_Resources(AbstractService.Service_Abstract):
         """
         :type userDomain: models.User.Domain.User_Domain
         """
-        domain = models.Resources.Domain.Resources_Domain()
-        domain.setOptions(
-            models.Resources.Mapper.Resources_Mapper.getByUser(userDomain)
-        )
-
-        return domain
+        return models.Resources.Factory.Resources_Factory.getResources(userDomain)
 
     def setResources(self, user, resources):
         """

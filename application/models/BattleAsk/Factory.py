@@ -23,4 +23,13 @@ class BattleAsk_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return domain
 
+    def getDomainFromData(self, data):
+        domain = Domain.BattleAsk_Domain()
+
+        domain.setLocation(data['location'])
+        domain.setAttacker(data['attacker'])
+        domain.setDefender(data['defender'])
+
+        return domain
+
 BattleAsk_Factory = BattleAsk_Factory_Main()

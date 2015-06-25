@@ -34,6 +34,21 @@ class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return collection
 
+    def getByPosIds(self, posIds):
+        return self.getCollectionFromData(
+            Mapper.Map_Mapper.getByPosIds(posIds)
+        )
+
+    def getRegion(self, regionMap):
+        """
+        :type regionMap:helpers.MapRegion.MapRegion
+        """
+        regionResult = Mapper.Map_Mapper.getRegion(regionMap)
+
+        return self.getCollectionFromData(
+            regionResult
+        )
+
     def getDomainFromData(self, data):
         """
         :rtype: models.Map.Domain.Map_Domain

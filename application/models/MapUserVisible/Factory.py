@@ -58,6 +58,19 @@ class MapUserVisible_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return collectionMapUserVisible
 
+    def getByChunks(self, user, chunks):
+        return self.getCollectionFromData(
+            Mapper.MapUserVisible_Mapper.getCellsByUsersAndChunks(user, chunks)
+        )
+
+    def getByIds(self, user, ids):
+        """
+        :rtype: collection.MapUserVisibleCollection.MapUserVisible_Collection
+        """
+        return self.getCollectionFromData(
+            Mapper.MapUserVisible_Mapper.getByIds(user, ids)
+        )
+
     def getDomainFromData(self, data):
         """
         :rtype: models.MapUserVisible.Domain.MapUserVisible_Domain

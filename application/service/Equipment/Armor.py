@@ -1,7 +1,6 @@
 from service.Abstract.AbstractEquipment import AbstractEquipment
 
 from models.Equipment.Armor.Factory import Equipment_Armor_Factory
-from models.Equipment.Armor.Domain import Equipment_Armor_Domain
 import models.Equipment.Armor.Data as Data
 
 from helpers import math

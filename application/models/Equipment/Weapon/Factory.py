@@ -25,6 +25,27 @@ class Equipment_Weapon_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return collection
 
+    def getDomainFromData(self, data, price=None):
+        domain = Domain.Equipment_Weapon_Domain()
 
+        if '_id' in data:
+            domain.setId(data['_id'])
+
+        domain.setType(data['type'])
+        domain.setDamage(data['damage'])
+        domain.setSpeed(data['speed'])
+        domain.setCriticalChance(data['critical_chance'])
+        domain.setCriticalDamage(data['critical_damage'])
+
+        if price:
+            domain.setLevel(price['level'])
+            domain.setTime(price['time'])
+
+            domain.setRubins(price['rubins'])
+            domain.setWood(price['wood'])
+            domain.setSteel(price['steel'])
+            domain.setEat(price['eat'])
+
+        return domain
 
 Equipment_Weapon_Factory = Equipment_Weapon_Factory_Main()

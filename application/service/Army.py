@@ -1,16 +1,18 @@
 from .Abstract import AbstractService
 
-from models.Army.Domain import Army_Domain
 from models.Army.Factory import Army_Factory
 
-from models.Equipment.Units import Common
 from models.Map import Data as Map_Data
+
+from models.Equipment.Units import Common
 from models.Army import Common as Army_Common
 from models.UserState import Common as UserStateCommon
+
 from service.Town import Service_Town
 from service.Map import Service_Map
 from service.User import Service_User
 from service.Battle import Service_Battle
+
 from battle.structure.front import Front
 
 import exceptions.army
@@ -270,22 +272,24 @@ class Service_Army(AbstractService.Service_Abstract):
         return bool(len(collection))
 
     def _create(self, unit, town, count):
-        domain = Army_Domain()
-        domain.setUnit(unit)
-        domain.setUser(town.getUser())
-        domain.setCount(count)
-        domain.setCommander(None)
-        domain.setMap(town.getMap())
-        domain.setInBuild(True)
-        domain.setPower(100)
-        domain.setMode(1)
-        domain.setMovePath([])
-        domain.setSuite(None)
-        domain.setIsGeneral(unit.getType() == Common.TYPE_GENERAL)
-        domain.setLastPowerUpdate(int(time.time()))
-        domain.setFormationAttack(Front.TYPE_AVANGARD)
-        domain.setFormationDefence(Front.TYPE_AVANGARD)
+        data = {
+            'unit': unit,
+            'user': town.getUser(),
+            'count': count,
+            'commander': None,
+            'map': town.getMap(),
+            'in_build': True,
+            'power': 100,
+            'mode': 1,
+            'move_path': [],
+            'suite': None,
+            'is_general': unit.getType() == Common.TYPE_GENERAL,
+            'last_power_update': int(time.time()),
+            'formation_attack': Front.TYPE_AVANGARD,
+            'formation_defence': Front.TYPE_AVANGARD
+        }
 
+        domain = Army_Factory.getDomainFromData(data)
         domain.getMapper().save(domain)
         return domain
 

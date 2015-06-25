@@ -47,4 +47,24 @@ class Army_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         result = Mapper.Army_Mapper.getByMapCollectionWithoutUser(user, collection)
         return self._getCollectionFromData(result)
 
+    def getDomainFromData(self, data):
+        domain = Domain.Army_Domain()
+        domain.setUnit(data['unit'])
+        domain.setUser(data['user'])
+        domain.setCount(data['count'])
+        domain.setCommander(data['commander'])
+        domain.setMap(data['map'])
+        domain.setInBuild(data['in_build'])
+        domain.setPower(data['power'])
+        domain.setMode(data['mode'])
+        domain.setMovePath(data['move_path'])
+        domain.setSuite(data['suite'])
+        domain.setIsGeneral(data['is_general'])
+        domain.setLastPowerUpdate(data['last_power_update'])
+        domain.setFormationAttack(data['formation_attack'])
+        domain.setFormationDefence(data['formation_defence'])
+
+        return domain
+
+
 Army_Factory = Army_Factory_Main()

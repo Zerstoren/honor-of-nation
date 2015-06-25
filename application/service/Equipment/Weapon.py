@@ -1,7 +1,7 @@
 from service.Abstract.AbstractEquipment import AbstractEquipment
 
 from models.Equipment.Weapon.Factory import Equipment_Weapon_Factory
-from models.Equipment.Weapon.Domain import Equipment_Weapon_Domain
+
 import models.Equipment.Weapon.Data as Data
 
 from helpers import math
@@ -34,18 +34,10 @@ class Service_Equipment_Weapon(AbstractEquipment):
         return True
 
     def _getWeaponCalculatedDomain(self, data):
-        domain = Equipment_Weapon_Domain()
-
-        if '_id' in data:
-            domain.setId(data['_id'])
 
         data = self._fixLevels(data)
 
-        domain.setType(data['type'])
-        domain.setDamage(data['damage'])
-        domain.setSpeed(data['speed'])
-        domain.setCriticalChance(data['critical_chance'])
-        domain.setCriticalDamage(data['critical_damage'])
+        domain = Equipment_Weapon_Factory.getDomainFromData(data)
 
         currentPrice = self._calculatePrice(domain)
 

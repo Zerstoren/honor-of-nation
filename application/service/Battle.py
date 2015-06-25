@@ -1,6 +1,5 @@
 from .Abstract import AbstractService
 
-from models.BattleAsk.Domain import BattleAsk_Domain
 from models.BattleAsk.Factory import BattleAsk_Factory
 
 
@@ -20,10 +19,11 @@ class Service_Battle(AbstractService.Service_Abstract):
         battleAskDomain.getMapper().save(battleAskDomain)
 
     def addBattleAsk(self, mapCoordinate, attacker, defender):
-        domain = BattleAsk_Domain()
-        domain.setLocation(mapCoordinate.getPosId())
-        domain.setAttacker(attacker)
-        domain.setDefender(defender)
+        domain = BattleAsk_Factory.getDomainFromData({
+            'location': mapCoordinate.getPosId(),
+            'attacker': attacker,
+            'defender': defender
+        })
 
         domain.getMapper().save(domain)
 
