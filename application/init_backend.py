@@ -13,7 +13,7 @@ import system.log
 import json
 import zlib
 
-import balancer.client.respondent
+import network.client.respondent
 
 from tornado import ioloop
 
@@ -67,7 +67,7 @@ def execute(transfer, data):
 
 
 if __name__ == '__main__':
-    balancer.client.respondent.Respondent.setHandler(handler)
+    network.client.respondent.Respondent.setHandler(handler)
 
     system.log.info("Server is prepared")
 

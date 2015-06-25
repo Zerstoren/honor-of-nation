@@ -30,8 +30,8 @@ class Decorate():
 
         return userDomain
 
-    def openMapForUser(self, user, coordinate):
-        self._testAccessAdmin(user)
+    def openMapForUser(self, user, coordinate, aclUser=None):
+        self._testAccessAdmin(aclUser)
         return super().openMapForUser(user, coordinate)
 
     def saveMapResources(self, user, domainData):

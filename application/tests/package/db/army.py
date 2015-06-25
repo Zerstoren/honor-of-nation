@@ -1,5 +1,6 @@
 from service.Army import Service_Army
 from service.ArmyQueue import Service_ArmyQueue
+from helpers.MapCoordinate import MapCoordinate
 
 class Army(object):
     def createArmy(
@@ -38,3 +39,19 @@ class Army(object):
     def setArmyLeaveTown(self, general):
         general.setInBuild(False)
         general.getMapper().save(general)
+
+    def fastMove(self, general, x, y):
+        general.setMovePath([
+            {
+                'pos_id': MapCoordinate(x=x, y=y).getPosId(),
+                'direction': '',
+                'code': '',
+                'power': 0,
+                'start_at': 0,
+                'complete_after': 1
+            }
+        ])
+
+        general.getMapper().save(general)
+
+        Service_Army()._moveUnitPosition(general)

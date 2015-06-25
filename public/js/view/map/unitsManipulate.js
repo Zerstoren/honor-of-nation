@@ -1,14 +1,15 @@
 define('view/map/unitsManipulate', [
-    'service/standalone/map'
+    'service/standalone/map',
+    'service/standalone/user',
 ], function (
-    mapInstance
+    mapInstance,
+    ServiceStandaloneUser
 ) {
     return AbstractView.extend({
         initialize: function () {
             mapInstance.on('onDragStart', this.onMouseDragStart, this);
             mapInstance.on('onDragMove', this.onUnitDrag, this);
             mapInstance.on('onDragStop', this.onStopUnitDrag, this);
-            window.m = mapInstance;
             this.unitMove = false;
         },
 
@@ -31,7 +32,7 @@ define('view/map/unitsManipulate', [
             }
 
             var e = ev.e();
-            this.unitLayer.setMoveTargetPosition([e.layerX, e.layerY]);
+            this.unitLayer.setMoveTargetPosition([e.offsetX, e.offsetY], ev);
 
             return true;
         },
@@ -44,6 +45,14 @@ define('view/map/unitsManipulate', [
             mapInstance.activateDrag();
 
             this.unitLayer.setMoveTargetPosition(null);
+
+            if (
+                ev.unit() &&
+                ServiceStandaloneUser.getStateFor(ev.unit().get('user')._id) !== ServiceStandaloneUser.STATE_WAR &&
+                ev.unit().get('_id') !== this.unitLayer.army.get('_id')
+            ) {
+                debugger;
+            }
 
             this.trigger('moveArmy', this.unitMove, ev.x(), ev.y());
             this.unitMove = false;

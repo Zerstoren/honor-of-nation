@@ -1,8 +1,6 @@
 from .Abstract import AbstractService
 
 import models.MapResources.Factory
-import models.MapResources.Mapper
-import models.MapResources.Domain
 
 import models.Map.Math
 import models.Map.Common

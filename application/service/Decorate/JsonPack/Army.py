@@ -1,4 +1,5 @@
 from service.Equipment.Units import Service_Equipment_Units
+from service.User import Service_User
 
 class Decorate():
     def pack(self, domain):
@@ -10,7 +11,7 @@ class Decorate():
 
         return {
             '_id': str(domain.getId()),
-            'user': str(domain.getUser().getId()),
+            'user': Service_User().getDecorateClass(Service_User.JSONPACK).packDomainToDict(domain.getUser()),
             'unit': str(domain.getUnit().getId()),
             'unit_data': unitService.getForce(domain.getUnit().getId()),
             'suite': str(domain.getSuite().getId()) if domain.getSuite() else None,

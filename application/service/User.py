@@ -1,10 +1,17 @@
 import service.Abstract.AbstractService
 import models.User.Factory
 import models.User.Mapper
+
+import models.UserState.Factory
+import models.UserState.Mapper
+
 import exceptions.database
 
 
 class Service_User(service.Abstract.AbstractService.Service_Abstract):
+
+    def createUser(self):
+        pass
 
     def login(self, login, password):
         """
@@ -27,6 +34,23 @@ class Service_User(service.Abstract.AbstractService.Service_Abstract):
         return models.User.Factory.User_Factory.getDomainFromData(
             models.User.Mapper.User_Mapper.getById(domainId)
         )
+
+    def getUserStates(self, user):
+        return models.UserState.Factory.UserState_Factory.getCollectionFromData(
+            models.UserState.Mapper.UserState_Mapper.userStates(user)
+        )
+
+    def getUserState(self, userFrom, userTo):
+        try:
+            stateResult = models.UserState.Mapper.UserState_Mapper.userState(userFrom, userTo)
+        except exceptions.database.NotFound:
+            models.UserState.Mapper.UserState_Mapper.createBaseState(userFrom, userTo)
+            stateResult = models.UserState.Mapper.UserState_Mapper.userState(userFrom, userTo)
+
+        return models.UserState.Factory.UserState_Factory.getDomainFromData(stateResult)
+
+    def setUserState(self, userFrom, userTo, state):
+        models.UserState.Mapper.UserState_Mapper.updateBaseState(userFrom, userTo, state)
 
     def searchUser(self, login):
         """

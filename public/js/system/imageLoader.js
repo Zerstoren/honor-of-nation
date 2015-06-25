@@ -4,6 +4,7 @@ define('system/imageLoader', [], function () {
         'shadow': 'ground/shadow.png',
 
         'ground-debug': 'ground/debug.png',
+        'cursor'      : 'ground/cursor.png',
 
         // ground
         'ground-1-1': 'ground/1-1.png',
@@ -35,6 +36,7 @@ define('system/imageLoader', [], function () {
         // units
         'commander': 'units/commander.png',
         'unit-marker-move': 'units/marker.png',
+        'unit-attack': 'units/attack.png',
 
         'move-top':          'units/path.png [0:0:64:64]',
         'move-top-right':    'units/path.png [0:64:64:64]',

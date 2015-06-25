@@ -24,7 +24,7 @@ class Service_Admin(AbstractService.Service_Abstract):
         except exceptions.database.NotFound:
             raise exceptions.message.Message('Пользователь с логином %s не найден' % userLogin)
 
-    def openMapForUser(self, user, coordinate):
+    def openMapForUser(self, user, coordinate, aclUser=None):
         mapCollection = Service_Map().decorate(Service_Map.PARAMS).getRegion(coordinate)
         return Service_MapUserVisible().openRegion(user, mapCollection)
 

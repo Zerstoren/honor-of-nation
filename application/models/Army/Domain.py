@@ -12,6 +12,9 @@ import config
 
 import models.Map.Factory
 
+from battle.structure.front import Front
+
+
 class Army_Domain(models.Abstract.Domain.Abstract_Domain):
     def setUser(self, user):
         if isinstance(user, User_Domain):
@@ -96,6 +99,14 @@ class Army_Domain(models.Abstract.Domain.Abstract_Domain):
             value = []
 
         self.set('move_path', value)
+
+    def setFormationAttack(self, formation):
+        assert formation in [Front.TYPE_AVANGARD, Front.TYPE_LEFT_FLANG, Front.TYPE_RIGHT_FLANG, Front.TYPE_REAR]
+        self.set('formation_attack', formation)
+
+    def setFormationDefence(self, formation):
+        assert formation in [Front.TYPE_AVANGARD, Front.TYPE_LEFT_FLANG, Front.TYPE_RIGHT_FLANG, Front.TYPE_REAR]
+        self.set('formation_defence', formation)
 
     def getMapper(self):
         """

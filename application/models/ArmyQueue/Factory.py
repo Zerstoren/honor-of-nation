@@ -20,4 +20,17 @@ class ArmyQueue_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         collection.setOptions(result)
         return collection
 
+    def getDomainFromData(self, data):
+        armyQueueDomain = Domain.ArmyQueue_Domain()
+
+        armyQueueDomain.setUnit(data['unit'])
+        armyQueueDomain.setTown(data['town'])
+        armyQueueDomain.setCount(data['count'])
+        armyQueueDomain.setCompleteAfter(data['complete_after'])
+        armyQueueDomain.setStartAt(data['start_at'])
+        armyQueueDomain.setQueueCode(data['queue_code'])
+
+        return armyQueueDomain
+
+
 ArmyQueue_Factory = ArmyQueue_Factory_Main()

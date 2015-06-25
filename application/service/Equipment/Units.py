@@ -1,10 +1,8 @@
 from service.Abstract.AbstractEquipment import AbstractEquipment
 
 from models.Equipment.Units.Factory import Equipment_Units_Factory
-from models.Equipment.Units.Domain import Equipment_Units_Domain
 
 import models.Equipment.Units.Data as Data
-import models.Equipment.Units.Common as Common
 
 from helpers import math
 
@@ -36,30 +34,9 @@ class Service_Equipment_Units(AbstractEquipment):
         return True
 
     def _getArmorCalculatedDomain(self, data):
-        domain = Equipment_Units_Domain()
-
-        if '_id' in data and data['_id']:
-            domain.setId(data['_id'])
-        else:
-            domain._loaded = True
-
         data = self._fixLevels(data)
 
-        domain.setType(data['type'])
-        domain.setHealth(data['health'])
-        domain.setAgility(data['agility'])
-        domain.setAbsorption(data['absorption'])
-        domain.setStamina(data['stamina'])
-        domain.setStrength(data['strength'])
-
-        domain.setArmor(data['armor'])
-        domain.setWeapon(data['weapon'])
-        domain.setWeaponSecond(data['weapon_second'])
-
-        if domain.getType() == Common.TYPE_SOLIDER:
-            data['troop_size'] = 0
-
-        domain.setTroopSize(data['troop_size'])
+        domain = Equipment_Units_Factory.getDomainFromData(data)
 
         currentPrice = self._calculatePrice(domain)
 

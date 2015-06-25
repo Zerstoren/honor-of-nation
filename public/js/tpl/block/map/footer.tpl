@@ -23,7 +23,9 @@
 
                         - {{this.footer.town.name}}
                     </div>
-                    <div class="holder">Владелец: <a href="javascript:void(0)">Zerst</a></div>
+                    <div class="holder">Владелец:
+                        <a href="javascript:void(0)">{{this.footer.town.user.login}}</a>
+                    </div>
                     <div class="population">
                         Население: {{formatters.transformNumberToPretty(this.footer.town.population)}}
                     </div>
@@ -84,18 +86,18 @@
                 </div>
                 {{/this.footer.type}}
 
-                {{#this.footer.type === 'army'}}
-                <div class="army">
-                    <img src="" />
-                </div>
-                {{/this.footer.type}}
+                    {{#this.footer.type === 'army'}}
+                    <div class="army">
+                        <div class="army_size">Размер армии: {{this.footer.army.count}}</div>
+                        <div>Армия {{this.footer.army.user.login}}</div>
+                    </div>
+                    {{/this.footer.type}}
 
             </div>
 
             <div class="right">
                 {{#this.footer.type === 'army'}}
                 <div class="army">
-                    <div class="army_size">Размер армии: {{this.footer.army.count}}</div>
                     <div class="army_power">Запас сил: {{this.footer.army_power}}</div>
                     <div class="army_mode">
                         <button class="btn btn-default mode{{#this.footer.army.mode == 1}} active{{/this.footer.army.mode}}" data-mode="1"

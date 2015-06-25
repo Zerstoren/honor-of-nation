@@ -25,6 +25,22 @@ class Equipment_Armor_Factory_Main(models.Abstract.Factory.Abstract_Factory):
 
         return collection
 
+    def getDomainFromData(self, data):
+        domain = Domain.Equipment_Armor_Domain()
 
+        if '_id' in data:
+            domain.setId(data['_id'])
+
+        domain.setType(data['type'])
+        domain.setHealth(data['health'])
+        domain.setAgility(data['agility'])
+        domain.setAbsorption(data['absorption'])
+
+        domain.setShield(data['shield'])
+        domain.setShieldType(data['shield_type'])
+        domain.setShieldDurability(data['shield_durability'])
+        domain.setShieldBlocking(data['shield_blocking'])
+
+        return domain
 
 Equipment_Armor_Factory = Equipment_Armor_Factory_Main()

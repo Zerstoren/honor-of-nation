@@ -44,9 +44,20 @@ define('service/standalone/map/canvas/support', [], function () {
     });
 
     CustomDragger = atom.declare(LibCanvas.App.Dragger, {
-        initialize: function method(mouse) {
-            method.previous.call(this, mouse);
+        initialize: function(mouse) {
+            this.bindMethods([ 'dragStart' ]);
+            this.events = new atom.Events(this);
+
+            this.mouse  = mouse;
+            this.shifts = [];
+
+            this._events = {
+                down: this.dragStart
+            };
+
             this.mouse.events.add( this._events );
+            jQuery(document).on('mousemove', this.dragMove.bind(this));
+            jQuery(document).on('mouseup', this.dragStop.bind(this));
         },
 
         start: function (callback) {
@@ -79,11 +90,13 @@ define('service/standalone/map/canvas/support', [], function () {
             }
 
             this.drag = false;
+            this.mouse.set(e, true);
             this.events.fire( 'stop', [ e ]);
         },
 
         dragMove: function method (e) {
             method.previous.call(this, e);
+            this.mouse.set(e, true);
             this.events.fire( 'move', [ e ]);
         }
     });

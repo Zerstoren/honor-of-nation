@@ -52,17 +52,13 @@ class Service_MapUserVisible(service.Abstract.AbstractService.Service_Abstract):
         controller.MapController.DeliveryController().openRegion(user, mapCollection)
 
     def getByChunks(self, user, chunks):
-        return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
-            models.MapUserVisible.Mapper.MapUserVisible_Mapper.getCellsByUsersAndChunks(user, chunks)
-        )
+        return models.MapUserVisible.Factory.MapUserVisible_Factory.getByChunks(user, chunks)
 
     def getByIds(self, user, ids):
         """
         :rtype: collection.MapUserVisibleCollection.MapUserVisible_Collection
         """
-        return models.MapUserVisible.Factory.MapUserVisible_Factory.getCollectionFromData(
-            models.MapUserVisible.Mapper.MapUserVisible_Mapper.getByIds(user, ids)
-        )
+        return models.MapUserVisible.Factory.MapUserVisible_Factory.getByIds(user, ids)
 
     def getUsersWhoSeePosition(self, mapCoordinate):
         return models.MapUserVisible.Factory.MapUserVisible_Factory.getUsersByPosition(mapCoordinate)

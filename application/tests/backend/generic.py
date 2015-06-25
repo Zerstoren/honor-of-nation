@@ -33,7 +33,7 @@ class Backend_Generic(Generic):
                 [
                     'python3',
                     '-B',
-                    '%sinit_celery.py' % pythonPath,
+                    '%s/init_celery.py' % (config.get('project.dir') + '/' + config.get('project.application')),
                     '--type=%s' % config.configType,
                     '--database=%s' % self.core.database_name
                 ],

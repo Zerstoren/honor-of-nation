@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from tornado import ioloop
 
-import balancer.celery_sender.sender
+import network.celery_sender.sender
 import config
 
 import helpers.times
@@ -42,7 +42,7 @@ app.conf.update(
 )
 
 def message(message, user):
-    balancer.celery_sender.sender.Respondent.writeMessage(
+    network.celery_sender.sender.Respondent.writeMessage(
         message,
         str(user.getId())
     )
@@ -62,6 +62,14 @@ def army(message):
     import controller.ArmyQueueController
     celeryController = controller.ArmyQueueController.CeleryPrivateController()
     celeryController.armyCreated(message)
+
+
+@app.task(serializer='json', name='init_celery.waitBattle')
+@helpers.times.decorate
+def waitBattle(message):
+    import controller.BattleController
+    celeryController = controller.BattleController.CeleryPrivateController()
+    celeryController.waitBattle(message)
 
 
 @app.task(serialize='json', name='init_celery.army_move')

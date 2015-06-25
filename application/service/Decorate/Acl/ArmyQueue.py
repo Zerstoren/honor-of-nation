@@ -1,7 +1,5 @@
 import exceptions.httpCodes
-"""
-Access Layer Level for decorate base service class
-"""
+
 class Decorate():
     def _checkAccess(self, town, user):
         if town.getUser().getId() != user.getId():

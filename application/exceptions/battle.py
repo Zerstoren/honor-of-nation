@@ -1,0 +1,4 @@
+
+class EnemyFrontIsDeath(Exception):
+    pass
+

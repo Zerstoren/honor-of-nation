@@ -10,6 +10,11 @@ class Decorate():
             'position': domain.getPosition()
         }
 
+    def packUserStateToDict(self, domain):
+        return {
+            'user': str(domain.getTo().getId()),
+            'state': domain.getState()
+        }
 
     def login(self, login, password):
         result, domain = super().login(login, password)
@@ -34,4 +39,20 @@ class Decorate():
     def getUserDomain(self, userId):
         return self.packDomainToDict(
             super().getUserDomain(userId)
+        )
+
+    def getUserStates(self, user):
+        result = []
+        collection = super().getUserStates(user)
+
+        for item in collection:
+            result.append(
+                self.packUserStateToDict(item)
+            )
+
+        return result
+
+    def getUserState(self, userFrom, userTo):
+        return self.packDomainToDict(
+            super().getUserStates(userFrom, userTo)
         )

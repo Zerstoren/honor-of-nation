@@ -9,6 +9,7 @@ import controller.ArmyController
 
 import service.ArmyQueue
 import service.Army
+import service.User
 
 import time
 
@@ -81,7 +82,8 @@ class Backend_Controller_ArmyTest(_Abstract_Controller):
                 'location': 0,
                 'commander': None,
                 'count': 100,
-                'formation': None,
+                'formation_attack': 1,
+                'formation_defence': 1,
                 'in_build': True,
                 'is_general': False,
                 'mode': 1,
@@ -257,7 +259,8 @@ class Backend_Controller_ArmyCeleryTest(_Abstract_Controller):
                 'location': self.town.getMap().getPosition().getPosId(),
                 'count': 1,
                 'commander': None,
-                'formation': None,
+                'formation_attack': 1,
+                'formation_defence': 1,
                 'in_build': True,
                 'mode': 1,
                 'is_general': False,

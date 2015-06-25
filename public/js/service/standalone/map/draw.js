@@ -204,7 +204,7 @@ define('service/standalone/map/draw', [
 
             if ((army = this.mapDrawObjectsArmy.searchByPosition(x, y))) {
                 _.each(army, function (layerItem) {
-                    if (layerItem.isTriggerPoint([e.layerX, e.layerY])) {
+                    if (layerItem.isTriggerPoint([e.offsetX, e.offsetY])) {
                         ev.setUnit('army', layerItem.getDomain())
                     }
                 });

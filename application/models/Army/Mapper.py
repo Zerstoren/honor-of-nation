@@ -73,8 +73,9 @@ class Army_Mapper_Main(models.Abstract.Mapper.Abstract_Mapper):
         commonSet.add('last_power_update', unit.getLastPowerUpdate())
         commonSet.add('mode', unit.getMode())
         commonSet.add('move_path', unit.getMovePath())
-        commonSet.add('formation', unit.getFormation())
         commonSet.add('is_general', unit.getIsGeneral())
+        commonSet.add('formation_attack', unit.getFormationAttack())
+        commonSet.add('formation_defence', unit.getFormationDefence())
 
         if unit.hasId():
             commonFilter = Common.Common_Filter()

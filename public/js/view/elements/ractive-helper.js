@@ -96,4 +96,6 @@ define('view/elements/ractive-helper', [
             }
         }
     };
+
+    return Ractive.defaults.data.formatters;
 });

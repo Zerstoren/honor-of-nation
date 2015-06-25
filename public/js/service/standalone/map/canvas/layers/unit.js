@@ -1,16 +1,18 @@
 define('service/standalone/map/canvas/layers/unit', [
     'service/standalone/map/canvas/layers/abstract',
 
+    'service/standalone/user',
     'system/imageLoader'
 ], function (
     AbstractLayer,
+
+    ServiceStandaloneUser,
     imageLoader
 ) {
     return atom.declare(AbstractLayer, {
         configure: function method () {
-            window.ctx = this.layer.ctx;
-            this.mapInstance = window.require('service/standalone/map');
             this.movePath = [];
+            this.mapInstance = window.require('service/standalone/map');
             method.previous.call(this);
         },
 
@@ -18,6 +20,7 @@ define('service/standalone/map/canvas/layers/unit', [
         updateObject: false,
         image: false,
         taskForMove: null,
+        taskForMoveEvent: null,
         taskMove: null,
         newShape: null,
         movePath: null,
@@ -35,16 +38,33 @@ define('service/standalone/map/canvas/layers/unit', [
         },
 
         setDomain: function (armyDomain) {
+            var imageMoveFlag = imageLoader.get('unit-marker-move'),
+                imageMoveAttack = imageLoader.get('unit-attack');
+
             this.armyDrawPoint = null;
 
             this.army = armyDomain;
             this.image = imageLoader.get('commander');
-            this.imageMove = imageLoader.get('unit-marker-move');
 
-            this.moveImageShift = new LibCanvas.Point(
-                parseInt(this.imageMove.width / -2),
-                parseInt(this.imageMove.height / -2)
-            );
+            this.imageMove = {
+                flag  : {
+                    image: imageMoveFlag,
+                    shift: new LibCanvas.Point(
+                        parseInt(imageMoveFlag.width / -2),
+                        parseInt(imageMoveFlag.height / -2)
+                    )
+                },
+
+                attack: {
+                    image: imageMoveAttack,
+                    shift: new LibCanvas.Point(
+                        parseInt(imageMoveAttack.width / -2),
+                        parseInt(imageMoveAttack.height / -2)
+                    )
+                }
+            };
+            this.currentMoveImage = null;
+
             this.imagePathShift = new LibCanvas.Point(32, -33);
             this.modelShift = new LibCanvas.Point(10, -72);
 
@@ -57,12 +77,14 @@ define('service/standalone/map/canvas/layers/unit', [
             this.army.on('change:move_path', this.update, this);
         },
 
-        setMoveTargetPosition: function (point) {
+        setMoveTargetPosition: function (point, ev) {
             if (point) {
                 this.taskForMove = new LibCanvas.Point(point);
+                this.taskForMoveEvent = ev;
             } else {
                 this.taskForMove = null;
                 this.taskMove = null;
+                this.taskForMoveEvent = null;
             }
 
             this.update();
@@ -89,6 +111,8 @@ define('service/standalone/map/canvas/layers/unit', [
 
             var self = this,
                 markerMove,
+                move,
+                shift,
                 area = [],
                 unitPosition = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
                 unitArea = this._getArea(unitPosition.x, unitPosition.y, this.image, this.modelShift),
@@ -97,9 +121,25 @@ define('service/standalone/map/canvas/layers/unit', [
             area = _.union(area, unitArea);
 
             if (this.taskForMove) {
-                markerMove = this._getPolygonDescription(this.taskForMove, this.imageMove, this.moveImageShift);
-                area = _.union(area, markerMove);
-                this.taskMove = new LibCanvas.Shapes.Polygon(markerMove);
+                var ev = this.taskForMoveEvent;
+
+                if (ev.unit() === null || ev.unit().get('_id') === this.army.get('_id')) {
+                    move = this.imageMove.flag.image;
+                    shift = this.imageMove.flag.shift;
+
+                    this.currentMoveImage = move;
+                } else if (ServiceStandaloneUser.getStateFor(ev.unit().get('user')._id) === ServiceStandaloneUser.STATE_WAR) {
+                    move = this.imageMove.attack.image;
+                    shift = this.imageMove.attack.shift;
+
+                    this.currentMoveImage = move;
+                }
+
+                if (move) {
+                    markerMove = this._getPolygonDescription(this.taskForMove, move, shift);
+                    area = _.union(area, markerMove);
+                    this.taskMove = new LibCanvas.Shapes.Polygon(markerMove);
+                }
             }
 
             if (movePath.length) {
@@ -130,9 +170,7 @@ define('service/standalone/map/canvas/layers/unit', [
         },
 
         renderTo: function (ctx) {
-            var self = this;
-
-            ctx2d = ctx.ctx2d;
+            var ctx2d = ctx.ctx2d;
 
             if (this.movePath.length) {
                 _.each(this.movePath, function (item) {
@@ -152,7 +190,7 @@ define('service/standalone/map/canvas/layers/unit', [
 
             if (this.taskMove) {
                 ctx2d.drawImage(
-                    this.imageMove,
+                    this.currentMoveImage,
                     this.taskMove.get(0).x,
                     this.taskMove.get(0).y
                 );
@@ -167,7 +205,7 @@ define('service/standalone/map/canvas/layers/unit', [
             }
 
             var positionArmy = this.mapInstance.help.fromIdToPlace(this.army.get('location')),
-                armyDrawPoint = this.mapInstance.fromPositionToMapItem(
+                armyDrawPoint = this.controller.fromPositionToMapItem(
                     positionArmy.x, positionArmy.y
                 );
 
@@ -181,58 +219,6 @@ define('service/standalone/map/canvas/layers/unit', [
 
         clearPrevious: function (ctx) {
             LibCanvas.App.Element.prototype.clearPrevious.apply(this, [ctx]);
-        },
-
-        _getArea: function (x, y, image, shift) {
-            var drawPosition,
-                mapPosition = this.mapInstance.fromPositionToMapItem(x, y);
-
-            if (shift === undefined) {
-                shift = {
-                    x: 0,
-                    y: 0
-                };
-            }
-
-            if (image === undefined) {
-                image = {
-                    width: 0,
-                    height: 0
-                };
-            }
-
-            if (!mapPosition) {
-                return null;
-            }
-
-            drawPosition = this.projection.toIsometric([mapPosition.x, mapPosition.y]);
-            return this._getPolygonDescription(drawPosition, image, shift);
-        },
-
-        _getPolygonDescription: function (drawPoint, image, shift) {
-            if (shift === undefined) {
-                shift = {
-                    x: 0,
-                    y: 0
-                };
-            }
-
-            if (image === undefined) {
-                image = {
-                    width: 0,
-                    height: 0
-                };
-            }
-
-            drawPoint.x += shift.x;
-            drawPoint.y += shift.y;
-
-            return [
-                [drawPoint.x, drawPoint.y],
-                [drawPoint.x + image.width, drawPoint.y],
-                [drawPoint.x + image.width, drawPoint.y + image.height],
-                [drawPoint.x, drawPoint.y + image.height]
-            ];
         }
     });
 });

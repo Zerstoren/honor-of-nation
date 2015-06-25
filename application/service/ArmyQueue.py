@@ -5,7 +5,6 @@ import init_celery
 import service.Army
 import models.Equipment.Units.Common as Units_Common
 
-from models.ArmyQueue.Domain import ArmyQueue_Domain
 from models.ArmyQueue.Factory import ArmyQueue_Factory
 
 import config
@@ -15,7 +14,6 @@ import time
 class Service_ArmyQueue(AbstractService.Service_Abstract):
     def add(self, town, unit, count, user=None):
         resourcesDomain = town.getUser().getResources()
-        armyQueueDomain = ArmyQueue_Domain()
 
         if count != 1 and unit.getType() == Units_Common.TYPE_GENERAL:
             count = 1
@@ -31,12 +29,14 @@ class Service_ArmyQueue(AbstractService.Service_Abstract):
             'time': count * unit.getTime()
         }
 
-        armyQueueDomain.setUnit(unit)
-        armyQueueDomain.setTown(town)
-        armyQueueDomain.setCount(count)
-        armyQueueDomain.setCompleteAfter(price['time'])
-        armyQueueDomain.setStartAt(None)
-        armyQueueDomain.setQueueCode(None)
+        armyQueueDomain = ArmyQueue_Factory.getDomainFromData({
+            'unit': unit,
+            'town': town,
+            'count': count,
+            'complete_after': price['time'],
+            'start_at': None,
+            'queue_code': None
+        })
 
         resourcesDomain.dropResources(price)
         resourcesDomain.getMapper().save(resourcesDomain)

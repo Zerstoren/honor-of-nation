@@ -2,11 +2,10 @@ from .Abstract import AbstractService
 
 import config
 
-import models.Map.Factory
+from models.Map.Factory import Map_Factory
 import models.Map.Mapper
 import models.Map.Math
 import models.Map.Domain
-import models.MapUserVisible.Factory
 
 import helpers.MapCoordinate
 
@@ -28,19 +27,13 @@ class Service_Map(AbstractService.Service_Abstract):
         return collection.getMap()
 
     def getByPosIds(self, posIds):
-        return models.Map.Factory.Map_Factory.getCollectionFromData(
-            models.Map.Mapper.Map_Mapper.getByPosIds(posIds)
-        )
+        return Map_Factory.getByPosIds(posIds)
 
     def getRegion(self, regionMap):
         """
         :type regionMap:helpers.MapRegion.MapRegion
         """
-        regionResult = models.Map.Mapper.Map_Mapper.getRegion(regionMap)
-
-        return models.Map.Factory.Map_Factory.getCollectionFromData(
-            regionResult
-        )
+        return Map_Factory.getRegion(regionMap)
 
     def fillCoordinate(self, regionMap, land, landType):
         """
@@ -81,17 +74,18 @@ class Service_Map(AbstractService.Service_Abstract):
             return domain
 
         except exceptions.database.NotFound:
-            domain = models.Map.Domain.Map_Domain()
-            domain.setPosId(models.Map.Math.fromPositionToId(x, y))
-            domain.setChunk(models.Map.Math.fromPositionToChunk(x, y))
-            domain.setX(x)
-            domain.setY(y)
-            domain.setLand(land)
-            domain.setLandType(landType)
-            domain.setDecor(decor)
-            domain.setBuild(build)
-            domain.setBuildType(buildType)
-            return domain
+            return models.Map.Factory.Map_Factory.getDomainFromData({
+                'pos_id': '',
+                'chunk': '',
+                'x': '',
+                'y': '',
+                'land': '',
+                'land_type': '',
+                'decor': '',
+                'build': '',
+                'bild_type': ''
+
+            })
 
     def decorate(self, *args):
         """
