@@ -43,10 +43,8 @@ class Map_Factory_Main(models.Abstract.Factory.Abstract_Factory):
         """
         :type regionMap:helpers.MapRegion.MapRegion
         """
-        regionResult = Mapper.Map_Mapper.getRegion(regionMap)
-
         return self.getCollectionFromData(
-            regionResult
+            Mapper.Map_Mapper.getRegion(regionMap)
         )
 
     def getDomainFromData(self, data):

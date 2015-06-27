@@ -2,10 +2,11 @@ from .Abstract import AbstractService
 
 import config
 
-from models.Map.Factory import Map_Factory
+import models.Map.Factory
 import models.Map.Mapper
 import models.Map.Math
 import models.Map.Domain
+import models.MapUserVisible.Factory
 
 import helpers.MapCoordinate
 
@@ -27,13 +28,13 @@ class Service_Map(AbstractService.Service_Abstract):
         return collection.getMap()
 
     def getByPosIds(self, posIds):
-        return Map_Factory.getByPosIds(posIds)
+        return models.Map.Factory.Map_Factory.getByPosIds(posIds)
 
     def getRegion(self, regionMap):
         """
         :type regionMap:helpers.MapRegion.MapRegion
         """
-        return Map_Factory.getRegion(regionMap)
+        return models.Map.Factory.Map_Factory.getRegion(regionMap)
 
     def fillCoordinate(self, regionMap, land, landType):
         """
@@ -75,16 +76,15 @@ class Service_Map(AbstractService.Service_Abstract):
 
         except exceptions.database.NotFound:
             return models.Map.Factory.Map_Factory.getDomainFromData({
-                'pos_id': '',
-                'chunk': '',
-                'x': '',
-                'y': '',
-                'land': '',
-                'land_type': '',
-                'decor': '',
-                'build': '',
-                'bild_type': ''
-
+                'pos_id': models.Map.Math.fromPositionToId(x, y),
+                'chunk': models.Map.Math.fromPositionToId(x, y),
+                'x': x,
+                'y': y,
+                'land': land,
+                'land_type': landType,
+                'decor': decor,
+                'build': build,
+                'bild_type': buildType
             })
 
     def decorate(self, *args):
